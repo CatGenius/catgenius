@@ -6,5 +6,12 @@
 !_TAG_PROGRAM_VERSION	5.5.4	//
 !_TAG_REVISION_NAME	MCHPTags	//
 !_TAG_REVISION_VERSION	6.0.1	//
-PROTECT	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	3;"	v	line:3
-main	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	5;"	f	line:5	signature:(void)
+CLOCK_HZ::(4*MHZ)	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	11;"	d	line:11	file:
+FCMDIS	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	5;"	v	line:5
+KHZ::(1000)	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	8;"	d	line:8	file:
+MHZ::(1000*(KHZ))	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	9;"	d	line:9	file:
+init	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	32;"	f	line:32	signature:(void)
+main	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	64;"	f	line:64	signature:(void)
+temp	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	34;"	l	line:34
+test	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	13;"	v	line:13
+timer1_isr	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	16;"	f	line:16	signature:(void)
