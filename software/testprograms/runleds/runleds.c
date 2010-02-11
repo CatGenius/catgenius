@@ -5,6 +5,9 @@
 __CONFIG(XT & WDTDIS & PWRTEN & BOREN & LVPDIS & DPROT & WRTEN & PROTECT);
 //__CONFIG(XT & WDTEN & PWRTEN & BOREN & LVPDIS & DPROT & WRTEN & PROTECT);
 
+static unsigned char		test		= 0;
+
+
 void init (void)
 {
 	unsigned char temp;
@@ -23,10 +26,22 @@ void init (void)
 
 void main (void)
 {
+	unsigned long	delay = SECOND/5;
+	struct timer	test_timer ;
+
 	/* Initialize the hardware */
 	init();
 
+	settimeout(&test_timer, delay);
+
 	/* Execute the run loop */
 	for(;;){
+		if (timeoutexpired(&test_timer))
+		{
+			settimeout(&test_timer, delay);
+			test++;
+			PORTC = test & 0x01;
+		}
+
 	}
 }
