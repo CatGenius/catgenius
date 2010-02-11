@@ -6,12 +6,53 @@
 !_TAG_PROGRAM_VERSION	5.5.4	//
 !_TAG_REVISION_NAME	MCHPTags	//
 !_TAG_REVISION_VERSION	6.0.1	//
-CLOCK_HZ::(4*MHZ)	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	11;"	d	line:11	file:
-FCMDIS	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	5;"	v	line:5
-KHZ::(1000)	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	8;"	d	line:8	file:
-MHZ::(1000*(KHZ))	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	9;"	d	line:9	file:
-init	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	32;"	f	line:32	signature:(void)
-main	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	64;"	f	line:64	signature:(void)
-temp	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	34;"	l	line:34
-test	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	13;"	v	line:13
-timer1_isr	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	16;"	f	line:16	signature:(void)
+B0_MASK::0x01	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	22;"	d	line:22	file:
+B1_MASK::0x02	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	23;"	d	line:23	file:
+B2_MASK::0x04	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	24;"	d	line:24	file:
+B3_MASK::0x08	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	25;"	d	line:25	file:
+B4_MASK::0x10	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	26;"	d	line:26	file:
+B5_MASK::0x20	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	27;"	d	line:27	file:
+B6_MASK::0x40	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	28;"	d	line:28	file:
+B7_MASK::0x80	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	29;"	d	line:29	file:
+Bit::(n)(1U<<(n))	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	18;"	d	line:18	file:
+CheckTimeout	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	44;"	p	line:44	signature:(unsigned long const * const timer_p)
+Delay	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	50;"	p	line:50	signature:(unsigned long * const delay)
+ExpireTimeout	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	40;"	p	line:40	signature:(unsigned long * const timer_p)
+FOSC::(4*MHZ)	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	23;"	d	line:23
+HOUR::(60*(MINUTE))	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	27;"	d	line:27
+KHZ::(1000)	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	21;"	d	line:21
+MHZ::(1000*(KHZ))	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	22;"	d	line:22
+MINUTE::(60*(SECOND))	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	26;"	d	line:26
+MaskShiftL::(i,m,s)(((i)&(m))<<(s))	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	19;"	d	line:19	file:
+MaskShiftR::(i,m,s)(((i)&(m))>>(s))	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	20;"	d	line:20	file:
+MicroDelay	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	52;"	p	line:52	signature:(unsigned short const delay_us)
+NR_OF_TICK_BYTES::(6)	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	15;"	d	line:15	file:
+NeverTimeout	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	42;"	p	line:42	signature:(unsigned long * const timer_p)
+PROTECT	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	5;"	v	line:5
+PostponeTimeout	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	37;"	p	line:37	signature:(unsigned long * const timer_p, unsigned long const postpone)
+SECOND::((FOSC)/4/8)	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	25;"	d	line:25
+SetTimeStamp	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	46;"	p	line:46	signature:(unsigned long * const timer_p)
+SetTimeout	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	34;"	p	line:34	signature:(unsigned long * const timer_p, unsigned long const timout)
+T3_incs_per_tick::(nsecs_per_tick/nsecs_per_T3_i	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	37;"	d	line:37	file:
+T3_max_value::0xFFFF	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	34;"	d	line:34	file:
+T3_reload_value::((T3_max_value-T3_incs_per_tic	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	38;"	d	line:38	file:
+TICKS_PER_10_US::(125)	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	32;"	d	line:32	file:
+TIMER_C	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	9;"	d	line:9	file:
+TIMER_H	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	9;"	d	line:9
+TMR3_RELOAD_VALUE::(0x30D4)	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	33;"	d	line:33	file:
+TimeStampAge	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	48;"	p	line:48	signature:(unsigned long const * const timer_p)
+extern	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	12;"	d	line:12
+extern::extern	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	17;"	d	line:17
+extern::extern"C"	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	15;"	d	line:15
+init	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	8;"	f	line:8	signature:(void)
+main	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	24;"	f	line:24	signature:(void)
+nsecs_per_T3_inc::400	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	35;"	d	line:35	file:
+nsecs_per_tick::(TICKS_PER_MS*1000000UL)	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	36;"	d	line:36	file:
+temp	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	10;"	l	line:10
+test	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	45;"	v	line:45	file:
+ticks	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	46;"	v	line:46	file:
+timer1_isr	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	438;"	f	line:438	signature:(void)
+timer_init	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	60;"	f	line:60	signature:(void)
+timer_init	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	30;"	p	line:30	signature:(void)
+timer_term	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	90;"	f	line:90	signature:(void)
+timer_term	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	32;"	p	line:32	signature:(void)
