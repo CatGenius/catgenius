@@ -12,45 +12,26 @@
 
 #include "timer.h"
 
-#define NR_OF_TICK_BYTES  (6)
 
-#if 0
-#define Bit(n)            (1U << (n))           // Bit mask for bit 'n'
-#define MaskShiftL(i,m,s) (((i) & (m)) << (s))  // Mask 'i' with 'm' and shift left 's'
-#define MaskShiftR(i,m,s) (((i) & (m)) >> (s))  // Mask 'i' with 'm' and shift right 's'
+/******************************************************************************/
+// Global Data								      */
+/******************************************************************************/
 
-#define B0_MASK           0x01
-#define B1_MASK           0x02
-#define B2_MASK           0x04
-#define B3_MASK           0x08
-#define B4_MASK           0x10
-#define B5_MASK           0x20
-#define B6_MASK           0x40
-#define B7_MASK           0x80
+//union timecalc
+//{
+//	unsigned char		ticksByte[sizeof(struct timer)];
+//	struct timer		ticksValues;
+//} ;
+
+static unsigned long		overflows	= 0;
 
 
-#define TICKS_PER_10_US       (125)
-#define TMR3_RELOAD_VALUE     (0x30D4)
-#define T3_max_value          0xFFFF
-#define nsecs_per_T3_inc      400
-#define nsecs_per_tick        (TICKS_PER_MS * 1000000UL)
-#define T3_incs_per_tick      (nsecs_per_tick / nsecs_per_T3_inc)
-#define T3_reload_value       ((T3_max_value - T3_incs_per_tick) + 1)
-#endif
+/******************************************************************************/
+/* Local Prototypes							      */
+/******************************************************************************/
 
-////////////////////////////////////////////////////////////////////////////////
-// Global Data                                                                //
-////////////////////////////////////////////////////////////////////////////////
-
-static unsigned char		test = 0;
-static unsigned char		ticks[NR_OF_TICK_BYTES - 2] ;
-
-////////////////////////////////////////////////////////////////////////////////
-// Local Prototypes                                                           //
-////////////////////////////////////////////////////////////////////////////////
-
-//static void ISR_Timer3       (void) ;
-//static void TMR_CurrentTicks (TMR_ticks_struct * const currTicks_ptr) ;
+static void interrupt		timer1_isr	(void);
+static void			getticks	(struct timer	* const ticks);
 
 
 /******************************************************************************/
@@ -69,18 +50,18 @@ void timer_init (void)
 	 * Initialize timer 1
 	 */
 	/* Select Fosc/4 as source */
-	TMR1CS = 0 ;
+	TMR1CS = 0;
 	/* Set prescaler to 1:8 */
-	T1CKPS1 = 1 ;
-	T1CKPS0 = 1 ;
+	T1CKPS1 = 1;
+	T1CKPS0 = 1;
 	/* Disable timer 1 external oscillator */
-	T1OSCEN = 0 ;
+	T1OSCEN = 0;
 	/* Disable synchronized clock */
 	T1SYNC = 0;
 	/* Switch on timer 1 */
-	TMR1ON = 1 ;
+	TMR1ON = 1;
 	/* Enable timer 1 interrupt */
-	TMR1IE = 1 ;
+	TMR1IE = 1;
 
 	return;
 }
@@ -95,47 +76,53 @@ void timer_term (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	TMR1IE = 0 ;		/* Disable timer interrupt */
-	TMR1ON = 0 ;		/* Stop timer1 */
+	TMR1IE = 0;		/* Disable timer interrupt */
+	TMR1ON = 0;		/* Stop timer1 */
 
 	return;
 }
 // End: timer_term
 
-#if 0
-void TMR_SetTimeout (TMR_ticks_struct * const pt_timeout,
-                     unsigned long      const timout)
-////////////////////////////////////////////////////////////////////////////////
-// Function:       TMR_SetTimeout                                             //
-//                 - Calculate a requested timeout                            //
-// History :       24 Jul 2004 by R. Delien:                                  //
-//                 - Initial revision.                                        //
-////////////////////////////////////////////////////////////////////////////////
+
+void settimeout (struct timer	* const timer_p,
+		 unsigned long	  const timout)
+/******************************************************************************/
+/* Function:	settimeout						      */
+/*		- Calculate a requested timeout				      */
+/* History :	11 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
 {
-  unsigned long       tempTicksWord ;  // Rollover detection buffer
+	unsigned long	tempLongTicks;		/* Overflow detection buffer */
+	struct {
+		unsigned long	ls_longTicks ;	/* Least significant long */
+		unsigned short	ms_shortTicks ;	/* Most significant short */
+	} *longshort = timer_p;
 
-  // Fetch the current time
-  TMR_CurrentTicks (pt_timeout) ;
+	/* Fetch the current time */
+	getticks(timer_p);
 
-  // Temporarilly store the Long-part of the current time
-  tempTicksWord = pt_timeout->t_ticksCalc.u32_lsLong ;
+	/* If no timeout is required, we're done */
+	if (!timout)
+		return;
 
-  // Add the timout to the Long-part of the current time
-  pt_timeout->t_ticksCalc.u32_lsLong += timout ;
+	/* Store lower value-before-adding to detect an overflow */
+	tempLongTicks = longshort->ls_longTicks;
 
-  // Check if the Long-part has rolled over and increase
-  // the Short-part if so
-  if (pt_timeout->t_ticksCalc.u32_lsLong < tempTicksWord)
-  {
-    pt_timeout->t_ticksCalc.u16_msShort ++ ;
-  }
+	/* Add the requested delay */
+	longshort->ls_longTicks += timout;
 
-  return ;
+	/* Carry an overflow to the most significant part */
+	if (longshort->ls_longTicks <= tempLongTicks)
+		longshort->ms_shortTicks++;
+
+	return;
 }
-// End: TMR_SetTimeout
+// End: settimeout
 
+#if 0
 
-void TMR_PostponeTimeout (TMR_ticks_struct * const pt_timeout,
+void TMR_PostponeTimeout (struct timer * const timer_p,
                           unsigned long      const postpone)
 ////////////////////////////////////////////////////////////////////////////////
 // Function:       TMR_PosponeTimeout                                         //
@@ -144,27 +131,27 @@ void TMR_PostponeTimeout (TMR_ticks_struct * const pt_timeout,
 //                 - Initial revision.                                        //
 ////////////////////////////////////////////////////////////////////////////////
 {
-  unsigned long       tempTicksWord ;  // Rollover detection buffer
+  unsigned long       tempTicksWord;  // Rollover detection buffer
 
   // Temporarilly store the Long-part of the given timeout
-  tempTicksWord = pt_timeout->t_ticksCalc.u32_lsLong ;
+  tempTicksWord = timer_p->t_ticksCalc.u32_lsLong;
 
   // Add the timout to the Long-part of the given timeout
-  pt_timeout->t_ticksCalc.u32_lsLong += postpone ;
+  timer_p->t_ticksCalc.u32_lsLong += postpone;
 
   // Check if the Long-part has rolled over and increase
   // the Short-part if so
-  if (pt_timeout->t_ticksCalc.u32_lsLong < tempTicksWord)
+  if (timer_p->t_ticksCalc.u32_lsLong < tempTicksWord)
   {
-    pt_timeout->t_ticksCalc.u16_msShort ++ ;
+    timer_p->t_ticksCalc.u16_msShort ++;
   }
 
-  return ;
+  return;
 }
 // End: TMR_PosponeTimeout
 
 
-void TMR_ExpireTimeout (TMR_ticks_struct * const pt_timeout)
+void TMR_ExpireTimeout (struct timer * const timer_p)
 ////////////////////////////////////////////////////////////////////////////////
 // Function:       TMR_ExpireTimeout                                          //
 //                 - Make the given timeout expire unconditionally            //
@@ -172,20 +159,20 @@ void TMR_ExpireTimeout (TMR_ticks_struct * const pt_timeout)
 //                 - Initial revision.                                        //
 ////////////////////////////////////////////////////////////////////////////////
 {
-  unsigned char cntr ;
+  unsigned char cntr;
 
   // Set timeout time to 0 by clearing all bytes
-  for (cntr = 0; cntr < NR_OF_TICK_BYTES; cntr ++)
+  for (cntr = 0; cntr < sizeof(struct timer); cntr ++)
   {
-    pt_timeout->u8_ticksByte[cntr] = 0x00 ;
+    timer_p->u8_ticksByte[cntr] = 0x00;
   }
 
-  return ;
+  return;
 }
 // End: TMR_ExpireTimeout
 
 
-void TMR_NeverTimeout (TMR_ticks_struct * const pt_timeout)
+void TMR_NeverTimeout (struct timer * const timer_p)
 ////////////////////////////////////////////////////////////////////////////////
 // Function:       TMR_NeverTimeout                                           //
 //                 - Prevent the given timeout to expire, ever                //
@@ -193,52 +180,48 @@ void TMR_NeverTimeout (TMR_ticks_struct * const pt_timeout)
 //                 - Initial revision.                                        //
 ////////////////////////////////////////////////////////////////////////////////
 {
-  unsigned char cntr ;
+  unsigned char cntr;
 
   // Set timeout time to 'nearly' infinite (>584942417 year)
-  for (cntr = 0; cntr < NR_OF_TICK_BYTES; cntr ++)
+  for (cntr = 0; cntr < sizeof(struct timer); cntr ++)
   {
-    pt_timeout->u8_ticksByte[cntr] = 0xFF ;
+    timer_p->u8_ticksByte[cntr] = 0xFF;
   }
 
-  return ;
+  return;
 }
 // End: TMR_NeverTimeout
+#endif
 
 
-BOOL TMR_CheckTimeout (TMR_ticks_struct const * const pt_timeout)
-////////////////////////////////////////////////////////////////////////////////
-// Function:       TMR_CheckTimeout                                           //
-//                 - Check if a given timeout has expired                     //
-// History :       24 Jul 2004 by R. Delien:                                  //
-//                 - Initial revision.                                        //
-////////////////////////////////////////////////////////////////////////////////
+unsigned char timeoutexpired (struct timer const * const timer_p)
+/******************************************************************************/
+/* Function:	timeoutexpired						      */
+/*		- Check if a given timeout has expired			      */
+/* History :	11 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
 {
-  BOOL             expired ;
-  TMR_ticks_struct currentTime ;
+	struct timer	currentTime;
 
-  // Fetch the current time
-  TMR_CurrentTicks (&currentTime) ;
+	/* Fetch the current time */
+	getticks (&currentTime);
 
-  if (currentTime.t_ticksCalc.u16_msShort == pt_timeout->t_ticksCalc.u16_msShort)
-  {
-    expired = (currentTime.t_ticksCalc.u32_lsLong >= pt_timeout->t_ticksCalc.u32_lsLong) ?
-              TRUE :
-              FALSE ;
-  }
-  else
-  {
-    expired = (currentTime.t_ticksCalc.u16_msShort >= pt_timeout->t_ticksCalc.u16_msShort) ?
-              TRUE :
-              FALSE ;
-  }
-
-  return (expired) ;
+	if (currentTime.overflows == timer_p->overflows)
+		if (currentTime.timer1 >= timer_p->timer1)
+			return 1;
+		else
+			return 0;
+	else
+		if (currentTime.overflows > timer_p->overflows)
+			return 1;
+		else
+			return 0;
 }
-// End: TMR_CheckTimeout
+// End: timeoutexpired
 
-
-void TMR_SetTimeStamp (TMR_ticks_struct * const pt_timestamp)
+#if 0
+void TMR_SetTimeStamp (struct timer * const pt_timestamp)
 ////////////////////////////////////////////////////////////////////////////////
 // Function:       TMR_SetTimeStamp                                           //
 //                 - Check if a given timeout has expired                     //
@@ -247,14 +230,14 @@ void TMR_SetTimeStamp (TMR_ticks_struct * const pt_timestamp)
 ////////////////////////////////////////////////////////////////////////////////
 {
   // Fetch the current time
-  TMR_CurrentTicks (pt_timestamp) ;
+  getticks (pt_timestamp);
 
-  return ;
+  return;
 }
 // End: TMR_SetTimeStamp
 
 
-unsigned long TMR_TimeStampAge (TMR_ticks_struct const * const pt_timestamp)
+unsigned long TMR_TimeStampAge (struct timer const * const pt_timestamp)
 ////////////////////////////////////////////////////////////////////////////////
 // Function:       TMR_TimeStampAge                                           //
 //                 - Calculate the time now and the time the give timestamp   //
@@ -263,11 +246,11 @@ unsigned long TMR_TimeStampAge (TMR_ticks_struct const * const pt_timestamp)
 //                 - Initial revision.                                        //
 ////////////////////////////////////////////////////////////////////////////////
 {
-  unsigned long       age         = 0 ;
-  TMR_ticks_struct    currentTime ;
+  unsigned long       age         = 0;
+  struct timer    currentTime;
 
   // Fetch the current time
-  TMR_CurrentTicks (&currentTime) ;
+  getticks (&currentTime);
 
   // Check Most Significant Short for future time stamps
   if (currentTime.t_ticksCalc.u16_msShort >= pt_timestamp->t_ticksCalc.u16_msShort)
@@ -278,41 +261,41 @@ unsigned long TMR_TimeStampAge (TMR_ticks_struct const * const pt_timestamp)
         if (currentTime.t_ticksCalc.u32_lsLong > pt_timestamp->t_ticksCalc.u32_lsLong)
         {
           // Past time stamp: Just subtract the Least Significant LWords
-          age = currentTime.t_ticksCalc.u32_lsLong - pt_timestamp->t_ticksCalc.u32_lsLong ;
+          age = currentTime.t_ticksCalc.u32_lsLong - pt_timestamp->t_ticksCalc.u32_lsLong;
         }
         else
         {
           // Future or current time stamp
-          age = 0 ;
+          age = 0;
         }
-        break ;
+        break;
 
       case 1: // Most Significant LWord is increased just by 1
         if (currentTime.t_ticksCalc.u32_lsLong < pt_timestamp->t_ticksCalc.u32_lsLong)
         {
           // The Least Significant LWords has only wrapped around
-          age = (0xFFFFFFFF - (pt_timestamp->t_ticksCalc.u32_lsLong - currentTime.t_ticksCalc.u32_lsLong)) + 1 ;
+          age = (0xFFFFFFFF - (pt_timestamp->t_ticksCalc.u32_lsLong - currentTime.t_ticksCalc.u32_lsLong)) + 1;
         }
         else
         {
           // The The stamp has just aged beyond the maximum
-          age = 0xFFFFFFFF ;
+          age = 0xFFFFFFFF;
         }
-        break ;
+        break;
 
       default: // Most Significant LWord is increased by two of more
         // The time stamp is ancient, older than 49 days!
-        age = 0xFFFFFFFF ;
-        break ;
+        age = 0xFFFFFFFF;
+        break;
     }
   }
   else
   {
     // Future time stamp
-    age = 0 ;
+    age = 0;
   }
 
-  return (age) ;
+  return (age);
 }
 // End: TMR_TimeStampAge
 
@@ -325,19 +308,19 @@ void TMR_Delay (unsigned long const delay)
 //                 - Initial revision.                                        //
 ////////////////////////////////////////////////////////////////////////////////
 {
-  TMR_ticks_struct timeoutTime ;
+  struct timer timeoutTime;
 
   // Set a timout
-  TMR_SetTimeout (&timeoutTime, delay) ;
+  TMR_SetTimeout (&timeoutTime, delay);
 
   // Wait for it to expire
   while (!TMR_CheckTimeout (&timeoutTime))
   {
     // Just wait...
-    ;
+;
   }
 
-  return ;
+  return;
 }
 // End: TMR_Delay
 
@@ -350,54 +333,55 @@ void TMR_MicroDelay (unsigned short const delay_us)
 //                 - Initial revision.                                        //
 ////////////////////////////////////////////////////////////////////////////////
 {
-  unsigned char            u8_old_tmr3_dr[2] ;
-  unsigned short volatile *pu16_old_tmr3 = (unsigned short volatile *)&(u8_old_tmr3_dr[0]) ;
+  unsigned char            u8_old_tmr3_dr[2];
+  unsigned short volatile *pu16_old_tmr3 = (unsigned short volatile *)&(u8_old_tmr3_dr[0]);
 
-  unsigned char            u8_cur_tmr3_dr[2] ;
-  unsigned short volatile *pu16_cur_tmr3 = (unsigned short volatile *)&(u8_cur_tmr3_dr[0]) ;
+  unsigned char            u8_cur_tmr3_dr[2];
+  unsigned short volatile *pu16_cur_tmr3 = (unsigned short volatile *)&(u8_cur_tmr3_dr[0]);
 
-  unsigned int             u24_ticks_to_wait ;
-  unsigned int             u24_ticks_waited = 0 ;
+  unsigned int             u24_ticks_to_wait;
+  unsigned int             u24_ticks_waited = 0;
 
   // Store TMR3 value first, for highest accuracy
-  u8_old_tmr3_dr[0] = TMR3_DR_L ; // Read the lower byte first, this will also latch the higher byte
-  u8_old_tmr3_dr[1] = TMR3_DR_H ; // Read the latched higher byte
+  u8_old_tmr3_dr[0] = TMR3_DR_L; // Read the lower byte first, this will also latch the higher byte
+  u8_old_tmr3_dr[1] = TMR3_DR_H; // Read the latched higher byte
 
   // Ticks-per-us is 12.5. To keep the 0.5, we use ticks-per-10us which is 125.
   // To calculate the proper nr of ticks to wait, the delay must be multiplied
   // by 10 too.
-  u24_ticks_to_wait = (delay_us * TICKS_PER_10_US) / 10 ;
+  u24_ticks_to_wait = (delay_us * TICKS_PER_10_US) / 10;
 
   while (u24_ticks_waited < u24_ticks_to_wait)
   {
     // Fetch the current TMR3 value
-    u8_cur_tmr3_dr[0] = TMR3_DR_L ; // Read the lower byte first, this will also latch the higher byte
-    u8_cur_tmr3_dr[1] = TMR3_DR_H ; // Read the latched higher byte
+    u8_cur_tmr3_dr[0] = TMR3_DR_L; // Read the lower byte first, this will also latch the higher byte
+    u8_cur_tmr3_dr[1] = TMR3_DR_H; // Read the latched higher byte
 
     // Check if the timer has decreased and if it rolled under
     if (*pu16_cur_tmr3 < *pu16_old_tmr3)
     {
       // Timer has decreased, just add the difference
-      u24_ticks_waited += (*pu16_old_tmr3 - *pu16_cur_tmr3) ;
+      u24_ticks_waited += (*pu16_old_tmr3 - *pu16_cur_tmr3);
     }
     else if (*pu16_cur_tmr3 > *pu16_old_tmr3)
     {
       // Timer has rolled under.
-      u24_ticks_waited += *pu16_old_tmr3 + (TMR3_RELOAD_VALUE - *pu16_cur_tmr3) ;
+      u24_ticks_waited += *pu16_old_tmr3 + (TMR3_RELOAD_VALUE - *pu16_cur_tmr3);
     }
 
-    *pu16_old_tmr3 = *pu16_cur_tmr3 ;
+    *pu16_old_tmr3 = *pu16_cur_tmr3;
   }
 
-  return ;
+  return;
 }
+#endif
 
 
 /******************************************************************************/
 /* Local Implementations						      */
 /******************************************************************************/
 
-static void getticks (unsigned char * const currTicks)
+static void getticks (struct timer * const ticks)
 /******************************************************************************/
 /* Function:	getticks:						      */
 /*		- Fetch current ticks accurately, without stopping the timer  */
@@ -405,7 +389,8 @@ static void getticks (unsigned char * const currTicks)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	volatile unsigned char		tempByte ;
+	volatile unsigned char	temp;
+	unsigned char		*bytes = (unsigned char *)ticks;
 
 	/* To prevent a roll-over while reading the separate bytes, we could
 	 * disable the interrupts, but this would reduce the ticks accuracy.
@@ -414,28 +399,24 @@ static void getticks (unsigned char * const currTicks)
 	{
 		/* Temporarilly store the first roll-over dependent byte
 		 * directly from the running clock */
-		tempByte = TMR1H ;
+		temp = TMR1H;
 
-		currTicks[0] = TMR1L;
-		currTicks[2] = ticks[0];
-		currTicks[3] = ticks[1];
-		currTicks[4] = ticks[2];
-		currTicks[5] = ticks[3];
-		currTicks[1] = TMR1H;
-		// Copy the contents from the running clock into the return buffer
-		*currTicks_ptr = t_currentTicks ;
-		
-		// Check if the Least Significant Byte has rolled over during this operation,
-		// having the incread a More Significant Byte and making the buffer invalid
-		} while (currTicks_ptr->u8_ticksByte[1] != tempByte) ;
-		
-		return ;
+		/* Copy the contents from the running clock into the return buffer */
+		ticks->overflows = overflows;
+		bytes[0] = TMR1L;
+		bytes[1] = TMR1H;
+
+		/* Check if the Least Significant Byte has rolled over during this
+		 * operation, having the incread a More Significant Byte and making
+		 * the buffer invalid */
+	} while (bytes[1] != temp);
+
+	return;
 }
-// End: TMR_CurrentTicks
-#endif
+// End: getticks
 
 
-void interrupt timer1_isr (void)
+static void interrupt timer1_isr (void)
 /******************************************************************************/
 /* Function:	Timer 1 interrupt service routine:			      */
 /*		- Each interrupt will increment the 32-bit ticks counter.     */
@@ -443,22 +424,8 @@ void interrupt timer1_isr (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-//	unsigned char	index = 0;
-
-test++;
-PORTC = test & 0x01;
-
-//TMR1H = 0xF6;
-//TMR1L = 0x3F;
-
-	/* There's a neater way to increase the counter, but this is the
-	   quickst. Since this occurs ever 10 millisecond, at we only have
-	   4 MHz, we'll go for the quickest sollution. */
-//	while (!++ticks[index]) {
-//		if (++index >= (NR_OF_TICK_BYTES - 2)) {
-//			/* Reset! */
-//		}
-//	}
+	/* Increase the number of timer overflows */
+	overflows++;
 
 	/* Reset the interrupt */
 	TMR1IF = 0;
