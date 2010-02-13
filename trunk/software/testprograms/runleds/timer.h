@@ -8,16 +8,6 @@
 #ifndef TIMER_H				/* Include file already compiled? */
 #define TIMER_H
 
-#ifdef TIMER_C				/* Compiled in timer.C? */
-#define extern
-#else
-#ifdef __cplusplus			/* Compiled for C++? */
-#define extern extern "C"
-#else
-#define extern extern
-#endif // __cplusplus
-#endif // TIMER_C
-
 #define KHZ		(1000UL)
 #define MHZ		(1000UL * (KHZ))
 #define FOSC		(4UL * MHZ)		/* Crystal frequency */
@@ -32,7 +22,7 @@ struct timer {
 };
 
 void		timer_init		(void) ;
-
+void		timer_isr		(void) ;
 void		timer_term		(void) ;
 
 void		settimeout		(struct timer		* const timer_p,
@@ -43,11 +33,11 @@ void		PostponeTimeout		(struct timer		* const timer_p,
 
 void		ExpireTimeout		(struct timer		* const timer_p) ;
 
-void		NeverTimeout		(struct timer		* const timer_p) ;
+void		timeoutnever		(struct timer		* const timer_p) ;
 
 unsigned char	timeoutexpired		(struct timer	 const	* const timer_p) ;
 
-void		SetTimeStamp		(struct timer		* const timer_p) ;
+void		gettimestamp		(struct timer		* const ticks) ;
 
 unsigned long	TimeStampAge		(struct timer	 const	* const timer_p) ;
 

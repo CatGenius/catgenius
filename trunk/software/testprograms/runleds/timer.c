@@ -6,22 +6,19 @@
 /* History :	10 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
-#define TIMER_C
-
 #include <htc.h>
 
 #include "timer.h"
 
 
 /******************************************************************************/
-// Global Data								      */
+/* Macros								      */
 /******************************************************************************/
 
-//union timecalc
-//{
-//	unsigned char		ticksByte[sizeof(struct timer)];
-//	struct timer		ticksValues;
-//} ;
+
+/******************************************************************************/
+/* Global Data								      */
+/******************************************************************************/
 
 static unsigned long		overflows	= 0;
 
@@ -29,9 +26,6 @@ static unsigned long		overflows	= 0;
 /******************************************************************************/
 /* Local Prototypes							      */
 /******************************************************************************/
-
-static void interrupt		timer1_isr	(void);
-static void			getticks	(struct timer	* const ticks);
 
 
 /******************************************************************************/
@@ -62,10 +56,8 @@ void timer_init (void)
 	TMR1ON = 1;
 	/* Enable timer 1 interrupt */
 	TMR1IE = 1;
-
-	return;
 }
-// End: timer_init
+/* End: timer_init */
 
 
 void timer_term (void)
@@ -78,10 +70,8 @@ void timer_term (void)
 {
 	TMR1IE = 0;		/* Disable timer interrupt */
 	TMR1ON = 0;		/* Stop timer1 */
-
-	return;
 }
-// End: timer_term
+/* End: timer_term */
 
 
 void settimeout (struct timer	* const timer_p,
@@ -100,7 +90,7 @@ void settimeout (struct timer	* const timer_p,
 	} *longshort = timer_p;
 
 	/* Fetch the current time */
-	getticks(timer_p);
+	gettimestamp(timer_p);
 
 	/* If no timeout is required, we're done */
 	if (!timout)
@@ -115,13 +105,11 @@ void settimeout (struct timer	* const timer_p,
 	/* Carry an overflow to the most significant part */
 	if (longshort->ls_longTicks <= tempLongTicks)
 		longshort->ms_shortTicks++;
-
-	return;
 }
-// End: settimeout
+/* End: settimeout */
+
 
 #if 0
-
 void TMR_PostponeTimeout (struct timer * const timer_p,
                           unsigned long      const postpone)
 ////////////////////////////////////////////////////////////////////////////////
@@ -149,49 +137,35 @@ void TMR_PostponeTimeout (struct timer * const timer_p,
   return;
 }
 // End: TMR_PosponeTimeout
-
-
-void TMR_ExpireTimeout (struct timer * const timer_p)
-////////////////////////////////////////////////////////////////////////////////
-// Function:       TMR_ExpireTimeout                                          //
-//                 - Make the given timeout expire unconditionally            //
-// History :       24 Jul 2004 by R. Delien:                                  //
-//                 - Initial revision.                                        //
-////////////////////////////////////////////////////////////////////////////////
-{
-  unsigned char cntr;
-
-  // Set timeout time to 0 by clearing all bytes
-  for (cntr = 0; cntr < sizeof(struct timer); cntr ++)
-  {
-    timer_p->u8_ticksByte[cntr] = 0x00;
-  }
-
-  return;
-}
-// End: TMR_ExpireTimeout
-
-
-void TMR_NeverTimeout (struct timer * const timer_p)
-////////////////////////////////////////////////////////////////////////////////
-// Function:       TMR_NeverTimeout                                           //
-//                 - Prevent the given timeout to expire, ever                //
-// History :       24 Jul 2004 by R. Delien:                                  //
-//                 - Initial revision.                                        //
-////////////////////////////////////////////////////////////////////////////////
-{
-  unsigned char cntr;
-
-  // Set timeout time to 'nearly' infinite (>584942417 year)
-  for (cntr = 0; cntr < sizeof(struct timer); cntr ++)
-  {
-    timer_p->u8_ticksByte[cntr] = 0xFF;
-  }
-
-  return;
-}
-// End: TMR_NeverTimeout
 #endif
+
+
+void timeoutnow (struct timer * const timer_p)
+/******************************************************************************/
+/* Function:	timeoutnow						      */
+/*		- Expire the given timer immediately			      */
+/* History :	13 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
+{
+	timer_p->timer1    = 0x0000;
+	timer_p->overflows = 0x00000000;
+}
+/* End: timeoutnow */
+
+
+void timeoutnever (struct timer * const timer_p)
+/******************************************************************************/
+/* Function:	timeoutnever						      */
+/*		- Make sure the given timer will not expire anymore	      */
+/* History :	13 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
+{
+	timer_p->timer1    = 0xFFFF;
+	timer_p->overflows = 0xFFFFFFFF;
+}
+/* End: timeoutnever */
 
 
 unsigned char timeoutexpired (struct timer const * const timer_p)
@@ -205,7 +179,7 @@ unsigned char timeoutexpired (struct timer const * const timer_p)
 	struct timer	currentTime;
 
 	/* Fetch the current time */
-	getticks (&currentTime);
+	gettimestamp (&currentTime);
 
 	if (currentTime.overflows == timer_p->overflows)
 		if (currentTime.timer1 >= timer_p->timer1)
@@ -218,25 +192,43 @@ unsigned char timeoutexpired (struct timer const * const timer_p)
 		else
 			return 0;
 }
-// End: timeoutexpired
+/* End: timeoutexpired */
+
+
+void gettimestamp (struct timer * const ticks)
+/******************************************************************************/
+/* Function:	gettimestamp:						      */
+/*		- Fetch current ticks accurately, without stopping the timer  */
+/* History :	10 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
+{
+	volatile unsigned char	temp;
+	unsigned char		*bytes = (unsigned char *)ticks;
+
+	/* To prevent a roll-over while reading the separate bytes, we could
+	 * disable the interrupts, but this would reduce the ticks accuracy.
+	 * That's why we use a trick: */
+	do
+	{
+		/* Temporarilly store the first roll-over dependent byte
+		 * directly from the running clock */
+		temp = TMR1H;
+
+		/* Copy the contents from the running clock into the return buffer */
+		ticks->overflows = overflows;
+		bytes[0] = TMR1L;
+		bytes[1] = TMR1H;
+
+		/* Check if the Least Significant Byte has rolled over during this
+		 * operation, having the incread a More Significant Byte and making
+		 * the buffer invalid */
+	} while (bytes[1] != temp);
+}
+/* End: gettimestamp */
+
 
 #if 0
-void TMR_SetTimeStamp (struct timer * const pt_timestamp)
-////////////////////////////////////////////////////////////////////////////////
-// Function:       TMR_SetTimeStamp                                           //
-//                 - Check if a given timeout has expired                     //
-// History :       24 Jul 2004 by R. Delien:                                  //
-//                 - Initial revision.                                        //
-////////////////////////////////////////////////////////////////////////////////
-{
-  // Fetch the current time
-  getticks (pt_timestamp);
-
-  return;
-}
-// End: TMR_SetTimeStamp
-
-
 unsigned long TMR_TimeStampAge (struct timer const * const pt_timestamp)
 ////////////////////////////////////////////////////////////////////////////////
 // Function:       TMR_TimeStampAge                                           //
@@ -250,7 +242,7 @@ unsigned long TMR_TimeStampAge (struct timer const * const pt_timestamp)
   struct timer    currentTime;
 
   // Fetch the current time
-  getticks (&currentTime);
+  gettimestamp (&currentTime);
 
   // Check Most Significant Short for future time stamps
   if (currentTime.t_ticksCalc.u16_msShort >= pt_timestamp->t_ticksCalc.u16_msShort)
@@ -381,42 +373,7 @@ void TMR_MicroDelay (unsigned short const delay_us)
 /* Local Implementations						      */
 /******************************************************************************/
 
-static void getticks (struct timer * const ticks)
-/******************************************************************************/
-/* Function:	getticks:						      */
-/*		- Fetch current ticks accurately, without stopping the timer  */
-/* History :	10 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-	volatile unsigned char	temp;
-	unsigned char		*bytes = (unsigned char *)ticks;
-
-	/* To prevent a roll-over while reading the separate bytes, we could
-	 * disable the interrupts, but this would reduce the ticks accuracy.
-	 * That's why we use a trick: */
-	do
-	{
-		/* Temporarilly store the first roll-over dependent byte
-		 * directly from the running clock */
-		temp = TMR1H;
-
-		/* Copy the contents from the running clock into the return buffer */
-		ticks->overflows = overflows;
-		bytes[0] = TMR1L;
-		bytes[1] = TMR1H;
-
-		/* Check if the Least Significant Byte has rolled over during this
-		 * operation, having the incread a More Significant Byte and making
-		 * the buffer invalid */
-	} while (bytes[1] != temp);
-
-	return;
-}
-// End: getticks
-
-
-static void interrupt timer1_isr (void)
+void timer_isr (void)
 /******************************************************************************/
 /* Function:	Timer 1 interrupt service routine:			      */
 /*		- Each interrupt will increment the 32-bit ticks counter.     */
@@ -426,10 +383,5 @@ static void interrupt timer1_isr (void)
 {
 	/* Increase the number of timer overflows */
 	overflows++;
-
-	/* Reset the interrupt */
-	TMR1IF = 0;
-
-	return;
 }
 /* End: timer1_isr */
