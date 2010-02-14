@@ -102,17 +102,17 @@ static void interrupt isr (void)
 		/* Reset interrupt */
 		INTF = 0;
 		/* Handle interrupt */
-		startbutton_isr();
+//		startbutton_isr();
 	}
 	if (RBIF) {
 		unsigned char	PORTB_diff = PORTB ^ PORTB_old;
 		/* Reset interrupt */
 		RBIF = 0;
 		/* Handle interrupt */
-		if (PORTB_diff & 0x10)
-			catsensor_isr();
-		if (PORTB_diff & 0x20)
-			setupbutton_isr();
+//		if (PORTB_diff & 0x10)
+//			catsensor_isr();
+//		if (PORTB_diff & 0x20)
+//			setupbutton_isr();
 		PORTB_old = PORTB ;
 	}
 }
