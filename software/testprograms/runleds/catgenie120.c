@@ -16,7 +16,7 @@
 /* Macros								      */
 /******************************************************************************/
 
-#define BIT(n)		(1U << (n))	/* Bit mask for bit 'n' */
+#define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
 
 #define TRISx0_OUT		(0 << 0)
 #define TRISx0_IN		(1 << 0)
@@ -35,49 +35,67 @@
 #define TRISx7_OUT		(0 << 7)
 #define TRISx7_IN		(1 << 7)
 
+/* Buttons */
 #define STARTBUTTON_PORT	PORTB
-#define STARTBUTTON_BIT		(1 << 0)
+#define STARTBUTTON_MASK	BIT(0)
 #define SETUPBUTTON_PORT	PORTB
-#define SETUPBUTTON_BIT		(1 << 5)
+#define SETUPBUTTON_MASK	BIT(5)
 #define CATSENSOR_PORT		PORTB
-#define CATSENSOR_BIT		(1 << 4)
+#define CATSENSOR_MASK		BIT(4)
 
+/* Indicators */
 #define BEEPER_PORT		PORTC
 #define BEEPER_MASK		BIT(1)
 #define LED_ERROR_PORT		PORTC
 #define LED_ERROR_MASK		BIT(0)
-#define LED_LOCK_PORT		PORTE
-#define LED_LOCK_MASK		BIT(2)
+#define LED_LOCKED_PORT		PORTE
+#define LED_LOCKED_MASK		BIT(2)
 #define LED_CARTRIDGE_PORT	PORTE
 #define LED_CARTRIDGE_MASK	BIT(0)
 #define LED_CAT_PORT		PORTE
 #define LED_CAT_MASK		BIT(1)
 
+/* Actuators */
+
+/* Debouncers */
 #define BUTTON_DEBOUNCE		(SECOND/20)	/* 50ms */
 #define CATSENSOR_DEBOUNCE	(SECOND)	/* 1000ms */
+#define DEBOUNCER_BUTTON_START	0
+#define DEBOUNCER_BUTTON_SETUP	1
+#define DEBOUNCER_SENSOR_CAT	2
+#define DEBOUNCER_MAX		3
 
+/* Pacers */
 #define PACER_BITTIME		(SECOND/5)	/* 200ms */
 #define PACER_BEEPER		0
 #define PACER_LED_ERROR		1
-#define PACER_LED_LOCK		2
+#define PACER_LED_LOCKED	2
 #define PACER_LED_CARTRIDGE	3
 #define PACER_LED_CAT		4
 #define PACER_MAX		5
+
 
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
 
-static struct timer	startbutton_debounce = {0xFFFF, 0xFFFFFFFF};
-static struct timer	setupbutton_debounce = {0xFFFF, 0xFFFFFFFF};
-static struct timer	catsensor_debounce   = {0xFFFF, 0xFFFFFFFF};
-static unsigned char	startbutton_state = 0;
-static unsigned char	setupbutton_state = 0;
-static unsigned char	catsensor_state = 0;
+struct debouncer {
+	struct timer	timer;
+	unsigned long	timeout;
+	unsigned char	state;
+	volatile char	*port;
+	unsigned char	port_mask;
+}
+static struct debouncer	debouncers[DEBOUNCER_MAX] = {
+	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,    0, &STARTBUTTON_PORT, STARTBUTTON_MASK},
+	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,    0, &SETUPBUTTON_PORT, SETUPBUTTON_MASK},
+	{{0xFFFF, 0xFFFFFFFF}, CATSENSOR_DEBOUNCE, 0, &CATSENSOR_PORT,   CATSENSOR_MASK}
+};
 
 struct pacer {
-	struct timer	bit_timer;
-	unsigned char	bit_mask;
+	struct timer	timer;
+/*	unsigned long	timeout;*/
+	unsigned char	mask;
 	unsigned char	pattern;
 	unsigned char	repeat;
 	volatile char	*port;
@@ -85,10 +103,10 @@ struct pacer {
 }
 static struct pacer	pacers[PACER_MAX] = {
 	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &BEEPER_PORT,        BEEPER_MASK},
-	{{0x0000, 0x00000000}, 0x01, 0x0F, 1, &LED_ERROR_PORT,     LED_ERROR_MASK},
-	{{0x0000, 0x00000000}, 0x01, 0x05, 1, &LED_LOCK_PORT,      LED_LOCK_MASK},
-	{{0x0000, 0x00000000}, 0x01, 0x50, 1, &LED_CARTRIDGE_PORT, LED_CARTRIDGE_MASK},
-	{{0x0000, 0x00000000}, 0x01, 0x0A, 1, &LED_CAT_PORT,       LED_CAT_MASK}
+	{{0x0000, 0x00000000}, 0x01, 0x55, 1, &LED_ERROR_PORT,     LED_ERROR_MASK},
+	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &LED_LOCKED_PORT,    LED_LOCKED_MASK},
+	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &LED_CARTRIDGE_PORT, LED_CARTRIDGE_MASK},
+	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &LED_CAT_PORT,       LED_CAT_MASK}
 };
 
 
@@ -109,6 +127,8 @@ void init_catgenie (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	unsigned char	index ;
+
 	/*
 	 * Setup port A
 	 */
@@ -176,9 +196,12 @@ void init_catgenie (void)
 		TRISx2_OUT ;	/* LED Child Lock */
 	PORTE = 0x00;
 
-	startbutton_state = STARTBUTTON_PORT & STARTBUTTON_BIT;
-	setupbutton_state = SETUPBUTTON_PORT & SETUPBUTTON_BIT;
-	catsensor_state = CATSENSOR_PORT & CATSENSOR_BIT;
+	/* Copy the initial states into the debouncer states */
+	for (index = 0; index < DEBOUNCER_MAX; index++) {
+		unsigned char	tempmask = debouncers[index].port_mask; /* for compiler limitations */
+
+		debouncers[index].state = *debouncers[index].port & tempmask;
+	}
 }
 /* End: init_catgenie */
 
@@ -193,46 +216,35 @@ void do_catgenie (void)
 {
 	unsigned char	index ;
 
-	/* Handle the debounced Start/Pause button */
-	if (timeoutexpired(&startbutton_debounce)) {
-		timeoutnever(&startbutton_debounce);
-		/* Check if the button state changed */
-		if ((STARTBUTTON_PORT & STARTBUTTON_BIT) != startbutton_state) {
+	/* Execute the debouncers */
+	for (index = 0; index < DEBOUNCER_MAX; index++)
+		if (timeoutexpired(&debouncers[index].timer)) {
+			unsigned char	tempstate = *debouncers[index].port; /* for compiler limitations */
+			tempstate &= debouncers[index].port_mask;
+			/* Check if the button state changed */
+			if (tempstate != debouncers[index].state) {
+				set_Beeper(1,0);
 
-			startbutton_state = STARTBUTTON_PORT & STARTBUTTON_BIT;
+				debouncers[index].state = tempstate;
+			}
+			timeoutnever(&debouncers[index].timer);
 		}
-	}
-	/* Handle the debounced Auto setup button */
-	if (timeoutexpired(&setupbutton_debounce)) {
-		timeoutnever(&setupbutton_debounce);
-		/* Check if the button state changed */
-		if ((SETUPBUTTON_PORT & SETUPBUTTON_BIT) != setupbutton_state) {
-			set_Beeper(1,0);
-			setupbutton_state = SETUPBUTTON_PORT & SETUPBUTTON_BIT;
-		}
-	}
-	/* Handle the debounced cat sensor */
-	if (timeoutexpired(&catsensor_debounce)) {
-		timeoutnever(&catsensor_debounce);
-		if ((CATSENSOR_PORT & CATSENSOR_BIT) != catsensor_state) {
 
-			catsensor_state = CATSENSOR_PORT & CATSENSOR_BIT;
-		}
-	}
 	/* Execute the pacers */
 	for (index = 0; index < PACER_MAX; index++)
-		if (timeoutexpired(&pacers[index].bit_timer)) {
-			unsigned char tempmask = pacers[index].bit_mask;
+		if (timeoutexpired(&pacers[index].timer)) {
+			unsigned char	tempmask = pacers[index].mask; /* for compiler limitations */
+
 			/* Set a time for the next execution time */
-			settimeout(&pacers[index].bit_timer, PACER_BITTIME);
+			settimeout(&pacers[index].timer, PACER_BITTIME);
 			/* Copy the current pattern bit to the beeper */
 			if (pacers[index].pattern & tempmask)
 				*pacers[index].port |= pacers[index].port_mask;
 			else
 				*pacers[index].port &= ~pacers[index].port_mask;
 			/* Update the current bit */
-			if (!(pacers[index].bit_mask <<= 1)) {
-				pacers[index].bit_mask = 1;
+			if (!(pacers[index].mask <<= 1)) {
+				pacers[index].mask = 1;
 				/* Clear the pattern if repeat is not selected */
 				if (!pacers[index].repeat)
 					pacers[index].pattern = 0;
@@ -260,7 +272,8 @@ void startbutton_isr (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	settimeout(&startbutton_debounce, BUTTON_DEBOUNCE);
+	settimeout(&debouncers[DEBOUNCER_BUTTON_START].timer,
+		   debouncers[DEBOUNCER_BUTTON_START].timeout);
 }
 /* startbutton_isr */
 
@@ -273,7 +286,8 @@ void setupbutton_isr (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	settimeout(&setupbutton_debounce, BUTTON_DEBOUNCE);
+	settimeout(&debouncers[DEBOUNCER_BUTTON_SETUP].timer,
+		   debouncers[DEBOUNCER_BUTTON_SETUP].timeout);
 }
 /* setupbutton_isr */
 
@@ -286,7 +300,8 @@ void catsensor_isr (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	settimeout(&setupbutton_debounce, CATSENSOR_DEBOUNCE);
+	settimeout(&debouncers[DEBOUNCER_SENSOR_CAT].timer,
+		   debouncers[DEBOUNCER_SENSOR_CAT].timeout);
 }
 /* catsensor_isr */
 
@@ -321,42 +336,50 @@ void set_LED (unsigned char led, unsigned char on)
 	}
 }
 
-void set_LED_Error (unsigned char on)
+void set_LED_Error (unsigned char pattern, unsigned char repeat)
 {
-	if (on)
-		PORTC |= BIT(0);
-	else
-		PORTC &= ~BIT(0);
+	/* Reset the mask to the first bit */
+	pacers[PACER_LED_ERROR].mask = 0x01;
+	/* Copy the beep pattern */
+	pacers[PACER_LED_ERROR].pattern = pattern;
+	/* Copy the repeat flag */
+	pacers[PACER_LED_ERROR].repeat = repeat;
 }
 
-void set_LED_Cartridge (unsigned char on)
+void set_LED_Locked (unsigned char pattern, unsigned char repeat)
 {
-	if (on)
-		PORTE |= BIT(0);
-	else
-		PORTE &= ~BIT(0);
+	/* Reset the mask to the first bit */
+	pacers[PACER_LED_LOCKED].mask = 0x01;
+	/* Copy the beep pattern */
+	pacers[PACER_LED_LOCKED].pattern = pattern;
+	/* Copy the repeat flag */
+	pacers[PACER_LED_LOCKED].repeat = repeat;
 }
 
-void set_LED_Cat (unsigned char on)
+void set_LED_Cartridge (unsigned char pattern, unsigned char repeat)
 {
-	if (on)
-		PORTE |= BIT(1);
-	else
-		PORTE &= ~BIT(1);
+	/* Reset the mask to the first bit */
+	pacers[PACER_LED_CARTRIDGE].mask = 0x01;
+	/* Copy the beep pattern */
+	pacers[PACER_LED_CARTRIDGE].pattern = pattern;
+	/* Copy the repeat flag */
+	pacers[PACER_LED_CARTRIDGE].repeat = repeat;
 }
 
-void set_LED_Locked (unsigned char on)
+void set_LED_Cat (unsigned char pattern, unsigned char repeat)
 {
-	if (on)
-		PORTE |= BIT(2);
-	else
-		PORTE &= ~BIT(2);
+	/* Reset the mask to the first bit */
+	pacers[PACER_LED_CAT].mask = 0x01;
+	/* Copy the beep pattern */
+	pacers[PACER_LED_CAT].pattern = pattern;
+	/* Copy the repeat flag */
+	pacers[PACER_LED_CAT].repeat = repeat;
 }
 
 void set_Beeper (unsigned char pattern, unsigned char repeat)
 {
 	/* Reset the mask to the first bit */
-	pacers[PACER_BEEPER].bit_mask = 0x01;
+	pacers[PACER_BEEPER].mask = 0x01;
 	/* Copy the beep pattern */
 	pacers[PACER_BEEPER].pattern = pattern;
 	/* Copy the repeat flag */

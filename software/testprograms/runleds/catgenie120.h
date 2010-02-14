@@ -18,10 +18,14 @@ void		catsensor_isr		(void) ;
 
 void		set_LED			(unsigned char led,
 					 unsigned char on);
-void		set_LED_Cat		(unsigned char on);
-void		set_LED_Error		(unsigned char on);
-void		set_LED_Cartridge	(unsigned char on);
-void		set_LED_Locked		(unsigned char on);
+void		set_LED_Cat		(unsigned char pattern,
+					 unsigned char repeat);
+void		set_LED_Error		(unsigned char pattern,
+					 unsigned char repeat);
+void		set_LED_Cartridge	(unsigned char pattern,
+					 unsigned char repeat);
+void		set_LED_Locked		(unsigned char pattern,
+					 unsigned char repeat);
 void		set_Beeper		(unsigned char pattern,
 					 unsigned char repeat) ;
 
