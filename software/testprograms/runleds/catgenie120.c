@@ -18,24 +18,36 @@
 
 #define BIT(n)		(1U << (n))	/* Bit mask for bit 'n' */
 
-#define TRISx0_OUT	(0 << 0)
-#define TRISx0_IN	(1 << 0)
-#define TRISx1_OUT	(0 << 1)
-#define TRISx1_IN	(1 << 1)
-#define TRISx2_OUT	(0 << 2)
-#define TRISx2_IN	(1 << 2)
-#define TRISx3_OUT	(0 << 3)
-#define TRISx3_IN	(1 << 3)
-#define TRISx4_OUT	(0 << 4)
-#define TRISx4_IN	(1 << 4)
-#define TRISx5_OUT	(0 << 5)
-#define TRISx5_IN	(1 << 5)
-#define TRISx6_OUT	(0 << 6)
-#define TRISx6_IN	(1 << 6)
-#define TRISx7_OUT	(0 << 7)
-#define TRISx7_IN	(1 << 7)
+#define TRISx0_OUT		(0 << 0)
+#define TRISx0_IN		(1 << 0)
+#define TRISx1_OUT		(0 << 1)
+#define TRISx1_IN		(1 << 1)
+#define TRISx2_OUT		(0 << 2)
+#define TRISx2_IN		(1 << 2)
+#define TRISx3_OUT		(0 << 3)
+#define TRISx3_IN		(1 << 3)
+#define TRISx4_OUT		(0 << 4)
+#define TRISx4_IN		(1 << 4)
+#define TRISx5_OUT		(0 << 5)
+#define TRISx5_IN		(1 << 5)
+#define TRISx6_OUT		(0 << 6)
+#define TRISx6_IN		(1 << 6)
+#define TRISx7_OUT		(0 << 7)
+#define TRISx7_IN		(1 << 7)
 
-#define DEBOUNCE	(SECOND/20)	/* 50ms */
+#define STARTBUTTON_PORT	PORTB
+#define STARTBUTTON_BIT		(1 << 0)
+#define SETUPBUTTON_PORT	PORTB
+#define SETUPBUTTON_BIT		(1 << 5)
+#define CATSENSOR_PORT		PORTB
+#define CATSENSOR_BIT		(1 << 4)
+#define BEEPER_PORT		PORTC
+#define BEEPER_BIT		(1 << 1)
+
+
+#define BEEPBITTIME		(SECOND/10)	/* 100ms */
+#define BUTTON_DEBOUNCE		(SECOND/20)	/* 50ms */
+#define CATSENSOR_DEBOUNCE	(SECOND)	/* 1000ms */
 
 /******************************************************************************/
 /* Global Data								      */
@@ -44,7 +56,14 @@
 static struct timer	startbutton_debounce = {0xFFFF, 0xFFFFFFFF};
 static struct timer	setupbutton_debounce = {0xFFFF, 0xFFFFFFFF};
 static struct timer	catsensor_debounce   = {0xFFFF, 0xFFFFFFFF};
+static unsigned char	startbutton_state = 0;
+static unsigned char	setupbutton_state = 0;
+static unsigned char	catsensor_state = 0;
 
+static struct timer	beeper_pacer		= {0x0000, 0x00000000};
+static unsigned char	beep_bitmask		= 0x01;
+static unsigned char	beep_pattern		= 0x00;
+static unsigned char	beep_repeat		= 0;
 
 /******************************************************************************/
 /* Local Prototypes							      */
@@ -87,7 +106,7 @@ void init_catgenie (void)
 		TRISx6_IN  |	/* PGM Clock */
 		TRISx7_IN  ;	/* PGM Data */
 	PORTB = 0x00;
-	/* Turn on all internal weak pull-up resitors */
+	/* Turn on internal weak pull-up resitors on inputs */
 	RBPU = 0;
 	/* Clear the interrupt status */
 	INTF = 0;
@@ -142,23 +161,46 @@ void do_catgenie (void)
 /******************************************************************************/
 {
 	/* Handle the debounced Start/Pause button */
-	if (&startbutton_debounce) {
+	if (timeoutexpired(&startbutton_debounce)) {
 		timeoutnever(&startbutton_debounce);
-		if (PORTB & 0x01) {
+		/* Check if the button state changed */
+		if ((STARTBUTTON_PORT & STARTBUTTON_BIT) != startbutton_state) {
+
+			startbutton_state = STARTBUTTON_PORT & STARTBUTTON_BIT;
 		}
 	}
 	/* Handle the debounced Auto setup button */
-	if (&setupbutton_debounce) {
+	if (timeoutexpired(&setupbutton_debounce)) {
 		timeoutnever(&setupbutton_debounce);
-		if (PORTB & 0x20)
-			set_LED_Locked(1) ;
-		else
-			set_LED_Locked(0) ;
+		/* Check if the button state changed */
+		if ((SETUPBUTTON_PORT & SETUPBUTTON_BIT) != setupbutton_state) {
+			set_Beeper(1,0);
+			setupbutton_state = SETUPBUTTON_PORT & SETUPBUTTON_BIT;
+		}
 	}
 	/* Handle the debounced cat sensor */
-	if (&catsensor_debounce) {
+	if (timeoutexpired(&catsensor_debounce)) {
 		timeoutnever(&catsensor_debounce);
-		if (PORTB & 0x10) {
+		if ((CATSENSOR_PORT & CATSENSOR_BIT) != catsensor_state) {
+
+			catsensor_state = CATSENSOR_PORT & CATSENSOR_BIT;
+		}
+	}
+	/* Execute the beeper pacer */
+	if (timeoutexpired(&beeper_pacer)) {
+		/* Set a time for the next execution time */
+		settimeout(&beeper_pacer, BEEPBITTIME);
+		/* Copy the current pattern bit to the beeper */
+		if (beep_pattern & beep_bitmask)
+			BEEPER_PORT |= BEEPER_BIT;
+		else
+			BEEPER_PORT &= ~BEEPER_BIT;
+		/* Update the current bit */
+		if (!(beep_bitmask <<= 1)) {
+			beep_bitmask = 1;
+			/* Clear the pattern if repeat is not selected */
+			if (!beep_repeat)
+				beep_pattern = 0;
 		}
 	}
 }
@@ -183,7 +225,7 @@ void startbutton_isr (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	settimeout(&startbutton_debounce, DEBOUNCE);
+	settimeout(&startbutton_debounce, BUTTON_DEBOUNCE);
 }
 /* startbutton_isr */
 
@@ -196,7 +238,7 @@ void setupbutton_isr (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	settimeout(&setupbutton_debounce, DEBOUNCE);
+	settimeout(&setupbutton_debounce, BUTTON_DEBOUNCE);
 }
 /* setupbutton_isr */
 
@@ -209,6 +251,7 @@ void catsensor_isr (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	settimeout(&setupbutton_debounce, CATSENSOR_DEBOUNCE);
 }
 /* catsensor_isr */
 
@@ -275,12 +318,14 @@ void set_LED_Locked (unsigned char on)
 		PORTE &= ~BIT(2);
 }
 
-void set_Beeper (unsigned char on)
+void set_Beeper (unsigned char pattern, unsigned char repeat)
 {
-	if (on)
-		PORTC |= BIT(1);
-	else
-		PORTC &= ~BIT(1);
+	/* Reset the mask to the first bit */
+	beep_bitmask = 0x01;
+	/* Copy the beep pattern */
+	beep_pattern = pattern;
+	/* Copy the repeat flag */
+	beep_repeat = repeat;
 }
 
 /******************************************************************************/

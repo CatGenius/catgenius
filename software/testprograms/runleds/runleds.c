@@ -1,15 +1,47 @@
+/******************************************************************************/
+/* File    :	runleds.c						      */
+/* Function:	CatGenie test program					      */
+/* Author  :	Robert Delien						      */
+/*		Copyright (C) 2010, Clockwork Engineering		      */
+/* History :	12 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
 #include <htc.h>
 
 #include "timer.h"
 #include "catgenie120.h"
 
+
+/******************************************************************************/
+/* Macros								      */
+/******************************************************************************/
+
 __CONFIG(XT & WDTDIS & PWRTEN & BOREN & LVPDIS & DPROT & WRTEN & PROTECT);
 //__CONFIG(XT & WDTEN & PWRTEN & BOREN & LVPDIS & DPROT & WRTEN & PROTECT);
 
+#define NO_INTERRUPTS
+
+
+/******************************************************************************/
+/* Global Data								      */
+/******************************************************************************/
 
 static unsigned char	PORTB_old;
 static unsigned char	test		= 0;
 
+
+/******************************************************************************/
+/* Local Prototypes							      */
+/******************************************************************************/
+
+#ifdef NO_INTERRUPTS
+static void isr (void);
+#endif /* NO_INTERRUPTS */
+
+
+/******************************************************************************/
+/* Global Implementations						      */
+/******************************************************************************/
 
 void init (void)
 {
@@ -26,7 +58,7 @@ void init (void)
 	PEIE = 1;
 
 	/* Enable interrupts */
-	GIE = 1;
+//	GIE = 1;
 }
 
 void main (void)
@@ -41,6 +73,10 @@ void main (void)
 
 	/* Execute the run loop */
 	for(;;){
+#ifdef NO_INTERRUPTS
+		isr();
+#endif /* NO_INTERRUPTS */
+
 		do_catgenie();
 		if (timeoutexpired(&test_timer))
 		{
@@ -51,7 +87,16 @@ void main (void)
 	}
 }
 
+
+/******************************************************************************/
+/* Local Implementations						      */
+/******************************************************************************/
+
+#ifdef NO_INTERRUPTS
+static void isr (void)
+#else
 static void interrupt isr (void)
+#endif /* NO_INTERRUPTS */
 {
 	if (TMR1IF) {
 		/* Reset interrupt */
