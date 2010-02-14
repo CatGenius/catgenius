@@ -41,13 +41,28 @@
 #define SETUPBUTTON_BIT		(1 << 5)
 #define CATSENSOR_PORT		PORTB
 #define CATSENSOR_BIT		(1 << 4)
+
 #define BEEPER_PORT		PORTC
-#define BEEPER_BIT		(1 << 1)
+#define BEEPER_MASK		BIT(1)
+#define LED_ERROR_PORT		PORTC
+#define LED_ERROR_MASK		BIT(0)
+#define LED_LOCK_PORT		PORTE
+#define LED_LOCK_MASK		BIT(2)
+#define LED_CARTRIDGE_PORT	PORTE
+#define LED_CARTRIDGE_MASK	BIT(0)
+#define LED_CAT_PORT		PORTE
+#define LED_CAT_MASK		BIT(1)
 
-
-#define BEEPBITTIME		(SECOND/10)	/* 100ms */
 #define BUTTON_DEBOUNCE		(SECOND/20)	/* 50ms */
 #define CATSENSOR_DEBOUNCE	(SECOND)	/* 1000ms */
+
+#define PACER_BITTIME		(SECOND/5)	/* 200ms */
+#define PACER_BEEPER		0
+#define PACER_LED_ERROR		1
+#define PACER_LED_LOCK		2
+#define PACER_LED_CARTRIDGE	3
+#define PACER_LED_CAT		4
+#define PACER_MAX		5
 
 /******************************************************************************/
 /* Global Data								      */
@@ -60,10 +75,22 @@ static unsigned char	startbutton_state = 0;
 static unsigned char	setupbutton_state = 0;
 static unsigned char	catsensor_state = 0;
 
-static struct timer	beeper_pacer		= {0x0000, 0x00000000};
-static unsigned char	beep_bitmask		= 0x01;
-static unsigned char	beep_pattern		= 0x00;
-static unsigned char	beep_repeat		= 0;
+struct pacer {
+	struct timer	bit_timer;
+	unsigned char	bit_mask;
+	unsigned char	pattern;
+	unsigned char	repeat;
+	volatile char	*port;
+	unsigned char	port_mask;
+}
+static struct pacer	pacers[PACER_MAX] = {
+	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &BEEPER_PORT,        BEEPER_MASK},
+	{{0x0000, 0x00000000}, 0x01, 0x0F, 1, &LED_ERROR_PORT,     LED_ERROR_MASK},
+	{{0x0000, 0x00000000}, 0x01, 0x05, 1, &LED_LOCK_PORT,      LED_LOCK_MASK},
+	{{0x0000, 0x00000000}, 0x01, 0x50, 1, &LED_CARTRIDGE_PORT, LED_CARTRIDGE_MASK},
+	{{0x0000, 0x00000000}, 0x01, 0x0A, 1, &LED_CAT_PORT,       LED_CAT_MASK}
+};
+
 
 /******************************************************************************/
 /* Local Prototypes							      */
@@ -148,6 +175,10 @@ void init_catgenie (void)
 		TRISx1_OUT |	/* LED Cat */
 		TRISx2_OUT ;	/* LED Child Lock */
 	PORTE = 0x00;
+
+	startbutton_state = STARTBUTTON_PORT & STARTBUTTON_BIT;
+	setupbutton_state = SETUPBUTTON_PORT & SETUPBUTTON_BIT;
+	catsensor_state = CATSENSOR_PORT & CATSENSOR_BIT;
 }
 /* End: init_catgenie */
 
@@ -160,6 +191,8 @@ void do_catgenie (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	unsigned char	index ;
+
 	/* Handle the debounced Start/Pause button */
 	if (timeoutexpired(&startbutton_debounce)) {
 		timeoutnever(&startbutton_debounce);
@@ -186,23 +219,25 @@ void do_catgenie (void)
 			catsensor_state = CATSENSOR_PORT & CATSENSOR_BIT;
 		}
 	}
-	/* Execute the beeper pacer */
-	if (timeoutexpired(&beeper_pacer)) {
-		/* Set a time for the next execution time */
-		settimeout(&beeper_pacer, BEEPBITTIME);
-		/* Copy the current pattern bit to the beeper */
-		if (beep_pattern & beep_bitmask)
-			BEEPER_PORT |= BEEPER_BIT;
-		else
-			BEEPER_PORT &= ~BEEPER_BIT;
-		/* Update the current bit */
-		if (!(beep_bitmask <<= 1)) {
-			beep_bitmask = 1;
-			/* Clear the pattern if repeat is not selected */
-			if (!beep_repeat)
-				beep_pattern = 0;
+	/* Execute the pacers */
+	for (index = 0; index < PACER_MAX; index++)
+		if (timeoutexpired(&pacers[index].bit_timer)) {
+			unsigned char tempmask = pacers[index].bit_mask;
+			/* Set a time for the next execution time */
+			settimeout(&pacers[index].bit_timer, PACER_BITTIME);
+			/* Copy the current pattern bit to the beeper */
+			if (pacers[index].pattern & tempmask)
+				*pacers[index].port |= pacers[index].port_mask;
+			else
+				*pacers[index].port &= ~pacers[index].port_mask;
+			/* Update the current bit */
+			if (!(pacers[index].bit_mask <<= 1)) {
+				pacers[index].bit_mask = 1;
+				/* Clear the pattern if repeat is not selected */
+				if (!pacers[index].repeat)
+					pacers[index].pattern = 0;
+			}
 		}
-	}
 }
 
 void term_catgenie (void)
@@ -321,11 +356,11 @@ void set_LED_Locked (unsigned char on)
 void set_Beeper (unsigned char pattern, unsigned char repeat)
 {
 	/* Reset the mask to the first bit */
-	beep_bitmask = 0x01;
+	pacers[PACER_BEEPER].bit_mask = 0x01;
 	/* Copy the beep pattern */
-	beep_pattern = pattern;
+	pacers[PACER_BEEPER].pattern = pattern;
 	/* Copy the repeat flag */
-	beep_repeat = repeat;
+	pacers[PACER_BEEPER].repeat = repeat;
 }
 
 /******************************************************************************/
