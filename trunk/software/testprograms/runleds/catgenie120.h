@@ -22,6 +22,7 @@ void		set_LED_Cat		(unsigned char on);
 void		set_LED_Error		(unsigned char on);
 void		set_LED_Cartridge	(unsigned char on);
 void		set_LED_Locked		(unsigned char on);
-void		set_Beeper		(unsigned char on);
+void		set_Beeper		(unsigned char pattern,
+					 unsigned char repeat) ;
 
 #endif /* CATGENIE120_C */
