@@ -78,12 +78,12 @@ void main (void)
 #endif /* NO_INTERRUPTS */
 
 		do_catgenie();
-		if (timeoutexpired(&test_timer))
-		{
-			settimeout(&test_timer, delay);
-			test++;
-			set_LED_Error(test & 1);
-		}
+//		if (timeoutexpired(&test_timer))
+//		{
+//			settimeout(&test_timer, delay);
+//			test++;
+//			set_LED_Error(test & 1);
+//		}
 	}
 }
 
