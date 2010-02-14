@@ -29,6 +29,8 @@ void		term_catgenie		(void) ;
 void		startbutton_isr		(void) ;
 void		setupbutton_isr		(void) ;
 void		catsensor_isr		(void) ;
+void		watersensor_isr		(void) ;
+void		heatsensor_isr		(void) ;
 
 /* Indicators */
 void		set_LED			(unsigned char led,

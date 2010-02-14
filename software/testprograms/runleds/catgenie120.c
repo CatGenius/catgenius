@@ -38,10 +38,9 @@
 /* Buttons */
 #define STARTBUTTON_PORT	PORTB
 #define STARTBUTTON_MASK	BIT(0)
-#define CATSENSOR_PORT		PORTB
-#define CATSENSOR_MASK		BIT(4)
 #define SETUPBUTTON_PORT	PORTB
 #define SETUPBUTTON_MASK	BIT(5)
+#define BUTTON_DEBOUNCE		(SECOND/20)	/* 50ms */
 
 /* Indicators */
 #define LED_2_PORT		PORTA
@@ -78,10 +77,24 @@
 #define ARM_PORT		PORTD
 #define ARM_MASK_UPDOWN		BIT(6)
 #define ARM_MASK_ONOFF		BIT(7)
+#define DOSAGE_SECONDS_PER_ML	10	/* For 1 ml of cleaning liquid, 10 seconds of pumping */
+
+/* Sensors */
+#define CATDET_LED_PORT		PORTC
+#define CATDET_LED_MASK		BIT(2)
+#define CATSENSOR_PORT		PORTB
+#define CATSENSOR_MASK		BIT(4)
+#define CATSENSOR_DEBOUNCE	(SECOND)	/* 1000ms */
+#define WATERDET_LED_PORT	PORTB
+#define WATERDET_LED_MASK	BIT(2)
+#define WATERSENSOR_PORT	PORTB
+#define WATERSENSOR_MASK	BIT(3)
+#define WATERSENSOR_DEBOUNCE	(SECOND)	/* 1000ms */
+#define HEATSENSOR_PORT		PORTB
+#define HEATSENSOR_MASK		BIT(1)
+#define HEATSENSOR_DEBOUNCE	(0)		/* 0ms */
 
 /* Debouncers */
-#define BUTTON_DEBOUNCE		(SECOND/20)	/* 50ms */
-#define CATSENSOR_DEBOUNCE	(SECOND)	/* 1000ms */
 #define DEBOUNCER_BUTTON_START	0
 #define DEBOUNCER_BUTTON_SETUP	1
 #define DEBOUNCER_SENSOR_CAT	2
@@ -98,10 +111,13 @@
 #define PACER_LED_CAT		4
 #define PACER_MAX		5
 
+void handler (unsigned char i);
 
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
+
+static unsigned char	portb_old;
 
 struct debouncer {
 	struct timer	timer;
@@ -109,11 +125,14 @@ struct debouncer {
 	unsigned char	state;
 	volatile char	*port;
 	unsigned char	port_mask;
-}
+	void		(*handler)(unsigned char);
+};
 static struct debouncer	debouncers[DEBOUNCER_MAX] = {
-	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,    0, &STARTBUTTON_PORT, STARTBUTTON_MASK},
-	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,    0, &SETUPBUTTON_PORT, SETUPBUTTON_MASK},
-	{{0xFFFF, 0xFFFFFFFF}, CATSENSOR_DEBOUNCE, 0, &CATSENSOR_PORT,   CATSENSOR_MASK}
+	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &STARTBUTTON_PORT, STARTBUTTON_MASK, handler},
+	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &SETUPBUTTON_PORT, SETUPBUTTON_MASK, handler},
+	{{0xFFFF, 0xFFFFFFFF}, CATSENSOR_DEBOUNCE,   0, &CATSENSOR_PORT,   CATSENSOR_MASK,   handler},
+	{{0xFFFF, 0xFFFFFFFF}, WATERSENSOR_DEBOUNCE, 0, &WATERSENSOR_PORT, WATERSENSOR_MASK, handler},
+	{{0xFFFF, 0xFFFFFFFF}, HEATSENSOR_DEBOUNCE,  0, &HEATSENSOR_PORT,  HEATSENSOR_MASK,  handler}
 };
 
 struct pacer {
@@ -124,7 +143,7 @@ struct pacer {
 	unsigned char	repeat;
 	volatile char	*port;
 	unsigned char	port_mask;
-}
+};
 static struct pacer	pacers[PACER_MAX] = {
 	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &BEEPER_PORT,        BEEPER_MASK},
 	{{0x0000, 0x00000000}, 0x01, 0x55, 1, &LED_ERROR_PORT,     LED_ERROR_MASK},
@@ -199,6 +218,8 @@ void init_catgenie (void)
 		TRISx7_IN  ;	/* UART RxD */
 	PORTC = 0x00;
 
+//PORTC = CATDET_LED_MASK;
+
 	/*
 	 * Setup port D
 	 */
@@ -220,6 +241,8 @@ void init_catgenie (void)
 		TRISx2_OUT ;	/* LED Child Lock */
 	PORTE = 0x00;
 
+	portb_old = PORTB;
+
 	/* Copy the initial states into the debouncer states */
 	for (index = 0; index < DEBOUNCER_MAX; index++) {
 		unsigned char	tempmask = debouncers[index].port_mask; /* for compiler limitations */
@@ -239,8 +262,22 @@ void do_catgenie (void)
 /******************************************************************************/
 {
 	unsigned char	index ;
+	unsigned char	status ;
 
-	/* Poll inputs for changes */
+	/* Poll Port B inputs for changes */
+	status    = PORTB;
+	index     = status ^ portb_old;
+	portb_old = status;
+	if (index & STARTBUTTON_MASK)
+		startbutton_isr();
+	if (index & SETUPBUTTON_MASK)
+		setupbutton_isr();
+	if (index & CATSENSOR_MASK)
+		catsensor_isr();
+	if (index & WATERSENSOR_MASK)
+		watersensor_isr();
+	if (index & HEATSENSOR_MASK)
+		heatsensor_isr();
 
 	/* Execute the debouncers */
 	for (index = 0; index < DEBOUNCER_MAX; index++)
@@ -249,8 +286,8 @@ void do_catgenie (void)
 			tempstate &= debouncers[index].port_mask;
 			/* Check if the button state changed */
 			if (tempstate != debouncers[index].state) {
-				set_Beeper(1,0);
-				/* Call function pointer */
+				/* Call function pointer (cannot be NULL) */
+				debouncers[index].handler(tempstate);
 				debouncers[index].state = tempstate;
 			}
 			timeoutnever(&debouncers[index].timer);
@@ -346,9 +383,9 @@ void watersensor_isr (void)
 /* watersensor_isr */
 
 
-void overheatsensor_isr (void)
+void heatsensor_isr (void)
 /******************************************************************************/
-/* Function:	overheatsensor_isr					      */
+/* Function:	heatsensor_isr					      */
 /*		- Handle state changes of over-heat sensor		      */
 /* History :	13 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
@@ -357,7 +394,7 @@ void overheatsensor_isr (void)
 	settimeout(&debouncers[DEBOUNCER_SENSOR_HEAT].timer,
 		   debouncers[DEBOUNCER_SENSOR_HEAT].timeout);
 }
-/* overheatsensor_isr */
+/* heatsensor_isr */
 
 
 void set_LED (unsigned char led, unsigned char on)
@@ -513,3 +550,8 @@ void set_Dryer	(unsigned char on)
 /* Local Implementations						      */
 /******************************************************************************/
 
+void handler (unsigned char i)
+{
+	if (!i)
+		set_Beeper(1,0);
+}
