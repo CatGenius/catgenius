@@ -38,24 +38,46 @@
 /* Buttons */
 #define STARTBUTTON_PORT	PORTB
 #define STARTBUTTON_MASK	BIT(0)
-#define SETUPBUTTON_PORT	PORTB
-#define SETUPBUTTON_MASK	BIT(5)
 #define CATSENSOR_PORT		PORTB
 #define CATSENSOR_MASK		BIT(4)
+#define SETUPBUTTON_PORT	PORTB
+#define SETUPBUTTON_MASK	BIT(5)
 
 /* Indicators */
-#define BEEPER_PORT		PORTC
-#define BEEPER_MASK		BIT(1)
+#define LED_2_PORT		PORTA
+#define LED_2_MASK		BIT(2)
+#define LED_3_PORT		PORTA
+#define LED_3_MASK		BIT(3)
+#define LED_4_PORT		PORTA
+#define LED_4_MASK		BIT(5)
 #define LED_ERROR_PORT		PORTC
 #define LED_ERROR_MASK		BIT(0)
-#define LED_LOCKED_PORT		PORTE
-#define LED_LOCKED_MASK		BIT(2)
+#define BEEPER_PORT		PORTC
+#define BEEPER_MASK		BIT(1)
+#define LED_1_PORT		PORTC
+#define LED_1_MASK		BIT(5)
 #define LED_CARTRIDGE_PORT	PORTE
 #define LED_CARTRIDGE_MASK	BIT(0)
 #define LED_CAT_PORT		PORTE
 #define LED_CAT_MASK		BIT(1)
+#define LED_LOCKED_PORT		PORTE
+#define LED_LOCKED_MASK		BIT(2)
 
 /* Actuators */
+#define WATER_PORT		PORTB
+#define WATER_MASK		BIT(3)
+#define PUMP_PORT		PORTD
+#define PUMP_MASK		BIT(1)
+#define DRYER_PORT		PORTD
+#define DRYER_MASK		BIT(2)
+#define DOSAGE_PORT		PORTD
+#define DOSAGE_MASK		BIT(3)
+#define BOWL_PORT		PORTD
+#define BOWL_MASK_CWCCW		BIT(4)
+#define BOWL_MASK_ONOFF		BIT(5)
+#define ARM_PORT		PORTD
+#define ARM_MASK_UPDOWN		BIT(6)
+#define ARM_MASK_ONOFF		BIT(7)
 
 /* Debouncers */
 #define BUTTON_DEBOUNCE		(SECOND/20)	/* 50ms */
@@ -63,7 +85,9 @@
 #define DEBOUNCER_BUTTON_START	0
 #define DEBOUNCER_BUTTON_SETUP	1
 #define DEBOUNCER_SENSOR_CAT	2
-#define DEBOUNCER_MAX		3
+#define DEBOUNCER_SENSOR_WATER	3
+#define DEBOUNCER_SENSOR_HEAT	4
+#define DEBOUNCER_MAX		5
 
 /* Pacers */
 #define PACER_BITTIME		(SECOND/5)	/* 200ms */
@@ -184,8 +208,8 @@ void init_catgenie (void)
 		TRISx3_OUT |	/* Dosage pump on/off (RL4) */
 		TRISx4_OUT |	/* Bowl cw/ccw (RL7) */
 		TRISx5_OUT |	/* Bowl on/off (RL5) */
-		TRISx6_OUT |	/* Scooper up/down (RL8) */
-		TRISx7_OUT ;	/* Scooper on/off (RL6) */
+		TRISx6_OUT |	/* Arm up/down (RL8) */
+		TRISx7_OUT ;	/* Arm on/off (RL6) */
 	PORTD = 0x00;
 
 	/*
@@ -216,6 +240,8 @@ void do_catgenie (void)
 {
 	unsigned char	index ;
 
+	/* Poll inputs for changes */
+
 	/* Execute the debouncers */
 	for (index = 0; index < DEBOUNCER_MAX; index++)
 		if (timeoutexpired(&debouncers[index].timer)) {
@@ -224,7 +250,7 @@ void do_catgenie (void)
 			/* Check if the button state changed */
 			if (tempstate != debouncers[index].state) {
 				set_Beeper(1,0);
-
+				/* Call function pointer */
 				debouncers[index].state = tempstate;
 			}
 			timeoutnever(&debouncers[index].timer);
@@ -306,34 +332,62 @@ void catsensor_isr (void)
 /* catsensor_isr */
 
 
+void watersensor_isr (void)
+/******************************************************************************/
+/* Function:	watersensor_isr						      */
+/*		- Handle state changes of water sensor			      */
+/* History :	13 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
+{
+	settimeout(&debouncers[DEBOUNCER_SENSOR_WATER].timer,
+		   debouncers[DEBOUNCER_SENSOR_WATER].timeout);
+}
+/* watersensor_isr */
+
+
+void overheatsensor_isr (void)
+/******************************************************************************/
+/* Function:	overheatsensor_isr					      */
+/*		- Handle state changes of over-heat sensor		      */
+/* History :	13 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
+{
+	settimeout(&debouncers[DEBOUNCER_SENSOR_HEAT].timer,
+		   debouncers[DEBOUNCER_SENSOR_HEAT].timeout);
+}
+/* overheatsensor_isr */
+
+
 void set_LED (unsigned char led, unsigned char on)
 {
+	volatile unsigned char	*port;
+	unsigned char		mask;
 	switch(led) {
 	case 1:
-		if (on)
-			PORTC |= BIT(5);
-		else
-			PORTC &= ~BIT(5);
+		port = &LED_1_PORT;
+		mask = LED_1_MASK;
 		break;
 	case 2:
-		if (on)
-			PORTA |= BIT(2);
-		else
-			PORTA &= ~BIT(2);
+		port = &LED_2_PORT;
+		mask = LED_2_MASK;
 		break;
 	case 3:
-		if (on)
-			PORTA |= BIT(3);
-		else
-			PORTA &= ~BIT(3);
+		port = &LED_3_PORT;
+		mask = LED_3_MASK;
 		break;
 	case 4:
-		if (on)
-			PORTA |= BIT(5);
-		else
-			PORTA &= ~BIT(5);
+		port = &LED_4_PORT;
+		mask = LED_4_MASK;
 		break;
+	default:
+		return;
 	}
+	if (on)
+		*port |= mask;
+	else
+		*port &= ~mask;
 }
 
 void set_LED_Error (unsigned char pattern, unsigned char repeat)
@@ -384,6 +438,75 @@ void set_Beeper (unsigned char pattern, unsigned char repeat)
 	pacers[PACER_BEEPER].pattern = pattern;
 	/* Copy the repeat flag */
 	pacers[PACER_BEEPER].repeat = repeat;
+}
+
+void set_Bowl (unsigned char mode)
+{
+	switch (mode) {
+	default:
+	case BOWL_STOP:
+		BOWL_PORT &= ~(BOWL_MASK_CWCCW | BOWL_MASK_ONOFF);
+		break;
+	case BOWL_CW:
+		BOWL_PORT &= ~BOWL_MASK_CWCCW;
+		BOWL_PORT |=  BOWL_MASK_ONOFF;
+		break;
+	case BOWL_CCW:
+		BOWL_PORT |= BOWL_MASK_CWCCW;
+		BOWL_PORT |= BOWL_MASK_ONOFF;
+		break;
+	}
+}
+
+void set_Arm (unsigned char mode)
+{
+	switch (mode) {
+	default:
+	case ARM_STOP:
+		ARM_PORT &= ~(ARM_MASK_UPDOWN | ARM_MASK_ONOFF);
+		break;
+	case ARM_UP:
+		ARM_PORT &= ~ARM_MASK_UPDOWN;
+		ARM_PORT |=  ARM_MASK_ONOFF;
+		break;
+	case ARM_DOWN:
+		ARM_PORT |= ARM_MASK_UPDOWN;
+		ARM_PORT |= ARM_MASK_ONOFF;
+		break;
+	}
+}
+
+void set_Water (unsigned char on)
+{
+	if (on)
+		WATER_PORT |= WATER_MASK;
+	else
+		WATER_PORT &= !WATER_MASK;
+}
+
+void set_Dosage (unsigned char on)
+{
+	if (on)
+		DOSAGE_PORT |= DOSAGE_MASK;
+	else
+		DOSAGE_PORT &= !DOSAGE_MASK;
+}
+
+void set_Pump (unsigned char on)
+{
+	if (on)
+		PUMP_PORT |= PUMP_MASK;
+	else
+		PUMP_PORT &= !PUMP_MASK;
+}
+
+
+void set_Dryer	(unsigned char on)
+{
+	if (on)
+		DRYER_PORT |= DRYER_MASK;
+	else
+		DRYER_PORT &= !DRYER_MASK;
 }
 
 /******************************************************************************/
