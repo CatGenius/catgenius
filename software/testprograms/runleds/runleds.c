@@ -58,18 +58,30 @@ void init (void)
 	PEIE = 1;
 
 	/* Enable interrupts */
-//	GIE = 1;
+	GIE = 1;
 }
 
 void main (void)
 {
-	unsigned long	delay = SECOND/2;
-	struct timer	test_timer ;
-
 	/* Initialize the hardware */
 	init();
 
-	settimeout(&test_timer, delay);
+CCP1M0 = 1;
+CCP1M1 = 1;
+CCP1M2 = 1;
+CCP1M3 = 1;
+PR2 = 0b01010100 ;
+T2CON = 0b00000101 ;
+CCPR1L = 0b00101010 ;
+CCP1CON = 0b00011100 ;
+
+TOUTPS0 = 1;
+TOUTPS1 = 1;
+TOUTPS2 = 1;
+TOUTPS3 = 1;
+TMR2IF = 0;
+TMR2IE = 1;
+
 
 	/* Execute the run loop */
 	for(;;){
@@ -97,6 +109,19 @@ static void interrupt isr (void)
 		TMR1IF = 0;
 		/* Handle interrupt */
 		timer_isr();
+	}
+	if (TMR2IF) {
+		/* Reset interrupt */
+		TMR2IF = 0;
+		/* Handle interrupt */
+		TRISC ^= 0x04;
+		if (TRISC & 0x04) {
+			T2CKPS1 = 1;
+			T2CKPS0 = 1;
+		} else {
+			T2CKPS1 = 0;
+			T2CKPS0 = 1;
+		}
 	}
 	if (INTF) {
 		/* Reset interrupt */
