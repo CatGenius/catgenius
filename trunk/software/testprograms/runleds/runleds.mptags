@@ -7,75 +7,78 @@
 !_TAG_REVISION_NAME	MCHPTags	//
 !_TAG_REVISION_VERSION	6.0.1	//
 ARM_DOWN::1	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	19;"	d	line:19
-ARM_MASK_ONOFF::BIT(7)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	78;"	d	line:78	file:
-ARM_MASK_UPDOWN::BIT(6)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	77;"	d	line:77	file:
-ARM_PORT::PORTD	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	76;"	d	line:76	file:
+ARM_MASK_ONOFF::BIT(7)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	79;"	d	line:79	file:
+ARM_MASK_UPDOWN::BIT(6)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	78;"	d	line:78	file:
+ARM_PORT::PORTD	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	77;"	d	line:77	file:
 ARM_STOP::0	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	18;"	d	line:18
 ARM_UP::2	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	20;"	d	line:20
-BEEPER_MASK::BIT(1)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	54;"	d	line:54	file:
-BEEPER_PORT::PORTC	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	53;"	d	line:53	file:
+BEEPER_MASK::BIT(1)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	55;"	d	line:55	file:
+BEEPER_PORT::PORTC	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	54;"	d	line:54	file:
 BIT::(n)(1U<<(n))	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	19;"	d	line:19	file:
 BOWL_CCW::2	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	15;"	d	line:15
 BOWL_CW::1	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	14;"	d	line:14
-BOWL_MASK_CWCCW::BIT(4)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	74;"	d	line:74	file:
-BOWL_MASK_ONOFF::BIT(5)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	75;"	d	line:75	file:
-BOWL_PORT::PORTD	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	73;"	d	line:73	file:
+BOWL_MASK_CWCCW::BIT(4)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	75;"	d	line:75	file:
+BOWL_MASK_ONOFF::BIT(5)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	76;"	d	line:76	file:
+BOWL_PORT::PORTD	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	74;"	d	line:74	file:
 BOWL_STOP::0	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	13;"	d	line:13
-BUTTON_DEBOUNCE::(SECOND/20)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	92;"	d	line:92	file:
-CATDET_LED_MASK::BIT(2)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	83;"	d	line:83	file:
-CATDET_LED_PORT::PORTC	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	82;"	d	line:82	file:
+BUTTON_DEBOUNCE::(SECOND/20)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	43;"	d	line:43	file:
+CATDET_LED_MASK::BIT(2)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	84;"	d	line:84	file:
+CATDET_LED_PORT::PORTC	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	83;"	d	line:83	file:
 CATGENIE120_H	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	9;"	d	line:9
-CATSENSOR_DEBOUNCE::(SECOND)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	93;"	d	line:93	file:
-CATSENSOR_MASK::BIT(4)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	85;"	d	line:85	file:
-CATSENSOR_PORT::PORTB	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	84;"	d	line:84	file:
-DEBOUNCER_BUTTON_SETUP::1	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	95;"	d	line:95	file:
-DEBOUNCER_BUTTON_START::0	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	94;"	d	line:94	file:
-DEBOUNCER_MAX::5	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	99;"	d	line:99	file:
-DEBOUNCER_SENSOR_CAT::2	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	96;"	d	line:96	file:
-DEBOUNCER_SENSOR_HEAT::4	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	98;"	d	line:98	file:
-DEBOUNCER_SENSOR_WATER::3	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	97;"	d	line:97	file:
-DOSAGE_MASK::BIT(3)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	72;"	d	line:72	file:
-DOSAGE_PORT::PORTD	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	71;"	d	line:71	file:
-DOSAGE_SECONDS_PER_ML::10	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	79;"	d	line:79	file:
-DRYER_MASK::BIT(2)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	70;"	d	line:70	file:
-DRYER_PORT::PORTD	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	69;"	d	line:69	file:
+CATSENSOR_DEBOUNCE::(SECOND)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	87;"	d	line:87	file:
+CATSENSOR_MASK::BIT(4)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	86;"	d	line:86	file:
+CATSENSOR_PORT::PORTB	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	85;"	d	line:85	file:
+DEBOUNCER_BUTTON_SETUP::1	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	99;"	d	line:99	file:
+DEBOUNCER_BUTTON_START::0	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	98;"	d	line:98	file:
+DEBOUNCER_MAX::5	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	103;"	d	line:103	file:
+DEBOUNCER_SENSOR_CAT::2	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	100;"	d	line:100	file:
+DEBOUNCER_SENSOR_HEAT::4	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	102;"	d	line:102	file:
+DEBOUNCER_SENSOR_WATER::3	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	101;"	d	line:101	file:
+DOSAGE_MASK::BIT(3)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	73;"	d	line:73	file:
+DOSAGE_PORT::PORTD	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	72;"	d	line:72	file:
+DOSAGE_SECONDS_PER_ML::10	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	80;"	d	line:80	file:
+DRYER_MASK::BIT(2)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	71;"	d	line:71	file:
+DRYER_PORT::PORTD	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	70;"	d	line:70	file:
 Delay	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	44;"	p	line:44	signature:(unsigned long * const delay)
 ExpireTimeout	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	34;"	p	line:34	signature:(struct timer * const timer_p)
 FOSC::(4UL*MHZ)	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	13;"	d	line:13
+HEATSENSOR_DEBOUNCE::(0)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	95;"	d	line:95	file:
+HEATSENSOR_MASK::BIT(1)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	94;"	d	line:94	file:
+HEATSENSOR_PORT::PORTB	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	93;"	d	line:93	file:
 HOUR::(60*(MINUTE))	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	17;"	d	line:17
 KHZ::(1000UL)	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	11;"	d	line:11
-LED_1_MASK::BIT(5)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	56;"	d	line:56	file:
-LED_1_PORT::PORTC	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	55;"	d	line:55	file:
-LED_2_MASK::BIT(2)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	46;"	d	line:46	file:
-LED_2_PORT::PORTA	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	45;"	d	line:45	file:
-LED_3_MASK::BIT(3)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	48;"	d	line:48	file:
-LED_3_PORT::PORTA	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	47;"	d	line:47	file:
-LED_4_MASK::BIT(5)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	50;"	d	line:50	file:
-LED_4_PORT::PORTA	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	49;"	d	line:49	file:
-LED_CARTRIDGE_MASK::BIT(0)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	58;"	d	line:58	file:
-LED_CARTRIDGE_PORT::PORTE	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	57;"	d	line:57	file:
-LED_CAT_MASK::BIT(1)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	60;"	d	line:60	file:
-LED_CAT_PORT::PORTE	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	59;"	d	line:59	file:
-LED_ERROR_MASK::BIT(0)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	52;"	d	line:52	file:
-LED_ERROR_PORT::PORTC	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	51;"	d	line:51	file:
-LED_LOCKED_MASK::BIT(2)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	62;"	d	line:62	file:
-LED_LOCKED_PORT::PORTE	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	61;"	d	line:61	file:
+LED_1_MASK::BIT(5)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	57;"	d	line:57	file:
+LED_1_PORT::PORTC	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	56;"	d	line:56	file:
+LED_2_MASK::BIT(2)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	47;"	d	line:47	file:
+LED_2_PORT::PORTA	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	46;"	d	line:46	file:
+LED_3_MASK::BIT(3)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	49;"	d	line:49	file:
+LED_3_PORT::PORTA	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	48;"	d	line:48	file:
+LED_4_MASK::BIT(5)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	51;"	d	line:51	file:
+LED_4_PORT::PORTA	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	50;"	d	line:50	file:
+LED_CARTRIDGE_MASK::BIT(0)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	59;"	d	line:59	file:
+LED_CARTRIDGE_PORT::PORTE	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	58;"	d	line:58	file:
+LED_CAT_MASK::BIT(1)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	61;"	d	line:61	file:
+LED_CAT_PORT::PORTE	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	60;"	d	line:60	file:
+LED_ERROR_MASK::BIT(0)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	53;"	d	line:53	file:
+LED_ERROR_PORT::PORTC	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	52;"	d	line:52	file:
+LED_LOCKED_MASK::BIT(2)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	63;"	d	line:63	file:
+LED_LOCKED_PORT::PORTE	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	62;"	d	line:62	file:
 MHZ::(1000UL*(KHZ))	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	12;"	d	line:12
 MINUTE::(60*(SECOND))	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	16;"	d	line:16
 MicroDelay	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	46;"	p	line:46	signature:(unsigned short const delay_us)
 NO_INTERRUPTS	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	22;"	d	line:22	file:
-PACER_BEEPER::0	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	103;"	d	line:103	file:
-PACER_BITTIME::(SECOND/5)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	102;"	d	line:102	file:
-PACER_LED_CARTRIDGE::3	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	106;"	d	line:106	file:
-PACER_LED_CAT::4	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	107;"	d	line:107	file:
-PACER_LED_ERROR::1	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	104;"	d	line:104	file:
-PACER_LED_LOCKED::2	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	105;"	d	line:105	file:
-PACER_MAX::5	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	108;"	d	line:108	file:
-PORTB_diff	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	108;"	l	line:108
+PACER_BEEPER::0	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	107;"	d	line:107	file:
+PACER_BITTIME::(SECOND/5)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	106;"	d	line:106	file:
+PACER_LED_CARTRIDGE::3	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	110;"	d	line:110	file:
+PACER_LED_CAT::4	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	111;"	d	line:111	file:
+PACER_LED_ERROR::1	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	108;"	d	line:108	file:
+PACER_LED_LOCKED::2	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	109;"	d	line:109	file:
+PACER_MAX::5	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	112;"	d	line:112	file:
+PORTB_diff	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	133;"	l	line:133
 PORTB_old	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	29;"	v	line:29	file:
 PROTECT	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	19;"	v	line:19
-PUMP_MASK::BIT(1)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	68;"	d	line:68	file:
-PUMP_PORT::PORTD	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	67;"	d	line:67	file:
+PUMP_MASK::BIT(1)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	69;"	d	line:69	file:
+PUMP_PORT::PORTD	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	68;"	d	line:68	file:
 PostponeTimeout	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	31;"	p	line:31	signature:(struct timer * const timer_p, unsigned long const postpone)
 SECOND::(((FOSC)/4)/8)	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	15;"	d	line:15
 SETUPBUTTON_MASK::BIT(5)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	42;"	d	line:42	file:
@@ -100,99 +103,103 @@ TRISx6_OUT::(0<<6)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie12
 TRISx7_IN::(1<<7)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	36;"	d	line:36	file:
 TRISx7_OUT::(0<<7)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	35;"	d	line:35	file:
 TimeStampAge	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	42;"	p	line:42	signature:(struct timer const * const timer_p)
-WATERDET_LED_MASK::BIT(2)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	87;"	d	line:87	file:
-WATERDET_LED_PORT::PORTB	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	86;"	d	line:86	file:
-WATERSENSOR_MASK::BIT(3)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	89;"	d	line:89	file:
-WATERSENSOR_PORT::PORTB	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	88;"	d	line:88	file:
-WATER_MASK::BIT(3)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	66;"	d	line:66	file:
-WATER_PORT::PORTB	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	65;"	d	line:65	file:
+WATERDET_LED_MASK::BIT(2)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	89;"	d	line:89	file:
+WATERDET_LED_PORT::PORTB	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	88;"	d	line:88	file:
+WATERSENSOR_DEBOUNCE::(SECOND)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	92;"	d	line:92	file:
+WATERSENSOR_MASK::BIT(3)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	91;"	d	line:91	file:
+WATERSENSOR_PORT::PORTB	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	90;"	d	line:90	file:
+WATER_MASK::BIT(3)	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	67;"	d	line:67	file:
+WATER_PORT::PORTB	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	66;"	d	line:66	file:
 bytes	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	207;"	l	line:207
-catsensor_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	350;"	f	line:350	signature:(void)
+catsensor_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	358;"	f	line:358	signature:(void)
 catsensor_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	31;"	p	line:31	signature:(void)
 currentTime	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	179;"	l	line:179
-debouncer	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	117;"	s	line:117	file:
-debouncers	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	124;"	v	line:124	file:
-delay	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	66;"	l	line:66
-do_catgenie	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	250;"	f	line:250	signature:(void)
+debouncer	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	122;"	s	line:122	file:
+debouncers	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	130;"	v	line:130	file:
+do_catgenie	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	256;"	f	line:256	signature:(void)
 do_catgenie	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	25;"	p	line:25	signature:(void)
 gettimestamp	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	198;"	f	line:198	signature:(struct timer * const ticks)
 gettimestamp	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	40;"	p	line:40	signature:(struct timer * const ticks)
-index	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	167;"	l	line:167
-index	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	258;"	l	line:258
+handler	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	114;"	p	line:114	file:	signature:(unsigned char i)
+handler	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	128;"	m	line:128	struct:debouncer	file:
+handler	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	290;"	p	line:290	file:
+handler	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	555;"	f	line:555	signature:(unsigned char i)
+heatsensor_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	388;"	f	line:388	signature:(void)
+heatsensor_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	33;"	p	line:33	signature:(void)
+index	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	173;"	l	line:173
+index	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	264;"	l	line:264
 init	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	46;"	f	line:46	signature:(void)
-init_catgenie	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	159;"	f	line:159	signature:(void)
+init_catgenie	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	165;"	f	line:165	signature:(void)
 init_catgenie	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	24;"	p	line:24	signature:(void)
+isr	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	102;"	f	line:102	file:	signature:(void)
 isr	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	38;"	p	line:38	file:	signature:(void)
-isr	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	90;"	f	line:90	file:	signature:(void)
 longshort	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	90;"	l	line:90
 ls_longTicks	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	88;"	m	line:88	file:
 main	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	64;"	f	line:64	signature:(void)
-mask	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	135;"	m	line:135	struct:pacer	file:
-mask	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	395;"	l	line:395
+mask	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	141;"	m	line:141	struct:pacer	file:
+mask	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	405;"	l	line:405
 ms_shortTicks	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	89;"	m	line:89	file:
 overflows	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	23;"	v	line:23	file:
 overflows	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	21;"	m	line:21	struct:timer
-overheatsensor_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	378;"	f	line:378	signature:(void)
-pacer	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	132;"	s	line:132	file:
-pacers	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	141;"	v	line:141	file:
-pattern	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	136;"	m	line:136	struct:pacer	file:
-port	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	121;"	m	line:121	struct:debouncer	file:
-port	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	138;"	m	line:138	struct:pacer	file:
-port	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	394;"	l	line:394
-port_mask	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	122;"	m	line:122	struct:debouncer	file:
-port_mask	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	139;"	m	line:139	struct:pacer	file:
-portb_old	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	115;"	v	line:115	file:
-repeat	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	137;"	m	line:137	struct:pacer	file:
-set_Arm	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	490;"	f	line:490	signature:(unsigned char mode)
-set_Arm	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	49;"	p	line:49	signature:(unsigned char mode)
-set_Beeper	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	462;"	f	line:462	signature:(unsigned char pattern, unsigned char repeat)
-set_Beeper	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	44;"	p	line:44	signature:(unsigned char pattern, unsigned char repeat)
-set_Bowl	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	472;"	f	line:472	signature:(unsigned char mode)
-set_Bowl	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	48;"	p	line:48	signature:(unsigned char mode)
-set_Dosage	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	516;"	f	line:516	signature:(unsigned char on)
-set_Dosage	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	51;"	p	line:51	signature:(unsigned char on)
-set_Dryer	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	533;"	f	line:533	signature:(unsigned char on)
-set_Dryer	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	53;"	p	line:53	signature:(unsigned char on)
-set_LED	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	392;"	f	line:392	signature:(unsigned char led, unsigned char on)
-set_LED	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	34;"	p	line:34	signature:(unsigned char led, unsigned char on)
-set_LED_Cartridge	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	442;"	f	line:442	signature:(unsigned char pattern, unsigned char repeat)
-set_LED_Cartridge	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	40;"	p	line:40	signature:(unsigned char pattern, unsigned char repeat)
-set_LED_Cat	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	452;"	f	line:452	signature:(unsigned char pattern, unsigned char repeat)
-set_LED_Cat	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	36;"	p	line:36	signature:(unsigned char pattern, unsigned char repeat)
-set_LED_Error	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	422;"	f	line:422	signature:(unsigned char pattern, unsigned char repeat)
-set_LED_Error	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	38;"	p	line:38	signature:(unsigned char pattern, unsigned char repeat)
-set_LED_Locked	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	432;"	f	line:432	signature:(unsigned char pattern, unsigned char repeat)
-set_LED_Locked	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	42;"	p	line:42	signature:(unsigned char pattern, unsigned char repeat)
-set_Pump	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	524;"	f	line:524	signature:(unsigned char on)
-set_Pump	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	52;"	p	line:52	signature:(unsigned char on)
-set_Water	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	508;"	f	line:508	signature:(unsigned char on)
-set_Water	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	50;"	p	line:50	signature:(unsigned char on)
+pacer	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	138;"	s	line:138	file:
+pacers	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	147;"	v	line:147	file:
+pattern	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	142;"	m	line:142	struct:pacer	file:
+port	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	126;"	m	line:126	struct:debouncer	file:
+port	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	144;"	m	line:144	struct:pacer	file:
+port	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	404;"	l	line:404
+port_mask	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	127;"	m	line:127	struct:debouncer	file:
+port_mask	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	145;"	m	line:145	struct:pacer	file:
+portb_old	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	120;"	v	line:120	file:
+repeat	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	143;"	m	line:143	struct:pacer	file:
+set_Arm	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	500;"	f	line:500	signature:(unsigned char mode)
+set_Arm	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	51;"	p	line:51	signature:(unsigned char mode)
+set_Beeper	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	472;"	f	line:472	signature:(unsigned char pattern, unsigned char repeat)
+set_Beeper	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	46;"	p	line:46	signature:(unsigned char pattern, unsigned char repeat)
+set_Bowl	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	482;"	f	line:482	signature:(unsigned char mode)
+set_Bowl	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	50;"	p	line:50	signature:(unsigned char mode)
+set_Dosage	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	526;"	f	line:526	signature:(unsigned char on)
+set_Dosage	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	53;"	p	line:53	signature:(unsigned char on)
+set_Dryer	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	543;"	f	line:543	signature:(unsigned char on)
+set_Dryer	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	55;"	p	line:55	signature:(unsigned char on)
+set_LED	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	402;"	f	line:402	signature:(unsigned char led, unsigned char on)
+set_LED	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	36;"	p	line:36	signature:(unsigned char led, unsigned char on)
+set_LED_Cartridge	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	452;"	f	line:452	signature:(unsigned char pattern, unsigned char repeat)
+set_LED_Cartridge	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	42;"	p	line:42	signature:(unsigned char pattern, unsigned char repeat)
+set_LED_Cat	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	462;"	f	line:462	signature:(unsigned char pattern, unsigned char repeat)
+set_LED_Cat	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	38;"	p	line:38	signature:(unsigned char pattern, unsigned char repeat)
+set_LED_Error	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	432;"	f	line:432	signature:(unsigned char pattern, unsigned char repeat)
+set_LED_Error	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	40;"	p	line:40	signature:(unsigned char pattern, unsigned char repeat)
+set_LED_Locked	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	442;"	f	line:442	signature:(unsigned char pattern, unsigned char repeat)
+set_LED_Locked	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	44;"	p	line:44	signature:(unsigned char pattern, unsigned char repeat)
+set_Pump	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	534;"	f	line:534	signature:(unsigned char on)
+set_Pump	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	54;"	p	line:54	signature:(unsigned char on)
+set_Water	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	518;"	f	line:518	signature:(unsigned char on)
+set_Water	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	52;"	p	line:52	signature:(unsigned char on)
 settimeout	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	77;"	f	line:77	signature:(struct timer * const timer_p, unsigned long const timout)
 settimeout	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	28;"	p	line:28	signature:(struct timer * const timer_p, unsigned long const timout)
-setupbutton_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	336;"	f	line:336	signature:(void)
+setupbutton_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	344;"	f	line:344	signature:(void)
 setupbutton_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	30;"	p	line:30	signature:(void)
-startbutton_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	322;"	f	line:322	signature:(void)
+startbutton_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	330;"	f	line:330	signature:(void)
 startbutton_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	29;"	p	line:29	signature:(void)
-state	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	120;"	m	line:120	struct:debouncer	file:
-status	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	259;"	l	line:259
+state	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	125;"	m	line:125	struct:debouncer	file:
+status	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	265;"	l	line:265
 temp	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	48;"	l	line:48
 temp	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	206;"	l	line:206
 tempLongTicks	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	86;"	l	line:86
-tempmask	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	242;"	l	line:242
-tempmask	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	291;"	l	line:291
-tempstate	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	277;"	l	line:277
-term_catgenie	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	310;"	f	line:310	signature:(void)
+tempmask	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	248;"	l	line:248
+tempmask	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	299;"	l	line:299
+tempstate	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	285;"	l	line:285
+term_catgenie	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	318;"	f	line:318	signature:(void)
 term_catgenie	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	26;"	p	line:26	signature:(void)
 test	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	30;"	v	line:30	file:
-test_timer	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	67;"	l	line:67
-timeout	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	119;"	m	line:119	struct:debouncer	file:
+timeout	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	124;"	m	line:124	struct:debouncer	file:
 timeoutexpired	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	171;"	f	line:171	signature:(struct timer const * const timer_p)
 timeoutexpired	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	38;"	p	line:38	signature:(struct timer const * const timer_p)
 timeoutnever	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	157;"	f	line:157	signature:(struct timer * const timer_p)
 timeoutnever	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	36;"	p	line:36	signature:(struct timer * const timer_p)
 timeoutnow	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	143;"	f	line:143	signature:(struct timer * const timer_p)
-timer	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	118;"	m	line:118	struct:debouncer	file:
-timer	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	133;"	m	line:133	struct:pacer	file:
+timer	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	123;"	m	line:123	struct:debouncer	file:
+timer	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	139;"	m	line:139	struct:pacer	file:
 timer	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	19;"	s	line:19
 timer1	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	20;"	m	line:20	struct:timer
 timer_init	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	35;"	f	line:35	signature:(void)
@@ -201,4 +208,5 @@ timer_isr	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	376;"	f	lin
 timer_isr	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	25;"	p	line:25	signature:(void)
 timer_term	Z:\Sources\catgenius\software\testprograms\runleds\timer.c	63;"	f	line:63	signature:(void)
 timer_term	Z:\Sources\catgenius\software\testprograms\runleds\timer.h	26;"	p	line:26	signature:(void)
-watersensor_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	364;"	f	line:364	signature:(void)
+watersensor_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.c	374;"	f	line:374	signature:(void)
+watersensor_isr	Z:\Sources\catgenius\software\testprograms\runleds\catgenie120.h	32;"	p	line:32	signature:(void)

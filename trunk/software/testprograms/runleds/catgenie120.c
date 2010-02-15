@@ -119,6 +119,10 @@ void handler (unsigned char i);
 
 static unsigned char	portb_old;
 
+#define PULSETOL	4
+struct timer		catsensor = {0xFFFF, 0xFFFFFFFF};
+unsigned char		catsensorpulses = 0;
+
 struct debouncer {
 	struct timer	timer;
 	unsigned long	timeout;
@@ -199,11 +203,11 @@ void init_catgenie (void)
 	/* Turn on internal weak pull-up resitors on inputs */
 	RBPU = 0;
 	/* Clear the interrupt status */
-	INTF = 0;
-	RBIF = 0;
+//	INTF = 0;
+//	RBIF = 0;
 	/* Enable interrupts */
-	INTE = 1;
-	RBIE = 1;
+//	INTE = 1;
+//	RBIE = 1;
 
 	/*
 	 * Setup port C
@@ -278,6 +282,18 @@ void do_catgenie (void)
 		watersensor_isr();
 	if (index & HEATSENSOR_MASK)
 		heatsensor_isr();
+
+	if (catsensorpulses){
+		if(timeoutexpired(&catsensor)) {
+			/* Cat gone */
+			catsensorpulses = 0;
+LED_CAT_PORT &= ~LED_CAT_MASK;
+		}
+		if (catsensorpulses > PULSETOL) {
+			/* Cat here */
+LED_CAT_PORT |= LED_CAT_MASK;
+		}
+	}
 
 	/* Execute the debouncers */
 	for (index = 0; index < DEBOUNCER_MAX; index++)
@@ -363,8 +379,13 @@ void catsensor_isr (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	settimeout(&debouncers[DEBOUNCER_SENSOR_CAT].timer,
-		   debouncers[DEBOUNCER_SENSOR_CAT].timeout);
+//	settimeout(&debouncers[DEBOUNCER_SENSOR_CAT].timer,
+//		   debouncers[DEBOUNCER_SENSOR_CAT].timeout);
+	if (CATSENSOR_PORT & CATSENSOR_MASK) {
+		settimeout(&catsensor, (PULSETOL * SECOND)/33);
+		if (catsensorpulses < 255)
+			catsensorpulses++;
+	}
 }
 /* catsensor_isr */
 
