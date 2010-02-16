@@ -8,9 +8,9 @@
 /******************************************************************************/
 #include <htc.h>
 
-#include "timer.h"
-#include "catsensor.h"
-#include "catgenie120.h"
+#include "../common/timer.h"
+#include "../common/catsensor.h"
+#include "../common/catgenie120.h"
 
 
 /******************************************************************************/
