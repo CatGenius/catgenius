@@ -27,8 +27,6 @@ void		catgenie_term		(void) ;
 
 /* Event notification */
 void		catsensor_event		(unsigned char detected) ;
-void		watersensor_isr		(void) ;
-void		heatsensor_isr		(void) ;
 
 /* Indicators */
 void		set_LED			(unsigned char led,
