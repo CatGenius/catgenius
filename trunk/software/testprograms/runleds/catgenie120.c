@@ -119,10 +119,6 @@ void handler (unsigned char i);
 
 static unsigned char	portb_old;
 
-#define PULSETOL	4
-struct timer		catsensor = {0xFFFF, 0xFFFFFFFF};
-unsigned char		catsensorpulses = 0;
-
 struct debouncer {
 	struct timer	timer;
 	unsigned long	timeout;
@@ -166,7 +162,7 @@ static struct pacer	pacers[PACER_MAX] = {
 /* Global Implementations						      */
 /******************************************************************************/
 
-void init_catgenie (void)
+void catgenie_init (void)
 /******************************************************************************/
 /* Function:	init_catgenie						      */
 /*		- Initialize the CatGenie 120 hardware			      */
@@ -203,11 +199,9 @@ void init_catgenie (void)
 	/* Turn on internal weak pull-up resitors on inputs */
 	RBPU = 0;
 	/* Clear the interrupt status */
-//	INTF = 0;
-//	RBIF = 0;
+	RBIF = 0;
 	/* Enable interrupts */
-//	INTE = 1;
-//	RBIE = 1;
+	RBIE = 1;
 
 	/*
 	 * Setup port C
@@ -257,7 +251,7 @@ void init_catgenie (void)
 /* End: init_catgenie */
 
 
-void do_catgenie (void)
+void catgenie_work (void)
 /******************************************************************************/
 /* Function:	do_catgenie						      */
 /*		- Worker function for the CatGenie 120 hardware		      */
@@ -268,7 +262,7 @@ void do_catgenie (void)
 	unsigned char	index ;
 	unsigned char	status ;
 
-	/* Poll Port B inputs for changes */
+	/* Poll critical Port B inputs for changes */
 	status    = PORTB;
 	index     = status ^ portb_old;
 	portb_old = status;
@@ -276,24 +270,10 @@ void do_catgenie (void)
 		startbutton_isr();
 	if (index & SETUPBUTTON_MASK)
 		setupbutton_isr();
-	if (index & CATSENSOR_MASK)
-		catsensor_isr();
 	if (index & WATERSENSOR_MASK)
 		watersensor_isr();
 	if (index & HEATSENSOR_MASK)
 		heatsensor_isr();
-
-	if (catsensorpulses){
-		if(timeoutexpired(&catsensor)) {
-			/* Cat gone */
-			catsensorpulses = 0;
-LED_CAT_PORT &= ~LED_CAT_MASK;
-		}
-		if (catsensorpulses > PULSETOL) {
-			/* Cat here */
-LED_CAT_PORT |= LED_CAT_MASK;
-		}
-	}
 
 	/* Execute the debouncers */
 	for (index = 0; index < DEBOUNCER_MAX; index++)
@@ -331,7 +311,7 @@ LED_CAT_PORT |= LED_CAT_MASK;
 		}
 }
 
-void term_catgenie (void)
+void catgenie_term (void)
 /******************************************************************************/
 /* Function:	term_catgenie						      */
 /*		- Initialize the CatGenie 120 hardware			      */
@@ -369,25 +349,6 @@ void setupbutton_isr (void)
 		   debouncers[DEBOUNCER_BUTTON_SETUP].timeout);
 }
 /* setupbutton_isr */
-
-
-void catsensor_isr (void)
-/******************************************************************************/
-/* Function:	catsensor_isr						      */
-/*		- Handle state changes of cat sensor			      */
-/* History :	13 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-//	settimeout(&debouncers[DEBOUNCER_SENSOR_CAT].timer,
-//		   debouncers[DEBOUNCER_SENSOR_CAT].timeout);
-	if (CATSENSOR_PORT & CATSENSOR_MASK) {
-		settimeout(&catsensor, (PULSETOL * SECOND)/33);
-		if (catsensorpulses < 255)
-			catsensorpulses++;
-	}
-}
-/* catsensor_isr */
 
 
 void watersensor_isr (void)

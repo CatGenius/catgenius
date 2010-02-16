@@ -1,5 +1,5 @@
 /******************************************************************************/
-/* File    :	timer.h							      */
+/* File    :	timer.c							      */
 /* Function:	Timer module						      */
 /* Author  :	Robert Delien						      */
 /*		Copyright (C) 2010, Clockwork Engineering		      */
@@ -20,7 +20,7 @@
 /* Global Data								      */
 /******************************************************************************/
 
-static unsigned long		overflows	= 0;
+static volatile unsigned long	overflows	= 0;
 
 
 /******************************************************************************/
@@ -34,7 +34,7 @@ static unsigned long		overflows	= 0;
 
 void timer_init (void)
 /******************************************************************************/
-/* Function:	Timer module initialisation routine			      */
+/* Function:	Module initialisation routine				      */
 /*		- Initializes the module				      */
 /* History :	10 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
@@ -62,14 +62,16 @@ void timer_init (void)
 
 void timer_term (void)
 /******************************************************************************/
-/* Function:	Timer module initialisation routine			      */
+/* Function:	Module initialisation routine				      */
 /*		- Terminates the module					      */
 /* History :	10 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	TMR1IE = 0;		/* Disable timer interrupt */
-	TMR1ON = 0;		/* Stop timer1 */
+	/* Disable timer interrupt */
+	TMR1IE = 0;
+	/* Stop timer1 */
+	TMR1ON = 0;
 }
 /* End: timer_term */
 
