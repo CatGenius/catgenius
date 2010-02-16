@@ -9,89 +9,26 @@
 #include <htc.h>
 
 #include "catgenie120.h"
+#include "hardware.h"
 #include "timer.h"
+
+extern void watersensor_event (unsigned char detected);
+extern void heatsensor_event  (unsigned char detected);
+extern void startbutton_event (unsigned char up);
+extern void setupbutton_event (unsigned char up);
 
 
 /******************************************************************************/
 /* Macros								      */
 /******************************************************************************/
 
-#define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
+#define DOSAGE_SECONDS_PER_ML	10		/* For 1 ml of cleaning liquid, 10 seconds of pumping */
 
-#define TRISx0_OUT		(0 << 0)
-#define TRISx0_IN		(1 << 0)
-#define TRISx1_OUT		(0 << 1)
-#define TRISx1_IN		(1 << 1)
-#define TRISx2_OUT		(0 << 2)
-#define TRISx2_IN		(1 << 2)
-#define TRISx3_OUT		(0 << 3)
-#define TRISx3_IN		(1 << 3)
-#define TRISx4_OUT		(0 << 4)
-#define TRISx4_IN		(1 << 4)
-#define TRISx5_OUT		(0 << 5)
-#define TRISx5_IN		(1 << 5)
-#define TRISx6_OUT		(0 << 6)
-#define TRISx6_IN		(1 << 6)
-#define TRISx7_OUT		(0 << 7)
-#define TRISx7_IN		(1 << 7)
-
-/* Buttons */
-#define STARTBUTTON_PORT	PORTB
-#define STARTBUTTON_MASK	BIT(0)
-#define SETUPBUTTON_PORT	PORTB
-#define SETUPBUTTON_MASK	BIT(5)
+/* Timing configuration */
 #define BUTTON_DEBOUNCE		(SECOND/20)	/* 50ms */
-
-/* Indicators */
-#define LED_2_PORT		PORTA
-#define LED_2_MASK		BIT(2)
-#define LED_3_PORT		PORTA
-#define LED_3_MASK		BIT(3)
-#define LED_4_PORT		PORTA
-#define LED_4_MASK		BIT(5)
-#define LED_ERROR_PORT		PORTC
-#define LED_ERROR_MASK		BIT(0)
-#define BEEPER_PORT		PORTC
-#define BEEPER_MASK		BIT(1)
-#define LED_1_PORT		PORTC
-#define LED_1_MASK		BIT(5)
-#define LED_CARTRIDGE_PORT	PORTE
-#define LED_CARTRIDGE_MASK	BIT(0)
-#define LED_CAT_PORT		PORTE
-#define LED_CAT_MASK		BIT(1)
-#define LED_LOCKED_PORT		PORTE
-#define LED_LOCKED_MASK		BIT(2)
-
-/* Actuators */
-#define WATER_PORT		PORTB
-#define WATER_MASK		BIT(3)
-#define PUMP_PORT		PORTD
-#define PUMP_MASK		BIT(1)
-#define DRYER_PORT		PORTD
-#define DRYER_MASK		BIT(2)
-#define DOSAGE_PORT		PORTD
-#define DOSAGE_MASK		BIT(3)
-#define BOWL_PORT		PORTD
-#define BOWL_MASK_CWCCW		BIT(4)
-#define BOWL_MASK_ONOFF		BIT(5)
-#define ARM_PORT		PORTD
-#define ARM_MASK_UPDOWN		BIT(6)
-#define ARM_MASK_ONOFF		BIT(7)
-#define DOSAGE_SECONDS_PER_ML	10	/* For 1 ml of cleaning liquid, 10 seconds of pumping */
-
-/* Sensors */
-#define CATSENSOR_LED_PORT	PORTC
-#define CATSENSOR_LED_MASK	BIT(2)
-#define CATSENSOR_PORT		PORTB
-#define CATSENSOR_MASK		BIT(4)
-#define WATERSENSOR_LED_PORT	PORTB
-#define WATERSENSOR_LED_MASK	BIT(2)
-#define WATERSENSOR_PORT	PORTA
-#define WATERSENSOR_MASK	BIT(1)
 #define WATERSENSOR_DEBOUNCE	(3*SECOND)	/* 3000ms */
-#define HEATSENSOR_PORT		PORTB
-#define HEATSENSOR_MASK		BIT(1)
 #define HEATSENSOR_DEBOUNCE	(0)		/* 0ms */
+#define PACER_BITTIME		(SECOND/5)	/* 200ms */
 
 /* Debouncers */
 #define DEBOUNCER_BUTTON_START	0
@@ -101,18 +38,12 @@
 #define DEBOUNCER_MAX		4
 
 /* Pacers */
-#define PACER_BITTIME		(SECOND/5)	/* 200ms */
 #define PACER_BEEPER		0
 #define PACER_LED_ERROR		1
 #define PACER_LED_LOCKED	2
 #define PACER_LED_CARTRIDGE	3
 #define PACER_LED_CAT		4
 #define PACER_MAX		5
-
-static void watersensor_event (unsigned char detected);
-static void heatsensor_event  (unsigned char detected);
-static void startbutton_event (unsigned char up);
-static void setupbutton_event (unsigned char up);
 
 /******************************************************************************/
 /* Global Data								      */
@@ -147,7 +78,7 @@ struct pacer {
 };
 static struct pacer	pacers[PACER_MAX] = {
 	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &BEEPER_PORT,        BEEPER_MASK},
-	{{0x0000, 0x00000000}, 0x01, 0x55, 1, &LED_ERROR_PORT,     LED_ERROR_MASK},
+	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &LED_ERROR_PORT,     LED_ERROR_MASK},
 	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &LED_LOCKED_PORT,    LED_LOCKED_MASK},
 	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &LED_CARTRIDGE_PORT, LED_CARTRIDGE_MASK},
 	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &LED_CAT_PORT,       LED_CAT_MASK}
@@ -163,7 +94,7 @@ static struct pacer	pacers[PACER_MAX] = {
 /* Global Implementations						      */
 /******************************************************************************/
 
-void catgenie_init (void)
+unsigned char catgenie_init (void)
 /******************************************************************************/
 /* Function:	init_catgenie						      */
 /*		- Initialize the CatGenie 120 hardware			      */
@@ -176,26 +107,22 @@ void catgenie_init (void)
 	/*
 	 * Setup port A
 	 */
-	TRISA = TRISx0_IN  |	/* Not used (R39, Absent) */
-		TRISx1_IN  |	/* Water Sensor */
-		TRISx2_OUT |	/* LED 2 */
-		TRISx3_OUT |	/* LED 3 */
-		TRISx4_IN  |	/* Not used (R1, Absent) */
-		TRISx5_OUT ;	/* LED 4 */
+	TRISA = NOT_USED_1_MASK  |	/* Not used (R39, Absent) */
+		WATERSENSOR_MASK |	/* Water Sensor */
+		NOT_USED_2_MASK  ;	/* Not used (R1, Absent) */
 	PORTA = 0x00;
+	/* Disable ADC */
 	ADCON1 = 0x07;
 
 	/*
 	 * Setup port B
 	 */
-	TRISB = TRISx0_IN  |	/* Button Start/Pause */
-		TRISx1_IN  |	/* Over heat detector (U4) */
-		TRISx2_OUT |	/* LED Water sensor */
-		TRISx3_OUT |	/* Relay Water valve (RL1) */
-		TRISx4_IN  |	/* Cat Sensor */
-		TRISx5_IN  |	/* Button Auto setup */
-		TRISx6_IN  |	/* PGM Clock */
-		TRISx7_IN  ;	/* PGM Data */
+	TRISB = STARTBUTTON_MASK |	/* Button Start/Pause */
+		HEATSENSOR_MASK  |	/* Over heat detector (U4) */
+		CATSENSOR_MASK   |	/* Cat Sensor */
+		SETUPBUTTON_MASK |	/* Button Auto setup */
+		NOT_USED_3_MASK  |	/* PGM Clock */
+		NOT_USED_4_MASK  ;	/* PGM Data */
 	PORTB = 0x00;
 	/* Turn on internal weak pull-up resitors on inputs */
 	RBPU = 0;
@@ -210,35 +137,22 @@ void catgenie_init (void)
 	/*
 	 * Setup port C
 	 */
-	TRISC = TRISx0_OUT |	/* LED Error */
-		TRISx1_OUT |	/* Beeper */
-		TRISx2_OUT |	/* Cat Sensor LED */
-		TRISx3_IN  |	/* I2C SCL */
-		TRISx4_IN  |	/* I2C SDA */
-		TRISx5_OUT |	/* LED 1 */
-		TRISx6_IN  |	/* UART TxD */
-		TRISx7_IN  ;	/* UART RxD */
+	TRISC = I2C_SCL_MASK  |		/* I2C SCL */
+		I2C_SDA_MASK  |		/* I2C SDA */
+		UART_TXD_MASK |		/* UART TxD */
+		UART_RXD_MASK ;		/* UART RxD */
 	PORTC = 0x00;
 
 	/*
 	 * Setup port D
 	 */
-	TRISD = TRISx0_IN  |	/* ? */
-		TRISx1_OUT |	/* Pump on/off (RL3) */
-		TRISx2_OUT |	/* Blow dryer on/off (RL2) */
-		TRISx3_OUT |	/* Dosage pump on/off (RL4) */
-		TRISx4_OUT |	/* Bowl cw/ccw (RL7) */
-		TRISx5_OUT |	/* Bowl on/off (RL5) */
-		TRISx6_OUT |	/* Arm up/down (RL8) */
-		TRISx7_OUT ;	/* Arm on/off (RL6) */
+	TRISD = NOT_USED_5_MASK ;	/* Unknown */
 	PORTD = 0x00;
 
 	/*
 	 * Setup port E
 	 */
-	TRISE = TRISx0_OUT |	/* LED Cartridge */
-		TRISx1_OUT |	/* LED Cat */
-		TRISx2_OUT ;	/* LED Child Lock */
+	TRISE = 0x00;			/* All outputs */
 	PORTE = 0x00;
 
 	PORTA_old = PORTA;
@@ -250,6 +164,8 @@ void catgenie_init (void)
 
 		debouncers[temp].state = *debouncers[temp].port & tempmask;
 	}
+
+	return 0;
 }
 /* End: init_catgenie */
 
@@ -334,22 +250,6 @@ void catgenie_term (void)
 {
 }
 /* End: term_catgenie */
-
-void catsensor_event (unsigned char detected)
-/******************************************************************************/
-/* Function:	catsensor_event						      */
-/*		- Handle state changes of cat sensor			      */
-/* History :	13 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-	if (detected)
-		set_LED_Cat(0x55, 1);
-	else
-		set_LED_Cat(0x0, 0);
-}
-/* catsensor_isr */
-
 
 void set_LED (unsigned char led, unsigned char on)
 {
@@ -504,58 +404,3 @@ void set_Dryer	(unsigned char on)
 /* Local Implementations						      */
 /******************************************************************************/
 
-static void watersensor_event (unsigned char detected)
-/******************************************************************************/
-/* Function:	watersensor_event					      */
-/*		- Handle state changes of water sensor			      */
-/* History :	13 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-	set_LED(1, detected);
-}
-/* watersensor_event */
-
-
-static void heatsensor_event (unsigned char detected)
-/******************************************************************************/
-/* Function:	heatsensor_event					      */
-/*		- Handle state changes of over-heat sensor		      */
-/* History :	13 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-}
-/* heatsensor_event */
-
-
-static void startbutton_event (unsigned char up)
-/******************************************************************************/
-/* Function:	startbutton_event					      */
-/*		- Handle state changes of Start button			      */
-/* History :	16 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-	if (!up)
-		set_Beeper(1,0);
-	set_LED(4, !up);
-	set_Water(!up);
-}
-/* startbutton_event */
-
-
-static void setupbutton_event (unsigned char up)
-/******************************************************************************/
-/* Function:	setupbutton_event					      */
-/*		- Handle state changes of Setup button			      */
-/* History :	16 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-	if (!up)
-		set_Beeper(1,0);
-	set_LED(3, !up);
-	set_Pump(!up);
-}
-/* setupbutton_event */
