@@ -9,8 +9,11 @@
 #include <htc.h>
 
 #include "catsensor.h"
+#include "hardware.h"
 #include "timer.h"
 #include "catgenie120.h"
+
+extern void catsensor_event (unsigned char detected);
 
 
 /******************************************************************************/
@@ -20,11 +23,6 @@
 #define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
 
 #define	DEBOUNCE_TIME		(SECOND/37)	/* Multiples of 27ms */
-
-#define CATSENSOR_LED_PORT	PORTC
-#define CATSENSOR_LED_MASK	BIT(2)
-#define CATSENSOR_PORT		PORTB
-#define CATSENSOR_MASK		BIT(4)
 
 
 /******************************************************************************/

@@ -21,12 +21,9 @@
 
 
 /* Generic */
-void		catgenie_init		(void) ;
+unsigned char	catgenie_init		(void) ;
 void		catgenie_work		(void) ;
 void		catgenie_term		(void) ;
-
-/* Event notification */
-void		catsensor_event		(unsigned char detected) ;
 
 /* Indicators */
 void		set_LED			(unsigned char led,
