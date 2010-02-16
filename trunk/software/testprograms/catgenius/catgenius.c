@@ -11,6 +11,7 @@
 #include "../common/timer.h"
 #include "../common/catsensor.h"
 #include "../common/catgenie120.h"
+#include "userinterface.h"
 
 
 /******************************************************************************/
@@ -52,12 +53,15 @@ void main (void)
 	/* Initialize the cat sensor */
 	catsensor_init();
 
+	userinterface_init();
+
 	/* Initialize interrupts */
 	interrupt_init();
 
 	/* Execute the run loop */
 	for(;;){
 		catsensor_work();
+		userinterface_work();
 		catgenie_work();
 	}
 }
@@ -94,28 +98,6 @@ void heatsensor_event (unsigned char detected)
 {
 }
 /* heatsensor_event */
-
-void startbutton_event (unsigned char up)
-/******************************************************************************/
-/* Function:	startbutton_event					      */
-/*		- Handle state changes of Start button			      */
-/* History :	16 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-}
-/* startbutton_event */
-
-void setupbutton_event (unsigned char up)
-/******************************************************************************/
-/* Function:	setupbutton_event					      */
-/*		- Handle state changes of Setup button			      */
-/* History :	16 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-}
-/* setupbutton_event */
 
 
 /******************************************************************************/
