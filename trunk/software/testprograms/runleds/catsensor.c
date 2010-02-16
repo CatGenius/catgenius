@@ -21,8 +21,8 @@
 
 #define	DEBOUNCE_TIME		(SECOND/37)	/* Multiples of 27ms */
 
-#define CATDET_LED_PORT		PORTC
-#define CATDET_LED_MASK		BIT(2)
+#define CATSENSOR_LED_PORT	PORTC
+#define CATSENSOR_LED_MASK	BIT(2)
 #define CATSENSOR_PORT		PORTB
 #define CATSENSOR_MASK		BIT(4)
 
@@ -65,7 +65,7 @@ void catsensor_init (void)
 	 * Timer 2 On */
 	T2CON = 0x7D ;
 	/* Select duty cycle  */
-	CCPR1L = 0b00101010 ;
+	CCPR1L = 0x2A ;
 	/* Set PWM mode
 	 * Select duty cycle  */
 	CCP1CON = 0x1F ;
@@ -92,8 +92,10 @@ void catsensor_work (void)
 	}
 
 	/* Notify is changed */
-	if (timeoutexpired(&debouncer))
+	if (timeoutexpired(&debouncer)) {
 		catsensor_event(detected);
+		timeoutnever(&debouncer);
+	}
 } /* catsensor_work */
 
 
@@ -123,7 +125,7 @@ void catsensor_isr_timer (void)
 {
 	if (pinged) {
 		/* End ping in progress */
-		TRISC |= CATDET_LED_MASK;
+		TRISC |= CATSENSOR_LED_MASK;
 		pinged = 0;
 		/* The echo is the detection */
 		detected = echoed;
@@ -131,7 +133,7 @@ void catsensor_isr_timer (void)
 		T2CKPS1 = 1;
 	} else {
 		/* Start new ping */
-		TRISC &= ~CATDET_LED_MASK;
+		TRISC &= ~CATSENSOR_LED_MASK;
 		pinged = 1;
 		/* Reset the echo for the new ping */
 		echoed = 0;
@@ -153,7 +155,7 @@ void catsensor_isr_input (void)
 	if ( (pinged) &&
 	     (CATSENSOR_PORT & CATSENSOR_MASK) )
 		/* Turn off emitter to reset the receiver */
-		TRISC |= CATDET_LED_MASK;
+		TRISC |= CATSENSOR_LED_MASK;
 		/* Store the echo */
 		echoed = 1;
 }
