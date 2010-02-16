@@ -78,6 +78,8 @@ static void interrupt_init (void)
 
 static void interrupt isr (void)
 {
+	unsigned char temp;
+
 	/* Timer 1 interrupt */
 	if (TMR1IF) {
 		/* Reset interrupt */
@@ -90,18 +92,18 @@ static void interrupt isr (void)
 		/* Reset interrupt */
 		TMR2IF = 0;
 		/* Handle interrupt */
-		catsensor_isr();
+		catsensor_isr_timer();
 	}
 	/* Port B interrupt */
 	if (RBIF) {
-		unsigned char	PORTB_diff = PORTB ^ PORTB_old;
 		/* Reset interrupt */
 		RBIF = 0;
+		/* Detected changes */
+		temp = PORTB ^ PORTB_old;
 		/* Handle interrupt */
-//		if (PORTB_diff & 0x10)
-//			catsensor_isr();
-//		if (PORTB_diff & 0x20)
-//			setupbutton_isr();
+		if (temp & 0x10)
+			catsensor_isr_input();
+		/* Update the old status */
 		PORTB_old = PORTB ;
 	}
 }
