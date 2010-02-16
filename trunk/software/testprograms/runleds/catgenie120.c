@@ -97,10 +97,9 @@
 /* Debouncers */
 #define DEBOUNCER_BUTTON_START	0
 #define DEBOUNCER_BUTTON_SETUP	1
-#define DEBOUNCER_SENSOR_CAT	2
-#define DEBOUNCER_SENSOR_WATER	3
-#define DEBOUNCER_SENSOR_HEAT	4
-#define DEBOUNCER_MAX		5
+#define DEBOUNCER_SENSOR_WATER	2
+#define DEBOUNCER_SENSOR_HEAT	3
+#define DEBOUNCER_MAX		4
 
 /* Pacers */
 #define PACER_BITTIME		(SECOND/5)	/* 200ms */
@@ -130,7 +129,6 @@ struct debouncer {
 static struct debouncer	debouncers[DEBOUNCER_MAX] = {
 	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &STARTBUTTON_PORT, STARTBUTTON_MASK, handler},
 	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &SETUPBUTTON_PORT, SETUPBUTTON_MASK, handler},
-	{{0xFFFF, 0xFFFFFFFF}, CATSENSOR_DEBOUNCE,   0, &CATSENSOR_PORT,   CATSENSOR_MASK,   handler},
 	{{0xFFFF, 0xFFFFFFFF}, WATERSENSOR_DEBOUNCE, 0, &WATERSENSOR_PORT, WATERSENSOR_MASK, handler},
 	{{0xFFFF, 0xFFFFFFFF}, HEATSENSOR_DEBOUNCE,  0, &HEATSENSOR_PORT,  HEATSENSOR_MASK,  handler}
 };
@@ -267,9 +265,11 @@ void catgenie_work (void)
 	index     = status ^ portb_old;
 	portb_old = status;
 	if (index & STARTBUTTON_MASK)
-		startbutton_isr();
+		settimeout(&debouncers[DEBOUNCER_BUTTON_START].timer,
+			   debouncers[DEBOUNCER_BUTTON_START].timeout);
 	if (index & SETUPBUTTON_MASK)
-		setupbutton_isr();
+		settimeout(&debouncers[DEBOUNCER_BUTTON_SETUP].timer,
+			   debouncers[DEBOUNCER_BUTTON_SETUP].timeout);
 	if (index & WATERSENSOR_MASK)
 		watersensor_isr();
 	if (index & HEATSENSOR_MASK)
@@ -322,33 +322,20 @@ void catgenie_term (void)
 }
 /* End: term_catgenie */
 
-
-void startbutton_isr (void)
+void catsensor_event (unsigned char detected)
 /******************************************************************************/
-/* Function:	startbutton_isr						      */
-/*		- Handle state changes of the Start/Pause button	      */
+/* Function:	catsensor_event						      */
+/*		- Handle state changes of cat sensor			      */
 /* History :	13 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	settimeout(&debouncers[DEBOUNCER_BUTTON_START].timer,
-		   debouncers[DEBOUNCER_BUTTON_START].timeout);
+	if (detected)
+		LED_CAT_PORT |= LED_CAT_MASK;
+	else
+		LED_CAT_PORT &= ~LED_CAT_MASK;
 }
-/* startbutton_isr */
-
-
-void setupbutton_isr (void)
-/******************************************************************************/
-/* Function:	setupbutton_isr						      */
-/*		- Handle state changes of the Auto setup button		      */
-/* History :	13 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-	settimeout(&debouncers[DEBOUNCER_BUTTON_SETUP].timer,
-		   debouncers[DEBOUNCER_BUTTON_SETUP].timeout);
-}
-/* setupbutton_isr */
+/* catsensor_isr */
 
 
 void watersensor_isr (void)

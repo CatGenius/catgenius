@@ -10,6 +10,7 @@
 
 #include "catsensor.h"
 #include "timer.h"
+#include "catgenie120.h"
 
 
 /******************************************************************************/
@@ -18,8 +19,7 @@
 
 #define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
 
-#define LED_CAT_PORT		PORTE
-#define LED_CAT_MASK		BIT(1)
+#define	DEBOUNCE_TIME		(SECOND/37)	/* Multiples of 27ms */
 
 #define CATDET_LED_PORT		PORTC
 #define CATDET_LED_MASK		BIT(2)
@@ -31,11 +31,11 @@
 /* Global Data								      */
 /******************************************************************************/
 
-#define PULSETOL	4
-struct timer		catsensor = {0xFFFF, 0xFFFFFFFF};
-unsigned char		catsensorpulses = 0;
-
-static unsigned char	portb_old;
+static bit			pinged       = 0;
+static bit			echoed       = 0;
+static bit			detected     = 0;
+static bit			detected_old = 0;
+static struct timer		debouncer    = {0xFFFF, 0xFFFFFFFF};
 
 
 /******************************************************************************/
@@ -58,38 +58,21 @@ void catsensor_init (void)
 	/*
 	 * Initialize timer 2
 	 */
-CCP1M0 = 1;
-CCP1M1 = 1;
-CCP1M2 = 1;
-CCP1M3 = 1;
-PR2 = 0b01010100 ;
-T2CON = 0b00000101 ;
-CCPR1L = 0b00101010 ;
-CCP1CON = 0b00011100 ;
-
-TOUTPS0 = 1;
-TOUTPS1 = 1;
-TOUTPS2 = 1;
-TOUTPS3 = 1;
-TMR2IF = 0;
-TMR2IE = 1;
-
-	/* Select Fosc/4 as source */
-//	TMR1CS = 0;
-	/* Set prescaler to 1:8 */
-//	T1CKPS1 = 1;
-//	T1CKPS0 = 1;
-	/* Disable timer 1 external oscillator */
-//	T1OSCEN = 0;
-	/* Disable synchronized clock */
-//	T1SYNC = 0;
-	/* Switch on timer 1 */
-//	TMR1ON = 1;
-	/* Enable timer 1 interrupt */
-//	TMR1IE = 1;
-
-//	portb_old = PORTB;
-
+	/* Select frequency */
+	PR2 = 0x54 ;
+	/* Postscaler to 1:16 
+	 * Prescaler to 1:4
+	 * Timer 2 On */
+	T2CON = 0x7D ;
+	/* Select duty cycle  */
+	CCPR1L = 0b00101010 ;
+	/* Set PWM mode
+	 * Select duty cycle  */
+	CCP1CON = 0x1F ;
+	/* Clear timer 2 interrupt status */
+	TMR2IF = 0;
+	/* Enable timer 2 interrupt */
+	TMR2IE = 1;
 }
 /* End: catsensor_init */
 
@@ -97,39 +80,20 @@ TMR2IE = 1;
 void catsensor_work (void)
 /******************************************************************************/
 /* Function:	Module worker routine					      */
-/*		- Terminates the module					      */
+/*		- Debounces the decoupled signal and notifies on changes      */
 /* History :	16 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	unsigned char	index ;
-	unsigned char	status ;
-
-	/* Poll critical Port B inputs for changes */
-	status    = PORTB;
-	index     = status ^ portb_old;
-	portb_old = status;
-	
-	if (index & CATSENSOR_MASK) {
-		if (CATSENSOR_PORT & CATSENSOR_MASK) {
-			settimeout(&catsensor, (PULSETOL * SECOND)/33);
-			if (catsensorpulses < 255)
-				catsensorpulses++;
-		}
+	/* Debounce the decouples 'detect' signal */
+	if (detected != detected_old) {
+		settimeout(&debouncer, DEBOUNCE_TIME);
+		detected_old = detected;
 	}
 
-	if (catsensorpulses){
-		if(timeoutexpired(&catsensor)) {
-			/* Cat gone */
-			catsensorpulses = 0;
-LED_CAT_PORT &= ~LED_CAT_MASK;
-		}
-		if (catsensorpulses > PULSETOL) {
-			/* Cat here */
-LED_CAT_PORT |= LED_CAT_MASK;
-		}
-	}
-
+	/* Notify is changed */
+	if (timeoutexpired(&debouncer))
+		catsensor_event(detected);
 } /* catsensor_work */
 
 
@@ -149,26 +113,53 @@ void catsensor_term (void)
 /* End: catsensor_term */
 
 
-
+void catsensor_isr_timer (void)
 /******************************************************************************/
-/* Local Implementations						      */
-/******************************************************************************/
-
-void catsensor_isr (void)
-/******************************************************************************/
-/* Function:	Interrupt service routine				      */
-/*		- Each interrupt will increment the 32-bit ticks counter.     */
+/* Function:	Timer interrupt service routine				      */
+/*		- Interrupt will toggle pinging				.     */
 /* History :	16 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	TRISC ^= 0x04;
-	if (TRISC & 0x04) {
+	if (pinged) {
+		/* End ping in progress */
+		TRISC |= CATDET_LED_MASK;
+		pinged = 0;
+		/* The echo is the detection */
+		detected = echoed;
+		/* Increase prescaler for long idle */
 		T2CKPS1 = 1;
-		T2CKPS0 = 1;
 	} else {
+		/* Start new ping */
+		TRISC &= ~CATDET_LED_MASK;
+		pinged = 1;
+		/* Reset the echo for the new ping */
+		echoed = 0;
+		/* Decrease prescaler for short ping */
 		T2CKPS1 = 0;
-		T2CKPS0 = 1;
 	}
 }
-/* End: catsensor_isr */
+/* End: catsensor_isr_timer */
+
+
+void catsensor_isr_input (void)
+/******************************************************************************/
+/* Function:	Input interrupt service routine				      */
+/*		- Interrupt will toggle pinging				.     */
+/* History :	16 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
+{
+	if ( (pinged) &&
+	     (CATSENSOR_PORT & CATSENSOR_MASK) )
+		/* Turn off emitter to reset the receiver */
+		TRISC |= CATDET_LED_MASK;
+		/* Store the echo */
+		echoed = 1;
+}
+/* End: catsensor_isr_input */
+
+
+/******************************************************************************/
+/* Local Implementations						      */
+/******************************************************************************/

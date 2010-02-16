@@ -26,9 +26,7 @@ void		catgenie_work		(void) ;
 void		catgenie_term		(void) ;
 
 /* Event notification */
-void		startbutton_isr		(void) ;
-void		setupbutton_isr		(void) ;
-//void		catsensor_isr		(void) ;
+void		catsensor_event		(unsigned char detected) ;
 void		watersensor_isr		(void) ;
 void		heatsensor_isr		(void) ;
 
