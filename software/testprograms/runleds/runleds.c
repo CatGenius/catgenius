@@ -9,6 +9,7 @@
 #include <htc.h>
 
 #include "timer.h"
+#include "catsensor.h"
 #include "catgenie120.h"
 
 
@@ -19,77 +20,45 @@
 __CONFIG(XT & WDTDIS & PWRTEN & BOREN & LVPDIS & DPROT & WRTEN & PROTECT);
 //__CONFIG(XT & WDTEN & PWRTEN & BOREN & LVPDIS & DPROT & WRTEN & PROTECT);
 
-#define NO_INTERRUPTS
-
 
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
 
 static unsigned char	PORTB_old;
-static unsigned char	test		= 0;
 
 
 /******************************************************************************/
 /* Local Prototypes							      */
 /******************************************************************************/
 
-#ifdef NO_INTERRUPTS
-static void isr (void);
-#endif /* NO_INTERRUPTS */
+static void interrupt_init (void);
+//static void isr (void);
 
 
 /******************************************************************************/
 /* Global Implementations						      */
 /******************************************************************************/
 
-void init (void)
-{
-	unsigned char temp;
-
-	/* Init the hardware */
-	init_catgenie();
-	PORTB_old = PORTB;
-
-	/* initialize timer 1 */
-	timer_init();
-
-	/* Enable peripheral interrupts */
-	PEIE = 1;
-
-	/* Enable interrupts */
-	GIE = 1;
-}
-
 void main (void)
 {
-	/* Initialize the hardware */
-	init();
+	/* Init the hardware */
+	catgenie_init();
+	PORTB_old = PORTB;
 
-CCP1M0 = 1;
-CCP1M1 = 1;
-CCP1M2 = 1;
-CCP1M3 = 1;
-PR2 = 0b01010100 ;
-T2CON = 0b00000101 ;
-CCPR1L = 0b00101010 ;
-CCP1CON = 0b00011100 ;
+	/* Initialize software timers */
+	timer_init();
 
-TOUTPS0 = 1;
-TOUTPS1 = 1;
-TOUTPS2 = 1;
-TOUTPS3 = 1;
-TMR2IF = 0;
-TMR2IE = 1;
+	/* Initialize the cat sensor */
+	catsensor_init();
 
+	/* Initialize interrupts */
+	interrupt_init();
 
 	/* Execute the run loop */
 	for(;;){
-#ifdef NO_INTERRUPTS
-		isr();
-#endif /* NO_INTERRUPTS */
-
-		do_catgenie();
+		catsensor_work();
+		catgenie_work();
 	}
 }
 
@@ -98,37 +67,32 @@ TMR2IE = 1;
 /* Local Implementations						      */
 /******************************************************************************/
 
-#ifdef NO_INTERRUPTS
-static void isr (void)
-#else
-static void interrupt isr (void)
-#endif /* NO_INTERRUPTS */
+static void interrupt_init (void)
 {
+	/* Enable peripheral interrupts */
+	PEIE = 1;
+
+	/* Enable interrupts */
+	GIE = 1;
+}
+
+static void interrupt isr (void)
+{
+	/* Timer 1 interrupt */
 	if (TMR1IF) {
 		/* Reset interrupt */
 		TMR1IF = 0;
 		/* Handle interrupt */
 		timer_isr();
 	}
+	/* Timer 2 interrupt */
 	if (TMR2IF) {
 		/* Reset interrupt */
 		TMR2IF = 0;
 		/* Handle interrupt */
-		TRISC ^= 0x04;
-		if (TRISC & 0x04) {
-			T2CKPS1 = 1;
-			T2CKPS0 = 1;
-		} else {
-			T2CKPS1 = 0;
-			T2CKPS0 = 1;
-		}
+		catsensor_isr();
 	}
-	if (INTF) {
-		/* Reset interrupt */
-		INTF = 0;
-		/* Handle interrupt */
-//		startbutton_isr();
-	}
+	/* Port B interrupt */
 	if (RBIF) {
 		unsigned char	PORTB_diff = PORTB ^ PORTB_old;
 		/* Reset interrupt */

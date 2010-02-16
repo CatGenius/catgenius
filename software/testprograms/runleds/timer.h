@@ -21,9 +21,12 @@ struct timer {
 	unsigned long	overflows ;
 };
 
+/* Generic */
 void		timer_init		(void) ;
-void		timer_isr		(void) ;
 void		timer_term		(void) ;
+
+/* Event notification */
+void		timer_isr		(void) ;
 
 void		settimeout		(struct timer		* const timer_p,
 					 unsigned long		  const timout) ;
