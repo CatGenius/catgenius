@@ -11,7 +11,7 @@
 /* Generic */
 void		catsensor_init		(void) ;
 void		catsensor_work		(void) ;
-void		catsensro_term		(void) ;
+void		catsensor_term		(void) ;
 
 /* Event notification */
 void		catsensor_isr_timer	(void) ;
