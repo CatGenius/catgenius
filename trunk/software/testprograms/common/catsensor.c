@@ -99,7 +99,7 @@ void catsensor_work (void)
 
 void catsensor_term (void)
 /******************************************************************************/
-/* Function:	Module initialisation routine			      */
+/* Function:	Module termination routine				      */
 /*		- Terminates the module					      */
 /* History :	16 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
@@ -130,11 +130,11 @@ void catsensor_isr_timer (void)
 		/* Increase prescaler for long idle */
 		T2CKPS1 = 1;
 	} else {
+		/* Reset the echo for the new ping */
+		echoed = 0;
 		/* Start new ping */
 		TRISC &= ~CATSENSOR_LED_MASK;
 		pinged = 1;
-		/* Reset the echo for the new ping */
-		echoed = 0;
 		/* Decrease prescaler for short ping */
 		T2CKPS1 = 0;
 	}
@@ -145,7 +145,7 @@ void catsensor_isr_timer (void)
 void catsensor_isr_input (void)
 /******************************************************************************/
 /* Function:	Input interrupt service routine				      */
-/*		- Interrupt will toggle pinging				.     */
+/*		- Interrupt will handle echo				.     */
 /* History :	16 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/

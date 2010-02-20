@@ -9,8 +9,9 @@
 #include <htc.h>
 
 #include "../common/timer.h"
-#include "../common/catsensor.h"
+#include "../common/hardware.h"
 #include "../common/catgenie120.h"
+#include "../common/catsensor.h"
 
 
 /******************************************************************************/
@@ -59,6 +60,7 @@ void main (void)
 	/* Execute the run loop */
 	for(;;){
 		catsensor_work();
+//		water_work();
 		catgenie_work();
 	}
 }
@@ -78,7 +80,7 @@ void catsensor_event (unsigned char detected)
 }
 /* catsensor_event */
 
-void watersensor_event (unsigned char detected)
+void watersensor_event (unsigned char undetected)
 /******************************************************************************/
 /* Function:	watersensor_event					      */
 /*		- Handle state changes of water sensor			      */
@@ -86,7 +88,7 @@ void watersensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if (detected)
+	if (!undetected)
 		set_LED_Cartridge(0x05, 1);
 	else
 		set_LED_Cartridge(0x0, 0);
@@ -177,7 +179,7 @@ static void interrupt isr (void)
 		/* Detected changes */
 		temp = PORTB ^ PORTB_old;
 		/* Handle interrupt */
-		if (temp & 0x10)
+		if (temp & CATSENSOR_MASK)
 			catsensor_isr_input();
 		/* Update the old status */
 		PORTB_old = PORTB ;
