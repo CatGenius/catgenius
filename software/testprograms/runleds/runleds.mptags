@@ -13,37 +13,36 @@ BIT::(n)(1U<<(n))	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	
 BOWL_CCW::2	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	26;"	d	line:26
 BOWL_CW::1	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	25;"	d	line:25
 BOWL_STOP::0	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	24;"	d	line:24
-BUTTON_DEBOUNCE::(SECOND/20)	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	28;"	d	line:28	file:
+BUTTON_DEBOUNCE::(SECOND/20)	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	29;"	d	line:29	file:
 CATGENIE120_H	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	9;"	d	line:9
 CATSENSOR_H	Z:\Sources\catgenius\software\testprograms\common\catsensor.h	9;"	d	line:9
-DEBOUNCER_BUTTON_SETUP::1	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	35;"	d	line:35	file:
-DEBOUNCER_BUTTON_START::0	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	34;"	d	line:34	file:
-DEBOUNCER_MAX::4	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	38;"	d	line:38	file:
-DEBOUNCER_SENSOR_HEAT::3	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	37;"	d	line:37	file:
-DEBOUNCER_SENSOR_WATER::2	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	36;"	d	line:36	file:
+DEBOUNCER_BUTTON_SETUP::1	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	36;"	d	line:36	file:
+DEBOUNCER_BUTTON_START::0	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	35;"	d	line:35	file:
+DEBOUNCER_MAX::4	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	39;"	d	line:39	file:
+DEBOUNCER_SENSOR_HEAT::3	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	38;"	d	line:38	file:
+DEBOUNCER_SENSOR_WATER::2	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	37;"	d	line:37	file:
 DEBOUNCE_TIME::(SECOND/37)	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	25;"	d	line:25	file:
 DOSAGE_SECONDS_PER_ML::10	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	25;"	d	line:25	file:
 Delay	Z:\Sources\catgenius\software\testprograms\common\timer.h	47;"	p	line:47	signature:(unsigned long * const delay)
 ExpireTimeout	Z:\Sources\catgenius\software\testprograms\common\timer.h	37;"	p	line:37	signature:(struct timer * const timer_p)
 FOSC::(4UL*MHZ)	Z:\Sources\catgenius\software\testprograms\common\timer.h	13;"	d	line:13
-HEATSENSOR_DEBOUNCE::(0)	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	30;"	d	line:30	file:
+HEATSENSOR_DEBOUNCE::(0)	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	31;"	d	line:31	file:
 HOUR::(60*(MINUTE))	Z:\Sources\catgenius\software\testprograms\common\timer.h	17;"	d	line:17
 KHZ::(1000UL)	Z:\Sources\catgenius\software\testprograms\common\timer.h	11;"	d	line:11
 MHZ::(1000UL*(KHZ))	Z:\Sources\catgenius\software\testprograms\common\timer.h	12;"	d	line:12
 MINUTE::(60*(SECOND))	Z:\Sources\catgenius\software\testprograms\common\timer.h	16;"	d	line:16
 MicroDelay	Z:\Sources\catgenius\software\testprograms\common\timer.h	49;"	p	line:49	signature:(unsigned short const delay_us)
 OVERHEAT_DETECTED::0x08	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	16;"	d	line:16
-PACER_BEEPER::0	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	41;"	d	line:41	file:
-PACER_BITTIME::(SECOND/5)	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	31;"	d	line:31	file:
-PACER_LED_CARTRIDGE::3	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	44;"	d	line:44	file:
-PACER_LED_CAT::4	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	45;"	d	line:45	file:
-PACER_LED_ERROR::1	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	42;"	d	line:42	file:
-PACER_LED_LOCKED::2	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	43;"	d	line:43	file:
-PACER_MAX::5	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	46;"	d	line:46	file:
-PORTA_old	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	52;"	v	line:52	file:
-PORTB_old	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	53;"	v	line:53	file:
-PORTB_old	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	28;"	v	line:28	file:
-PROTECT	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	20;"	v	line:20
+PACER_BEEPER::0	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	42;"	d	line:42	file:
+PACER_BITTIME::(SECOND/5)	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	32;"	d	line:32	file:
+PACER_LED_CARTRIDGE::3	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	45;"	d	line:45	file:
+PACER_LED_CAT::4	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	46;"	d	line:46	file:
+PACER_LED_ERROR::1	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	43;"	d	line:43	file:
+PACER_LED_LOCKED::2	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	44;"	d	line:44	file:
+PACER_MAX::5	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	47;"	d	line:47	file:
+PORTB_old	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	54;"	v	line:54	file:
+PORTB_old	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	29;"	v	line:29	file:
+PROTECT	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	21;"	v	line:21
 PostponeTimeout	Z:\Sources\catgenius\software\testprograms\common\timer.h	34;"	p	line:34	signature:(struct timer * const timer_p, unsigned long const postpone)
 RESERVED_1::0x10	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	17;"	d	line:17
 RESERVED_2::0x20	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	18;"	d	line:18
@@ -54,17 +53,18 @@ SETUP_BUTTON_HELD::0x02	Z:\Sources\catgenius\software\testprograms\common\catgen
 START_BUTTON_HELD::0x01	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	13;"	d	line:13
 TIMER_H	Z:\Sources\catgenius\software\testprograms\common\timer.h	9;"	d	line:9
 TimeStampAge	Z:\Sources\catgenius\software\testprograms\common\timer.h	45;"	p	line:45	signature:(struct timer const * const timer_p)
-WATERSENSOR_DEBOUNCE::(3*SECOND)	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	29;"	d	line:29	file:
+WATERSENSORPOLLING::(SECOND)	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	28;"	d	line:28	file:
+WATERSENSOR_DEBOUNCE::(3*SECOND)	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	30;"	d	line:30	file:
 WATER_DETECTED::0x04	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	15;"	d	line:15
 bytes	Z:\Sources\catgenius\software\testprograms\common\timer.c	209;"	l	line:209
-catgenie_init	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	97;"	f	line:97	signature:(void)
+catgenie_init	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	102;"	f	line:102	signature:(void)
 catgenie_init	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	35;"	p	line:35	signature:(void)
-catgenie_term	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	243;"	f	line:243	signature:(void)
+catgenie_term	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	262;"	f	line:262	signature:(void)
 catgenie_term	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	37;"	p	line:37	signature:(void)
-catgenie_work	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	173;"	f	line:173	signature:(void)
+catgenie_work	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	181;"	f	line:181	signature:(void)
 catgenie_work	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	36;"	p	line:36	signature:(void)
 catsensor_event	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	16;"	p	line:16	file:	signature:(unsigned char detected)
-catsensor_event	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	66;"	f	line:66	signature:(unsigned char detected)
+catsensor_event	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	68;"	f	line:68	signature:(unsigned char detected)
 catsensor_init	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	48;"	f	line:48	signature:(void)
 catsensor_init	Z:\Sources\catgenius\software\testprograms\common\catsensor.h	12;"	p	line:12	signature:(void)
 catsensor_isr_input	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	145;"	f	line:145	signature:(void)
@@ -72,91 +72,91 @@ catsensor_isr_input	Z:\Sources\catgenius\software\testprograms\common\catsensor.
 catsensor_isr_timer	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	116;"	f	line:116	signature:(void)
 catsensor_isr_timer	Z:\Sources\catgenius\software\testprograms\common\catsensor.h	17;"	p	line:17	signature:(void)
 catsensor_term	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	100;"	f	line:100	signature:(void)
+catsensor_term	Z:\Sources\catgenius\software\testprograms\common\catsensor.h	14;"	p	line:14	signature:(void)
 catsensor_work	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	78;"	f	line:78	signature:(void)
 catsensor_work	Z:\Sources\catgenius\software\testprograms\common\catsensor.h	13;"	p	line:13	signature:(void)
-catsensro_term	Z:\Sources\catgenius\software\testprograms\common\catsensor.h	14;"	p	line:14	signature:(void)
 currentTime	Z:\Sources\catgenius\software\testprograms\common\timer.c	181;"	l	line:181
-debouncer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	55;"	s	line:55	file:
+debouncer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	60;"	s	line:60	file:
 debouncer	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	36;"	v	line:36	file:
-debouncers	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	63;"	v	line:63	file:
+debouncers	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	68;"	v	line:68	file:
 detected	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	34;"	v	line:34	file:
 detected_old	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	35;"	v	line:35	file:
 echoed	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	33;"	v	line:33	file:
 gettimestamp	Z:\Sources\catgenius\software\testprograms\common\timer.c	200;"	f	line:200	signature:(struct timer * const ticks)
 gettimestamp	Z:\Sources\catgenius\software\testprograms\common\timer.h	43;"	p	line:43	signature:(struct timer * const ticks)
-handler	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	215;"	p	line:215	file:
-handler	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	61;"	m	line:61	struct:debouncer	file:
+handler	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	234;"	p	line:234	file:
+handler	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	66;"	m	line:66	struct:debouncer	file:
 heatsensor_event	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	16;"	p	line:16	file:	signature:(unsigned char detected)
-heatsensor_event	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	96;"	f	line:96	signature:(unsigned char detected)
-interrupt_init	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	144;"	f	line:144	file:	signature:(void)
-interrupt_init	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	35;"	p	line:35	file:	signature:(void)
-isr	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	155;"	f	line:155	file:	signature:(void)
+heatsensor_event	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	98;"	f	line:98	signature:(unsigned char detected)
+interrupt_init	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	146;"	f	line:146	file:	signature:(void)
+interrupt_init	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	36;"	p	line:36	file:	signature:(void)
+isr	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	157;"	f	line:157	file:	signature:(void)
 longshort	Z:\Sources\catgenius\software\testprograms\common\timer.c	92;"	l	line:92
 ls_longTicks	Z:\Sources\catgenius\software\testprograms\common\timer.c	90;"	m	line:90	file:
-main	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	42;"	f	line:42	signature:(void)
-mask	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	257;"	l	line:257
-mask	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	73;"	m	line:73	struct:pacer	file:
+main	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	43;"	f	line:43	signature:(void)
+mask	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	276;"	l	line:276
+mask	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	78;"	m	line:78	struct:pacer	file:
 ms_shortTicks	Z:\Sources\catgenius\software\testprograms\common\timer.c	91;"	m	line:91	file:
 overflows	Z:\Sources\catgenius\software\testprograms\common\timer.c	23;"	v	line:23	file:
 overflows	Z:\Sources\catgenius\software\testprograms\common\timer.h	21;"	m	line:21	struct:timer
-pacer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	70;"	s	line:70	file:
-pacers	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	79;"	v	line:79	file:
-pattern	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	74;"	m	line:74	struct:pacer	file:
+pacer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	75;"	s	line:75	file:
+pacers	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	84;"	v	line:84	file:
+pattern	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	79;"	m	line:79	struct:pacer	file:
 pinged	Z:\Sources\catgenius\software\testprograms\common\catsensor.c	32;"	v	line:32	file:
-port	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	256;"	l	line:256
-port	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	59;"	m	line:59	struct:debouncer	file:
-port	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	76;"	m	line:76	struct:pacer	file:
-port_mask	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	60;"	m	line:60	struct:debouncer	file:
-port_mask	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	77;"	m	line:77	struct:pacer	file:
-repeat	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	75;"	m	line:75	struct:pacer	file:
-set_Arm	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	352;"	f	line:352	signature:(unsigned char mode)
+port	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	275;"	l	line:275
+port	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	64;"	m	line:64	struct:debouncer	file:
+port	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	81;"	m	line:81	struct:pacer	file:
+port_mask	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	65;"	m	line:65	struct:debouncer	file:
+port_mask	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	82;"	m	line:82	struct:pacer	file:
+repeat	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	80;"	m	line:80	struct:pacer	file:
+set_Arm	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	371;"	f	line:371	signature:(unsigned char mode)
 set_Arm	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	55;"	p	line:55	signature:(unsigned char mode)
-set_Beeper	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	324;"	f	line:324	signature:(unsigned char pattern, unsigned char repeat)
+set_Beeper	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	343;"	f	line:343	signature:(unsigned char pattern, unsigned char repeat)
 set_Beeper	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	50;"	p	line:50	signature:(unsigned char pattern, unsigned char repeat)
-set_Bowl	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	334;"	f	line:334	signature:(unsigned char mode)
+set_Bowl	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	353;"	f	line:353	signature:(unsigned char mode)
 set_Bowl	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	54;"	p	line:54	signature:(unsigned char mode)
-set_Dosage	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	378;"	f	line:378	signature:(unsigned char on)
+set_Dosage	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	397;"	f	line:397	signature:(unsigned char on)
 set_Dosage	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	57;"	p	line:57	signature:(unsigned char on)
-set_Dryer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	395;"	f	line:395	signature:(unsigned char on)
+set_Dryer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	414;"	f	line:414	signature:(unsigned char on)
 set_Dryer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	59;"	p	line:59	signature:(unsigned char on)
-set_LED	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	254;"	f	line:254	signature:(unsigned char led, unsigned char on)
+set_LED	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	273;"	f	line:273	signature:(unsigned char led, unsigned char on)
 set_LED	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	40;"	p	line:40	signature:(unsigned char led, unsigned char on)
-set_LED_Cartridge	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	304;"	f	line:304	signature:(unsigned char pattern, unsigned char repeat)
+set_LED_Cartridge	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	323;"	f	line:323	signature:(unsigned char pattern, unsigned char repeat)
 set_LED_Cartridge	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	46;"	p	line:46	signature:(unsigned char pattern, unsigned char repeat)
-set_LED_Cat	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	314;"	f	line:314	signature:(unsigned char pattern, unsigned char repeat)
+set_LED_Cat	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	333;"	f	line:333	signature:(unsigned char pattern, unsigned char repeat)
 set_LED_Cat	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	42;"	p	line:42	signature:(unsigned char pattern, unsigned char repeat)
-set_LED_Error	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	284;"	f	line:284	signature:(unsigned char pattern, unsigned char repeat)
+set_LED_Error	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	303;"	f	line:303	signature:(unsigned char pattern, unsigned char repeat)
 set_LED_Error	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	44;"	p	line:44	signature:(unsigned char pattern, unsigned char repeat)
-set_LED_Locked	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	294;"	f	line:294	signature:(unsigned char pattern, unsigned char repeat)
+set_LED_Locked	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	313;"	f	line:313	signature:(unsigned char pattern, unsigned char repeat)
 set_LED_Locked	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	48;"	p	line:48	signature:(unsigned char pattern, unsigned char repeat)
-set_Pump	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	386;"	f	line:386	signature:(unsigned char on)
+set_Pump	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	405;"	f	line:405	signature:(unsigned char on)
 set_Pump	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	58;"	p	line:58	signature:(unsigned char on)
-set_Water	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	370;"	f	line:370	signature:(unsigned char on)
+set_Water	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	389;"	f	line:389	signature:(unsigned char on)
 set_Water	Z:\Sources\catgenius\software\testprograms\common\catgenie120.h	56;"	p	line:56	signature:(unsigned char on)
 settimeout	Z:\Sources\catgenius\software\testprograms\common\timer.c	79;"	f	line:79	signature:(struct timer * const timer_p, unsigned long const timout)
 settimeout	Z:\Sources\catgenius\software\testprograms\common\timer.h	31;"	p	line:31	signature:(struct timer * const timer_p, unsigned long const timout)
 setupbutton_event	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	18;"	p	line:18	file:	signature:(unsigned char up)
-setupbutton_event	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	123;"	f	line:123	signature:(unsigned char up)
+setupbutton_event	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	125;"	f	line:125	signature:(unsigned char up)
 startbutton_event	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	17;"	p	line:17	file:	signature:(unsigned char up)
-startbutton_event	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	107;"	f	line:107	signature:(unsigned char up)
-state	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	58;"	m	line:58	struct:debouncer	file:
-status	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	182;"	l	line:182
-temp	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	105;"	l	line:105
-temp	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	181;"	l	line:181
+startbutton_event	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	109;"	f	line:109	signature:(unsigned char up)
+state	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	63;"	m	line:63	struct:debouncer	file:
+status	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	190;"	l	line:190
+temp	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	110;"	l	line:110
+temp	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	189;"	l	line:189
 temp	Z:\Sources\catgenius\software\testprograms\common\timer.c	208;"	l	line:208
-temp	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	157;"	l	line:157
+temp	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	159;"	l	line:159
 tempLongTicks	Z:\Sources\catgenius\software\testprograms\common\timer.c	88;"	l	line:88
-tempmask	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	163;"	l	line:163
-tempmask	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	224;"	l	line:224
-tempstate	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	210;"	l	line:210
-timeout	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	57;"	m	line:57	struct:debouncer	file:
+tempmask	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	171;"	l	line:171
+tempmask	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	243;"	l	line:243
+tempstate	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	229;"	l	line:229
+timeout	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	62;"	m	line:62	struct:debouncer	file:
 timeoutexpired	Z:\Sources\catgenius\software\testprograms\common\timer.c	173;"	f	line:173	signature:(struct timer const * const timer_p)
 timeoutexpired	Z:\Sources\catgenius\software\testprograms\common\timer.h	41;"	p	line:41	signature:(struct timer const * const timer_p)
 timeoutnever	Z:\Sources\catgenius\software\testprograms\common\timer.c	159;"	f	line:159	signature:(struct timer * const timer_p)
 timeoutnever	Z:\Sources\catgenius\software\testprograms\common\timer.h	39;"	p	line:39	signature:(struct timer * const timer_p)
 timeoutnow	Z:\Sources\catgenius\software\testprograms\common\timer.c	145;"	f	line:145	signature:(struct timer * const timer_p)
-timer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	56;"	m	line:56	struct:debouncer	file:
-timer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	71;"	m	line:71	struct:pacer	file:
+timer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	61;"	m	line:61	struct:debouncer	file:
+timer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	76;"	m	line:76	struct:pacer	file:
 timer	Z:\Sources\catgenius\software\testprograms\common\timer.h	19;"	s	line:19
 timer1	Z:\Sources\catgenius\software\testprograms\common\timer.h	20;"	m	line:20	struct:timer
 timer_init	Z:\Sources\catgenius\software\testprograms\common\timer.c	35;"	f	line:35	signature:(void)
@@ -165,5 +165,8 @@ timer_isr	Z:\Sources\catgenius\software\testprograms\common\timer.c	378;"	f	line
 timer_isr	Z:\Sources\catgenius\software\testprograms\common\timer.h	29;"	p	line:29	signature:(void)
 timer_term	Z:\Sources\catgenius\software\testprograms\common\timer.c	63;"	f	line:63	signature:(void)
 timer_term	Z:\Sources\catgenius\software\testprograms\common\timer.h	26;"	p	line:26	signature:(void)
-watersensor_event	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	15;"	p	line:15	file:	signature:(unsigned char detected)
-watersensor_event	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	81;"	f	line:81	signature:(unsigned char detected)
+watersensor_event	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	15;"	p	line:15	file:	signature:(unsigned char undetected)
+watersensor_event	Z:\Sources\catgenius\software\testprograms\runleds\runleds.c	83;"	f	line:83	signature:(unsigned char undetected)
+watersensorbuffer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	57;"	v	line:57	file:
+watersensorbuffer_old	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	58;"	v	line:58	file:
+watersensortimer	Z:\Sources\catgenius\software\testprograms\common\catgenie120.c	56;"	v	line:56	file:

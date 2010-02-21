@@ -15,6 +15,7 @@
 #define SECOND		(((FOSC)/4)/8)		/* Number of timer ticks per second */
 #define MINUTE		(60 * (SECOND))		/* Number of timer ticks per minute */
 #define HOUR		(60 * (MINUTE))		/* Number of timer ticks per hour */
+#define MILISECOND	(SECOND/1000)		/* Number of timer ticks per milisecond */
 
 struct timer {
 	unsigned short	timer1 ;
@@ -34,7 +35,7 @@ void		settimeout		(struct timer		* const timer_p,
 void		PostponeTimeout		(struct timer		* const timer_p,
 					 unsigned long		  const postpone) ;
 
-void		ExpireTimeout		(struct timer		* const timer_p) ;
+void		timeoutnow		(struct timer		* const timer_p) ;
 
 void		timeoutnever		(struct timer		* const timer_p) ;
 

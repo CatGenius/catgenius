@@ -11,7 +11,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File001]
@@ -24,7 +24,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File002]
@@ -35,9 +35,9 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File003]
@@ -50,7 +50,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File004]
@@ -63,7 +63,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File005]
@@ -76,7 +76,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File006]
@@ -89,7 +89,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File007]
@@ -102,7 +102,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File008]
@@ -115,7 +115,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File009]
@@ -128,7 +128,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File010]
@@ -141,7 +141,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File011]
@@ -154,7 +154,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File012]
@@ -167,7 +167,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File013]
@@ -180,7 +180,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File014]
@@ -193,7 +193,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File015]
@@ -206,7 +206,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File016]
@@ -219,7 +219,7 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File017]
@@ -232,6 +232,6 @@ LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
 SOLK=<src>|Z:\Sources\catgenius\software\testprograms\common\catsensor.c|Z:\Sources\catgenius\software\testprograms\common\catgenie120.c|Z:\Sources\catgenius\software\testprograms\common\timer.c|catgenius.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
-ToolArgsString= C9=1
+ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
