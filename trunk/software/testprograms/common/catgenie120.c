@@ -362,12 +362,12 @@ void set_Bowl (unsigned char mode)
 		BOWL_PORT &= ~(BOWL_MASK_CWCCW | BOWL_MASK_ONOFF);
 		break;
 	case BOWL_CW:
-		BOWL_PORT &= ~BOWL_MASK_CWCCW;
-		BOWL_PORT |=  BOWL_MASK_ONOFF;
-		break;
-	case BOWL_CCW:
 		BOWL_PORT |= BOWL_MASK_CWCCW;
 		BOWL_PORT |= BOWL_MASK_ONOFF;
+		break;
+	case BOWL_CCW:
+		BOWL_PORT &= ~BOWL_MASK_CWCCW;
+		BOWL_PORT |=  BOWL_MASK_ONOFF;
 		break;
 	}
 }
