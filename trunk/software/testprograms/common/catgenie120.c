@@ -25,11 +25,11 @@ extern void setupbutton_event (unsigned char up);
 #define DOSAGE_SECONDS_PER_ML	10		/* For 1 ml of cleaning liquid, 10 seconds of pumping */
 
 /* Timing configuration */
-#define WATERSENSORPOLLING	(SECOND)	/* 1000ms*/
+#define WATERSENSORPOLLING	(SECOND/10)	/*  100ms*/
 #define BUTTON_DEBOUNCE		(SECOND/20)	/*   50ms */
-#define WATERSENSOR_DEBOUNCE	(3*SECOND)	/* 3000ms */
-#define HEATSENSOR_DEBOUNCE	(0)		/*    0ms */
-#define PACER_BITTIME		(SECOND/5)	/*  200ms */
+#define WATERSENSOR_DEBOUNCE	(SECOND/2)	/* 3000ms */
+#define HEATSENSOR_DEBOUNCE	(SECOND/20)	/*    0ms */
+#define PACER_BITTIME		(SECOND/8)	/*  125ms */
 
 /* Debouncers */
 #define DEBOUNCER_BUTTON_START	0
@@ -53,9 +53,10 @@ extern void setupbutton_event (unsigned char up);
 
 static unsigned char	PORTB_old;
 
-static struct timer	watersensortimer  = {0x0000, 0x00000000};
-static unsigned char	watersensorbuffer = 0;
-static unsigned char	watersensorbuffer_old = 0;
+static struct timer	water_sensortimer      = {0x0000, 0x00000000};
+static unsigned char	water_sensorbuffer     = 0;
+static unsigned char	water_sensorbuffer_old = 0;
+static bit		water_filling          = 0;
 
 struct debouncer {
 	struct timer	timer;
@@ -66,10 +67,10 @@ struct debouncer {
 	void		(*handler)(unsigned char);
 };
 static struct debouncer	debouncers[DEBOUNCER_MAX] = {
-	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &STARTBUTTON_PORT,  STARTBUTTON_MASK, startbutton_event},
-	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &SETUPBUTTON_PORT,  SETUPBUTTON_MASK, setupbutton_event},
-	{{0xFFFF, 0xFFFFFFFF}, WATERSENSOR_DEBOUNCE, 0, &watersensorbuffer, WATERSENSOR_MASK, watersensor_event},
-	{{0xFFFF, 0xFFFFFFFF}, HEATSENSOR_DEBOUNCE,  0, &HEATSENSOR_PORT,   HEATSENSOR_MASK,  heatsensor_event}
+	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &STARTBUTTON_PORT,   STARTBUTTON_MASK, startbutton_event},
+	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &SETUPBUTTON_PORT,   SETUPBUTTON_MASK, setupbutton_event},
+	{{0xFFFF, 0xFFFFFFFF}, WATERSENSOR_DEBOUNCE, 0, &water_sensorbuffer, WATERSENSOR_MASK, watersensor_event},
+	{{0xFFFF, 0xFFFFFFFF}, HEATSENSOR_DEBOUNCE,  0, &HEATSENSOR_PORT,    HEATSENSOR_MASK,  heatsensor_event}
 };
 
 struct pacer {
@@ -190,21 +191,24 @@ void catgenie_work (void)
 	unsigned char	status ;
 
 	/* Poll the water sensor */
-	if (timeoutexpired(&watersensortimer)) {
+	if (timeoutexpired(&water_sensortimer)) {
 		/* Set new polling timeout */
-		settimeout(&watersensortimer, WATERSENSORPOLLING);
-		/* Unmute Water Sensor */
-		TRISA |= WATERSENSORMUTE_MASK;
-		__delay_us(85);
-		watersensorbuffer = WATERSENSOR_PORT ;
-		/* Mute Water Sensor */
-		TRISA &= ~WATERSENSORMUTE_MASK;
+		settimeout(&water_sensortimer, WATERSENSORPOLLING);
+		if (!water_filling) {
+			/* Unmute Water Sensor */
+			TRISA |= WATERSENSORMUTE_MASK;
+			__delay_us(85);
+			water_sensorbuffer = WATERSENSOR_PORT ;
+			/* Mute Water Sensor */
+			TRISA &= ~WATERSENSORMUTE_MASK;
+		} else
+			water_sensorbuffer = WATERSENSOR_PORT ;
 		/* Detect state change */
-		if (watersensorbuffer != watersensorbuffer_old) {
+		if (water_sensorbuffer != water_sensorbuffer_old) {
 		/* Postpone the debouncer */
 			settimeout(&debouncers[DEBOUNCER_SENSOR_WATER].timer,
 				   debouncers[DEBOUNCER_SENSOR_WATER].timeout);
-			watersensorbuffer_old = watersensorbuffer;
+			water_sensorbuffer_old = water_sensorbuffer;
 		}
 	}
 
@@ -388,10 +392,15 @@ void set_Arm (unsigned char mode)
 
 void set_Water (unsigned char on)
 {
-//	if (on)
-//		WATER_PORT |= WATER_MASK;
-//	else
-//		WATER_PORT &= !WATER_MASK;
+	if (on) {
+		water_filling = 1;
+		/* Unmute Water Sensor */
+		TRISA |= WATERSENSORMUTE_MASK;
+	} else {
+		water_filling = 0;
+		/* Mute Water Sensor */
+		TRISA &= ~WATERSENSORMUTE_MASK;
+	}
 }
 
 void set_Dosage (unsigned char on)
@@ -417,6 +426,12 @@ void set_Dryer	(unsigned char on)
 		DRYER_PORT |= DRYER_MASK;
 	else
 		DRYER_PORT &= !DRYER_MASK;
+}
+
+
+unsigned char detected_Water(void)
+{
+	return !(water_sensorbuffer & WATERSENSOR_MASK);
 }
 
 /******************************************************************************/

@@ -58,4 +58,6 @@ void		set_Dosage		(unsigned char on);
 void		set_Pump		(unsigned char on);
 void		set_Dryer		(unsigned char on);
 
+unsigned char	detected_Water		(void);
+
 #endif /* CATGENIE120_H */
