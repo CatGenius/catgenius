@@ -10,8 +10,8 @@
 
 #include "../common/timer.h"
 #include "../common/hardware.h"
-#include "../common/catgenie120.h"
 #include "../common/catsensor.h"
+#include "../common/catgenie120.h"
 
 
 /******************************************************************************/
@@ -42,8 +42,9 @@ static void interrupt_init (void);
 
 void main (void)
 {
+	unsigned char	flags;
 	/* Init the hardware */
-	catgenie_init();
+	flags = catgenie_init();
 
 	/* Initialize software timers */
 	timer_init();
@@ -60,7 +61,6 @@ void main (void)
 	/* Execute the run loop */
 	for(;;){
 		catsensor_work();
-//		water_work();
 		catgenie_work();
 	}
 }
