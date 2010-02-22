@@ -49,9 +49,7 @@ void washprogram_init (void)
 /* washprogram_init */
 
 #define MAX_FILL_TIME	(135*SECOND)
-#define SCCOP1		0
-#define SCCOP2		9
-#define SCCOP3		17
+#define SCOOP		0
 #define WASH		27
 #define DRY		100
 #define EQUALIZE	120
@@ -73,7 +71,7 @@ void washprogram_work (void)
 	/*
 	 * Scooping
 	 */
-	case SCCOP1:	/* Wait for program to start */
+	case SCOOP:	/* Wait for program to start */
 		if (timeoutexpired(&state_timer)) {
 			set_Bowl(BOWL_CCW);
 			set_Arm(ARM_DOWN);
@@ -81,21 +79,21 @@ void washprogram_work (void)
 			state++;
 		}
 		break;
-	case SCCOP1 + 1: /* Wait for arm to hit bottom */
+	case SCOOP + 1: /* Wait for arm to hit bottom */
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_STOP);
 			settimeout(&state_timer, 18109*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP1 + 2:
+	case SCOOP + 2:
 		if (timeoutexpired(&state_timer)) {
 			set_Bowl(BOWL_CW);
 			settimeout(&state_timer, 6201*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP1 + 3:
+	case SCOOP + 3:
 		if (timeoutexpired(&state_timer)) {
 			set_Bowl(BOWL_CCW);
 			set_Arm(ARM_DOWN);
@@ -103,97 +101,97 @@ void washprogram_work (void)
 			state++;
 		}
 		break;
-	case SCCOP1 + 4:
+	case SCOOP + 4:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_UP);
 			settimeout(&state_timer, 531*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP1 + 5:
+	case SCOOP + 5:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_STOP);
 			settimeout(&state_timer, 25206*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP1 + 6:
+	case SCOOP + 6:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_UP);
 			settimeout(&state_timer, 10670*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP1 + 7:
+	case SCOOP + 7:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_DOWN);
 			settimeout(&state_timer, 6601*MILISECOND);
 			state++;
 		}
-	case SCCOP1 + 8:
+	case SCOOP + 8:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_UP);
 			settimeout(&state_timer, 17204*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP2:
+	case SCOOP + 9:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_DOWN);
 			settimeout(&state_timer, 12703*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP2 + 1:
+	case SCOOP + 10:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_STOP);
 			settimeout(&state_timer, 4669*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP2 + 2:
+	case SCOOP + 11:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_DOWN);
 			settimeout(&state_timer, 11170*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP2 + 3:
+	case SCOOP + 12:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_UP);
 			settimeout(&state_timer, 531*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP2 + 4:
+	case SCOOP + 13:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_STOP);
 			settimeout(&state_timer, 25206*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP2 + 5:
+	case SCOOP + 14:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_UP);
 			settimeout(&state_timer, 10670*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP2 + 6:
+	case SCOOP + 15:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_DOWN);
 			settimeout(&state_timer, 6601*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP2 + 7:
+	case SCOOP + 16:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_UP);
 			settimeout(&state_timer, 20141*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP3:
+	case SCOOP + 17:
 		if (timeoutexpired(&state_timer)) {
 			set_Bowl(BOWL_CW);
 			set_Arm(ARM_DOWN);
@@ -201,56 +199,56 @@ void washprogram_work (void)
 			state++;
 		}
 		break;
-	case SCCOP3 + 1:
+	case SCOOP + 18:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_UP);
 			settimeout(&state_timer, 932*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP3 + 2:
+	case SCOOP + 19:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_STOP);
 			settimeout(&state_timer, 12107*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP3 + 3:
+	case SCOOP + 20:
 		if (timeoutexpired(&state_timer)) {
 			set_Bowl(BOWL_CCW);
 			set_Arm(ARM_DOWN);
 			settimeout(&state_timer, 3168*MILISECOND);
 			state++;
 		}
-	case SCCOP3 + 4:
+	case SCOOP + 21:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_UP);
 			settimeout(&state_timer, 531*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP3 + 5:
+	case SCOOP + 22:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_STOP);
 			settimeout(&state_timer, 24206*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP3 + 6:
+	case SCOOP + 23:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_UP);
 			settimeout(&state_timer, 10571*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP3 + 7:
+	case SCOOP + 24:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_DOWN);
 			settimeout(&state_timer, 6602*MILISECOND);
 			state++;
 		}
 		break;
-	case SCCOP3 + 8:
+	case SCOOP + 25:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_UP);
 			if (!scooponly) {
@@ -262,7 +260,7 @@ void washprogram_work (void)
 			state++;
 		}
 		break;
-	case SCCOP3 + 9:
+	case SCOOP + 26:
 		if (timeoutexpired(&state_timer)) {
 			set_Arm(ARM_STOP);
 			if (scooponly) {
@@ -388,6 +386,29 @@ void washprogram_work (void)
 			settimeout(&state_timer, 0*MILISECOND);
 			state++;
 		}
+		break;
+	case WASH + 14:
+		if (detected_Water()) {
+			set_Water(0);
+			settimeout(&state_timer, 63582*MILISECOND);
+			state++;
+		} else
+			if (timeoutexpired(&water_timer)) {
+				set_Water(0);
+				/*
+				 * ERROR 2
+				 */
+			}
+		break;
+	/*
+	 * Drying
+	 */
+	case DRY:
+		break;
+	/*
+	 * Equalizing
+	 */
+	case EQUALIZE:
 		break;
 	}
 }
