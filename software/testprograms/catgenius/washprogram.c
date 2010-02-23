@@ -17,15 +17,182 @@
 /* Macros								      */
 /******************************************************************************/
 
+#define CMD_BEGIN	0x01
+#define CMD_BOWL	0x02
+#define CMD_ARM		0x03
+#define CMD_WATER	0x04
+#define CMD_DOSAGE	0x05
+#define CMD_PUMP	0x06
+#define CMD_DRYER	0x07
+#define CMD_WAITTIME	0x08
+#define CMD_WAITWATER	0x09
+#define CMD_SKIPIFDRY	0x10
+#define CMD_SKIPIFWET	0x11
+#define CMD_AUTODOSE	0x12
+#define CMD_END		0xFE
+#define CMD_RESERVED	0xFF
+
+#define MAX_FILLTIME	((2*60+15)*SECOND)
+#define MAX_DRAINTIME	((2*60+15)*SECOND) /* TODO: Tune this value */
 
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
 
-static struct timer	state_timer = {0xFFFF, 0xFFFFFFFF};
-static struct timer	water_timer = {0xFFFF, 0xFFFFFFFF};
+struct command {
+	unsigned char	cmd;
+	unsigned long	arg;
+}
+
+static const struct command	program[256] = {
+	{CMD_BEGIN,     0},
+	/* Scooping */
+	{CMD_BOWL,      BOWL_CCW},
+	{CMD_ARM,       ARM_DOWN},
+	{CMD_WAITTIME,  13217 * MILISECOND},
+	{CMD_ARM,       ARM_STOP},
+	{CMD_WAITTIME,  18141 * MILISECOND},
+	{CMD_BOWL,      BOWL_CW},
+	{CMD_WAITTIME,  6201 * MILISECOND},
+	{CMD_BOWL,      BOWL_CCW},
+	{CMD_ARM,       ARM_DOWN},
+	{CMD_WAITTIME,  5765 * MILISECOND},
+	{CMD_ARM,       ARM_UP},
+	{CMD_WAITTIME,  532 * MILISECOND},
+	{CMD_ARM,       ARM_STOP},
+	{CMD_WAITTIME,  25206 * MILISECOND},
+	{CMD_ARM,       ARM_UP},
+	{CMD_WAITTIME,  10671 * MILISECOND},
+	{CMD_ARM,       ARM_DOWN},
+	{CMD_WAITTIME,  6602 * MILISECOND},
+	{CMD_ARM,       ARM_UP},
+	{CMD_WAITTIME,  17204 * MILISECOND},
+	{CMD_ARM,       ARM_DOWN},
+	{CMD_WAITTIME,  12703 * MILISECOND},
+	{CMD_ARM,       ARM_STOP},
+	{CMD_WAITTIME,  4701 * MILISECOND},
+	{CMD_ARM,       ARM_DOWN},
+	{CMD_WAITTIME,  11203 * MILISECOND},
+	{CMD_ARM,       ARM_UP},
+	{CMD_WAITTIME,  532 * MILISECOND},
+	{CMD_ARM,       ARM_STOP},
+	{CMD_WAITTIME,  25206 * MILISECOND},
+	{CMD_ARM,       ARM_UP},
+	{CMD_WAITTIME,  10671 * MILISECOND},
+	{CMD_ARM,       ARM_DOWN},
+	{CMD_WAITTIME,  6601 * MILISECOND},
+	{CMD_ARM,       ARM_UP},
+	{CMD_WAITTIME,  20141 * MILISECOND},
+	{CMD_BOWL,      BOWL_CW},
+	{CMD_ARM,       ARM_DOWN},
+	{CMD_WAITTIME,  21769 * MILISECOND},
+	{CMD_ARM,       ARM_UP},
+	{CMD_WAITTIME,  932 * MILISECOND},
+	{CMD_ARM,       ARM_STOP},
+	{CMD_WAITTIME,  12108 * MILISECOND},
+	{CMD_BOWL,      BOWL_CCW},
+	{CMD_ARM,       ARM_DOWN},
+	{CMD_WAITTIME,  3264 * MILISECOND},
+	{CMD_ARM,       ARM_UP},
+	{CMD_WAITTIME,  532 * MILISECOND},
+	{CMD_ARM,       ARM_STOP},
+	{CMD_WAITTIME,  24206 * MILISECOND},
+	{CMD_ARM,       ARM_UP},
+	{CMD_WAITTIME,  10571 * MILISECOND},
+	{CMD_ARM,       ARM_DOWN},
+	{CMD_WAITTIME,  6602 * MILISECOND},
+	{CMD_ARM,       ARM_UP},
+	{CMD_WATER,     1},
+	{CMD_BOWL,      BOWL_CW},
+	{CMD_WAITTIME,  17141 * MILISECOND},
+	{CMD_ARM,       ARM_STOP},
+	{CMD_SKIPIFWET, 1},
+	{CMD_BOWL,      BOWL_STOP},
+	{CMD_SKIPIFDRY, 90},		/* TODO: Correct value to skip washing */
+	/* Washing */
+	{CMD_BOWL,      BOWL_CW},
+	{CMD_WAITTIME,  18768 * MILISECOND},
+	{CMD_ARM,       ARM_DOWN},
+	{CMD_WAITTIME,  25206 * MILISECOND},
+	{CMD_ARM,       ARM_UP},
+	{CMD_WAITTIME,  1132 * MILISECOND},
+	{CMD_ARM,       ARM_STOP},
+	{CMD_WAITTIME,  75591 * MILISECOND},
+	{CMD_PUMP,      1},
+	{CMD_WAITTIME,  25206 * MILISECOND},
+	{CMD_PUMP,      0},
+	{CMD_WAITTIME,  75718 * MILISECOND},
+	{CMD_PUMP,      1},
+	{CMD_WAITTIME,  25206 * MILISECOND},
+	{CMD_PUMP,      0},
+	{CMD_WAITTIME,  8202 * MILISECOND},
+	{CMD_PUMP,      1},
+	{CMD_WAITTIME,  25206 * MILISECOND},
+	{CMD_PUMP,      0},
+	{CMD_WAITTIME,  8202 * MILISECOND},
+	{CMD_PUMP,      1},
+	{CMD_WAITTIME,  65616 * MILISECOND},
+	{CMD_PUMP,      0},
+	{CMD_WATER,     1},
+	{CMD_BOWL,      BOWL_CCW},
+	{CMD_DOSAGE,    1},
+	{CMD_WAITTIME,  55418 * MILISECOND},
+	{CMD_WAITTIME,  2601 * MILISECOND},
+	{CMD_WAITTIME,  65711 * MILISECOND},
+	{CMD_WAITTIME,  25206 * MILISECOND},
+	{CMD_WAITTIME,  75718 * MILISECOND},
+	{CMD_WAITTIME,  24206 * MILISECOND},
+	{CMD_WAITTIME,  8202 * MILISECOND},
+	{CMD_WAITTIME,  24206 * MILISECOND},
+	{CMD_WAITTIME,  8202 * MILISECOND},
+	{CMD_WAITTIME,  75718 * MILISECOND},
+	{CMD_WAITTIME,  25502 * MILISECOND},
+	{CMD_WAITTIME,  21205 * MILISECOND},
+	{CMD_WAITTIME,  1132 * MILISECOND},
+	{CMD_WAITTIME,  9580 * MILISECOND},
+	{CMD_WAITTIME,  5329 * MILISECOND},
+	{CMD_WAITTIME,  55482 * MILISECOND},
+	{CMD_WAITTIME,  65648 * MILISECOND},
+	{CMD_END,       0}
+};
+#if 0
+			settimeout(&state_timer, 25174*MILISECOND);
+			settimeout(&state_timer, 1132*MILISECOND);
+			settimeout(&state_timer, 1132*MILISECOND);
+	{CMD_WATER,     0);
+			settimeout(&state_timer, 63582*MILISECOND);
+			settimeout(&state_timer, 25602*MILISECOND);
+			settimeout(&state_timer, 75718*MILISECOND);
+			settimeout(&state_timer, 25602*MILISECOND);
+			settimeout(&state_timer, 8202*MILISECOND);
+			settimeout(&state_timer, 25602*MILISECOND);
+			settimeout(&state_timer, 8202*MILISECOND);
+			settimeout(&state_timer, 65616*MILISECOND);
+			settimeout(&state_timer, 2462*MILISECOND);
+	{CMD_DOSAGE,    0);
+	{CMD_BOWL,       BOWL_CW);
+			settimeout(&state_timer, 0*MILISECOND);
+		if (detected_Water()) {
+	{CMD_WATER,     0);
+			settimeout(&state_timer, 63582*MILISECOND);
+			state++;
+		} else
+			if (timeoutexpired(&water_timer)) {
+		{CMD_WATER,     0);
+				/*
+				 * ERROR 2
+				 */
+			}
+		break;
+#endif
+
+static struct timer	timer_autostart = {0xFFFF, 0xFFFFFFFF};
+static struct timer	timer_waitcmd   = {0xFFFF, 0xFFFFFFFF};
+static struct timer	timer_fill      = {0xFFFF, 0xFFFFFFFF};
+static struct timer	timer_drain     = {0xFFFF, 0xFFFFFFFF};
+static struct timer	timer_autodose  = {0xFFFF, 0xFFFFFFFF};
 static unsigned char	scooponly   = 1;
-static unsigned char	state       = 0;
+static unsigned char	pc       = 0;
 
 
 /******************************************************************************/
@@ -62,353 +229,107 @@ void washprogram_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	switch (state) {
+	/* Check timeouts */
+	if (timeoutexpired(&timer_autodose)) {
+		set_Dosage(0);
+		timeoutnever(&timer_autodose);
+	}
+	if (timeoutexpired(&timer_fill)) {
+		/* Fill error */
+		/* Pauze */
+	}
+	if (timeoutexpired(&timer_drain)) {
+		/* Drain error */
+		/* Pauze */
+	}
+
+	/* Do the waiting */
+	switch (program[pc].cmd) {
+	case CMD_WAITTIME:
+		if (!timeoutexpired(&timer_waitcmd))
+			return;
+		pc++;
+		break;
+	case CMD_WAITWATER:
+		if (program[pc].arg) {
+			if (!detected_Water())
+				return;
+			timeoutnever(&timer_fill);
+		} else {
+			if (detected_Water())
+				return;
+			timeoutnever(&timer_drain);
+		}
+		pc++;
+		break;
+	}
+
+	/* Execute wait commands */
+	switch (program[pc].cmd) {
+	case CMD_BEGIN:
+		if (timeoutexpired(&timer_autostart))
+			pc++;
+		break;
+	case CMD_BOWL:
+		set_Bowl((unsigned char)program[pc].arg);
+		pc++;
+		break;
+	case CMD_ARM:
+		set_Arm((unsigned char)program[pc].arg);
+		pc++;
+		break;
+	case CMD_WATER:
+		if (!scooponly) {
+			set_Water((unsigned char)program[pc].arg);
+			if (program[pc].arg)
+				settimeout(&timer_fill, MAX_FILLTIME);
+			else
+				timeoutnever(&timer_fill);
+		}
+		pc++;
+		break;
+	case CMD_DOSAGE:
+		set_Dosage((unsigned char)program[pc].arg);
+		pc++;
+		break;
+	case CMD_PUMP:
+		set_Pump((unsigned char)program[pc].arg);
+		if (program[pc].arg)
+			settimeout(&timer_drain, MAX_DRAINTIME);
+		else
+			timeoutnever(&timer_drain);
+		pc++;
+		break;
+	case CMD_DRYER:
+		set_Dryer((unsigned char)program[pc].arg);
+		pc++;
+		break;
+	case CMD_WAITTIME:
+		settimeout(&timer_waitcmd, program[pc].arg);
+		break;
+	case CMD_WAITWATER:
+		break;
+	case CMD_SKIPIFDRY:
+		if (scooponly)
+			pc += program[pc].arg + 1;
+		break;
+	case CMD_SKIPIFWET:
+		if (!scooponly)
+			pc += program[pc].arg + 1;
+		break;
+	case CMD_AUTODOSE:
+		settimeout(&timer_autodose, program[pc].arg);
+		set_Dosage(1);
+		pc++;
+		break;
+	case CMD_END:
+		timeoutnever(&timer_drain);
+		pc=0;
+		break;
 	default:
-		set_Arm(ARM_STOP);
-		set_Bowl(BOWL_STOP);
-		timeoutnever(&state_timer);
-		state = 0;
-	/*
-	 * Scooping
-	 */
-	case SCOOP:	/* Wait for program to start */
-		if (timeoutexpired(&state_timer)) {
-			set_Bowl(BOWL_CCW);
-			set_Arm(ARM_DOWN);
-			settimeout(&state_timer, 13153*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 1: /* Wait for arm to hit bottom */
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_STOP);
-			settimeout(&state_timer, 18109*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 2:
-		if (timeoutexpired(&state_timer)) {
-			set_Bowl(BOWL_CW);
-			settimeout(&state_timer, 6201*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 3:
-		if (timeoutexpired(&state_timer)) {
-			set_Bowl(BOWL_CCW);
-			set_Arm(ARM_DOWN);
-			settimeout(&state_timer, 5669*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 4:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_UP);
-			settimeout(&state_timer, 531*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 5:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_STOP);
-			settimeout(&state_timer, 25206*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 6:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_UP);
-			settimeout(&state_timer, 10670*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 7:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_DOWN);
-			settimeout(&state_timer, 6601*MILISECOND);
-			state++;
-		}
-	case SCOOP + 8:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_UP);
-			settimeout(&state_timer, 17204*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 9:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_DOWN);
-			settimeout(&state_timer, 12703*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 10:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_STOP);
-			settimeout(&state_timer, 4669*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 11:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_DOWN);
-			settimeout(&state_timer, 11170*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 12:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_UP);
-			settimeout(&state_timer, 531*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 13:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_STOP);
-			settimeout(&state_timer, 25206*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 14:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_UP);
-			settimeout(&state_timer, 10670*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 15:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_DOWN);
-			settimeout(&state_timer, 6601*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 16:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_UP);
-			settimeout(&state_timer, 20141*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 17:
-		if (timeoutexpired(&state_timer)) {
-			set_Bowl(BOWL_CW);
-			set_Arm(ARM_DOWN);
-			settimeout(&state_timer, 21705*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 18:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_UP);
-			settimeout(&state_timer, 932*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 19:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_STOP);
-			settimeout(&state_timer, 12107*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 20:
-		if (timeoutexpired(&state_timer)) {
-			set_Bowl(BOWL_CCW);
-			set_Arm(ARM_DOWN);
-			settimeout(&state_timer, 3168*MILISECOND);
-			state++;
-		}
-	case SCOOP + 21:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_UP);
-			settimeout(&state_timer, 531*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 22:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_STOP);
-			settimeout(&state_timer, 24206*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 23:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_UP);
-			settimeout(&state_timer, 10571*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 24:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_DOWN);
-			settimeout(&state_timer, 6602*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 25:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_UP);
-			if (!scooponly) {
-				set_Water(1);
-				settimeout(&water_timer, MAX_FILL_TIME);
-			}
-			set_Bowl(BOWL_CW);
-			settimeout(&state_timer, 17141*MILISECOND);
-			state++;
-		}
-		break;
-	case SCOOP + 26:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_STOP);
-			if (scooponly) {
-				set_Bowl(BOWL_STOP);
-				settimeout(&state_timer, 0*MILISECOND); /* TODO */
-				state = EQUALIZE;
-			} else {
-				set_Bowl(BOWL_CW);
-				settimeout(&state_timer, 18673*MILISECOND);
-				state = WASH;
-			}
-		}
-		break;
-	/*
-	 * Washing
-	 */
-	case WASH:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_DOWN);
-			settimeout(&state_timer, 25174*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 1:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_UP);
-			settimeout(&state_timer, 1132*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 2:
-		if (timeoutexpired(&state_timer)) {
-			set_Arm(ARM_STOP);
-			settimeout(&state_timer, 1132*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 3:
-		if (detected_Water()) {
-			set_Water(0);
-			settimeout(&state_timer, 63582*MILISECOND);
-			state++;
-		} else
-			if (timeoutexpired(&water_timer)) {
-				set_Water(0);
-				/*
-				 * ERROR 2
-				 */
-			}
-		break;
-	case WASH + 4:
-		if (timeoutexpired(&state_timer)) {
-			set_Pump(1);
-			settimeout(&state_timer, 25602*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 5:
-		if (timeoutexpired(&state_timer)) {
-			set_Pump(0);
-			settimeout(&state_timer, 75718*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 6:
-		if (timeoutexpired(&state_timer)) {
-			set_Pump(1);
-			settimeout(&state_timer, 25602*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 7:
-		if (timeoutexpired(&state_timer)) {
-			set_Pump(0);
-			settimeout(&state_timer, 8202*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 8:
-		if (timeoutexpired(&state_timer)) {
-			set_Pump(1);
-			settimeout(&state_timer, 25602*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 9:
-		if (timeoutexpired(&state_timer)) {
-			set_Pump(0);
-			settimeout(&state_timer, 8202*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 10:
-		if (timeoutexpired(&state_timer)) {
-			set_Pump(1);
-			settimeout(&state_timer, 65616*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 11:
-		if (timeoutexpired(&state_timer)) {
-			set_Pump(0);
-			set_Water(1);
-			settimeout(&water_timer, MAX_FILL_TIME);
-			settimeout(&state_timer, 55418*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 12:
-		if (timeoutexpired(&state_timer)) {
-			set_Bowl(BOWL_CCW);
-			set_Dosage(1);
-			settimeout(&water_timer, MAX_FILL_TIME);
-			settimeout(&state_timer, 2462*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 13:
-		if (timeoutexpired(&state_timer)) {
-			set_Dosage(0);
-			set_Bowl(BOWL_CW);
-			settimeout(&water_timer, MAX_FILL_TIME);
-			settimeout(&state_timer, 0*MILISECOND);
-			state++;
-		}
-		break;
-	case WASH + 14:
-		if (detected_Water()) {
-			set_Water(0);
-			settimeout(&state_timer, 63582*MILISECOND);
-			state++;
-		} else
-			if (timeoutexpired(&water_timer)) {
-				set_Water(0);
-				/*
-				 * ERROR 2
-				 */
-			}
-		break;
-	/*
-	 * Drying
-	 */
-	case DRY:
-		break;
-	/*
-	 * Equalizing
-	 */
-	case EQUALIZE:
+		/* Program error */
+		timeoutnever(&timer_autostart);
+		pc = 0;
 		break;
 	}
 }
@@ -429,21 +350,21 @@ void washprogram_term (void)
 
 void washprogram_mode (unsigned char justscoop)
 {
-	if (!state)
+	if (!pc)
 		scooponly = justscoop ;
 }
 
 
 void washprogram_start (void)
 {
-	if (!state)
-		timeoutnow(&state_timer);
+	if (!pc)
+		timeoutnow(&timer_autostart);
 }
 
 
 unsigned char washprogram_running (void)
 {
-	return (state);
+	return (pc);
 }
 
 
