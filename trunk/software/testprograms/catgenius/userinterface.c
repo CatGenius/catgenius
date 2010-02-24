@@ -11,6 +11,7 @@
 #include "userinterface.h"
 #include "../common/timer.h"
 #include "../common/catgenie120.h"
+#include "washprogram.h"
 
 
 /******************************************************************************/
@@ -258,8 +259,8 @@ static void setup (void)
 
 static void start (void)
 {
-	if (!program_state)
-		timeoutnow(&program_timer);
+	if (!washprogram_running())
+		washprogram_start();
 }
 
 
