@@ -17,18 +17,25 @@
 /* Macros								      */
 /******************************************************************************/
 
-#define CMD_BEGIN	0x01
-#define CMD_BOWL	0x02
-#define CMD_ARM		0x03
-#define CMD_WATER	0x04
-#define CMD_DOSAGE	0x05
-#define CMD_PUMP	0x06
-#define CMD_DRYER	0x07
+#define FLAGS_AUTORUN	0x0100	/* Start program without user intervention */
+#define FLAGS_DRYRUN	0x0200	/* Program supports dry cleaning */
+#define FLAGS_WETRUN	0x0400	/* Program supports wet cleaning */
+#define FLASH_OVERWRITE	0x0800	/* Program will be copied to FLASH to replace standard program */
+
+#define CMD_START	0x00	/* Designates the start of a program. Argument is CMD_LAST or-ed with flags */
+#define CMD_BOWL	0x01	/* Controls the bowl. Argument is what the bowl should do */
+#define CMD_ARM		0x02	/* Controls the arm. Argument is what the arm should do */
+#define CMD_WATER	0x03	/* Controls the water valve. Argument is */
+#define CMD_DOSAGE	0x04
+#define CMD_PUMP	0x05
+#define CMD_DRYER	0x06
+
 #define CMD_WAITTIME	0x08
 #define CMD_WAITWATER	0x09
 #define CMD_SKIPIFDRY	0x10
 #define CMD_SKIPIFWET	0x11
 #define CMD_AUTODOSE	0x12
+#define CMD_LAST	CMD_AUTODOSE
 #define CMD_END		0xFE
 #define CMD_RESERVED	0xFF
 
@@ -41,144 +48,150 @@
 
 struct command {
 	unsigned char	cmd;
-	unsigned long	arg;
+	unsigned int	arg;
 }
 
-static const struct command	program[256] = {
-	{CMD_BEGIN,     0},
+static const struct command	program[] = {
+	{CMD_START,	CMD_LAST | 
+			FLAGS_DRYRUN |
+			FLAGS_WETRUN },
 	/* Scooping */
-	{CMD_BOWL,      BOWL_CCW},
-	{CMD_ARM,       ARM_DOWN},
-	{CMD_WAITTIME,  13217 * MILISECOND},
-	{CMD_ARM,       ARM_STOP},
-	{CMD_WAITTIME,  18141 * MILISECOND},
-	{CMD_BOWL,      BOWL_CW},
-	{CMD_WAITTIME,  6201 * MILISECOND},
-	{CMD_BOWL,      BOWL_CCW},
-	{CMD_ARM,       ARM_DOWN},
-	{CMD_WAITTIME,  5765 * MILISECOND},
-	{CMD_ARM,       ARM_UP},
-	{CMD_WAITTIME,  532 * MILISECOND},
-	{CMD_ARM,       ARM_STOP},
-	{CMD_WAITTIME,  25206 * MILISECOND},
-	{CMD_ARM,       ARM_UP},
-	{CMD_WAITTIME,  10671 * MILISECOND},
-	{CMD_ARM,       ARM_DOWN},
-	{CMD_WAITTIME,  6602 * MILISECOND},
-	{CMD_ARM,       ARM_UP},
-	{CMD_WAITTIME,  17204 * MILISECOND},
-	{CMD_ARM,       ARM_DOWN},
-	{CMD_WAITTIME,  12703 * MILISECOND},
-	{CMD_ARM,       ARM_STOP},
-	{CMD_WAITTIME,  4701 * MILISECOND},
-	{CMD_ARM,       ARM_DOWN},
-	{CMD_WAITTIME,  11203 * MILISECOND},
-	{CMD_ARM,       ARM_UP},
-	{CMD_WAITTIME,  532 * MILISECOND},
-	{CMD_ARM,       ARM_STOP},
-	{CMD_WAITTIME,  25206 * MILISECOND},
-	{CMD_ARM,       ARM_UP},
-	{CMD_WAITTIME,  10671 * MILISECOND},
-	{CMD_ARM,       ARM_DOWN},
-	{CMD_WAITTIME,  6601 * MILISECOND},
-	{CMD_ARM,       ARM_UP},
-	{CMD_WAITTIME,  20141 * MILISECOND},
-	{CMD_BOWL,      BOWL_CW},
-	{CMD_ARM,       ARM_DOWN},
-	{CMD_WAITTIME,  21769 * MILISECOND},
-	{CMD_ARM,       ARM_UP},
-	{CMD_WAITTIME,  932 * MILISECOND},
-	{CMD_ARM,       ARM_STOP},
-	{CMD_WAITTIME,  12108 * MILISECOND},
-	{CMD_BOWL,      BOWL_CCW},
-	{CMD_ARM,       ARM_DOWN},
-	{CMD_WAITTIME,  3264 * MILISECOND},
-	{CMD_ARM,       ARM_UP},
-	{CMD_WAITTIME,  532 * MILISECOND},
-	{CMD_ARM,       ARM_STOP},
-	{CMD_WAITTIME,  24206 * MILISECOND},
-	{CMD_ARM,       ARM_UP},
-	{CMD_WAITTIME,  10571 * MILISECOND},
-	{CMD_ARM,       ARM_DOWN},
-	{CMD_WAITTIME,  6602 * MILISECOND},
-	{CMD_ARM,       ARM_UP},
-	{CMD_WATER,     1},
-	{CMD_BOWL,      BOWL_CW},
-	{CMD_WAITTIME,  17141 * MILISECOND},
-	{CMD_ARM,       ARM_STOP},
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	13217},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_WAITTIME,	18141},
+	{CMD_BOWL,	BOWL_CW},
+	{CMD_WAITTIME,	6201},
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	5765},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	532},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_WAITTIME,	25206},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	10671},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	6602},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	17204},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	12703},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_WAITTIME,	4701},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	11203},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	532},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_WAITTIME,	25206},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	10671},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	6601},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	20141},
+	{CMD_BOWL,	BOWL_CW},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	21769},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	932},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_WAITTIME,	12108},
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	3264},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	532},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_WAITTIME,	24206},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	10571},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	6602},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WATER,	1},
+	{CMD_BOWL,	BOWL_CW},
+	{CMD_WAITTIME,	17141},
+	{CMD_ARM,	ARM_STOP},
 	{CMD_SKIPIFWET, 1},
-	{CMD_BOWL,      BOWL_STOP},
+	{CMD_BOWL,	BOWL_STOP},
+{CMD_END, 0},
 	{CMD_SKIPIFDRY, 90},		/* TODO: Correct value to skip washing */
 	/* Washing */
-	{CMD_BOWL,      BOWL_CW},
-	{CMD_WAITTIME,  18768 * MILISECOND},
-	{CMD_ARM,       ARM_DOWN},
-	{CMD_WAITTIME,  25206 * MILISECOND},
-	{CMD_ARM,       ARM_UP},
-	{CMD_WAITTIME,  1132 * MILISECOND},
-	{CMD_ARM,       ARM_STOP},
-	{CMD_WAITTIME,  75591 * MILISECOND},
-	{CMD_PUMP,      1},
-	{CMD_WAITTIME,  25206 * MILISECOND},
-	{CMD_PUMP,      0},
-	{CMD_WAITTIME,  75718 * MILISECOND},
-	{CMD_PUMP,      1},
-	{CMD_WAITTIME,  25206 * MILISECOND},
-	{CMD_PUMP,      0},
-	{CMD_WAITTIME,  8202 * MILISECOND},
-	{CMD_PUMP,      1},
-	{CMD_WAITTIME,  25206 * MILISECOND},
-	{CMD_PUMP,      0},
-	{CMD_WAITTIME,  8202 * MILISECOND},
-	{CMD_PUMP,      1},
-	{CMD_WAITTIME,  65616 * MILISECOND},
-	{CMD_PUMP,      0},
-	{CMD_WATER,     1},
-	{CMD_BOWL,      BOWL_CCW},
-	{CMD_DOSAGE,    1},
-	{CMD_WAITTIME,  55418 * MILISECOND},
-	{CMD_WAITTIME,  2601 * MILISECOND},
-	{CMD_WAITTIME,  65711 * MILISECOND},
-	{CMD_WAITTIME,  25206 * MILISECOND},
-	{CMD_WAITTIME,  75718 * MILISECOND},
-	{CMD_WAITTIME,  24206 * MILISECOND},
-	{CMD_WAITTIME,  8202 * MILISECOND},
-	{CMD_WAITTIME,  24206 * MILISECOND},
-	{CMD_WAITTIME,  8202 * MILISECOND},
-	{CMD_WAITTIME,  75718 * MILISECOND},
-	{CMD_WAITTIME,  25502 * MILISECOND},
-	{CMD_WAITTIME,  21205 * MILISECOND},
-	{CMD_WAITTIME,  1132 * MILISECOND},
-	{CMD_WAITTIME,  9580 * MILISECOND},
-	{CMD_WAITTIME,  5329 * MILISECOND},
-	{CMD_WAITTIME,  55482 * MILISECOND},
-	{CMD_WAITTIME,  65648 * MILISECOND},
-	{CMD_END,       0}
+	{CMD_BOWL,	BOWL_CW},
+	{CMD_WAITTIME,	18768},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	25206},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	1132},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_WAITTIME,	65535},		/* Delay split in two because it exceeds maximum */
+	{CMD_WAITTIME,	10056},		/* 65535 + 10056 = 75591 */
+	{CMD_PUMP,	1},
+	{CMD_WAITTIME,	25206},
+	{CMD_PUMP,	0},
+	{CMD_WAITTIME,	65535},		/* Delay split in two because it exceeds maximum */
+	{CMD_WAITTIME,	10183},		/* 65535 + 10183 = 75718 */
+	{CMD_PUMP,	1},
+	{CMD_WAITTIME,	25206},
+	{CMD_PUMP,	0},
+	{CMD_WAITTIME,	8202},
+	{CMD_PUMP,	1},
+	{CMD_WAITTIME,	25206},
+	{CMD_PUMP,	0},
+	{CMD_WAITTIME,	8202},
+	{CMD_PUMP,	1},
+	{CMD_WAITTIME,	65616},		/* Delay split in two because it exceeds maximum */
+	{CMD_WAITTIME,	81},		/* 65535 + 81 = 65616 */
+	{CMD_PUMP,	0},
+	{CMD_WATER,	1},
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_DOSAGE,	1},
+	{CMD_WAITTIME,	55418},
+	{CMD_WAITTIME,	2601},
+	{CMD_WAITTIME,	65711},
+	{CMD_WAITTIME,	25206},
+	{CMD_WAITTIME,	75718},
+	{CMD_WAITTIME,	24206},
+	{CMD_WAITTIME,	8202},
+	{CMD_WAITTIME,	24206},
+	{CMD_WAITTIME,	8202},
+	{CMD_WAITTIME,	75718},
+	{CMD_WAITTIME,	25502},
+	{CMD_WAITTIME,	21205},
+	{CMD_WAITTIME,	1132},
+	{CMD_WAITTIME,	9580},
+	{CMD_WAITTIME,	5329},
+	{CMD_WAITTIME,	55482},
+	{CMD_WAITTIME,	65648},
+	{CMD_END,	0}
 };
 #if 0
-			settimeout(&state_timer, 25174*MILISECOND);
-			settimeout(&state_timer, 1132*MILISECOND);
-			settimeout(&state_timer, 1132*MILISECOND);
-	{CMD_WATER,     0);
-			settimeout(&state_timer, 63582*MILISECOND);
-			settimeout(&state_timer, 25602*MILISECOND);
-			settimeout(&state_timer, 75718*MILISECOND);
-			settimeout(&state_timer, 25602*MILISECOND);
-			settimeout(&state_timer, 8202*MILISECOND);
-			settimeout(&state_timer, 25602*MILISECOND);
-			settimeout(&state_timer, 8202*MILISECOND);
-			settimeout(&state_timer, 65616*MILISECOND);
-			settimeout(&state_timer, 2462*MILISECOND);
-	{CMD_DOSAGE,    0);
-	{CMD_BOWL,       BOWL_CW);
-			settimeout(&state_timer, 0*MILISECOND);
+			settimeout(&state_timer, 25174);
+			settimeout(&state_timer, 1132);
+			settimeout(&state_timer, 1132);
+	{CMD_WATER,	0);
+			settimeout(&state_timer, 63582);
+			settimeout(&state_timer, 25602);
+			settimeout(&state_timer, 75718);
+			settimeout(&state_timer, 25602);
+			settimeout(&state_timer, 8202);
+			settimeout(&state_timer, 25602);
+			settimeout(&state_timer, 8202);
+			settimeout(&state_timer, 65616);
+			settimeout(&state_timer, 2462);
+	{CMD_DOSAGE,	0);
+	{CMD_BOWL,	BOWL_CW);
+			settimeout(&state_timer, 0);
 		if (detected_Water()) {
-	{CMD_WATER,     0);
-			settimeout(&state_timer, 63582*MILISECOND);
+	{CMD_WATER,	0);
+			settimeout(&state_timer, 63582);
 			state++;
 		} else
 			if (timeoutexpired(&water_timer)) {
-		{CMD_WATER,     0);
+		{CMD_WATER,	0);
 				/*
 				 * ERROR 2
 				 */
@@ -198,6 +211,9 @@ static unsigned char	pc       = 0;
 /******************************************************************************/
 /* Local Prototypes							      */
 /******************************************************************************/
+
+static void wait ();
+static void execute ();
 
 
 /******************************************************************************/
@@ -229,11 +245,9 @@ void washprogram_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	/* Check timeouts */
-	if (timeoutexpired(&timer_autodose)) {
-		set_Dosage(0);
-		timeoutnever(&timer_autodose);
-	}
+	static bit	waiting = 0;
+
+	/* Check error timeouts */
 	if (timeoutexpired(&timer_fill)) {
 		/* Fill error */
 		/* Pauze */
@@ -243,30 +257,39 @@ void washprogram_work (void)
 		/* Pauze */
 	}
 
-	/* Do the waiting */
-	switch (program[pc].cmd) {
-	case CMD_WAITTIME:
-		if (!timeoutexpired(&timer_waitcmd))
-			return;
-		pc++;
-		break;
-	case CMD_WAITWATER:
-		if (program[pc].arg) {
-			if (!detected_Water())
-				return;
-			timeoutnever(&timer_fill);
-		} else {
-			if (detected_Water())
-				return;
-			timeoutnever(&timer_drain);
-		}
-		pc++;
-		break;
+	/* Check auto timeouts */
+	if (timeoutexpired(&timer_autodose)) {
+		set_Dosage(0);
+		timeoutnever(&timer_autodose);
 	}
 
+	/* Do the waiting */
+	if (waiting) {
+		switch (program[pc].cmd) {
+		case CMD_WAITTIME:
+			if (!timeoutexpired(&timer_waitcmd))
+				return;
+			waiting = 0;
+			pc++;
+			break;
+		case CMD_WAITWATER:
+			if (program[pc].arg) {
+				if (!detected_Water())
+					return;
+				timeoutnever(&timer_fill);
+			} else {
+				if (detected_Water())
+					return;
+				timeoutnever(&timer_drain);
+			}
+			waiting = 0;
+			pc++;
+			break;
+		}
+	} else {
 	/* Execute wait commands */
 	switch (program[pc].cmd) {
-	case CMD_BEGIN:
+	case CMD_START:
 		if (timeoutexpired(&timer_autostart))
 			pc++;
 		break;
@@ -305,17 +328,24 @@ void washprogram_work (void)
 		pc++;
 		break;
 	case CMD_WAITTIME:
-		settimeout(&timer_waitcmd, program[pc].arg);
+		settimeout( &timer_waitcmd,
+			    (unsigned long)program[pc].arg * MILISECOND );
+		waiting = 1;
 		break;
 	case CMD_WAITWATER:
+		waiting = 1;
 		break;
 	case CMD_SKIPIFDRY:
 		if (scooponly)
 			pc += program[pc].arg + 1;
+		else
+			pc++;
 		break;
 	case CMD_SKIPIFWET:
 		if (!scooponly)
 			pc += program[pc].arg + 1;
+		else
+			pc++;
 		break;
 	case CMD_AUTODOSE:
 		settimeout(&timer_autodose, program[pc].arg);
@@ -324,6 +354,7 @@ void washprogram_work (void)
 		break;
 	case CMD_END:
 		timeoutnever(&timer_drain);
+		timeoutnever(&timer_autostart);
 		pc=0;
 		break;
 	default:
@@ -332,6 +363,7 @@ void washprogram_work (void)
 		pc = 0;
 		break;
 	}
+}
 }
 /* washprogram_work */
 
@@ -357,7 +389,7 @@ void washprogram_mode (unsigned char justscoop)
 
 void washprogram_start (void)
 {
-	if (!pc)
+	if (program[pc].cmd == CMD_START)
 		timeoutnow(&timer_autostart);
 }
 
@@ -377,3 +409,10 @@ void washprogram_pause (unsigned char pause)
 /* Local Implementations						      */
 /******************************************************************************/
 
+static void wait ()
+{
+}
+
+static void execute ()
+{
+}
