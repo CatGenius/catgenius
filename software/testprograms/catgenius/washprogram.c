@@ -42,6 +42,7 @@
 #define MAX_FILLTIME	((2*60+15)*SECOND)
 #define MAX_DRAINTIME	((2*60+15)*SECOND) /* TODO: Tune this value */
 
+
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
@@ -55,157 +56,160 @@ static const struct command	program[] = {
 	{CMD_START,	CMD_LAST | 
 			FLAGS_DRYRUN |
 			FLAGS_WETRUN },
-	/* Scooping */
-	{CMD_BOWL,	BOWL_CCW},
+	{CMD_BOWL,	BOWL_CCW},	/* Scoop */
 	{CMD_ARM,	ARM_DOWN},
 	{CMD_WAITTIME,	13217},
-	{CMD_ARM,	ARM_STOP},
+	{CMD_ARM,	ARM_STOP},	/* Scoop + 1 */
 	{CMD_WAITTIME,	18141},
-	{CMD_BOWL,	BOWL_CW},
+	{CMD_BOWL,	BOWL_CW},	/* Scoop + 2 */
 	{CMD_WAITTIME,	6201},
-	{CMD_BOWL,	BOWL_CCW},
+	{CMD_BOWL,	BOWL_CCW},	/* Scoop + 3 */
 	{CMD_ARM,	ARM_DOWN},
 	{CMD_WAITTIME,	5765},
-	{CMD_ARM,	ARM_UP},
+	{CMD_ARM,	ARM_UP},	/* Scoop + 4 */
 	{CMD_WAITTIME,	532},
-	{CMD_ARM,	ARM_STOP},
+	{CMD_ARM,	ARM_STOP},	/* Scoop + 5 */
 	{CMD_WAITTIME,	25206},
-	{CMD_ARM,	ARM_UP},
+	{CMD_ARM,	ARM_UP},	/* Scoop + 6 */
 	{CMD_WAITTIME,	10671},
-	{CMD_ARM,	ARM_DOWN},
+	{CMD_ARM,	ARM_DOWN},	/* Scoop + 7 */
 	{CMD_WAITTIME,	6602},
-	{CMD_ARM,	ARM_UP},
+	{CMD_ARM,	ARM_UP},	/* Scoop + 8 */
 	{CMD_WAITTIME,	17204},
-	{CMD_ARM,	ARM_DOWN},
+	{CMD_ARM,	ARM_DOWN},	/* Scoop + 9 */
 	{CMD_WAITTIME,	12703},
-	{CMD_ARM,	ARM_STOP},
+	{CMD_ARM,	ARM_STOP},	/* Scoop + 10 */
 	{CMD_WAITTIME,	4701},
-	{CMD_ARM,	ARM_DOWN},
+	{CMD_ARM,	ARM_DOWN},	/* Scoop + 11 */
 	{CMD_WAITTIME,	11203},
-	{CMD_ARM,	ARM_UP},
+	{CMD_ARM,	ARM_UP},	/* Scoop + 12 */
 	{CMD_WAITTIME,	532},
-	{CMD_ARM,	ARM_STOP},
+	{CMD_ARM,	ARM_STOP},	/* Scoop + 13 */
 	{CMD_WAITTIME,	25206},
-	{CMD_ARM,	ARM_UP},
+	{CMD_ARM,	ARM_UP},	/* Scoop + 14 */
 	{CMD_WAITTIME,	10671},
-	{CMD_ARM,	ARM_DOWN},
+	{CMD_ARM,	ARM_DOWN},	/* Scoop + 15 */
 	{CMD_WAITTIME,	6601},
-	{CMD_ARM,	ARM_UP},
+	{CMD_ARM,	ARM_UP},	/* Scoop + 16 */
 	{CMD_WAITTIME,	20141},
-	{CMD_BOWL,	BOWL_CW},
+	{CMD_BOWL,	BOWL_CW},	/* Scoop + 17 */
 	{CMD_ARM,	ARM_DOWN},
 	{CMD_WAITTIME,	21769},
-	{CMD_ARM,	ARM_UP},
+	{CMD_ARM,	ARM_UP},	/* Scoop + 18 */
 	{CMD_WAITTIME,	932},
-	{CMD_ARM,	ARM_STOP},
+	{CMD_ARM,	ARM_STOP},	/* Scoop + 19 */
 	{CMD_WAITTIME,	12108},
-	{CMD_BOWL,	BOWL_CCW},
+	{CMD_BOWL,	BOWL_CCW},	/* Scoop + 20 */
 	{CMD_ARM,	ARM_DOWN},
 	{CMD_WAITTIME,	3264},
-	{CMD_ARM,	ARM_UP},
+	{CMD_ARM,	ARM_UP},	/* Scoop + 21 */
 	{CMD_WAITTIME,	532},
-	{CMD_ARM,	ARM_STOP},
+	{CMD_ARM,	ARM_STOP},	/* Scoop + 22 */
 	{CMD_WAITTIME,	24206},
-	{CMD_ARM,	ARM_UP},
+	{CMD_ARM,	ARM_UP},	/* Scoop + 23 */
 	{CMD_WAITTIME,	10571},
-	{CMD_ARM,	ARM_DOWN},
+	{CMD_ARM,	ARM_DOWN},	/* Scoop + 24 */
 	{CMD_WAITTIME,	6602},
-	{CMD_ARM,	ARM_UP},
+	{CMD_ARM,	ARM_UP},	/* Scoop + 25 */
 	{CMD_WATER,	1},
-	{CMD_BOWL,	BOWL_CW},
 	{CMD_WAITTIME,	17141},
+	{CMD_BOWL,	BOWL_CW},	/* Scoop + 26 */
 	{CMD_ARM,	ARM_STOP},
-	{CMD_SKIPIFWET, 1},
-	{CMD_BOWL,	BOWL_STOP},
-{CMD_END, 0},
-	{CMD_SKIPIFDRY, 90},		/* TODO: Correct value to skip washing */
-	/* Washing */
-	{CMD_BOWL,	BOWL_CW},
+//	{CMD_SKIPIFWET, 2},
+//	{CMD_BOWL,	BOWL_STOP},
+//	{CMD_SKIPIFDRY, 90},		/* TODO: Correct value to skip washing */
 	{CMD_WAITTIME,	18768},
-	{CMD_ARM,	ARM_DOWN},
+	{CMD_ARM,	ARM_DOWN},	/* Wash */
 	{CMD_WAITTIME,	25206},
-	{CMD_ARM,	ARM_UP},
+	{CMD_ARM,	ARM_UP},	/* Wash + 1 */
 	{CMD_WAITTIME,	1132},
-	{CMD_ARM,	ARM_STOP},
-	{CMD_WAITTIME,	65535},		/* Delay split in two because it exceeds maximum */
-	{CMD_WAITTIME,	10056},		/* 65535 + 10056 = 75591 */
-	{CMD_PUMP,	1},
+	{CMD_ARM,	ARM_STOP},	/* Wash + 2 */
+	{CMD_WAITWATER, 1},		/* Wash + 3 */
+	{CMD_WATER,	0},
+	{CMD_WAITTIME,	63582},		/* From full program sheet */
+	{CMD_PUMP,	1},		/* Wash + 4 */
 	{CMD_WAITTIME,	25206},
-	{CMD_PUMP,	0},
+	{CMD_PUMP,	0},		/* Wash + 5 */
 	{CMD_WAITTIME,	65535},		/* Delay split in two because it exceeds maximum */
 	{CMD_WAITTIME,	10183},		/* 65535 + 10183 = 75718 */
-	{CMD_PUMP,	1},
+	{CMD_PUMP,	1},		/* Wash + 6 */
 	{CMD_WAITTIME,	25206},
-	{CMD_PUMP,	0},
+	{CMD_PUMP,	0},		/* Wash + 7 */
 	{CMD_WAITTIME,	8202},
-	{CMD_PUMP,	1},
+	{CMD_PUMP,	1},		/* Wash + 8 */
 	{CMD_WAITTIME,	25206},
-	{CMD_PUMP,	0},
+	{CMD_PUMP,	0},		/* Wash + 9 */
 	{CMD_WAITTIME,	8202},
-	{CMD_PUMP,	1},
+	{CMD_PUMP,	1},		/* Wash + 10 */
 	{CMD_WAITTIME,	65616},		/* Delay split in two because it exceeds maximum */
 	{CMD_WAITTIME,	81},		/* 65535 + 81 = 65616 */
-	{CMD_PUMP,	0},
+	{CMD_PUMP,	0},		/* Wash + 11 */
 	{CMD_WATER,	1},
-	{CMD_BOWL,	BOWL_CCW},
+	{CMD_WAITTIME,	55418},	
+	{CMD_BOWL,	BOWL_CCW},	/* Wash + 12 */
 	{CMD_DOSAGE,	1},
-	{CMD_WAITTIME,	55418},
 	{CMD_WAITTIME,	2601},
-	{CMD_WAITTIME,	65711},
+	{CMD_DOSAGE,	0},		/* Wash + 13 */
+	{CMD_BOWL,	BOWL_CW},
+	{CMD_WAITWATER, 1},		/* Wash + 14 */
+	{CMD_WATER,	0},
+	{CMD_WAITTIME,	44002},		/* From full program sheet */
+	{CMD_PUMP,	1},		/* Wash + 15 */
 	{CMD_WAITTIME,	25206},
-	{CMD_WAITTIME,	75718},
+	{CMD_PUMP,	0},		/* Wash + 16 */
+	{CMD_WAITTIME,	75718},	/* TODO: Split up */
+	{CMD_PUMP,	1},		/* Wash + 17 */
 	{CMD_WAITTIME,	24206},
+	{CMD_PUMP,	0},		/* Wash + 18 */
 	{CMD_WAITTIME,	8202},
+	{CMD_PUMP,	1},		/* Wash + 19 */
 	{CMD_WAITTIME,	24206},
+	{CMD_PUMP,	0},		/* Wash + 20 */
 	{CMD_WAITTIME,	8202},
-	{CMD_WAITTIME,	75718},
+	{CMD_PUMP,	1},		/* Wash + 21 */
+	{CMD_WAITTIME,	75718},	/* TODO: Split up */
+	{CMD_PUMP,	0},		/* Wash + 22 */
+	{CMD_WATER,	1},
 	{CMD_WAITTIME,	25502},
+	{CMD_ARM,	ARM_DOWN},	/* Wash + 23 */
 	{CMD_WAITTIME,	21205},
+	{CMD_ARM,	ARM_UP},	/* Wash + 24 */
+	{CMD_BOWL,	BOWL_STOP},
+	{CMD_DOSAGE,	1},
 	{CMD_WAITTIME,	1132},
+	{CMD_ARM,	ARM_STOP},	/* Wash + 25 */
 	{CMD_WAITTIME,	9580},
+	{CMD_DOSAGE,	0},		/* Wash + 26 */
+	{CMD_BOWL,	BOWL_CCW},
 	{CMD_WAITTIME,	5329},
+	{CMD_BOWL,	BOWL_CW},	/* Wash + 27 */
 	{CMD_WAITTIME,	55482},
-	{CMD_WAITTIME,	65648},
+	{CMD_WAITWATER, 1},		/* Wash + 28 */
+	{CMD_WATER,	0},
+	{CMD_WAITTIME,	39107},
+	{CMD_PUMP,	1},		/* Wash + 29 */
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_WAITTIME,	65648},	/* TODO: Split up */
+	{CMD_BOWL,	BOWL_CW},	/* Wash + 30 */
+	{CMD_WAITTIME,	10075},
+	{CMD_BOWL,	BOWL_STOP},	/* Wash + 31 */
+	{CMD_DOSAGE,	1},
+	{CMD_WAITTIME,	9802},
+	{CMD_BOWL,	BOWL_CW},	/* Wash + 32 */
+	{CMD_DOSAGE,	1},
+	{CMD_WAITTIME,	25270},
+
 	{CMD_END,	0}
 };
-#if 0
-			settimeout(&state_timer, 25174);
-			settimeout(&state_timer, 1132);
-			settimeout(&state_timer, 1132);
-	{CMD_WATER,	0);
-			settimeout(&state_timer, 63582);
-			settimeout(&state_timer, 25602);
-			settimeout(&state_timer, 75718);
-			settimeout(&state_timer, 25602);
-			settimeout(&state_timer, 8202);
-			settimeout(&state_timer, 25602);
-			settimeout(&state_timer, 8202);
-			settimeout(&state_timer, 65616);
-			settimeout(&state_timer, 2462);
-	{CMD_DOSAGE,	0);
-	{CMD_BOWL,	BOWL_CW);
-			settimeout(&state_timer, 0);
-		if (detected_Water()) {
-	{CMD_WATER,	0);
-			settimeout(&state_timer, 63582);
-			state++;
-		} else
-			if (timeoutexpired(&water_timer)) {
-		{CMD_WATER,	0);
-				/*
-				 * ERROR 2
-				 */
-			}
-		break;
-#endif
 
-static struct timer	timer_autostart = {0xFFFF, 0xFFFFFFFF};
-static struct timer	timer_waitcmd   = {0xFFFF, 0xFFFFFFFF};
-static struct timer	timer_fill      = {0xFFFF, 0xFFFFFFFF};
-static struct timer	timer_drain     = {0xFFFF, 0xFFFFFFFF};
-static struct timer	timer_autodose  = {0xFFFF, 0xFFFFFFFF};
-static unsigned char	scooponly   = 1;
-static unsigned char	pc       = 0;
+
+static struct timer	timer_autostart = NEVER;
+static struct timer	timer_waitcmd   = NEVER;
+static struct timer	timer_fill      = NEVER;
+static struct timer	timer_drain     = NEVER;
+static struct timer	timer_autodose  = NEVER;
+static unsigned char	scooponly       = 0;
+static unsigned char	pc              = 0;
 
 
 /******************************************************************************/
@@ -231,11 +235,6 @@ void washprogram_init (void)
 }
 /* washprogram_init */
 
-#define MAX_FILL_TIME	(135*SECOND)
-#define SCOOP		0
-#define WASH		27
-#define DRY		100
-#define EQUALIZE	120
 
 void washprogram_work (void)
 /******************************************************************************/
