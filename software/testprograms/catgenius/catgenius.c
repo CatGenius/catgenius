@@ -20,8 +20,11 @@
 /* Macros								      */
 /******************************************************************************/
 
-__CONFIG(XT & WDTDIS & PWRTEN & BOREN & LVPDIS & DPROT & WRTEN & PROTECT);
-//__CONFIG(XT & WDTEN & PWRTEN & BOREN & LVPDIS & DPROT & WRTEN & PROTECT);
+#ifdef __DEBUG
+__CONFIG(XT & WDTDIS & PWRTEN & BOREN & LVPDIS & DUNPROT & WRTEN & DEBUGEN  & UNPROTECT);
+#else
+__CONFIG(XT & WDTEN  & PWRTEN & BOREN & LVPDIS & DPROT   & WRTEN & DEBUGDIS & PROTECT);
+#endif
 
 
 /******************************************************************************/
