@@ -24,11 +24,23 @@ extern void setupbutton_event (unsigned char up);
 
 #define DOSAGE_SECONDS_PER_ML	10		/* For 1 ml of cleaning liquid, 10 seconds of pumping */
 
+#define BOWL_MOTOR_RPM		50
+#define BOWL_MOTOR_TEETH	12
+#define BOWL_TEETH_PER_SECOND	((BOWL_MOTOR_RPM) * (BOWL_MOTOR_TEETH) / 60)
+#define BOWL_TEETH_REV		174
+#define BOWL_REV_MSEC		(1000 * (BOWL_TEETH_REV) / (BOWL_TEETH_PER_SECOND))
+
+#define ARM_MOTOR_RPM		5
+#define ARM_MOTOR_TEETH		16
+#define ARM_TEETH_PER_SECOND	((ARM_MOTOR_RPM) * (ARM_MOTOR_TEETH) / 60))
+#define ARM_TEETH_STOKE		18
+#define ARM_STROKE_MSEC		13500
+
 /* Timing configuration */
 #define WATERSENSORPOLLING	(SECOND/10)	/*  100ms*/
 #define BUTTON_DEBOUNCE		(SECOND/20)	/*   50ms */
-#define WATERSENSOR_DEBOUNCE	(SECOND/2)	/* 3000ms */
-#define HEATSENSOR_DEBOUNCE	(SECOND/20)	/*    0ms */
+#define WATERSENSOR_DEBOUNCE	(SECOND/2)	/*  500ms */
+#define HEATSENSOR_DEBOUNCE	(SECOND/20)	/*   50ms */
 #define PACER_BITTIME		(SECOND/8)	/*  125ms */
 
 /* Debouncers */
