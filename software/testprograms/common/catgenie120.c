@@ -79,8 +79,8 @@ struct debouncer {
 	void		(*handler)(unsigned char);
 };
 static struct debouncer	debouncers[DEBOUNCER_MAX] = {
-	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &STARTBUTTON_PORT,   STARTBUTTON_MASK, startbutton_event},
-	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &SETUPBUTTON_PORT,   SETUPBUTTON_MASK, setupbutton_event},
+	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      STARTBUTTON_MASK, &STARTBUTTON_PORT,   STARTBUTTON_MASK, startbutton_event},
+	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      SETUPBUTTON_MASK, &SETUPBUTTON_PORT,   SETUPBUTTON_MASK, setupbutton_event},
 	{{0xFFFF, 0xFFFFFFFF}, WATERSENSOR_DEBOUNCE, 0, &water_sensorbuffer, WATERSENSOR_MASK, watersensor_event},
 	{{0xFFFF, 0xFFFFFFFF}, HEATSENSOR_DEBOUNCE,  0, &HEATSENSOR_PORT,    HEATSENSOR_MASK,  heatsensor_event}
 };

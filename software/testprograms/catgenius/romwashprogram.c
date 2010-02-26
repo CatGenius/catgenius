@@ -1,5 +1,5 @@
 /******************************************************************************/
-/* File    :	washprogram.c						      */
+/* File    :	romwashprogram.c						      */
 /* Function:	CatGenius washing program				      */
 /* Author  :	Robert Delien						      */
 /*		Copyright (C) 2010, Clockwork Engineering		      */
@@ -8,8 +8,8 @@
 /******************************************************************************/
 #include <htc.h>
 
-#include "washprogram.h"
-#include "../common/timer.h"
+#include "romwashprogram.h"
+#include "litterlanguage.h"
 #include "../common/catgenie120.h"
 
 
@@ -17,45 +17,40 @@
 /* Macros								      */
 /******************************************************************************/
 
-#define FLAGS_AUTORUN	0x0100	/* Start program without user intervention */
-#define FLAGS_DRYRUN	0x0200	/* Program supports dry cleaning */
-#define FLAGS_WETRUN	0x0400	/* Program supports wet cleaning */
-#define FLASH_OVERWRITE	0x0800	/* Program will be copied to FLASH to replace standard program */
-
-#define CMD_START	0x00	/* Designates the start of a program. Argument is CMD_LAST or-ed with flags */
-#define CMD_BOWL	0x01	/* Controls the bowl. Argument is what the bowl should do */
-#define CMD_ARM		0x02	/* Controls the arm. Argument is what the arm should do */
-#define CMD_WATER	0x03	/* Controls the water valve. Argument is */
-#define CMD_DOSAGE	0x04
-#define CMD_PUMP	0x05
-#define CMD_DRYER	0x06
-
-#define CMD_WAITTIME	0x08
-#define CMD_WAITWATER	0x09
-#define CMD_SKIPIFDRY	0x10
-#define CMD_SKIPIFWET	0x11
-#define CMD_AUTODOSE	0x12
-#define CMD_LAST	CMD_AUTODOSE
-#define CMD_END		0xFE
-#define CMD_RESERVED	0xFF
-
-#define MAX_FILLTIME	((2*60+15)*SECOND)
-#define MAX_DRAINTIME	((2*60+15)*SECOND) /* TODO: Tune this value */
-
 
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
 
-struct command {
-	unsigned char	cmd;
-	unsigned int	arg;
-}
+static unsigned char		cmdptr = 0;
 
-static const struct command	program[] = {
+static const struct command	washprogram[] = {
 	{CMD_START,	CMD_LAST | 
 			FLAGS_DRYRUN |
 			FLAGS_WETRUN },
+#if 0
+	{CMD_BOWL,	BOWL_CCW},
+//	{CMD_WATER,	1},
+//	{CMD_WAITWATER,	1},
+//	{CMD_WATER,	0},
+	{CMD_WAITTIME,	1200},
+	{CMD_BOWL,	BOWL_STOP},
+	{CMD_END,	0},
+
+
+	{CMD_WATER,	1},
+	{CMD_WAITWATER, 1},
+	{CMD_BOWL,	BOWL_STOP},	/* Scoop */
+	{CMD_END,	0},
+
+	{CMD_WATER,	0},
+	{CMD_PUMP,	1},
+	{CMD_WAITTIME,	60000},
+	{CMD_PUMP,	0},
+
+
+	{CMD_END,	0},
+#endif
 	{CMD_BOWL,	BOWL_CCW},	/* Scoop */
 	{CMD_ARM,	ARM_DOWN},
 	{CMD_WAITTIME,	13217},
@@ -113,11 +108,14 @@ static const struct command	program[] = {
 	{CMD_ARM,	ARM_UP},	/* Scoop + 25 */
 	{CMD_WATER,	1},
 	{CMD_WAITTIME,	17141},
+	{CMD_ARM,	ARM_STOP},	/* Scoop + 26 */
+
+	{CMD_SKIPIFWET, 3},		/* Prepare for surfacing */
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	13217},
+	{CMD_SKIPIFDRY, 153},		/* Skip washing to surfacing */
+
 	{CMD_BOWL,	BOWL_CW},	/* Scoop + 26 */
-	{CMD_ARM,	ARM_STOP},
-//	{CMD_SKIPIFWET, 2},
-//	{CMD_BOWL,	BOWL_STOP},
-//	{CMD_SKIPIFDRY, 90},		/* TODO: Correct value to skip washing */
 	{CMD_WAITTIME,	18768},
 	{CMD_ARM,	ARM_DOWN},	/* Wash */
 	{CMD_WAITTIME,	25206},
@@ -270,7 +268,8 @@ static const struct command	program[] = {
 	{CMD_WAITTIME,	2169},
 	{CMD_ARM,	ARM_DOWN},	/* Dry + 30 */
 	{CMD_WAITTIME,	11703},
-	{CMD_ARM,	ARM_STOP},	/* Dry + 31 */
+
+	{CMD_ARM,	ARM_STOP},	/* Surface + 31 */
 	{CMD_WAITTIME,	45347},
 	{CMD_BOWL,	BOWL_CW},	/* Dry + 32 */
 	{CMD_WAITTIME,	35309},
@@ -316,215 +315,29 @@ static const struct command	program[] = {
 };
 
 
-static struct timer	timer_autostart = NEVER;
-static struct timer	timer_waitcmd   = NEVER;
-static struct timer	timer_fill      = NEVER;
-static struct timer	timer_drain     = NEVER;
-static struct timer	timer_autodose  = NEVER;
-static unsigned char	scooponly       = 0;
-static unsigned char	pc              = 0;
-
-
 /******************************************************************************/
 /* Local Prototypes							      */
 /******************************************************************************/
-
-static void wait ();
-static void execute ();
 
 
 /******************************************************************************/
 /* Global Implementations						      */
 /******************************************************************************/
 
-void washprogram_init (void)
-/******************************************************************************/
-/* Function:	washprogram_init					      */
-/*		- Initialize the CatGenius washing program		      */
-/* History :	21 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
+void romwashprogram_getcmd (unsigned char cmd_pointer)
 {
-}
-/* washprogram_init */
-
-
-void washprogram_work (void)
-/******************************************************************************/
-/* Function:	washprogram_work					      */
-/*		- Worker function for the CatGenius washing program	      */
-/* History :	21 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-	static bit	waiting = 0;
-
-	/* Check error timeouts */
-	if (timeoutexpired(&timer_fill)) {
-		/* Fill error */
-		/* Pauze */
-	}
-	if (timeoutexpired(&timer_drain)) {
-		/* Drain error */
-		/* Pauze */
-	}
-
-	/* Check auto timeouts */
-	if (timeoutexpired(&timer_autodose)) {
-		set_Dosage(0);
-		timeoutnever(&timer_autodose);
-	}
-
-	/* Do the waiting */
-	if (waiting) {
-		switch (program[pc].cmd) {
-		case CMD_WAITTIME:
-			if (!timeoutexpired(&timer_waitcmd))
-				return;
-			waiting = 0;
-			pc++;
-			break;
-		case CMD_WAITWATER:
-			if (program[pc].arg) {
-				if (!detected_Water())
-					return;
-				timeoutnever(&timer_fill);
-			} else {
-				if (detected_Water())
-					return;
-				timeoutnever(&timer_drain);
-			}
-			waiting = 0;
-			pc++;
-			break;
-		}
-	} else {
-	/* Execute wait commands */
-	switch (program[pc].cmd) {
-	case CMD_START:
-		if (timeoutexpired(&timer_autostart))
-			pc++;
-		break;
-	case CMD_BOWL:
-		set_Bowl((unsigned char)program[pc].arg);
-		pc++;
-		break;
-	case CMD_ARM:
-		set_Arm((unsigned char)program[pc].arg);
-		pc++;
-		break;
-	case CMD_WATER:
-		if (!scooponly) {
-			set_Water((unsigned char)program[pc].arg);
-			if (program[pc].arg)
-				settimeout(&timer_fill, MAX_FILLTIME);
-			else
-				timeoutnever(&timer_fill);
-		}
-		pc++;
-		break;
-	case CMD_DOSAGE:
-		set_Dosage((unsigned char)program[pc].arg);
-		pc++;
-		break;
-	case CMD_PUMP:
-		set_Pump((unsigned char)program[pc].arg);
-		if (program[pc].arg)
-			settimeout(&timer_drain, MAX_DRAINTIME);
-		else
-			timeoutnever(&timer_drain);
-		pc++;
-		break;
-	case CMD_DRYER:
-		set_Dryer((unsigned char)program[pc].arg);
-		pc++;
-		break;
-	case CMD_WAITTIME:
-		settimeout( &timer_waitcmd,
-			    (unsigned long)program[pc].arg * MILISECOND );
-		waiting = 1;
-		break;
-	case CMD_WAITWATER:
-		waiting = 1;
-		break;
-	case CMD_SKIPIFDRY:
-		if (scooponly)
-			pc += program[pc].arg + 1;
-		else
-			pc++;
-		break;
-	case CMD_SKIPIFWET:
-		if (!scooponly)
-			pc += program[pc].arg + 1;
-		else
-			pc++;
-		break;
-	case CMD_AUTODOSE:
-		settimeout(&timer_autodose, program[pc].arg);
-		set_Dosage(1);
-		pc++;
-		break;
-	case CMD_END:
-		timeoutnever(&timer_drain);
-		timeoutnever(&timer_autostart);
-		pc=0;
-		break;
-	default:
-		/* Program error */
-		timeoutnever(&timer_autostart);
-		pc = 0;
-		break;
-	}
-}
-}
-/* washprogram_work */
-
-
-void washprogram_term (void)
-/******************************************************************************/
-/* Function:	userinterface_term					      */
-/*		- Terminate the CatGenius washing program		      */
-/* History :	21 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-}
-/* washprogram_term */
-
-
-void washprogram_mode (unsigned char justscoop)
-{
-	if (!pc)
-		scooponly = justscoop ;
+	cmdptr = cmd_pointer;
 }
 
-
-void washprogram_start (void)
+unsigned char romwashprogram_gotcmd (struct command *command)
 {
-	if (program[pc].cmd == CMD_START)
-		timeoutnow(&timer_autostart);
-}
+	command->cmd = washprogram[cmdptr].cmd;
+	command->arg = washprogram[cmdptr].arg;
 
-
-unsigned char washprogram_running (void)
-{
-	return (pc);
-}
-
-
-void washprogram_pause (unsigned char pause)
-{
+	return 1;
 }
 
 
 /******************************************************************************/
 /* Local Implementations						      */
 /******************************************************************************/
-
-static void wait ()
-{
-}
-
-static void execute ()
-{
-}

@@ -11,7 +11,7 @@
 #include "userinterface.h"
 #include "../common/timer.h"
 #include "../common/catgenie120.h"
-#include "washprogram.h"
+#include "litterlanguage.h"
 
 
 /******************************************************************************/
@@ -259,8 +259,8 @@ static void setup (void)
 
 static void start (void)
 {
-	if (!washprogram_running())
-		washprogram_start();
+	if (!litterlanguage_running())
+		litterlanguage_start();
 }
 
 
