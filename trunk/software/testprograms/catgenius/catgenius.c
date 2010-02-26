@@ -13,7 +13,7 @@
 #include "../common/catsensor.h"
 #include "../common/catgenie120.h"
 #include "userinterface.h"
-#include "washprogram.h"
+#include "litterlanguage.h"
 
 
 /******************************************************************************/
@@ -62,7 +62,7 @@ void main (void)
 	userinterface_init();
 
 	/* Initialize the washing program */
-	washprogram_init();
+	litterlanguage_init();
 
 	/* Initialize interrupts */
 	interrupt_init();
@@ -72,7 +72,7 @@ void main (void)
 		catsensor_work();
 		catgenie_work();
 		userinterface_work();
-		washprogram_work();
+		litterlanguage_work();
 	}
 }
 
