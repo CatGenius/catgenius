@@ -196,11 +196,11 @@ void catgenie_work (void)
 			/* Unmute Water Sensor */
 			TRISA |= WATERSENSORMUTE_MASK;
 			__delay_us(85);
-			water_sensorbuffer = WATERSENSOR_PORT & WATERSENSORMUTE_MASK;
+			water_sensorbuffer = WATERSENSOR_PORT & WATERSENSOR_MASK;
 			/* Mute Water Sensor */
 			TRISA &= ~WATERSENSORMUTE_MASK;
 		} else
-			water_sensorbuffer = WATERSENSOR_PORT & WATERSENSORMUTE_MASK;
+			water_sensorbuffer = WATERSENSOR_PORT & WATERSENSOR_MASK;
 		/* Detect state change */
 		if (water_sensorbuffer != water_sensorbuffer_old) {
 		/* Postpone the debouncer */
