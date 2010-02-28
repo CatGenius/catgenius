@@ -1,5 +1,5 @@
 /******************************************************************************/
-/* File    :	romwashprogram.c						      */
+/* File    :	romwashprogram.c					      */
 /* Function:	CatGenius washing program				      */
 /* Author  :	Robert Delien						      */
 /*		Copyright (C) 2010, Clockwork Engineering		      */
@@ -28,29 +28,6 @@ static const struct command	washprogram[] = {
 	{CMD_START,	CMD_LAST | 
 			FLAGS_DRYRUN |
 			FLAGS_WETRUN },
-#if 0
-	{CMD_BOWL,	BOWL_CCW},
-//	{CMD_WATER,	1},
-//	{CMD_WAITWATER,	1},
-//	{CMD_WATER,	0},
-	{CMD_WAITTIME,	1200},
-	{CMD_BOWL,	BOWL_STOP},
-	{CMD_END,	0},
-
-
-	{CMD_WATER,	1},
-	{CMD_WAITWATER, 1},
-	{CMD_BOWL,	BOWL_STOP},	/* Scoop */
-	{CMD_END,	0},
-
-	{CMD_WATER,	0},
-	{CMD_PUMP,	1},
-	{CMD_WAITTIME,	60000},
-	{CMD_PUMP,	0},
-
-
-	{CMD_END,	0},
-#endif
 	{CMD_BOWL,	BOWL_CCW},	/* Scoop */
 	{CMD_ARM,	ARM_DOWN},
 	{CMD_WAITTIME,	13217},
