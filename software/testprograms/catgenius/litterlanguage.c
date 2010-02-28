@@ -25,7 +25,7 @@
 /******************************************************************************/
 
 static unsigned char	prg_source	= 0;
-static unsigned char	prg_scooponly	= 1;
+static unsigned char	prg_scooponly	= 0;
 
 static unsigned char	cmd_state	= 0;
 static unsigned char	cmd_pointer	= 0;
@@ -155,7 +155,7 @@ void litterlanguage_pause (unsigned char pause)
 static void get_command (unsigned char cmd_pointer)
 {
 	switch (prg_source) {
-	case 0:
+	case SRC_ROM:
 		romwashprogram_getcmd(cmd_pointer);
 	}
 }
@@ -163,7 +163,8 @@ static void get_command (unsigned char cmd_pointer)
 static unsigned char got_command (struct command *command)
 {
 	switch (prg_source) {
-	case 0:
+	default:
+	case SRC_ROM:
 		return romwashprogram_gotcmd(command);
 	}
 }

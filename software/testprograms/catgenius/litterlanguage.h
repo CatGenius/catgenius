@@ -8,6 +8,11 @@
 #ifndef LIITERLANGUAGE_H			/* Include file already compiled? */
 #define LIITERLANGUAGE_H
 
+#define SRC_ROM		0
+#define SRC_FLASH	1
+#define SRC_RFID	2
+#define SRC_EEPROM	3
+
 #define FLAGS_AUTORUN	0x0100	/* Start program without user intervention */
 #define FLAGS_DRYRUN	0x0200	/* Program supports dry cleaning */
 #define FLAGS_WETRUN	0x0400	/* Program supports wet cleaning */

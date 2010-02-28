@@ -25,7 +25,7 @@ extern void setupbutton_event (unsigned char up);
 /* Timing configuration */
 #define WATERSENSORPOLLING	(SECOND/10)	/*  100ms*/
 #define BUTTON_DEBOUNCE		(SECOND/20)	/*   50ms */
-#define WATERSENSOR_DEBOUNCE	(SECOND/2)	/*  500ms */
+#define WATERSENSOR_DEBOUNCE	(2*SECOND)	/* 2000ms */
 #define HEATSENSOR_DEBOUNCE	(SECOND/20)	/*   50ms */
 #define PACER_BITTIME		(SECOND/8)	/*  125ms */
 
@@ -195,7 +195,7 @@ void catgenie_work (void)
 		if (!water_filling) {
 			/* Unmute Water Sensor */
 			TRISA |= WATERSENSORMUTE_MASK;
-			__delay_us(85);
+			__delay_us(300);
 			water_sensorbuffer = WATERSENSOR_PORT & WATERSENSOR_MASK;
 			/* Mute Water Sensor */
 			TRISA &= ~WATERSENSORMUTE_MASK;
