@@ -1,0 +1,45 @@
+1	Ground
+2	Start/Pause button
+3	Auto/Setup button
+4	4 LED
+5	3 LED
+6	2 LED
+7	1 LED
+8	Cat LED
+9	Cartridge LED
+10	Error LED
+11	Child lock LED
+
+Green LED:
+1 mA	@1.9Volt
+5 mA	@2.0Volt
+
+Proc.
+Pin:
+27	Child lock LED
+32	Error LED
+25	Cartrigde LED
+26	Cat LED
+24	4 LED
+43	1 LED
+21	2 LED
+22	3 LED
+15	Auto/Setup button
+8	Start/Pause button
+5	U5 - RL6
+4	U5 - RL8
+3	U5 - RL5
+2	U5 - RL7
+41	U5 - RL4
+39	U5 - RL3
+11	U5 - RL1
+40	U3 - RL2
+35	U3 - LS1
+9	U4 - Overheat detector
+44	J18 - TX
+1	J18 - RX
+42	J16 - SDA
+37	J16 - SCL
+18	JC1 - RES
+16	JC1 - CLK
+17	JC1 - DA
