@@ -28,71 +28,68 @@ static const struct command	washprogram[] = {
 	{CMD_START,	CMD_LAST | 
 			FLAGS_DRYRUN |
 			FLAGS_WETRUN },
-	{CMD_BOWL,	BOWL_CCW},	/* Scoop */
+	{CMD_BOWL,	BOWL_CCW},	/* Scoop 1 */
 	{CMD_ARM,	ARM_DOWN},
 	{CMD_WAITTIME,	13217},
-	{CMD_ARM,	ARM_STOP},	/* Scoop + 1 */
+	{CMD_ARM,	ARM_STOP},	/* Scoop 1 + 1 */
 	{CMD_WAITTIME,	18141},
-	{CMD_BOWL,	BOWL_CW},	/* Scoop + 2 */
+	{CMD_BOWL,	BOWL_CW},	/* Scoop 1 + 2 */
 	{CMD_WAITTIME,	6201},
-	{CMD_BOWL,	BOWL_CCW},	/* Scoop + 3 */
+	{CMD_BOWL,	BOWL_CCW},	/* Scoop 1 + 3 */
 	{CMD_ARM,	ARM_DOWN},
 	{CMD_WAITTIME,	5765},
-	{CMD_ARM,	ARM_UP},	/* Scoop + 4 */
+	{CMD_ARM,	ARM_UP},	/* Scoop 1 + 4 */
 	{CMD_WAITTIME,	532},
-	{CMD_ARM,	ARM_STOP},	/* Scoop + 5 */
+	{CMD_ARM,	ARM_STOP},	/* Scoop 1 + 5 */
 	{CMD_WAITTIME,	25206},
-	{CMD_ARM,	ARM_UP},	/* Scoop + 6 */
+	{CMD_ARM,	ARM_UP},	/* Scoop 1 + 6 */
 	{CMD_WAITTIME,	10671},
-	{CMD_ARM,	ARM_DOWN},	/* Scoop + 7 */
+	{CMD_ARM,	ARM_DOWN},	/* Scoop 1 + 7 */
 	{CMD_WAITTIME,	6602},
-	{CMD_ARM,	ARM_UP},	/* Scoop + 8 */
+	{CMD_ARM,	ARM_UP},	/* Scoop 1 + 8 */
 	{CMD_WAITTIME,	17204},
-	{CMD_ARM,	ARM_DOWN},	/* Scoop + 9 */
+	{CMD_ARM,	ARM_DOWN},	/* Scoop 2 */
 	{CMD_WAITTIME,	12703},
-	{CMD_ARM,	ARM_STOP},	/* Scoop + 10 */
+	{CMD_ARM,	ARM_STOP},	/* Scoop 2 + 1 */
 	{CMD_WAITTIME,	4701},
-	{CMD_ARM,	ARM_DOWN},	/* Scoop + 11 */
+	{CMD_ARM,	ARM_DOWN},	/* Scoop 2 + 2 */
 	{CMD_WAITTIME,	11203},
-	{CMD_ARM,	ARM_UP},	/* Scoop + 12 */
+	{CMD_ARM,	ARM_UP},	/* Scoop 2 + 3 */
 	{CMD_WAITTIME,	532},
-	{CMD_ARM,	ARM_STOP},	/* Scoop + 13 */
+	{CMD_ARM,	ARM_STOP},	/* Scoop 2 + 4 */
 	{CMD_WAITTIME,	25206},
-	{CMD_ARM,	ARM_UP},	/* Scoop + 14 */
+	{CMD_ARM,	ARM_UP},	/* Scoop 2 + 5 */
 	{CMD_WAITTIME,	10671},
-	{CMD_ARM,	ARM_DOWN},	/* Scoop + 15 */
+	{CMD_ARM,	ARM_DOWN},	/* Scoop 2 + 6 */
 	{CMD_WAITTIME,	6601},
-	{CMD_ARM,	ARM_UP},	/* Scoop + 16 */
+	{CMD_ARM,	ARM_UP},	/* Scoop 2 + 7 */
 	{CMD_WAITTIME,	20141},
-	{CMD_BOWL,	BOWL_CW},	/* Scoop + 17 */
+	{CMD_BOWL,	BOWL_CW},	/* Scoop 3 */
 	{CMD_ARM,	ARM_DOWN},
 	{CMD_WAITTIME,	21769},
-	{CMD_ARM,	ARM_UP},	/* Scoop + 18 */
+	{CMD_ARM,	ARM_UP},	/* Scoop 3 + 1 */
 	{CMD_WAITTIME,	932},
-	{CMD_ARM,	ARM_STOP},	/* Scoop + 19 */
+	{CMD_ARM,	ARM_STOP},	/* Scoop 3 + 2 */
+
+	{CMD_SKIPIFDRY, 184},		/* Skip to surfacing in dry program */
+
 	{CMD_WAITTIME,	12108},
-	{CMD_BOWL,	BOWL_CCW},	/* Scoop + 20 */
+	{CMD_BOWL,	BOWL_CCW},	/* Scoop 3 + 3 */
 	{CMD_ARM,	ARM_DOWN},
 	{CMD_WAITTIME,	3264},
-	{CMD_ARM,	ARM_UP},	/* Scoop + 21 */
+	{CMD_ARM,	ARM_UP},	/* Scoop 3 + 4 */
 	{CMD_WAITTIME,	532},
-	{CMD_ARM,	ARM_STOP},	/* Scoop + 22 */
+	{CMD_ARM,	ARM_STOP},	/* Scoop 3 + 5 */
 	{CMD_WAITTIME,	24206},
-	{CMD_ARM,	ARM_UP},	/* Scoop + 23 */
+	{CMD_ARM,	ARM_UP},	/* Scoop 3 + 6 */
 	{CMD_WAITTIME,	10571},
-	{CMD_ARM,	ARM_DOWN},	/* Scoop + 24 */
+	{CMD_ARM,	ARM_DOWN},	/* Scoop 3 + 7 */
 	{CMD_WAITTIME,	6602},
-	{CMD_ARM,	ARM_UP},	/* Scoop + 25 */
+	{CMD_ARM,	ARM_UP},	/* Scoop 3 + 8 */
 	{CMD_WATER,	1},
 	{CMD_WAITTIME,	17141},
-	{CMD_ARM,	ARM_STOP},	/* Scoop + 26 */
-
-	{CMD_SKIPIFWET, 3},		/* Prepare for surfacing */
-	{CMD_ARM,	ARM_DOWN},
-	{CMD_WAITTIME,	13217},
-	{CMD_SKIPIFDRY, 153},		/* Skip washing to surfacing */
-
-	{CMD_BOWL,	BOWL_CW},	/* Scoop + 26 */
+	{CMD_BOWL,	BOWL_CW},	/* Scoop 3 + 9 */
+	{CMD_ARM,	ARM_STOP},
 	{CMD_WAITTIME,	18768},
 	{CMD_ARM,	ARM_DOWN},	/* Wash */
 	{CMD_WAITTIME,	25206},
@@ -245,8 +242,7 @@ static const struct command	washprogram[] = {
 	{CMD_WAITTIME,	2169},
 	{CMD_ARM,	ARM_DOWN},	/* Dry + 30 */
 	{CMD_WAITTIME,	11703},
-
-	{CMD_ARM,	ARM_STOP},	/* Surface + 31 */
+	{CMD_ARM,	ARM_STOP},	/* Dry + 31 */
 	{CMD_WAITTIME,	45347},
 	{CMD_BOWL,	BOWL_CW},	/* Dry + 32 */
 	{CMD_WAITTIME,	35309},
@@ -261,6 +257,7 @@ static const struct command	washprogram[] = {
 	{CMD_BOWL,	BOWL_CCW},	/* Dry + 37 */
 	{CMD_WAITTIME,	45411},
 	{CMD_BOWL,	BOWL_CW},	/* Dry + 38 */
+	/* Surfacing */
 	{CMD_WAITTIME,	35404},
 	{CMD_ARM,	ARM_UP},	/* Dry + 39 */
 	{CMD_WAITTIME,	300},
