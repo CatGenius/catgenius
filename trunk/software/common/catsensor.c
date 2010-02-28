@@ -33,7 +33,8 @@ static bit			pinged       = 0;
 static bit			echoed       = 0;
 static bit			detected     = 0;
 static bit			detected_old = 0;
-static struct timer		debouncer    = {0xFFFF, 0xFFFFFFFF};
+static bit			debounced    = 0;
+static struct timer		debouncer    = NEVER;
 
 
 /******************************************************************************/

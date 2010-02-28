@@ -10,6 +10,7 @@
 
 #include "userinterface.h"
 #include "../common/timer.h"
+#include "../common/hardware.h"
 #include "../common/catgenie120.h"
 #include "litterlanguage.h"
 

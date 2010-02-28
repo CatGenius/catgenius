@@ -8,11 +8,7 @@
 #ifndef TIMER_H				/* Include file already compiled? */
 #define TIMER_H
 
-#define KHZ		(1000UL)
-#define MHZ		(1000UL * (KHZ))
-#define FOSC		(4UL * MHZ)		/* Crystal frequency */
-
-#define SECOND		(((FOSC)/4)/8)		/* Number of timer ticks per second */
+#define SECOND		(((_XTAL_FREQ)/4)/8)	/* Number of timer ticks per second */
 #define MINUTE		(60 * (SECOND))		/* Number of timer ticks per minute */
 #define HOUR		(60 * (MINUTE))		/* Number of timer ticks per hour */
 #define MILISECOND	(SECOND/1000)		/* Number of timer ticks per milisecond */
