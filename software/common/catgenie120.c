@@ -51,7 +51,7 @@ extern void setupbutton_event (unsigned char up);
 
 static unsigned char	PORTB_old;
 
-static struct timer	water_sensortimer      = {0x0000, 0x00000000};
+static struct timer	water_sensortimer      = EXIRED;
 static unsigned char	water_sensorbuffer     = 0;
 static unsigned char	water_sensorbuffer_old = 0;
 static bit		water_filling          = 0;
@@ -145,9 +145,7 @@ unsigned char catgenie_init (void)
 	/*
 	 * Setup port C
 	 */
-	TRISC = I2C_SCL_MASK  |		/* I2C SCL */
-		I2C_SDA_MASK  |		/* I2C SDA */
-		UART_TXD_MASK |		/* UART TxD */
+	TRISC = UART_TXD_MASK |		/* UART TxD */
 		UART_RXD_MASK ;		/* UART RxD */
 	PORTC = 0x00;
 
