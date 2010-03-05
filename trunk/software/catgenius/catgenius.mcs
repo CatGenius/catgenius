@@ -9,7 +9,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
@@ -22,7 +22,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
@@ -35,7 +35,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
@@ -48,12 +48,77 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File004]
+Location=Z:\Sources\catgenius\software\catgenius\catgenie120.p1
+Folder=Intermediary
+DeviceName=PIC16F877A
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+ToolArgsString=C9=1
+TraceCmdString=
+DebugOptions=
+[File005]
+Location=Z:\Sources\catgenius\software\catgenius\catsensor.p1
+Folder=Intermediary
+DeviceName=PIC16F877A
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+ToolArgsString=C9=1
+TraceCmdString=
+DebugOptions=
+[File006]
+Location=Z:\Sources\catgenius\software\catgenius\timer.p1
+Folder=Intermediary
+DeviceName=PIC16F877A
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+ToolArgsString=C9=1
+TraceCmdString=
+DebugOptions=
+[File007]
+Location=Z:\Sources\catgenius\software\catgenius\serial.p1
+Folder=Intermediary
+DeviceName=PIC16F877A
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+ToolArgsString=C9=1
+TraceCmdString=
+DebugOptions=
+[File008]
+Location=Z:\Sources\catgenius\software\catgenius\i2c.p1
+Folder=Intermediary
+DeviceName=PIC16F877A
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
+PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+ToolArgsString=C9=1
+TraceCmdString=
+DebugOptions=
+[File009]
 Location=Z:\Sources\catgenius\software\catgenius\catgenius.cof
 Folder=Output
 DeviceName=PIC16F877A
@@ -61,12 +126,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File005]
+[File010]
 Location=Z:\Sources\catgenius\software\catgenius\catgenius.hex
 Folder=Output
 DeviceName=PIC16F877A
@@ -74,12 +139,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File006]
+[File011]
 Location=Z:\Sources\catgenius\software\catgenius\catgenius.sym
 Folder=Output
 DeviceName=PIC16F877A
@@ -87,12 +152,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File007]
+[File012]
 Location=Z:\Sources\catgenius\software\catgenius\catgenius.map
 Folder=Output
 DeviceName=PIC16F877A
@@ -100,12 +165,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File008]
+[File013]
 Location=Z:\Sources\catgenius\software\catgenius\catgenius.hxl
 Folder=Output
 DeviceName=PIC16F877A
@@ -113,12 +178,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File009]
+[File014]
 Location=Z:\Sources\catgenius\software\catgenius\startup.lst
 Folder=Output
 DeviceName=PIC16F877A
@@ -126,12 +191,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File010]
+[File015]
 Location=Z:\Sources\catgenius\software\catgenius\startup.rlf
 Folder=Output
 DeviceName=PIC16F877A
@@ -139,12 +204,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File011]
+[File016]
 Location=Z:\Sources\catgenius\software\catgenius\doprnt.p1
 Folder=Output
 DeviceName=PIC16F877A
@@ -152,12 +217,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File012]
+[File017]
 Location=Z:\Sources\catgenius\software\catgenius\doprnt.pre
 Folder=Output
 DeviceName=PIC16F877A
@@ -165,12 +230,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File013]
+[File018]
 Location=Z:\Sources\catgenius\software\catgenius\catgenius.obj
 Folder=Output
 DeviceName=PIC16F877A
@@ -178,12 +243,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File014]
+[File019]
 Location=Z:\Sources\catgenius\software\catgenius\catgenius.lst
 Folder=Output
 DeviceName=PIC16F877A
@@ -191,12 +256,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File015]
+[File020]
 Location=Z:\Sources\catgenius\software\catgenius\catgenius.rlf
 Folder=Output
 DeviceName=PIC16F877A
@@ -204,12 +269,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File016]
+[File021]
 Location=Z:\Sources\catgenius\software\catgenius\catgenius.sdb
 Folder=Output
 DeviceName=PIC16F877A
@@ -217,7 +282,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\timer.c|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|catgenius.c|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=

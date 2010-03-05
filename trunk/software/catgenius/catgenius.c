@@ -10,6 +10,8 @@
 
 #include "../common/timer.h"
 #include "../common/hardware.h"
+#include "../common/serial.h"
+#include "../common/i2c.h"
 #include "../common/catsensor.h"
 #include "../common/catgenie120.h"
 #include "userinterface.h"
@@ -55,6 +57,9 @@ void main (void)
 	/* Initialize software timers */
 	timer_init();
 
+	i2c_init();
+	serial_init();
+
 	/* Initialize the cat sensor */
 	catsensor_init();
 
@@ -73,6 +78,12 @@ void main (void)
 		catgenie_work();
 		userinterface_work();
 		litterlanguage_work();
+		i2c_work();
+#ifndef __DEBUG
+		CLRWDT();
+#endif
+//	putch('A');
+
 	}
 }
 
