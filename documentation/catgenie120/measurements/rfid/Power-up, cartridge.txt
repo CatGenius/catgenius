@@ -1,877 +1,999 @@
-Time [s],Event
--0,0000020,Start
-0,0000398,Setup write to 0x50. +ACK
-0,0001117,Wrote 0x00 to 0x50. +ACK
-0,0001838,Wrote 0x00 to 0x50. +ACK
+0,0000020,Start
+0,0000398,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0001117,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+0,0001838,Wrote 0x00 to 0x50. +ACK	/* Clear all */
 0,0002495,Stop
+
 0,0003020,Start
-0,0003437,Setup write to 0x50. +ACK
-0,0004160,Wrote 0x00 to 0x50. +ACK
-0,0004880,Wrote 0x10 to 0x50. +ACK
+0,0003437,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0004160,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+0,0004880,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 0,0005537,Stop
+
 0,0016295,Start
-0,0016713,Setup write to 0x50. +ACK
-0,0017433,Wrote 0x01 to 0x50. +ACK
-0,0018153,Wrote 0x02 to 0x50. +ACK
-0,0019253,Wrote 0x06 to 0x50. +ACK
-0,0019973,Wrote 0x00 to 0x50. +ACK
+0,0016713,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0017433,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,0018153,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,0019253,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+0,0019973,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 0,0020630,Stop
+
 0,0041350,Start
-0,0041768,Setup write to 0x50. +ACK
-0,0042488,Wrote 0x01 to 0x50. +ACK
+0,0041768,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0042488,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0043185,Start
 0,0043558,Setup read from 0x50. +ACK
-0,0044278,Read 0x01 from 0x50. +ACK
-0,0045520,Read 0x45 from 0x50. +No ACK
+0,0044278,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+0,0045520,Read 0x45 from 0x50. +No ACK	/* Read response: Unique chip ID (0x45) */
 0,0046828,Stop
+
 0,0047423,Start
-0,0047840,Setup write to 0x50. +ACK
-0,0049020,Wrote 0x01 to 0x50. +ACK
-0,0049740,Wrote 0x02 to 0x50. +ACK
-0,0050460,Wrote 0x0E to 0x50. +ACK
-0,0051180,Wrote 0x45 to 0x50. +ACK
+0,0047840,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0049020,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,0049740,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,0050460,Wrote 0x0E to 0x50. +ACK	/* Write command: Select chip ID */
+0,0051180,Wrote 0x45 to 0x50. +ACK	/* Write parameter: 0x45 */
 0,0051838,Stop
+
 0,0092793,Start
-0,0093210,Setup write to 0x50. +ACK
-0,0093930,Wrote 0x01 to 0x50. +ACK
+0,0093210,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0093930,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0094628,Start
 0,0095000,Setup read from 0x50. +ACK
-0,0095720,Read 0x01 from 0x50. +ACK
-0,0097003,Read 0x45 from 0x50. +No ACK
+0,0095720,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+0,0097003,Read 0x45 from 0x50. +No ACK	/* Read response: Selected chip ID (0x45) */
 0,0098210,Stop
+
 0,0099235,Start
-0,0099652,Setup write to 0x50. +ACK
-0,0100373,Wrote 0x01 to 0x50. +ACK
-0,0101093,Wrote 0x01 to 0x50. +ACK
-0,0101813,Wrote 0x0B to 0x50. +ACK
+0,0099652,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0100373,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,0101093,Wrote 0x01 to 0x50. +ACK	/* Write frame length: 1 byte */
+0,0101813,Wrote 0x0B to 0x50. +ACK	/* Write command: Get UID */
 0,0102470,Stop
+
 0,0143425,Start
-0,0143843,Setup write to 0x50. +ACK
-0,0144563,Wrote 0x01 to 0x50. +ACK
+0,0143843,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0144563,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0145260,Start
 0,0145633,Setup read from 0x50. +ACK
-0,0146353,Read 0x08 from 0x50. +ACK
-0,0147675,Read 0x67 from 0x50. +ACK
-0,0149415,Read 0x69 from 0x50. +ACK
-0,0150695,Read 0x56 from 0x50. +ACK
-0,0151975,Read 0x3F from 0x50. +ACK
-0,0153255,Read 0xE4 from 0x50. +ACK
-0,0154535,Read 0x0D from 0x50. +ACK
-0,0155815,Read 0x02 from 0x50. +ACK
-0,0157095,Read 0xD0 from 0x50. +No ACK
+0,0146353,Read 0x08 from 0x50. +ACK	/* Read frame length: 8 bytes */
+0,0147675,Read 0x67 from 0x50. +ACK	/* Read response: UID[0] = 0x67 */
+0,0149415,Read 0x69 from 0x50. +ACK	/* Read response: UID[1] = 0x69 */
+0,0150695,Read 0x56 from 0x50. +ACK	/* Read response: UID[2] = 0x56 */
+0,0151975,Read 0x3F from 0x50. +ACK	/* Read response: UID[3] = 0x3F */
+0,0153255,Read 0xE4 from 0x50. +ACK	/* Read response: UID[4] = 0xE4 */
+0,0154535,Read 0x0D from 0x50. +ACK	/* Read response: UID[5] = 0x0D */
+0,0155815,Read 0x02 from 0x50. +ACK	/* Read response: UID[6] = 0x02 */
+0,0157095,Read 0xD0 from 0x50. +No ACK	/* Read response: UID[7] = 0xD0 */
 0,0158305,Stop
+
 0,0280938,Start
-0,0281358,Setup write to 0x50. +ACK
-0,0282078,Wrote 0x01 to 0x50. +ACK
-0,0282798,Wrote 0x02 to 0x50. +ACK
-0,0283518,Wrote 0x08 to 0x50. +ACK
-0,0284238,Wrote 0x0D to 0x50. +ACK
+0,0281358,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0282078,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,0282798,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,0283518,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,0284238,Wrote 0x0D to 0x50. +ACK	/* Write parameter: block 0x0D */
 0,0284895,Stop
+
 0,0315728,Start
-0,0316145,Setup write to 0x50. +ACK
-0,0316865,Wrote 0x01 to 0x50. +ACK
+0,0316145,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0316865,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0317563,Start
 0,0317935,Setup read from 0x50. +ACK
-0,0319105,Read 0x04 from 0x50. +ACK
-0,0320425,Read 0x30 from 0x50. +ACK
-0,0321705,Read 0x2A from 0x50. +ACK
-0,0322988,Read 0xD8 from 0x50. +ACK
-0,0324268,Read 0xCB from 0x50. +No ACK
+0,0319105,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
+0,0320425,Read 0x30 from 0x50. +ACK	/* Read response: Block[0x0D][0] = 0x30 */
+0,0321705,Read 0x2A from 0x50. +ACK	/* Read response: Block[0x0D][1] = 0x2A */
+0,0322988,Read 0xD8 from 0x50. +ACK	/* Read response: Block[0x0D][2] = 0xD8 */
+0,0324268,Read 0xCB from 0x50. +No ACK	/* Read response: Block[0x0D][3] = 0xCB */
 0,0325475,Stop
+
 0,0326320,Start
-0,0326738,Setup write to 0x50. +ACK
-0,0327458,Wrote 0x01 to 0x50. +ACK
-0,0328178,Wrote 0x02 to 0x50. +ACK
-0,0329358,Wrote 0x08 to 0x50. +ACK
-0,0330078,Wrote 0x05 to 0x50. +ACK
+0,0326738,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0327458,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,0328178,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,0329358,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,0330078,Wrote 0x05 to 0x50. +ACK	/* Write parameter: block 0x05 */
 0,0330735,Stop
+
 0,0361578,Start
-0,0361995,Setup write to 0x50. +ACK
-0,0362715,Wrote 0x01 to 0x50. +ACK
+0,0361995,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0362715,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0363413,Start
 0,0363788,Setup read from 0x50. +ACK
-0,0364508,Read 0x04 from 0x50. +ACK
-0,0365828,Read 0x19 from 0x50. +ACK
-0,0367108,Read 0x00 from 0x50. +ACK
-0,0368388,Read 0x00 from 0x50. +ACK
-0,0369778,Read 0x00 from 0x50. +No ACK
+0,0364508,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
+0,0365828,Read 0x19 from 0x50. +ACK	/* Read response: counter[0][0] = 0x19 */
+0,0367108,Read 0x00 from 0x50. +ACK	/* Read response: counter[0][1] = 0x00 */
+0,0368388,Read 0x00 from 0x50. +ACK	/* Read response: counter[0][2] = 0x00 */
+0,0369778,Read 0x00 from 0x50. +No ACK	/* Read response: counter[0][3] = 0x00 */
 0,0370985,Stop
+
 0,0371670,Start
-0,0372088,Setup write to 0x50. +ACK
-0,0372808,Wrote 0x01 to 0x50. +ACK
-0,0373528,Wrote 0x02 to 0x50. +ACK
-0,0374250,Wrote 0x08 to 0x50. +ACK
-0,0374970,Wrote 0x06 to 0x50. +ACK
+0,0372088,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0372808,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,0373528,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,0374250,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,0374970,Wrote 0x06 to 0x50. +ACK	/* Write parameter: block 0x06 */
 0,0375628,Stop
+
 0,0406470,Start
-0,0406888,Setup write to 0x50. +ACK
-0,0407608,Wrote 0x01 to 0x50. +ACK
+0,0406888,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0407608,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0408305,Start
 0,0409128,Setup read from 0x50. +ACK
-0,0409848,Read 0x04 from 0x50. +ACK
-0,0411168,Read 0x19 from 0x50. +ACK
-0,0412448,Read 0x00 from 0x50. +ACK
-0,0413728,Read 0x00 from 0x50. +ACK
-0,0415010,Read 0x00 from 0x50. +No ACK
+0,0409848,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
+0,0411168,Read 0x19 from 0x50. +ACK	/* Read response: counter[1][0] = 0x19 */
+0,0412448,Read 0x00 from 0x50. +ACK	/* Read response: counter[1][1] = 0x00 */
+0,0413728,Read 0x00 from 0x50. +ACK	/* Read response: counter[1][2] = 0x00 */
+0,0415010,Read 0x00 from 0x50. +No ACK	/* Read response: counter[1][3] = 0x00 */
 0,0416218,Stop
+
 0,0417133,Start
-0,0417550,Setup write to 0x50. +ACK
-0,0418270,Wrote 0x01 to 0x50. +ACK
-0,0419360,Wrote 0x02 to 0x50. +ACK
-0,0420080,Wrote 0x08 to 0x50. +ACK
-0,0420800,Wrote 0x08 to 0x50. +ACK
+0,0417550,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0418270,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,0419360,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,0420080,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,0420800,Wrote 0x08 to 0x50. +ACK	/* Write parameter: block 0x08 */
 0,0421458,Stop
+
 0,0452300,Start
-0,0452718,Setup write to 0x50. +ACK
-0,0453438,Wrote 0x01 to 0x50. +ACK
+0,0452718,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0453438,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0454135,Start
 0,0454508,Setup read from 0x50. +ACK
-0,0455228,Read 0x04 from 0x50. +ACK
-0,0456550,Read 0x01 from 0x50. +ACK
-0,0457830,Read 0x00 from 0x50. +ACK
-0,0459560,Read 0x3C from 0x50. +ACK
-0,0460840,Read 0x00 from 0x50. +No ACK
+0,0455228,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
+0,0456550,Read 0x01 from 0x50. +ACK	/* Read response: Block[0x08][0] = 0x01 */
+0,0457830,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x08][1] = 0x00 */
+0,0459560,Read 0x3C from 0x50. +ACK	/* Read response: Block[0x08][2] = 0x3C */
+0,0460840,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x08][3] = 0x00 */
 0,0462048,Stop
+
 0,0462753,Start
-0,0463170,Setup write to 0x50. +ACK
-0,0463890,Wrote 0x01 to 0x50. +ACK
-0,0464610,Wrote 0x02 to 0x50. +ACK
-0,0465330,Wrote 0x08 to 0x50. +ACK
-0,0466050,Wrote 0x09 to 0x50. +ACK
+0,0463170,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0463890,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,0464610,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,0465330,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,0466050,Wrote 0x09 to 0x50. +ACK	/* Write parameter: block 0x09 */
 0,0466710,Stop
+
 0,0497540,Start
-0,0497960,Setup write to 0x50. +ACK
-0,0499140,Wrote 0x01 to 0x50. +ACK
+0,0497960,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0499140,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0499838,Start
 0,0500210,Setup read from 0x50. +ACK
-0,0500930,Read 0x04 from 0x50. +ACK
-0,0502250,Read 0x01 from 0x50. +ACK
-0,0503530,Read 0x00 from 0x50. +ACK
-0,0504810,Read 0x3C from 0x50. +ACK
-0,0506090,Read 0x00 from 0x50. +No ACK
+0,0500930,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
+0,0502250,Read 0x01 from 0x50. +ACK	/* Read response: Block[0x09][0] = 0x01 */
+0,0503530,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x09][1] = 0x00 */
+0,0504810,Read 0x3C from 0x50. +ACK	/* Read response: Block[0x09][2] = 0x3C */
+0,0506090,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x09][3] = 0x00 */
 0,0507300,Stop
+
 0,0508003,Start
-0,0508423,Setup write to 0x50. +ACK
-0,0509363,Wrote 0x01 to 0x50. +ACK
-0,0510083,Wrote 0x02 to 0x50. +ACK
-0,0510803,Wrote 0x08 to 0x50. +ACK
-0,0511523,Wrote 0x0A to 0x50. +ACK
+0,0508423,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0509363,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,0510083,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,0510803,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,0511523,Wrote 0x0A to 0x50. +ACK	/* Write parameter: block 0x0A */
 0,0512180,Stop
+
 0,0543023,Start
-0,0543440,Setup write to 0x50. +ACK
-0,0544160,Wrote 0x01 to 0x50. +ACK
+0,0543440,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0544160,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0544858,Start
 0,0545230,Setup read from 0x50. +ACK
-0,0545950,Read 0x04 from 0x50. +ACK
-0,0547270,Read 0x01 from 0x50. +ACK
-0,0549003,Read 0x00 from 0x50. +ACK
-0,0550283,Read 0x3C from 0x50. +ACK
-0,0551563,Read 0x00 from 0x50. +No ACK
+0,0545950,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
+0,0547270,Read 0x01 from 0x50. +ACK	/* Read response: Block[0x0A][0] = 0x01 */
+0,0549003,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x0A][1] = 0x00 */
+0,0550283,Read 0x3C from 0x50. +ACK	/* Read response: Block[0x0A][2] = 0x3C */
+0,0551563,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x0A][3] = 0x00 */
 0,0552770,Stop
+
 0,0554275,Start
-0,0554693,Setup write to 0x50. +ACK
-0,0555413,Wrote 0x01 to 0x50. +ACK
-0,0556133,Wrote 0x02 to 0x50. +ACK
-0,0556853,Wrote 0x08 to 0x50. +ACK
-0,0557573,Wrote 0x0B to 0x50. +ACK
+0,0554693,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0555413,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,0556133,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,0556853,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,0557573,Wrote 0x0B to 0x50. +ACK	/* Write parameter: block 0x0B */
 0,0558230,Stop
+
 0,0589533,Start
-0,0589953,Setup write to 0x50. +ACK
-0,0590673,Wrote 0x01 to 0x50. +ACK
+0,0589953,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0590673,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0591370,Start
 0,0591743,Setup read from 0x50. +ACK
-0,0592463,Read 0x04 from 0x50. +ACK
-0,0593783,Read 0x08 from 0x50. +ACK
-0,0595063,Read 0x21 from 0x50. +ACK
-0,0596343,Read 0x00 from 0x50. +ACK
-0,0597623,Read 0x00 from 0x50. +No ACK
+0,0592463,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
+0,0593783,Read 0x08 from 0x50. +ACK	/* Read response: Block[0x0B][0] = 0x08 */
+0,0595063,Read 0x21 from 0x50. +ACK	/* Read response: Block[0x0B][1] = 0x21 */
+0,0596343,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x0B][2] = 0x00 */
+0,0597623,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x0B][3] = 0x00 */
 0,0599290,Stop
+
 0,0599995,Start
-0,0600415,Setup write to 0x50. +ACK
-0,0601135,Wrote 0x01 to 0x50. +ACK
-0,0601855,Wrote 0x02 to 0x50. +ACK
-0,0602575,Wrote 0x08 to 0x50. +ACK
-0,0603295,Wrote 0x0C to 0x50. +ACK
+0,0600415,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0601135,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,0601855,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,0602575,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,0603295,Wrote 0x0C to 0x50. +ACK	/* Write parameter: block 0x0C */
 0,0603953,Stop
+
 0,0634795,Start
-0,0635213,Setup write to 0x50. +ACK
-0,0635933,Wrote 0x01 to 0x50. +ACK
+0,0635213,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0635933,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0636630,Start
 0,0637003,Setup read from 0x50. +ACK
-0,0637723,Read 0x04 from 0x50. +ACK
-0,0639503,Read 0x08 from 0x50. +ACK
-0,0640783,Read 0x21 from 0x50. +ACK
-0,0642065,Read 0x00 from 0x50. +ACK
-0,0643345,Read 0x00 from 0x50. +No ACK
+0,0637723,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
+0,0639503,Read 0x08 from 0x50. +ACK	/* Read response: Block[0x0C][0] = 0x08 */
+0,0640783,Read 0x21 from 0x50. +ACK	/* Read response: Block[0x0C][1] = 0x21 */
+0,0642065,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x0C][2] = 0x00 */
+0,0643345,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x0C][3] = 0x00 */
 0,0644553,Stop
+
 0,0645258,Start
-0,0645675,Setup write to 0x50. +ACK
-0,0646395,Wrote 0x01 to 0x50. +ACK
-0,0647115,Wrote 0x02 to 0x50. +ACK
-0,0647835,Wrote 0x08 to 0x50. +ACK
-0,0649015,Wrote 0x0F to 0x50. +ACK
+0,0645675,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0646395,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,0647115,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,0647835,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,0649015,Wrote 0x0F to 0x50. +ACK	/* Write parameter: block 0x0F */
 0,0649673,Stop
+
 0,0680505,Start
-0,0680923,Setup write to 0x50. +ACK
-0,0681643,Wrote 0x01 to 0x50. +ACK
+0,0680923,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0681643,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0682340,Start
 0,0682715,Setup read from 0x50. +ACK
-0,0683435,Read 0x04 from 0x50. +ACK
-0,0684755,Read 0x08 from 0x50. +ACK
-0,0686035,Read 0x21 from 0x50. +ACK
-0,0687315,Read 0xE0 from 0x50. +ACK
-0,0689055,Read 0xDE from 0x50. +No ACK
+0,0683435,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
+0,0684755,Read 0x08 from 0x50. +ACK	/* Read response: Block[0x0F][0] = 0x08 */
+0,0686035,Read 0x21 from 0x50. +ACK	/* Read response: Block[0x0F][1] = 0x21 */
+0,0687315,Read 0xE0 from 0x50. +ACK	/* Read response: Block[0x0F][2] = 0xE0 */
+0,0689055,Read 0xDE from 0x50. +No ACK	/* Read response: Block[0x0F][3] = 0xDE */
 0,0690263,Stop
+
 0,0691658,Start
-0,0692075,Setup write to 0x50. +ACK
-0,0692798,Wrote 0x00 to 0x50. +ACK
-0,0693518,Wrote 0x00 to 0x50. +ACK
+0,0692075,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,0692798,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+0,0693518,Wrote 0x00 to 0x50. +ACK	/* Turn on carrier */
 0,0694175,Stop
+
 0,2923700,Start
-0,2924120,Setup write to 0x50. +ACK
-0,2924840,Wrote 0x00 to 0x50. +ACK
-0,2925560,Wrote 0x00 to 0x50. +ACK
+0,2924120,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,2924840,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+0,2925560,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 0,2926218,Stop
+
 0,2926743,Start
-0,2927160,Setup write to 0x50. +ACK
-0,2927880,Wrote 0x00 to 0x50. +ACK
-0,2928600,Wrote 0x10 to 0x50. +ACK
+0,2927160,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,2927880,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+0,2928600,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 0,2929708,Stop
+
 0,2940385,Start
-0,2940803,Setup write to 0x50. +ACK
-0,2941523,Wrote 0x01 to 0x50. +ACK
-0,2942243,Wrote 0x02 to 0x50. +ACK
-0,2942963,Wrote 0x06 to 0x50. +ACK
-0,2943683,Wrote 0x00 to 0x50. +ACK
+0,2940803,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,2941523,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,2942243,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,2942963,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+0,2943683,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 0,2944340,Stop
+
 0,2965060,Start
-0,2965480,Setup write to 0x50. +ACK
-0,2966200,Wrote 0x01 to 0x50. +ACK
+0,2965480,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,2966200,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,2966898,Start
 0,2967270,Setup read from 0x50. +ACK
-0,2967990,Read 0x01 from 0x50. +ACK
-0,2969690,Read 0x14 from 0x50. +No ACK
+0,2967990,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+0,2969690,Read 0x14 from 0x50. +No ACK	/* Read response: Unique chip ID (0x14) */
 0,2970998,Stop
+
 0,2971573,Start
-0,2971990,Setup write to 0x50. +ACK
-0,2972710,Wrote 0x00 to 0x50. +ACK
-0,2973430,Wrote 0x00 to 0x50. +ACK
+0,2971990,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,2972710,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+0,2973430,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 0,2974088,Stop
+
 0,2975553,Start
-0,2975973,Setup write to 0x50. +ACK
-0,2976693,Wrote 0x00 to 0x50. +ACK
-0,2977413,Wrote 0x00 to 0x50. +ACK
+0,2975973,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,2976693,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+0,2977413,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 0,2978070,Stop
+
 0,2978595,Start
-0,2979013,Setup write to 0x50. +ACK
-0,2979943,Wrote 0x00 to 0x50. +ACK
-0,2980663,Wrote 0x10 to 0x50. +ACK
+0,2979013,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,2979943,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+0,2980663,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 0,2981320,Stop
+
 0,2992078,Start
-0,2992495,Setup write to 0x50. +ACK
-0,2993215,Wrote 0x01 to 0x50. +ACK
-0,2993935,Wrote 0x02 to 0x50. +ACK
-0,2994655,Wrote 0x06 to 0x50. +ACK
-0,2995375,Wrote 0x00 to 0x50. +ACK
+0,2992495,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,2993215,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,2993935,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,2994655,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+0,2995375,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 0,2996035,Stop
+
 0,3016753,Start
-0,3017173,Setup write to 0x50. +ACK
-0,3017893,Wrote 0x01 to 0x50. +ACK
+0,3017173,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3017893,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3018590,Start
 0,3018963,Setup read from 0x50. +ACK
-0,3019983,Read 0x01 from 0x50. +ACK
-0,3021223,Read 0x39 from 0x50. +No ACK
+0,3019983,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+0,3021223,Read 0x39 from 0x50. +No ACK	/* Read response: Unique chip ID (0x39) */
 0,3022530,Stop
+
 0,3023125,Start
-0,3023543,Setup write to 0x50. +ACK
-0,3024263,Wrote 0x01 to 0x50. +ACK
-0,3024983,Wrote 0x02 to 0x50. +ACK
-0,3025703,Wrote 0x0E to 0x50. +ACK
-0,3026423,Wrote 0x39 to 0x50. +ACK
+0,3023543,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3024263,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,3024983,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,3025703,Wrote 0x0E to 0x50. +ACK	/* Write command: Select chip ID */
+0,3026423,Wrote 0x39 to 0x50. +ACK	/* Write parameter: 0x39 */
 0,3027083,Stop
+
 0,3068035,Start
-0,3068455,Setup write to 0x50. +ACK
-0,3069635,Wrote 0x01 to 0x50. +ACK
+0,3068455,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3069635,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3070333,Start
 0,3070705,Setup read from 0x50. +ACK
-0,3071425,Read 0x01 from 0x50. +ACK
-0,3072705,Read 0x39 from 0x50. +No ACK
+0,3071425,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+0,3072705,Read 0x39 from 0x50. +No ACK	/* Read response: Selected chip ID (0x39) */
 0,3073913,Stop
+
 0,3074488,Start
-0,3074905,Setup write to 0x50. +ACK
-0,3075625,Wrote 0x01 to 0x50. +ACK
-0,3076345,Wrote 0x01 to 0x50. +ACK
-0,3077065,Wrote 0x0B to 0x50. +ACK
+0,3074905,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3075625,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,3076345,Wrote 0x01 to 0x50. +ACK	/* Write frame length: 1 byte */
+0,3077065,Wrote 0x0B to 0x50. +ACK	/* Write command: Get UID */
 0,3077723,Stop
+
 0,3118678,Start
-0,3119548,Setup write to 0x50. +ACK
-0,3120268,Wrote 0x01 to 0x50. +ACK
+0,3119548,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3120268,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3120965,Start
 0,3121338,Setup read from 0x50. +ACK
-0,3122058,Read 0x08 from 0x50. +ACK
-0,3123378,Read 0x67 from 0x50. +ACK
-0,3124658,Read 0x69 from 0x50. +ACK
-0,3125938,Read 0x56 from 0x50. +ACK
-0,3127218,Read 0x3F from 0x50. +ACK
-0,3128498,Read 0xE4 from 0x50. +ACK
-0,3130240,Read 0x0D from 0x50. +ACK
-0,3131520,Read 0x02 from 0x50. +ACK
-0,3132800,Read 0xD0 from 0x50. +No ACK
+0,3122058,Read 0x08 from 0x50. +ACK	/* Read frame length: 8 bytes */
+0,3123378,Read 0x67 from 0x50. +ACK	/* Read response: UID[0] = 0x67 */
+0,3124658,Read 0x69 from 0x50. +ACK	/* Read response: UID[1] = 0x69 */
+0,3125938,Read 0x56 from 0x50. +ACK	/* Read response: UID[2] = 0x56 */
+0,3127218,Read 0x3F from 0x50. +ACK	/* Read response: UID[3] = 0x3F */
+0,3128498,Read 0xE4 from 0x50. +ACK	/* Read response: UID[4] = 0xE4 */
+0,3130240,Read 0x0D from 0x50. +ACK	/* Read response: UID[5] = 0x0D */
+0,3131520,Read 0x02 from 0x50. +ACK	/* Read response: UID[6] = 0x02 */
+0,3132800,Read 0xD0 from 0x50. +No ACK	/* Read response: UID[7] = 0xD0 */
 0,3134008,Stop
+
 0,3256253,Start
-0,3256670,Setup write to 0x50. +ACK
-0,3257390,Wrote 0x01 to 0x50. +ACK
-0,3258110,Wrote 0x02 to 0x50. +ACK
-0,3258830,Wrote 0x08 to 0x50. +ACK
-0,3260010,Wrote 0x0D to 0x50. +ACK
+0,3256670,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3257390,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,3258110,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,3258830,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,3260010,Wrote 0x0D to 0x50. +ACK	/* Write parameter: block 0x0D */
 0,3260668,Stop
+
 0,3291500,Start
-0,3291918,Setup write to 0x50. +ACK
-0,3292638,Wrote 0x01 to 0x50. +ACK
+0,3291918,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3292638,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3293335,Start
 0,3293708,Setup read from 0x50. +ACK
-0,3294430,Read 0x04 from 0x50. +ACK
-0,3295750,Read 0x30 from 0x50. +ACK
-0,3297030,Read 0x2A from 0x50. +ACK
-0,3298310,Read 0xD8 from 0x50. +ACK
-0,3300050,Read 0xCB from 0x50. +No ACK
+0,3294430,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
+0,3295750,Read 0x30 from 0x50. +ACK	/* Read response: Block[0x0D][0] = 0x30 */
+0,3297030,Read 0x2A from 0x50. +ACK	/* Read response: Block[0x0D][1] = 0x2A */
+0,3298310,Read 0xD8 from 0x50. +ACK	/* Read response: Block[0x0D][2] = 0xD8 */
+0,3300050,Read 0xCB from 0x50. +No ACK	/* Read response: Block[0x0D][3] = 0xCB */
 0,3301258,Stop
+
 0,3302103,Start
-0,3302520,Setup write to 0x50. +ACK
-0,3303240,Wrote 0x01 to 0x50. +ACK
-0,3303960,Wrote 0x02 to 0x50. +ACK
-0,3304683,Wrote 0x08 to 0x50. +ACK
-0,3305403,Wrote 0x05 to 0x50. +ACK
+0,3302520,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3303240,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,3303960,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,3304683,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,3305403,Wrote 0x05 to 0x50. +ACK	/* Write parameter: block 0x05 */
 0,3306060,Stop
+
 0,3336903,Start
-0,3337320,Setup write to 0x50. +ACK
-0,3338040,Wrote 0x01 to 0x50. +ACK
+0,3337320,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3338040,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3338738,Start
 0,3339110,Setup read from 0x50. +ACK
-0,3340050,Read 0x04 from 0x50. +ACK
-0,3341370,Read 0x19 from 0x50. +ACK
-0,3342650,Read 0x00 from 0x50. +ACK
-0,3343930,Read 0x00 from 0x50. +ACK
-0,3345210,Read 0x00 from 0x50. +No ACK
+0,3340050,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
+0,3341370,Read 0x19 from 0x50. +ACK	/* Read response: counter[0][0] = 0x19 */
+0,3342650,Read 0x00 from 0x50. +ACK	/* Read response: counter[0][1] = 0x00 */
+0,3343930,Read 0x00 from 0x50. +ACK	/* Read response: counter[0][2] = 0x00 */
+0,3345210,Read 0x00 from 0x50. +No ACK	/* Read response: counter[0][3] = 0x00 */
 0,3346420,Stop
+
 0,3347105,Start
-0,3347523,Setup write to 0x50. +ACK
-0,3348243,Wrote 0x01 to 0x50. +ACK
-0,3348963,Wrote 0x02 to 0x50. +ACK
-0,3350063,Wrote 0x08 to 0x50. +ACK
-0,3350783,Wrote 0x06 to 0x50. +ACK
+0,3347523,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3348243,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,3348963,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,3350063,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,3350783,Wrote 0x06 to 0x50. +ACK	/* Write parameter: block 0x06 */
 0,3351440,Stop
+
 0,3382273,Start
-0,3382690,Setup write to 0x50. +ACK
-0,3383410,Wrote 0x01 to 0x50. +ACK
+0,3382690,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3383410,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3384108,Start
 0,3384480,Setup read from 0x50. +ACK
-0,3385200,Read 0x04 from 0x50. +ACK
-0,3386520,Read 0x19 from 0x50. +ACK
-0,3387803,Read 0x00 from 0x50. +ACK
-0,3389083,Read 0x00 from 0x50. +ACK
-0,3390473,Read 0x00 from 0x50. +No ACK
+0,3385200,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
+0,3386520,Read 0x19 from 0x50. +ACK	/* Read response: counter[1][0] = 0x19 */
+0,3387803,Read 0x00 from 0x50. +ACK	/* Read response: counter[1][1] = 0x00 */
+0,3389083,Read 0x00 from 0x50. +ACK	/* Read response: counter[1][2] = 0x00 */
+0,3390473,Read 0x00 from 0x50. +No ACK	/* Read response: counter[1][3] = 0x00 */
 0,3391680,Stop
+
 0,3392595,Start
-0,3393013,Setup write to 0x50. +ACK
-0,3393733,Wrote 0x01 to 0x50. +ACK
-0,3394453,Wrote 0x02 to 0x50. +ACK
-0,3395173,Wrote 0x08 to 0x50. +ACK
-0,3395893,Wrote 0x08 to 0x50. +ACK
+0,3393013,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3393733,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,3394453,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,3395173,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,3395893,Wrote 0x08 to 0x50. +ACK	/* Write parameter: block 0x08 */
 0,3396550,Stop
+
 0,3427383,Start
-0,3427800,Setup write to 0x50. +ACK
-0,3428523,Wrote 0x01 to 0x50. +ACK
+0,3427800,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3428523,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3429680,Start
 0,3430053,Setup read from 0x50. +ACK
-0,3430773,Read 0x04 from 0x50. +ACK
+0,3430773,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
 0,3432093,Read 0x01 from 0x50. +ACK
 0,3433373,Read 0x00 from 0x50. +ACK
 0,3434653,Read 0x3C from 0x50. +ACK
 0,3435933,Read 0x00 from 0x50. +No ACK
 0,3437140,Stop
+
 0,3437845,Start
-0,3438265,Setup write to 0x50. +ACK
-0,3438985,Wrote 0x01 to 0x50. +ACK
-0,3440085,Wrote 0x02 to 0x50. +ACK
-0,3440805,Wrote 0x08 to 0x50. +ACK
-0,3441525,Wrote 0x09 to 0x50. +ACK
+0,3438265,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3438985,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,3440085,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,3440805,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,3441525,Wrote 0x09 to 0x50. +ACK	/* Write parameter: block 0x09 */
 0,3442183,Stop
+
 0,3473015,Start
-0,3473433,Setup write to 0x50. +ACK
-0,3474153,Wrote 0x01 to 0x50. +ACK
+0,3473433,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3474153,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3474850,Start
 0,3475223,Setup read from 0x50. +ACK
-0,3475943,Read 0x04 from 0x50. +ACK
+0,3475943,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
 0,3477263,Read 0x01 from 0x50. +ACK
 0,3478543,Read 0x00 from 0x50. +ACK
 0,3480285,Read 0x3C from 0x50. +ACK
 0,3481565,Read 0x00 from 0x50. +No ACK
 0,3482773,Stop
+
 0,3483478,Start
-0,3483895,Setup write to 0x50. +ACK
-0,3484615,Wrote 0x01 to 0x50. +ACK
-0,3485335,Wrote 0x02 to 0x50. +ACK
-0,3486055,Wrote 0x08 to 0x50. +ACK
-0,3486775,Wrote 0x0A to 0x50. +ACK
+0,3483895,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3484615,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,3485335,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,3486055,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,3486775,Wrote 0x0A to 0x50. +ACK	/* Write parameter: block 0x0A */
 0,3487433,Stop
+
 0,3518275,Start
-0,3518693,Setup write to 0x50. +ACK
-0,3519873,Wrote 0x01 to 0x50. +ACK
+0,3518693,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3519873,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3520570,Start
 0,3520945,Setup read from 0x50. +ACK
-0,3521665,Read 0x04 from 0x50. +ACK
+0,3521665,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
 0,3522985,Read 0x01 from 0x50. +ACK
 0,3524265,Read 0x00 from 0x50. +ACK
 0,3525545,Read 0x3C from 0x50. +ACK
 0,3526825,Read 0x00 from 0x50. +No ACK
 0,3528033,Stop
+
 0,3529998,Start
-0,3530415,Setup write to 0x50. +ACK
-0,3531138,Wrote 0x01 to 0x50. +ACK
-0,3531858,Wrote 0x02 to 0x50. +ACK
-0,3532578,Wrote 0x08 to 0x50. +ACK
-0,3533298,Wrote 0x0B to 0x50. +ACK
+0,3530415,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3531138,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,3531858,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,3532578,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,3533298,Wrote 0x0B to 0x50. +ACK	/* Write parameter: block 0x0B */
 0,3533955,Stop
+
 0,3564788,Start
-0,3565205,Setup write to 0x50. +ACK
-0,3565925,Wrote 0x01 to 0x50. +ACK
+0,3565205,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3565925,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3566623,Start
 0,3566995,Setup read from 0x50. +ACK
-0,3567715,Read 0x04 from 0x50. +ACK
+0,3567715,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
 0,3569035,Read 0x08 from 0x50. +ACK
 0,3570605,Read 0x21 from 0x50. +ACK
 0,3571888,Read 0x00 from 0x50. +ACK
 0,3573168,Read 0x00 from 0x50. +No ACK
 0,3574375,Stop
+
 0,3575080,Start
-0,3575498,Setup write to 0x50. +ACK
-0,3576218,Wrote 0x01 to 0x50. +ACK
-0,3576938,Wrote 0x02 to 0x50. +ACK
-0,3577658,Wrote 0x08 to 0x50. +ACK
-0,3578378,Wrote 0x0C to 0x50. +ACK
+0,3575498,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3576218,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,3576938,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,3577658,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,3578378,Wrote 0x0C to 0x50. +ACK	/* Write parameter: block 0x0C */
 0,3579035,Stop
+
 0,3610328,Start
-0,3610745,Setup write to 0x50. +ACK
-0,3611465,Wrote 0x01 to 0x50. +ACK
+0,3610745,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3611465,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3612163,Start
 0,3612535,Setup read from 0x50. +ACK
-0,3613258,Read 0x04 from 0x50. +ACK
+0,3613258,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
 0,3614578,Read 0x08 from 0x50. +ACK
 0,3615858,Read 0x21 from 0x50. +ACK
 0,3617138,Read 0x00 from 0x50. +ACK
 0,3618418,Read 0x00 from 0x50. +No ACK
 0,3620085,Stop
+
 0,3620790,Start
-0,3621208,Setup write to 0x50. +ACK
-0,3621928,Wrote 0x01 to 0x50. +ACK
-0,3622648,Wrote 0x02 to 0x50. +ACK
-0,3623370,Wrote 0x08 to 0x50. +ACK
-0,3624090,Wrote 0x0F to 0x50. +ACK
+0,3621208,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3621928,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,3622648,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,3623370,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
+0,3624090,Wrote 0x0F to 0x50. +ACK	/* Write parameter: block 0x0F */
 0,3624748,Stop
+
 0,3655580,Start
-0,3655998,Setup write to 0x50. +ACK
-0,3656718,Wrote 0x01 to 0x50. +ACK
+0,3655998,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3656718,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3657415,Start
 0,3657788,Setup read from 0x50. +ACK
-0,3658508,Read 0x04 from 0x50. +ACK
+0,3658508,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
 0,3660288,Read 0x08 from 0x50. +ACK
 0,3661568,Read 0x21 from 0x50. +ACK
 0,3662848,Read 0xE0 from 0x50. +ACK
 0,3664128,Read 0xDE from 0x50. +No ACK
 0,3665338,Stop
+
 0,3666733,Start
-0,3667150,Setup write to 0x50. +ACK
-0,3667870,Wrote 0x00 to 0x50. +ACK
-0,3668590,Wrote 0x00 to 0x50. +ACK
+0,3667150,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,3667870,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+0,3668590,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 0,3669708,Stop
+
 0,4027830,Start
-0,4028248,Setup write to 0x50. +ACK
-0,4028968,Wrote 0x00 to 0x50. +ACK
-0,4030148,Wrote 0x00 to 0x50. +ACK
+0,4028248,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,4028968,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+0,4030148,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 0,4030805,Stop
+
 0,4031330,Start
-0,4031748,Setup write to 0x50. +ACK
-0,4032468,Wrote 0x00 to 0x50. +ACK
-0,4033188,Wrote 0x10 to 0x50. +ACK
+0,4031748,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,4032468,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+0,4033188,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 0,4033845,Stop
+
 0,4044523,Start
-0,4044943,Setup write to 0x50. +ACK
-0,4045663,Wrote 0x01 to 0x50. +ACK
-0,4046383,Wrote 0x02 to 0x50. +ACK
-0,4047103,Wrote 0x06 to 0x50. +ACK
-0,4047823,Wrote 0x00 to 0x50. +ACK
+0,4044943,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,4045663,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+0,4046383,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+0,4047103,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+0,4047823,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 0,4048480,Stop
+
 0,4069190,Start
-0,4070068,Setup write to 0x50. +ACK
-0,4070788,Wrote 0x01 to 0x50. +ACK
+0,4070068,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,4070788,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,4071485,Start
 0,4071858,Setup read from 0x50. +ACK
-0,4072578,Read 0x01 from 0x50. +ACK
-0,4073818,Read 0x90 from 0x50. +No ACK
+0,4072578,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+0,4073818,Read 0x90 from 0x50. +No ACK	/* Read response: Unique chip ID (0x90) */
 0,4075125,Stop
+
 0,4075700,Start
-0,4076120,Setup write to 0x50. +ACK
-0,4076840,Wrote 0x00 to 0x50. +ACK
-0,4077560,Wrote 0x00 to 0x50. +ACK
+0,4076120,Setup write to 0x50. +ACK	/* Address RFID reader */
+0,4076840,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+0,4077560,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 0,4078218,Stop
+
 1,3765328,Start
-1,3765745,Setup write to 0x50. +ACK
-1,3766465,Wrote 0x00 to 0x50. +ACK
-1,3767185,Wrote 0x00 to 0x50. +ACK
+1,3765745,Setup write to 0x50. +ACK	/* Address RFID reader */
+1,3766465,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+1,3767185,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 1,3767843,Stop
+
 1,3768368,Start
-1,3768785,Setup write to 0x50. +ACK
-1,3769505,Wrote 0x00 to 0x50. +ACK
-1,3770225,Wrote 0x10 to 0x50. +ACK
+1,3768785,Setup write to 0x50. +ACK	/* Address RFID reader */
+1,3769505,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+1,3770225,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 1,3770883,Stop
+
 1,3781550,Start
-1,3782428,Setup write to 0x50. +ACK
-1,3783148,Wrote 0x01 to 0x50. +ACK
-1,3783870,Wrote 0x02 to 0x50. +ACK
-1,3784590,Wrote 0x06 to 0x50. +ACK
-1,3785310,Wrote 0x00 to 0x50. +ACK
+1,3782428,Setup write to 0x50. +ACK	/* Address RFID reader */
+1,3783148,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+1,3783870,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+1,3784590,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+1,3785310,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 1,3785968,Stop
+
 1,3806678,Start
-1,3807095,Setup write to 0x50. +ACK
-1,3807815,Wrote 0x01 to 0x50. +ACK
+1,3807095,Setup write to 0x50. +ACK	/* Address RFID reader */
+1,3807815,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 1,3808513,Start
 1,3808885,Setup read from 0x50. +ACK
-1,3809605,Read 0x01 from 0x50. +ACK
-1,3810845,Read 0x14 from 0x50. +No ACK
+1,3809605,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+1,3810845,Read 0x14 from 0x50. +No ACK	/* Read response: Unique chip ID (0x14) */
 1,3812613,Stop
+
 1,3813188,Start
-1,3813605,Setup write to 0x50. +ACK
-1,3814325,Wrote 0x00 to 0x50. +ACK
-1,3815048,Wrote 0x00 to 0x50. +ACK
+1,3813605,Setup write to 0x50. +ACK	/* Address RFID reader */
+1,3814325,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+1,3815048,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 1,3815705,Stop
+
 2,3767668,Start
-2,3768085,Setup write to 0x50. +ACK
-2,3768805,Wrote 0x00 to 0x50. +ACK
-2,3769525,Wrote 0x00 to 0x50. +ACK
+2,3768085,Setup write to 0x50. +ACK	/* Address RFID reader */
+2,3768805,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+2,3769525,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 2,3770185,Stop
+
 2,3770708,Start
-2,3771128,Setup write to 0x50. +ACK
-2,3771848,Wrote 0x00 to 0x50. +ACK
-2,3772568,Wrote 0x10 to 0x50. +ACK
+2,3771128,Setup write to 0x50. +ACK	/* Address RFID reader */
+2,3771848,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+2,3772568,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 2,3773225,Stop
+
 2,3783903,Start
-2,3784770,Setup write to 0x50. +ACK
-2,3785490,Wrote 0x01 to 0x50. +ACK
-2,3786210,Wrote 0x02 to 0x50. +ACK
-2,3786930,Wrote 0x06 to 0x50. +ACK
-2,3787650,Wrote 0x00 to 0x50. +ACK
+2,3784770,Setup write to 0x50. +ACK	/* Address RFID reader */
+2,3785490,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+2,3786210,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+2,3786930,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+2,3787650,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 2,3788308,Stop
+
 2,3809028,Start
-2,3809445,Setup write to 0x50. +ACK
-2,3810165,Wrote 0x01 to 0x50. +ACK
+2,3809445,Setup write to 0x50. +ACK	/* Address RFID reader */
+2,3810165,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 2,3810863,Start
 2,3811235,Setup read from 0x50. +ACK
-2,3811958,Read 0x01 from 0x50. +ACK
-2,3813198,Read 0x34 from 0x50. +No ACK
+2,3811958,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+2,3813198,Read 0x34 from 0x50. +No ACK	/* Read response: Unique chip ID (0x34) */
 2,3814955,Stop
+
 2,3815530,Start
-2,3815948,Setup write to 0x50. +ACK
-2,3816668,Wrote 0x00 to 0x50. +ACK
-2,3817388,Wrote 0x00 to 0x50. +ACK
+2,3815948,Setup write to 0x50. +ACK	/* Address RFID reader */
+2,3816668,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+2,3817388,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 2,3818045,Stop
+
 3,3770050,Start
-3,3770468,Setup write to 0x50. +ACK
-3,3771188,Wrote 0x00 to 0x50. +ACK
-3,3771908,Wrote 0x00 to 0x50. +ACK
+3,3770468,Setup write to 0x50. +ACK	/* Address RFID reader */
+3,3771188,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+3,3771908,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 3,3772565,Stop
+
 3,3773090,Start
-3,3773508,Setup write to 0x50. +ACK
-3,3774228,Wrote 0x00 to 0x50. +ACK
-3,3774948,Wrote 0x10 to 0x50. +ACK
+3,3773508,Setup write to 0x50. +ACK	/* Address RFID reader */
+3,3774228,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+3,3774948,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 3,3775605,Stop
+
 3,3786283,Start
-3,3787160,Setup write to 0x50. +ACK
-3,3787883,Wrote 0x01 to 0x50. +ACK
-3,3788603,Wrote 0x02 to 0x50. +ACK
-3,3789323,Wrote 0x06 to 0x50. +ACK
-3,3790043,Wrote 0x00 to 0x50. +ACK
+3,3787160,Setup write to 0x50. +ACK	/* Address RFID reader */
+3,3787883,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+3,3788603,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+3,3789323,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+3,3790043,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 3,3790700,Stop
+
 3,3811420,Start
-3,3811838,Setup write to 0x50. +ACK
-3,3812558,Wrote 0x01 to 0x50. +ACK
+3,3811838,Setup write to 0x50. +ACK	/* Address RFID reader */
+3,3812558,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 3,3813255,Start
 3,3813628,Setup read from 0x50. +ACK
-3,3814348,Read 0x01 from 0x50. +ACK
-3,3815588,Read 0x35 from 0x50. +No ACK
+3,3814348,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+3,3815588,Read 0x35 from 0x50. +No ACK	/* Read response: Unique chip ID (0x35) */
 3,3817355,Stop
+
 3,3817930,Start
-3,3818348,Setup write to 0x50. +ACK
-3,3819070,Wrote 0x00 to 0x50. +ACK
-3,3819790,Wrote 0x00 to 0x50. +ACK
+3,3818348,Setup write to 0x50. +ACK	/* Address RFID reader */
+3,3819070,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+3,3819790,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 3,3820448,Stop
+
 4,3772570,Start
-4,3772988,Setup write to 0x50. +ACK
-4,3773708,Wrote 0x00 to 0x50. +ACK
-4,3774428,Wrote 0x00 to 0x50. +ACK
+4,3772988,Setup write to 0x50. +ACK	/* Address RFID reader */
+4,3773708,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+4,3774428,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 4,3775088,Stop
+
 4,3775613,Start
-4,3776030,Setup write to 0x50. +ACK
-4,3776750,Wrote 0x00 to 0x50. +ACK
-4,3777470,Wrote 0x10 to 0x50. +ACK
+4,3776030,Setup write to 0x50. +ACK	/* Address RFID reader */
+4,3776750,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+4,3777470,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 4,3778128,Stop
+
 4,3788795,Start
-4,3789673,Setup write to 0x50. +ACK
-4,3790393,Wrote 0x01 to 0x50. +ACK
-4,3791113,Wrote 0x02 to 0x50. +ACK
-4,3791833,Wrote 0x06 to 0x50. +ACK
-4,3792553,Wrote 0x00 to 0x50. +ACK
+4,3789673,Setup write to 0x50. +ACK	/* Address RFID reader */
+4,3790393,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+4,3791113,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+4,3791833,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+4,3792553,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 4,3793210,Stop
+
 4,3813920,Start
-4,3814338,Setup write to 0x50. +ACK
-4,3815058,Wrote 0x01 to 0x50. +ACK
+4,3814338,Setup write to 0x50. +ACK	/* Address RFID reader */
+4,3815058,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 4,3815755,Start
 4,3816130,Setup read from 0x50. +ACK
-4,3816850,Read 0x01 from 0x50. +ACK
-4,3818090,Read 0x3C from 0x50. +No ACK
+4,3816850,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+4,3818090,Read 0x3C from 0x50. +No ACK	/* Read response: Unique chip ID (0x3C) */
 4,3819858,Stop
+
 4,3820433,Start
-4,3820850,Setup write to 0x50. +ACK
-4,3821570,Wrote 0x00 to 0x50. +ACK
-4,3822290,Wrote 0x00 to 0x50. +ACK
+4,3820850,Setup write to 0x50. +ACK	/* Address RFID reader */
+4,3821570,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+4,3822290,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 4,3822948,Stop
+
 5,3774913,Start
-5,3775330,Setup write to 0x50. +ACK
-5,3776050,Wrote 0x00 to 0x50. +ACK
-5,3776770,Wrote 0x00 to 0x50. +ACK
+5,3775330,Setup write to 0x50. +ACK	/* Address RFID reader */
+5,3776050,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+5,3776770,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 5,3777428,Stop
+
 5,3777953,Start
-5,3778370,Setup write to 0x50. +ACK
-5,3779090,Wrote 0x00 to 0x50. +ACK
-5,3779810,Wrote 0x10 to 0x50. +ACK
+5,3778370,Setup write to 0x50. +ACK	/* Address RFID reader */
+5,3779090,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+5,3779810,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 5,3780468,Stop
+
 5,3791145,Start
-5,3792023,Setup write to 0x50. +ACK
-5,3792745,Wrote 0x01 to 0x50. +ACK
-5,3793465,Wrote 0x02 to 0x50. +ACK
-5,3794185,Wrote 0x06 to 0x50. +ACK
-5,3794905,Wrote 0x00 to 0x50. +ACK
+5,3792023,Setup write to 0x50. +ACK	/* Address RFID reader */
+5,3792745,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+5,3793465,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+5,3794185,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+5,3794905,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 5,3795563,Stop
+
 5,3816283,Start
-5,3816700,Setup write to 0x50. +ACK
-5,3817420,Wrote 0x01 to 0x50. +ACK
+5,3816700,Setup write to 0x50. +ACK	/* Address RFID reader */
+5,3817420,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 5,3818118,Start
 5,3818490,Setup read from 0x50. +ACK
-5,3819210,Read 0x01 from 0x50. +ACK
-5,3820450,Read 0x45 from 0x50. +No ACK
+5,3819210,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+5,3820450,Read 0x45 from 0x50. +No ACK	/* Read response: Unique chip ID (0x45) */
 5,3822218,Stop
+
 5,3822793,Start
-5,3823210,Setup write to 0x50. +ACK
-5,3823933,Wrote 0x00 to 0x50. +ACK
-5,3824653,Wrote 0x00 to 0x50. +ACK
+5,3823210,Setup write to 0x50. +ACK	/* Address RFID reader */
+5,3823933,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+5,3824653,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 5,3825310,Stop
+
 6,3777343,Start
-6,3777760,Setup write to 0x50. +ACK
-6,3778480,Wrote 0x00 to 0x50. +ACK
-6,3779200,Wrote 0x00 to 0x50. +ACK
+6,3777760,Setup write to 0x50. +ACK	/* Address RFID reader */
+6,3778480,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+6,3779200,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 6,3779860,Stop
+
 6,3780383,Start
-6,3780803,Setup write to 0x50. +ACK
-6,3781523,Wrote 0x00 to 0x50. +ACK
-6,3782243,Wrote 0x10 to 0x50. +ACK
+6,3780803,Setup write to 0x50. +ACK	/* Address RFID reader */
+6,3781523,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+6,3782243,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 6,3782900,Stop
+
 6,3793578,Start
-6,3794455,Setup write to 0x50. +ACK
-6,3795175,Wrote 0x01 to 0x50. +ACK
-6,3795895,Wrote 0x02 to 0x50. +ACK
-6,3796615,Wrote 0x06 to 0x50. +ACK
-6,3797335,Wrote 0x00 to 0x50. +ACK
+6,3794455,Setup write to 0x50. +ACK	/* Address RFID reader */
+6,3795175,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+6,3795895,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+6,3796615,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+6,3797335,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 6,3797993,Stop
+
 6,3818713,Start
-6,3819130,Setup write to 0x50. +ACK
-6,3819850,Wrote 0x01 to 0x50. +ACK
+6,3819130,Setup write to 0x50. +ACK	/* Address RFID reader */
+6,3819850,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 6,3820548,Start
 6,3820923,Setup read from 0x50. +ACK
-6,3821643,Read 0x01 from 0x50. +ACK
-6,3822883,Read 0x34 from 0x50. +No ACK
+6,3821643,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+6,3822883,Read 0x34 from 0x50. +No ACK	/* Read response: Unique chip ID (0x34) */
 6,3824650,Stop
+
 6,3825225,Start
-6,3825643,Setup write to 0x50. +ACK
-6,3826363,Wrote 0x00 to 0x50. +ACK
-6,3827083,Wrote 0x00 to 0x50. +ACK
+6,3825643,Setup write to 0x50. +ACK	/* Address RFID reader */
+6,3826363,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+6,3827083,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 6,3827740,Stop
+
 7,3779865,Start
-7,3780283,Setup write to 0x50. +ACK
-7,3781003,Wrote 0x00 to 0x50. +ACK
-7,3781723,Wrote 0x00 to 0x50. +ACK
+7,3780283,Setup write to 0x50. +ACK	/* Address RFID reader */
+7,3781003,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+7,3781723,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 7,3782380,Stop
+
 7,3782905,Start
-7,3783323,Setup write to 0x50. +ACK
-7,3784043,Wrote 0x00 to 0x50. +ACK
-7,3784763,Wrote 0x10 to 0x50. +ACK
+7,3783323,Setup write to 0x50. +ACK	/* Address RFID reader */
+7,3784043,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+7,3784763,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 7,3785420,Stop
+
 7,3796088,Start
-7,3796965,Setup write to 0x50. +ACK
-7,3797685,Wrote 0x01 to 0x50. +ACK
-7,3798408,Wrote 0x02 to 0x50. +ACK
-7,3799128,Wrote 0x06 to 0x50. +ACK
-7,3799848,Wrote 0x00 to 0x50. +ACK
+7,3796965,Setup write to 0x50. +ACK	/* Address RFID reader */
+7,3797685,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+7,3798408,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+7,3799128,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+7,3799848,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 7,3800505,Stop
+
 7,3821215,Start
-7,3821633,Setup write to 0x50. +ACK
-7,3822353,Wrote 0x01 to 0x50. +ACK
+7,3821633,Setup write to 0x50. +ACK	/* Address RFID reader */
+7,3822353,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 7,3823050,Start
 7,3823423,Setup read from 0x50. +ACK
-7,3824143,Read 0x01 from 0x50. +ACK
-7,3825383,Read 0x35 from 0x50. +No ACK
+7,3824143,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+7,3825383,Read 0x35 from 0x50. +No ACK	/* Read response: Unique chip ID (0x35) */
 7,3827150,Stop
+
 7,3827725,Start
-7,3828143,Setup write to 0x50. +ACK
-7,3828865,Wrote 0x00 to 0x50. +ACK
-7,3829585,Wrote 0x00 to 0x50. +ACK
+7,3828143,Setup write to 0x50. +ACK	/* Address RFID reader */
+7,3828865,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+7,3829585,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 7,3830243,Stop
+
 8,3782345,Start
-8,3782763,Setup write to 0x50. +ACK
-8,3783483,Wrote 0x00 to 0x50. +ACK
-8,3784203,Wrote 0x00 to 0x50. +ACK
+8,3782763,Setup write to 0x50. +ACK	/* Address RFID reader */
+8,3783483,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+8,3784203,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 8,3784860,Stop
+
 8,3785385,Start
-8,3785805,Setup write to 0x50. +ACK
-8,3786525,Wrote 0x00 to 0x50. +ACK
-8,3787245,Wrote 0x10 to 0x50. +ACK
+8,3785805,Setup write to 0x50. +ACK	/* Address RFID reader */
+8,3786525,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+8,3787245,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 8,3787903,Stop
+
 8,3798570,Start
-8,3799448,Setup write to 0x50. +ACK
-8,3800168,Wrote 0x01 to 0x50. +ACK
-8,3800888,Wrote 0x02 to 0x50. +ACK
-8,3801608,Wrote 0x06 to 0x50. +ACK
-8,3802328,Wrote 0x00 to 0x50. +ACK
+8,3799448,Setup write to 0x50. +ACK	/* Address RFID reader */
+8,3800168,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+8,3800888,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+8,3801608,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+8,3802328,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 8,3802985,Stop
+
 8,3823695,Start
-8,3824113,Setup write to 0x50. +ACK
-8,3824833,Wrote 0x01 to 0x50. +ACK
+8,3824113,Setup write to 0x50. +ACK	/* Address RFID reader */
+8,3824833,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 8,3825530,Start
 8,3825903,Setup read from 0x50. +ACK
-8,3826625,Read 0x01 from 0x50. +ACK
-8,3827865,Read 0x35 from 0x50. +No ACK
+8,3826625,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+8,3827865,Read 0x35 from 0x50. +No ACK	/* Read response: Unique chip ID (0x35) */
 8,3829633,Stop
+
 8,3830208,Start
-8,3830625,Setup write to 0x50. +ACK
-8,3831345,Wrote 0x00 to 0x50. +ACK
-8,3832065,Wrote 0x00 to 0x50. +ACK
+8,3830625,Setup write to 0x50. +ACK	/* Address RFID reader */
+8,3831345,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+8,3832065,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 8,3832723,Stop
+
 9,3784738,Start
-9,3785155,Setup write to 0x50. +ACK
-9,3785875,Wrote 0x00 to 0x50. +ACK
-9,3786595,Wrote 0x00 to 0x50. +ACK
+9,3785155,Setup write to 0x50. +ACK	/* Address RFID reader */
+9,3785875,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+9,3786595,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 9,3787253,Stop
+
 9,3787778,Start
-9,3788195,Setup write to 0x50. +ACK
-9,3788915,Wrote 0x00 to 0x50. +ACK
-9,3789635,Wrote 0x10 to 0x50. +ACK
+9,3788195,Setup write to 0x50. +ACK	/* Address RFID reader */
+9,3788915,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+9,3789635,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 9,3790293,Stop
+
 9,3800970,Start
-9,3801848,Setup write to 0x50. +ACK
-9,3802568,Wrote 0x01 to 0x50. +ACK
-9,3803290,Wrote 0x02 to 0x50. +ACK
-9,3804010,Wrote 0x06 to 0x50. +ACK
-9,3804730,Wrote 0x00 to 0x50. +ACK
+9,3801848,Setup write to 0x50. +ACK	/* Address RFID reader */
+9,3802568,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+9,3803290,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+9,3804010,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+9,3804730,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 9,3805388,Stop
+
 9,3826108,Start
-9,3826525,Setup write to 0x50. +ACK
-9,3827245,Wrote 0x01 to 0x50. +ACK
+9,3826525,Setup write to 0x50. +ACK	/* Address RFID reader */
+9,3827245,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 9,3827943,Start
 9,3828315,Setup read from 0x50. +ACK
-9,3829035,Read 0x01 from 0x50. +ACK
-9,3830275,Read 0x45 from 0x50. +No ACK
+9,3829035,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+9,3830275,Read 0x45 from 0x50. +No ACK	/* Read response: Unique chip ID (0x45) */
 9,3832033,Stop
+
 9,3832608,Start
-9,3833025,Setup write to 0x50. +ACK
-9,3833745,Wrote 0x00 to 0x50. +ACK
-9,3834468,Wrote 0x00 to 0x50. +ACK
+9,3833025,Setup write to 0x50. +ACK	/* Address RFID reader */
+9,3833745,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+9,3834468,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 9,3835125,Stop
+
 10,3787158,Start
-10,3787575,Setup write to 0x50. +ACK
-10,3788295,Wrote 0x00 to 0x50. +ACK
-10,3789015,Wrote 0x00 to 0x50. +ACK
+10,3787575,Setup write to 0x50. +ACK	/* Address RFID reader */
+10,3788295,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+10,3789015,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 10,3789673,Stop
+
 10,3790198,Start
-10,3790615,Setup write to 0x50. +ACK
-10,3791338,Wrote 0x00 to 0x50. +ACK
-10,3792058,Wrote 0x10 to 0x50. +ACK
+10,3790615,Setup write to 0x50. +ACK	/* Address RFID reader */
+10,3791338,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+10,3792058,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 10,3792715,Stop
+
 10,3803383,Start
-10,3804260,Setup write to 0x50. +ACK
-10,3804980,Wrote 0x01 to 0x50. +ACK
-10,3805700,Wrote 0x02 to 0x50. +ACK
-10,3806420,Wrote 0x06 to 0x50. +ACK
-10,3807140,Wrote 0x00 to 0x50. +ACK
+10,3804260,Setup write to 0x50. +ACK	/* Address RFID reader */
+10,3804980,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+10,3805700,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+10,3806420,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+10,3807140,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 10,3807798,Stop
+
 10,3828508,Start
-10,3828925,Setup write to 0x50. +ACK
-10,3829645,Wrote 0x01 to 0x50. +ACK
+10,3828925,Setup write to 0x50. +ACK	/* Address RFID reader */
+10,3829645,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 10,3830343,Start
 10,3830715,Setup read from 0x50. +ACK
-10,3831435,Read 0x01 from 0x50. +ACK
-10,3832678,Read 0x45 from 0x50. +No ACK
+10,3831435,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+10,3832678,Read 0x45 from 0x50. +No ACK	/* Read response: Unique chip ID (0x45) */
 10,3834445,Stop
+
 10,3835020,Start
-10,3835438,Setup write to 0x50. +ACK
-10,3836158,Wrote 0x00 to 0x50. +ACK
-10,3836878,Wrote 0x00 to 0x50. +ACK
+10,3835438,Setup write to 0x50. +ACK	/* Address RFID reader */
+10,3836158,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+10,3836878,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 10,3837535,Stop
+
 11,3789498,Start
-11,3789918,Setup write to 0x50. +ACK
-11,3790638,Wrote 0x00 to 0x50. +ACK
-11,3791358,Wrote 0x00 to 0x50. +ACK
+11,3789918,Setup write to 0x50. +ACK	/* Address RFID reader */
+11,3790638,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+11,3791358,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 11,3792015,Stop
+
 11,3792540,Start
-11,3792958,Setup write to 0x50. +ACK
-11,3793678,Wrote 0x00 to 0x50. +ACK
-11,3794398,Wrote 0x10 to 0x50. +ACK
+11,3792958,Setup write to 0x50. +ACK	/* Address RFID reader */
+11,3793678,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+11,3794398,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 11,3795055,Stop
+
 11,3805733,Start
-11,3806610,Setup write to 0x50. +ACK
-11,3807330,Wrote 0x01 to 0x50. +ACK
-11,3808050,Wrote 0x02 to 0x50. +ACK
-11,3808770,Wrote 0x06 to 0x50. +ACK
-11,3809490,Wrote 0x00 to 0x50. +ACK
+11,3806610,Setup write to 0x50. +ACK	/* Address RFID reader */
+11,3807330,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+11,3808050,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+11,3808770,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+11,3809490,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 11,3810150,Stop
+
 11,3830868,Start
-11,3831288,Setup write to 0x50. +ACK
-11,3832008,Wrote 0x01 to 0x50. +ACK
+11,3831288,Setup write to 0x50. +ACK	/* Address RFID reader */
+11,3832008,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 11,3832705,Start
 11,3833078,Setup read from 0x50. +ACK
-11,3833798,Read 0x01 from 0x50. +ACK
-11,3835038,Read 0x4D from 0x50. +No ACK
+11,3833798,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+11,3835038,Read 0x4D from 0x50. +No ACK	/* Read response: Unique chip ID (0x4D) */
 11,3836805,Stop
+
 11,3837380,Start
-11,3837798,Setup write to 0x50. +ACK
-11,3838518,Wrote 0x00 to 0x50. +ACK
-11,3839238,Wrote 0x00 to 0x50. +ACK
+11,3837798,Setup write to 0x50. +ACK	/* Address RFID reader */
+11,3838518,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+11,3839238,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 11,3839895,Stop
+
 12,3791930,Start
-12,3792348,Setup write to 0x50. +ACK
-12,3793068,Wrote 0x00 to 0x50. +ACK
-12,3793788,Wrote 0x00 to 0x50. +ACK
+12,3792348,Setup write to 0x50. +ACK	/* Address RFID reader */
+12,3793068,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+12,3793788,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 12,3794445,Stop
+
 12,3794970,Start
-12,3795388,Setup write to 0x50. +ACK
-12,3796108,Wrote 0x00 to 0x50. +ACK
-12,3796828,Wrote 0x10 to 0x50. +ACK
+12,3795388,Setup write to 0x50. +ACK	/* Address RFID reader */
+12,3796108,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+12,3796828,Wrote 0x10 to 0x50. +ACK	/* Turn on carrier */
 12,3797485,Stop
+
 12,3808163,Start
-12,3809043,Setup write to 0x50. +ACK
-12,3809763,Wrote 0x01 to 0x50. +ACK
-12,3810483,Wrote 0x02 to 0x50. +ACK
-12,3811203,Wrote 0x06 to 0x50. +ACK
-12,3811923,Wrote 0x00 to 0x50. +ACK
+12,3809043,Setup write to 0x50. +ACK	/* Address RFID reader */
+12,3809763,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
+12,3810483,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
+12,3811203,Wrote 0x06 to 0x50. +ACK	/* Write command: Initiate */
+12,3811923,Wrote 0x00 to 0x50. +ACK	/* Write parameter: Initiate */
 12,3812580,Stop
+
 12,3833300,Start
-12,3833718,Setup write to 0x50. +ACK
-12,3834438,Wrote 0x01 to 0x50. +ACK
+12,3833718,Setup write to 0x50. +ACK	/* Address RFID reader */
+12,3834438,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 12,3835135,Start
 12,3835508,Setup read from 0x50. +ACK
-12,3836228,Read 0x01 from 0x50. +ACK
-12,3837468,Read 0x45 from 0x50. +No ACK
+12,3836228,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
+12,3837468,Read 0x45 from 0x50. +No ACK	/* Read response: Unique chip ID (0x45) */
 12,3839238,Stop
+
 12,3839810,Start
-12,3840230,Setup write to 0x50. +ACK
-12,3840950,Wrote 0x00 to 0x50. +ACK
-12,3841670,Wrote 0x00 to 0x50. +ACK
+12,3840230,Setup write to 0x50. +ACK	/* Address RFID reader */
+12,3840950,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
+12,3841670,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 12,3842328,Stop
