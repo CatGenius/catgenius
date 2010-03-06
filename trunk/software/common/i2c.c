@@ -19,7 +19,7 @@
 /******************************************************************************/
 
 #define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
-#define BUS_FREQ	100000	/* 400kHz bus frequency */
+#define BUS_FREQ	400000	/* 400kHz bus frequency */
 #define I2C_IDLE	0
 #define I2C_START	1
 #define I2C_RESTART	2
@@ -61,12 +61,6 @@ void i2c_init (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	/*
-	 * Setup port C
-	 */
-	TRISC |= I2C_SCL_MASK |		/* I2C SCL */
-		 I2C_SDA_MASK ;		/* I2C SDA */
-
 	/* Set I2C controller in master mode */
 	SSPCON  = 0x38;
 	SSPCON2 = 0x00;
@@ -92,8 +86,8 @@ void i2c_work (void)
 /******************************************************************************/
 {
 	if (timeoutexpired(&timer)) {
-		settimeout(&timer, SECOND);
-		i2c_init();
+		settimeout(&timer, SECOND/4);
+
 		while (( SSPCON2 & 0x1F ) | RW ) {}; // wait for idle and not writing
 		SEN=1;
 		
