@@ -145,8 +145,12 @@ unsigned char catgenie_init (void)
 	/*
 	 * Setup port C
 	 */
-	TRISC = UART_TXD_MASK |		/* UART TxD */
-		UART_RXD_MASK ;		/* UART RxD */
+	TRISC = I2C_SCL_MASK |		/* I2C SCL */
+		I2C_SDA_MASK |		/* I2C SDA */
+		UART_TXD_MASK |		/* UART TxD */
+		UART_RXD_MASK |		/* UART RxD */
+		CATSENSOR_LED_PORT;
+
 	PORTC = 0x00;
 
 	/*

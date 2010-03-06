@@ -57,7 +57,10 @@ void main (void)
 	/* Initialize software timers */
 	timer_init();
 
+	/* Initialize the I2C bus */
 	i2c_init();
+
+	/* Initialize the serial port */
 	serial_init();
 
 	/* Initialize the cat sensor */
@@ -95,6 +98,10 @@ void catsensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	if (detected)
+		set_LED_Cat(0x55, 1);
+	else
+		set_LED_Cat(0x00, 0);
 }
 /* catsensor_event */
 
