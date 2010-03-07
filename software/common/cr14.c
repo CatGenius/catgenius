@@ -1,15 +1,15 @@
 /******************************************************************************/
-/* File    :	i2c.c							      */
-/* Function:	I2C bus functional implementation			      */
+/* File    :	cr14.c							      */
+/* Function:	ST-Micro CR14 RFID reader functional implementation	      */
 /* Author  :	Robert Delien						      */
 /*		Copyright (C) 2010, Clockwork Engineering		      */
-/* History :	5 Mar 2010 by R. Delien:				      */
+/* History :	7 Mar 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
 #include <htc.h>
 
+#include "cr14.h"
 #include "i2c.h"
-#include "hardware.h"
 
 #include "serial.h"
 
@@ -17,14 +17,17 @@
 /* Macros								      */
 /******************************************************************************/
 
-#define BUS_FREQ	400000	/* 400kHz bus frequency */
+#define I2C_ADDR	0x50
+#define PARAM_REG	0x00
+#define FRAME_REG	0x01
+#define FRAME_REG_SIZE	36
+#define SLOTMARK_REG	0x03
 
 #define IDLE		0
-#define START		1
-#define RESTART		3
-#define WRITE		5
-#define READ		7
-#define STOP		11
+#define RD_PARAMREG	1
+#define WR_PARAMREG	7
+#define RD_FRAME	13
+#define WR_FRAME	23
 
 
 /******************************************************************************/
@@ -32,8 +35,9 @@
 /******************************************************************************/
 
 static unsigned char	state	= 0;
-static unsigned char	data	= 0;
-static bit		ack	= 0;
+static unsigned char	frame[8];
+static unsigned char	length	= 0;
+static unsigned char	index	= 0;
 static bit		error	= 0;
 
 
@@ -46,7 +50,7 @@ static bit		error	= 0;
 /* Global Implementations						      */
 /******************************************************************************/
 
-void i2c_init (void)
+void cr14_init (void)
 /******************************************************************************/
 /* Function:	Module initialisation routine				      */
 /*		- Initializes the module				      */
@@ -54,23 +58,11 @@ void i2c_init (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	/* Set I2C controller in master mode */
-	SSPCON  = 0x38;
-	SSPCON2 = 0x00;
-
-	/* Set I2C bus frequency */
-	SSPADD = ((_XTAL_FREQ/4) / BUS_FREQ) /*-1*/;
-
-	CKE = 1;	// use I2C levels      worked also with '0'
-	SMP = 1;	// disable slew rate control  worked also with '0'
-	
-	PSPIF=0;	// clear SSPIF interrupt flag
-	BCLIF=0;	// clear bus collision flag
 }
-/* End: i2c_init */
+/* End: cr14_init */
 
 
-void i2c_work (void)
+void cr14_work (void)
 /******************************************************************************/
 /* Function:	Module worker routine					      */
 /*		-       */
@@ -78,82 +70,144 @@ void i2c_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	/* Nothing to do here if busy */
-	if ((SSPCON2 & 0x1F) | RW)
+	if (i2c_busy())
 		return;
-
-	switch (state) {
+	
+	switch(state) {
 	case IDLE:
 		break;
 
-	case START:
-		/* Start condition */
-//putch('1');
-		SEN = 1;
+	case RD_PARAMREG:
+		i2c_start();
 		state++;
 		break;
-	case START+1:
+	case RD_PARAMREG+1:
+		i2c_address(I2C_ADDR, I2C_WR);
+		state++;
+		break;
+	case RD_PARAMREG+2:
+		i2c_write(PARAM_REG);
+		state++;
+		break;
+	case RD_PARAMREG+3:
+		i2c_address(I2C_ADDR, I2C_RD);
+		state++;
+		break;
+	case RD_PARAMREG+4:
+		i2c_read(0);
+		state++;
+		break;
+	case RD_PARAMREG+5:
+		frame[0] = i2c_readbyte();
+		i2c_stop();
 		state = IDLE;
 		break;
 
-	case RESTART:
-//putch('2');
-		/* Repeated start condition */
-		RSEN = 1;
+	case WR_PARAMREG:
+		i2c_start();
 		state++;
 		break;
-	case RESTART+1:
+	case WR_PARAMREG+1:
+		i2c_address(I2C_ADDR, I2C_WR);
+		state++;
+		break;
+	case WR_PARAMREG+2:
+		i2c_write(PARAM_REG);
+		state++;
+		break;
+	case WR_PARAMREG+3:
+		i2c_write(frame[0]);
+		state++;
+		break;
+	case WR_PARAMREG+4:
+		if (!i2c_acked())
+			putch('N');
+		i2c_stop();
+		state++;
+		break;
+	case WR_PARAMREG+5:
 		state = IDLE;
 		break;
 
-	case WRITE:
-//putch('3');
-		/* Write data */
-		SSPBUF = data;
+	case RD_FRAME:
+		i2c_start();
 		state++;
 		break;
-	case WRITE+1:
-		ack = !ACKSTAT;
+	case RD_FRAME+1:
+		i2c_address(I2C_ADDR, I2C_WR);
+		state++;
+		break;
+	case RD_FRAME+2:
+		i2c_write(FRAME_REG);
+		state++;
+		break;
+	case RD_FRAME+3:
+		i2c_restart();
+		state++;
+		break;
+	case RD_FRAME+4:
+		i2c_address(I2C_ADDR, I2C_RD);
+		state++;
+		break;
+	case RD_FRAME+5:
+		i2c_read(0);
+		state++;
+		break;
+	case RD_FRAME+6:
+		length = i2c_readbyte();
+		index = 0;
+	case RD_FRAME+7:
+		if (length < index) {
+			i2c_read(index == (length-1));
+			state++;
+		} else
+			state = RD_PARAMREG+9;
+		break ;
+	case RD_FRAME+8:
+		frame[index] = i2c_readbyte();
+		index++;
+		state--;
+		break;
+	case RD_FRAME+9:
+		i2c_stop();
 		state = IDLE;
 		break;
 
-	case READ:
-//putch('4');
-		/* Enable reading */
-		RCEN = 1;
+	case WR_FRAME:
+		i2c_start();
 		state++;
 		break;
-	case READ+1:
-//putch('5');
-		/* Read data */
-		data = SSPBUF;
+	case WR_FRAME+1:
+		i2c_address(I2C_ADDR, I2C_WR);
 		state++;
 		break;
-	case READ+2:
-//putch('6');
-		/* Send (n)ack */
-		ACKDT = ack?0:1;
-		ACKEN = 1;
+	case WR_FRAME+2:
+		i2c_write(FRAME_REG);
 		state++;
 		break;
-	case READ+3:
-		state = IDLE;
-		break;
-
-	case STOP:
-//putch('7');
-		/* Stop condition */
-		PEN = 1;
+	case WR_FRAME+3:
+		i2c_write(length);
+		index = 0;
 		state++;
 		break;
-	case STOP+1:
+	case WR_FRAME+4:
+		if (index < length) {
+			i2c_write(frame[index]);
+			index++;
+		} else
+			state++;
+		break;
+	case WR_FRAME+5:
+		if (!i2c_acked())
+			putch('N');
+		i2c_stop();
 		state = IDLE;
 		break;
 	}
-} /* i2c_work */
+} /* cr14_work */
 
 
-void i2c_term (void)
+void cr14_term (void)
 /******************************************************************************/
 /* Function:	Module termination routine				      */
 /*		- Terminates the module					      */
@@ -162,56 +216,21 @@ void i2c_term (void)
 /******************************************************************************/
 {
 }
-/* End: i2c_term */
+/* End: cr14_term */
 
-unsigned char i2c_busy(void)
+
+unsigned char cr14_busy(void)
 {
 	return (state != IDLE);
 }
 
-void i2c_start(void)
+void cr14_writeparamreg(unsigned char regval)
 {
-	state = START;
-}
-
-void i2c_restart(void)
-{
-	state = RESTART;
-}
-
-void i2c_address(unsigned char byte, unsigned char read)
-{
-	data = byte << 1;
-	if (read)
-		data |= 0x01;
-	state = WRITE;
-}
-
-void i2c_read(unsigned char ack)
-{
-}
-
-unsigned char i2c_readbyte(void)
-{
-	return 0;
-}
-
-void i2c_write(unsigned char byte)
-{
-	data = byte;
-	state = WRITE;
-}
-
-void i2c_stop(void)
-{
-	state = STOP;
-}
-
-unsigned char i2c_acked (void)
-{
-	return ack;
+	frame[0] = regval;
+	state = WR_PARAMREG;
 }
 
 /******************************************************************************/
 /* Local Implementations						      */
 /******************************************************************************/
+

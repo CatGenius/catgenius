@@ -12,6 +12,8 @@
 #include "../common/hardware.h"
 #include "../common/serial.h"
 #include "../common/i2c.h"
+#include "../common/cr14.h"
+#include "../common/srix4k.h"
 #include "../common/catsensor.h"
 #include "../common/catgenie120.h"
 #include "userinterface.h"
@@ -60,6 +62,12 @@ void main (void)
 	/* Initialize the I2C bus */
 	i2c_init();
 
+	/* Initialize the RFID reader */
+	cr14_init();
+
+	/* Initialize the RFID tag */
+	srix4k_init();
+
 	/* Initialize the serial port */
 	serial_init();
 
@@ -81,6 +89,8 @@ void main (void)
 		catgenie_work();
 		userinterface_work();
 		litterlanguage_work();
+		srix4k_work();
+		cr14_work();
 		i2c_work();
 #ifndef __DEBUG
 		CLRWDT();
