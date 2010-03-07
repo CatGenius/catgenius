@@ -67,34 +67,34 @@ void serial_init(void)
 #  error could not #assert SPRBG and BRGH for specified crystal freq. and baud rate
 #endif
 	SPBRG=SPBRG_SET;
-	BRGH=BRGH_SET;	  //data rate for sending/receiving
-	SYNC=0;						//asynchronous
-	SPEN=1;						//enable serial port pins
-	CREN=1;						//enable reception
-	SREN=0;						//no effect
-	TXIE=0;						//disable tx interrupts
-	RCIE=0;						//disable rx interrupts
-	TX9=0;						//8-bit transmission
-	RX9=0;						//8-bit reception
-	TXEN=0;						//reset transmitter
-	TXEN=1;						//enable the transmitter
+	BRGH=BRGH_SET;	//data rate for sending/receiving
+	SYNC=0;		//asynchronous
+	SPEN=1;		//enable serial port pins
+	CREN=1;		//enable reception
+	SREN=0;		//no effect
+	TXIE=0;		//disable tx interrupts
+	RCIE=0;		//disable rx interrupts
+	TX9=0;		//8-bit transmission
+	RX9=0;		//8-bit reception
+	TXEN=0;		//reset transmitter
+	TXEN=1;		//enable the transmitter
 }
 
 unsigned char dummy;
 
 #define clear_usart_errors_inline	\
-if (OERR)													\
-{																	\
-	TXEN=0;													\
-	TXEN=1;													\
-	CREN=0;													\
-	CREN=1;													\
-}																	\
-if (FERR)													\
-{																	\
-	dummy=RCREG;										\
-	TXEN=0;													\
-	TXEN=1;													\
+if (OERR)				\
+{					\
+	TXEN=0;				\
+	TXEN=1;				\
+	CREN=0;				\
+	CREN=1;				\
+}					\
+if (FERR)				\
+{					\
+	dummy=RCREG;			\
+	TXEN=0;				\
+	TXEN=1;				\
 }
 
 //writes a character to the serial port
