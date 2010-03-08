@@ -306,6 +306,10 @@ void set_LED (unsigned char led, unsigned char on)
 
 void set_LED_Error (unsigned char pattern, unsigned char repeat)
 {
+	if( (pacers[PACER_LED_ERROR].pattern == pattern) &&
+	    (pacers[PACER_LED_ERROR].repeat == repeat) )
+		return;
+
 	/* Reset the mask to the first bit */
 	pacers[PACER_LED_ERROR].mask = 0x01;
 	/* Copy the beep pattern */
@@ -316,6 +320,10 @@ void set_LED_Error (unsigned char pattern, unsigned char repeat)
 
 void set_LED_Locked (unsigned char pattern, unsigned char repeat)
 {
+	if( (pacers[PACER_LED_LOCKED].pattern == pattern) &&
+	    (pacers[PACER_LED_LOCKED].repeat == repeat) )
+		return;
+
 	/* Reset the mask to the first bit */
 	pacers[PACER_LED_LOCKED].mask = 0x01;
 	/* Copy the beep pattern */
@@ -326,6 +334,10 @@ void set_LED_Locked (unsigned char pattern, unsigned char repeat)
 
 void set_LED_Cartridge (unsigned char pattern, unsigned char repeat)
 {
+	if( (pacers[PACER_LED_CARTRIDGE].pattern == pattern) &&
+	    (pacers[PACER_LED_CARTRIDGE].repeat == repeat) )
+		return;
+
 	/* Reset the mask to the first bit */
 	pacers[PACER_LED_CARTRIDGE].mask = 0x01;
 	/* Copy the beep pattern */
@@ -336,6 +348,9 @@ void set_LED_Cartridge (unsigned char pattern, unsigned char repeat)
 
 void set_LED_Cat (unsigned char pattern, unsigned char repeat)
 {
+	if( (pacers[PACER_LED_CAT].pattern == pattern) &&
+	    (pacers[PACER_LED_CAT].repeat == repeat) )
+		return;
 	/* Reset the mask to the first bit */
 	pacers[PACER_LED_CAT].mask = 0x01;
 	/* Copy the beep pattern */
@@ -346,6 +361,10 @@ void set_LED_Cat (unsigned char pattern, unsigned char repeat)
 
 void set_Beeper (unsigned char pattern, unsigned char repeat)
 {
+	if( (pacers[PACER_BEEPER].pattern == pattern) &&
+	    (pacers[PACER_BEEPER].repeat == repeat) )
+		return;
+
 	/* Reset the mask to the first bit */
 	pacers[PACER_BEEPER].mask = 0x01;
 	/* Copy the beep pattern */

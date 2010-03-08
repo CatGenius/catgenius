@@ -20,14 +20,15 @@
 #define I2C_ADDR	0x50
 #define PARAM_REG	0x00
 #define FRAME_REG	0x01
-#define FRAME_REG_SIZE	36
+#define FRAME_REG_SIZE	35
 #define SLOTMARK_REG	0x03
+#define FRAME_MAX	8
 
 #define IDLE		0
 #define RD_PARAMREG	1
-#define WR_PARAMREG	7
+#define WR_PARAMREG	8
 #define RD_FRAME	13
-#define WR_FRAME	23
+#define WR_FRAME	24
 
 
 /******************************************************************************/
@@ -35,7 +36,7 @@
 /******************************************************************************/
 
 static unsigned char	state	= 0;
-static unsigned char	frame[8];
+static unsigned char	frame[FRAME_MAX];
 static unsigned char	length	= 0;
 static unsigned char	index	= 0;
 static bit		error	= 0;
@@ -90,15 +91,19 @@ void cr14_work (void)
 		state++;
 		break;
 	case RD_PARAMREG+3:
-		i2c_address(I2C_ADDR, I2C_RD);
+		i2c_restart();
 		state++;
 		break;
 	case RD_PARAMREG+4:
-		i2c_read(0);
+		i2c_address(I2C_ADDR, I2C_RD);
 		state++;
 		break;
 	case RD_PARAMREG+5:
-		frame[0] = i2c_readbyte();
+		i2c_read(0);
+		state++;
+		break;
+	case RD_PARAMREG+6:
+		frame[0] = i2c_getbyte();
 		i2c_stop();
 		state = IDLE;
 		break;
@@ -123,9 +128,6 @@ void cr14_work (void)
 		if (!i2c_acked())
 			putch('N');
 		i2c_stop();
-		state++;
-		break;
-	case WR_PARAMREG+5:
 		state = IDLE;
 		break;
 
@@ -150,25 +152,38 @@ void cr14_work (void)
 		state++;
 		break;
 	case RD_FRAME+5:
-		i2c_read(0);
+		i2c_read(1);
 		state++;
 		break;
 	case RD_FRAME+6:
-		length = i2c_readbyte();
-		index = 0;
+		length = i2c_getbyte();
+		if (!length) {
+			state = RD_FRAME+9;
+		} else {
+			if (length > FRAME_MAX)
+				length = FRAME_MAX;
+			index = 0;
+			state++;
+		}
+		break;
 	case RD_FRAME+7:
-		if (length < index) {
-			i2c_read(index == (length-1));
+		if (index < length) {
+			i2c_read((index+1) < length);
 			state++;
 		} else
-			state = RD_PARAMREG+9;
+			state = RD_FRAME+10;
 		break ;
 	case RD_FRAME+8:
-		frame[index] = i2c_readbyte();
+		frame[index] = i2c_getbyte();
 		index++;
 		state--;
 		break;
 	case RD_FRAME+9:
+		/* Dummy read, just to nack */
+		i2c_read(0);
+		state++;
+		break;
+	case RD_FRAME+10:
 		i2c_stop();
 		state = IDLE;
 		break;
@@ -228,6 +243,43 @@ void cr14_writeparamreg(unsigned char regval)
 {
 	frame[0] = regval;
 	state = WR_PARAMREG;
+}
+
+void cr14_readparamreg(void)
+{
+	state = RD_PARAMREG;
+}
+
+unsigned char cr14_paramreg(void)
+{
+	return frame[0];
+}
+
+void cr14_writeframe(unsigned char *frame_ptr, unsigned char frame_len)
+{
+	unsigned char index;
+
+	if (frame_len > FRAME_MAX)
+		frame_len = FRAME_MAX;
+	for (index = 0; index < frame_len; index++)
+		frame[index] = frame_ptr[index];
+	length = frame_len;
+	state = WR_FRAME;
+}
+
+void cr14_readframe(void)
+{
+	state = RD_FRAME;
+}
+
+unsigned char cr14_getframe(unsigned char *frame_ptr)
+{
+	unsigned char index;
+
+	for (index = 0; index < length; index++)
+		frame_ptr[index] = frame[index];
+
+	return length;
 }
 
 /******************************************************************************/
