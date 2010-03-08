@@ -11,13 +11,12 @@
 #include "i2c.h"
 #include "hardware.h"
 
-#include "serial.h"
 
 /******************************************************************************/
 /* Macros								      */
 /******************************************************************************/
 
-#define BUS_FREQ	400000	/* 400kHz bus frequency */
+#define BUS_FREQ	100000	/* 400kHz bus frequency */
 
 #define IDLE		0
 #define START		1
@@ -88,65 +87,71 @@ void i2c_work (void)
 
 	case START:
 		/* Start condition */
-//putch('1');
 		SEN = 1;
+		/* Wait for not-busy */
 		state++;
 		break;
 	case START+1:
+		/* Ready */
 		state = IDLE;
 		break;
 
 	case RESTART:
-//putch('2');
 		/* Repeated start condition */
 		RSEN = 1;
+		/* Wait for not-busy */
 		state++;
 		break;
 	case RESTART+1:
+		/* Ready */
 		state = IDLE;
 		break;
 
 	case WRITE:
-//putch('3');
 		/* Write data */
 		SSPBUF = data;
+		/* Wait for not-busy */
 		state++;
 		break;
 	case WRITE+1:
+		/* Store (n)ack */
 		ack = !ACKSTAT;
+		/* Ready */
 		state = IDLE;
 		break;
 
 	case READ:
-//putch('4');
 		/* Enable reading */
 		RCEN = 1;
+		/* Wait for not-busy */
 		state++;
 		break;
 	case READ+1:
-//putch('5');
 		/* Read data */
 		data = SSPBUF;
+		/* Wait for not-busy */
 		state++;
 		break;
 	case READ+2:
-//putch('6');
 		/* Send (n)ack */
 		ACKDT = ack?0:1;
 		ACKEN = 1;
+		/* Wait for not-busy */
 		state++;
 		break;
 	case READ+3:
+		/* Ready */
 		state = IDLE;
 		break;
 
 	case STOP:
-//putch('7');
 		/* Stop condition */
 		PEN = 1;
+		/* Wait for not-busy */
 		state++;
 		break;
 	case STOP+1:
+		/* Ready */
 		state = IDLE;
 		break;
 	}
@@ -187,13 +192,15 @@ void i2c_address(unsigned char byte, unsigned char read)
 	state = WRITE;
 }
 
-void i2c_read(unsigned char ack)
+void i2c_read(unsigned char ackbyte)
 {
+	ack = ackbyte;
+	state = READ;
 }
 
-unsigned char i2c_readbyte(void)
+unsigned char i2c_getbyte(void)
 {
-	return 0;
+	return data;
 }
 
 void i2c_write(unsigned char byte)

@@ -34,6 +34,7 @@
 static struct timer	timer    = EXIRED;
 static unsigned char	state = 0;
 
+static unsigned char	initframe[]	= {0x06, 0x00};
 
 /******************************************************************************/
 /* Local Prototypes							      */
@@ -64,6 +65,8 @@ void srix4k_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	unsigned char frame[8];
+	
 	if( (state == IDLE) &&
 	    timeoutexpired(&timer) ){
 		settimeout(&timer, SECOND);
@@ -76,11 +79,27 @@ void srix4k_work (void)
 	switch (state) {
 	case IDLE:
 		break;
-	case CARRIEROFF:
-		cr14_writeparamreg(0x00);
+	case 1:
+		putchhex(cr14_paramreg());
+		putch('\n');
+		cr14_writeparamreg(0x10);
 		state++;
 		break;
-	case CARRIEROFF+1:
+	case 2:
+		cr14_writeframe(initframe, 2);
+		state++;
+		break;
+	case 3:
+		cr14_readframe();
+		state++;
+		break;
+	case 4:
+		cr14_getframe(&frame);
+		putchhex(frame[0]);
+		putch('\n');
+		state++;
+	case 5:
+		cr14_writeparamreg(0x00);
 		state = IDLE;
 		break;
 	}
