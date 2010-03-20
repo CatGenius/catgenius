@@ -65,8 +65,8 @@ struct debouncer {
 	void		(*handler)(unsigned char);
 };
 static struct debouncer	debouncers[DEBOUNCER_MAX] = {
-	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      STARTBUTTON_MASK, &STARTBUTTON_PORT,   STARTBUTTON_MASK, startbutton_event},
-	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      SETUPBUTTON_MASK, &SETUPBUTTON_PORT,   SETUPBUTTON_MASK, setupbutton_event},
+	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &STARTBUTTON_PORT,   STARTBUTTON_MASK, startbutton_event},
+	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &SETUPBUTTON_PORT,   SETUPBUTTON_MASK, setupbutton_event},
 	{{0xFFFF, 0xFFFFFFFF}, WATERSENSOR_DEBOUNCE, 0, &water_sensorbuffer, WATERSENSOR_MASK, watersensor_event},
 	{{0xFFFF, 0xFFFFFFFF}, HEATSENSOR_DEBOUNCE,  0, &HEATSENSOR_PORT,    HEATSENSOR_MASK,  heatsensor_event}
 };
@@ -142,6 +142,10 @@ unsigned char catgenie_init (void)
 	/* Switch on the water sensor LED permanently */
 	PORTB |= WATERSENSOR_LED_MASK;
 
+	PORTB_old = STARTBUTTON_MASK |
+		    SETUPBUTTON_MASK |
+		    HEATSENSOR_MASK ;
+
 	/*
 	 * Setup port C
 	 */
@@ -165,8 +169,6 @@ unsigned char catgenie_init (void)
 	TRISE = 0x00;			/* All outputs */
 	PORTE = 0x00;
 
-	PORTB_old = PORTB;
-
 	/* Copy the initial states into the debouncer states */
 	for (temp = 0; temp < DEBOUNCER_MAX; temp++) {
 		unsigned char	tempmask = debouncers[temp].port_mask; /* for compiler limitations */
@@ -174,7 +176,14 @@ unsigned char catgenie_init (void)
 		debouncers[temp].state = *debouncers[temp].port & tempmask;
 	}
 
-	return 0;
+	/* Fill out the return flags */
+	temp = 0;	
+	if (!(STARTBUTTON_PORT & STARTBUTTON_MASK))
+		temp |= START_BUTTON_HELD;
+	if (!(SETUPBUTTON_PORT & SETUPBUTTON_MASK))
+		temp |= SETUP_BUTTON_HELD;
+
+	return temp;
 }
 /* End: init_catgenie */
 
@@ -306,7 +315,8 @@ void set_LED (unsigned char led, unsigned char on)
 
 void set_LED_Error (unsigned char pattern, unsigned char repeat)
 {
-	if( (pacers[PACER_LED_ERROR].pattern == pattern) &&
+	if( repeat &&
+	    (pacers[PACER_LED_ERROR].pattern == pattern) &&
 	    (pacers[PACER_LED_ERROR].repeat == repeat) )
 		return;
 
@@ -320,7 +330,8 @@ void set_LED_Error (unsigned char pattern, unsigned char repeat)
 
 void set_LED_Locked (unsigned char pattern, unsigned char repeat)
 {
-	if( (pacers[PACER_LED_LOCKED].pattern == pattern) &&
+	if( repeat &&
+	    (pacers[PACER_LED_LOCKED].pattern == pattern) &&
 	    (pacers[PACER_LED_LOCKED].repeat == repeat) )
 		return;
 
@@ -334,7 +345,8 @@ void set_LED_Locked (unsigned char pattern, unsigned char repeat)
 
 void set_LED_Cartridge (unsigned char pattern, unsigned char repeat)
 {
-	if( (pacers[PACER_LED_CARTRIDGE].pattern == pattern) &&
+	if( repeat &&
+	    (pacers[PACER_LED_CARTRIDGE].pattern == pattern) &&
 	    (pacers[PACER_LED_CARTRIDGE].repeat == repeat) )
 		return;
 
@@ -348,7 +360,8 @@ void set_LED_Cartridge (unsigned char pattern, unsigned char repeat)
 
 void set_LED_Cat (unsigned char pattern, unsigned char repeat)
 {
-	if( (pacers[PACER_LED_CAT].pattern == pattern) &&
+	if( repeat &&
+	    (pacers[PACER_LED_CAT].pattern == pattern) &&
 	    (pacers[PACER_LED_CAT].repeat == repeat) )
 		return;
 	/* Reset the mask to the first bit */
@@ -361,7 +374,8 @@ void set_LED_Cat (unsigned char pattern, unsigned char repeat)
 
 void set_Beeper (unsigned char pattern, unsigned char repeat)
 {
-	if( (pacers[PACER_BEEPER].pattern == pattern) &&
+	if( repeat &&
+	    (pacers[PACER_BEEPER].pattern == pattern) &&
 	    (pacers[PACER_BEEPER].repeat == repeat) )
 		return;
 
