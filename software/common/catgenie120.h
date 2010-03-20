@@ -9,15 +9,15 @@
 #define CATGENIE120_H
 
 
-/* Init flags */
+/* Init return flags */
 #define START_BUTTON_HELD	0x01
 #define SETUP_BUTTON_HELD	0x02
-#define WATER_DETECTED		0x04
-#define OVERHEAT_DETECTED	0x08
-#define RESERVED_1		0x10
-#define RESERVED_2		0x20
-#define RESERVED_3		0x40
-#define RESERVED_4		0x80
+#define RESERVED_1		0x04
+#define RESERVED_2		0x08
+#define RESERVED_3		0x10
+#define RESERVED_4		0x20
+#define RESERVED_5		0x40
+#define RESERVED_6		0x80
 
 
 /* Bowl modi */

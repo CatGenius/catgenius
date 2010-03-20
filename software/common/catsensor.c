@@ -113,7 +113,7 @@ void catsensor_term (void)
 }
 /* End: catsensor_term */
 
-
+//#define RMW 1
 void catsensor_isr_timer (void)
 /******************************************************************************/
 /* Function:	Timer interrupt service routine				      */
@@ -124,12 +124,14 @@ void catsensor_isr_timer (void)
 {
 	if (pinged) {
 		/* End ping in progress */
-//		TRISC |= CATSENSOR_LED_MASK;
+#if RMW
+		TRISC |= CATSENSOR_LED_MASK;
+#else
 		TRISC = I2C_SCL_MASK |		/* I2C SCL */
 			I2C_SDA_MASK |		/* I2C SDA */
-			UART_TXD_MASK |		/* UART TxD */
 			UART_RXD_MASK |		/* UART RxD */
 			CATSENSOR_LED_PORT;
+#endif
 		pinged = 0;
 		/* The echo is the detection */
 		detected = echoed;
@@ -139,11 +141,13 @@ void catsensor_isr_timer (void)
 		/* Reset the echo for the new ping */
 		echoed = 0;
 		/* Start new ping */
-//		TRISC &= ~CATSENSOR_LED_MASK;
+#if RMW
+		TRISC &= ~CATSENSOR_LED_MASK;
+#else
 		TRISC = I2C_SCL_MASK |		/* I2C SCL */
 			I2C_SDA_MASK |		/* I2C SDA */
-			UART_TXD_MASK |		/* UART TxD */
 			UART_RXD_MASK ;		/* UART RxD */
+#endif
 		pinged = 1;
 		/* Decrease prescaler for short ping */
 		T2CKPS1 = 0;
@@ -163,11 +167,14 @@ void catsensor_isr_input (void)
 	if ( (pinged) &&
 	     (CATSENSOR_PORT & CATSENSOR_MASK) )
 		/* Turn off emitter to reset the receiver */
-//		TRISC |= CATSENSOR_LED_MASK;
+#if RMW
+		TRISC |= CATSENSOR_LED_MASK;
+#else
 		TRISC = I2C_SCL_MASK |		/* I2C SCL */
 			I2C_SDA_MASK |		/* I2C SDA */
-			UART_TXD_MASK |		/* UART TxD */
-			UART_RXD_MASK ;		/* UART RxD */
+			UART_RXD_MASK |		/* UART RxD */
+			CATSENSOR_LED_PORT;
+#endif
 		/* Store the echo */
 		echoed = 1;
 }

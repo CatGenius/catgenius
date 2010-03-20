@@ -39,6 +39,7 @@ static unsigned char	state	= 0;
 static unsigned char	frame[FRAME_MAX];
 static unsigned char	length	= 0;
 static unsigned char	index	= 0;
+static bit		busy	= 0;
 static bit		error	= 0;
 
 
@@ -87,8 +88,14 @@ void cr14_work (void)
 		state++;
 		break;
 	case RD_PARAMREG+2:
-		i2c_write(PARAM_REG);
-		state++;
+		if (i2c_acked()) {
+			i2c_write(PARAM_REG);
+			state++;
+		} else {
+			busy = 1;
+			i2c_stop();
+			state = IDLE;
+		}
 		break;
 	case RD_PARAMREG+3:
 		i2c_restart();
@@ -99,11 +106,20 @@ void cr14_work (void)
 		state++;
 		break;
 	case RD_PARAMREG+5:
-		i2c_read(0);
-		state++;
+		if (i2c_acked()) {
+			i2c_read(0);
+			state++;
+		} else {
+			error = 1;
+			i2c_stop();
+			state = IDLE;
+		}
 		break;
 	case RD_PARAMREG+6:
-		frame[0] = i2c_getbyte();
+		if (i2c_acked())
+			frame[0] = i2c_getbyte();
+		else
+			error = 1;
 		i2c_stop();
 		state = IDLE;
 		break;
@@ -117,16 +133,28 @@ void cr14_work (void)
 		state++;
 		break;
 	case WR_PARAMREG+2:
-		i2c_write(PARAM_REG);
-		state++;
+		if (i2c_acked()) {
+			i2c_write(PARAM_REG);
+			state++;
+		} else {
+			busy = 1;
+			i2c_stop();
+			state = IDLE;
+		}
 		break;
 	case WR_PARAMREG+3:
-		i2c_write(frame[0]);
-		state++;
+		if (i2c_acked()) {
+			i2c_write(frame[0]);
+			state++;
+		} else {
+			error = 1;
+			i2c_stop();
+			state = IDLE;
+		}
 		break;
 	case WR_PARAMREG+4:
 		if (!i2c_acked())
-			putch('N');
+			error = 1;
 		i2c_stop();
 		state = IDLE;
 		break;
@@ -140,8 +168,14 @@ void cr14_work (void)
 		state++;
 		break;
 	case RD_FRAME+2:
-		i2c_write(FRAME_REG);
-		state++;
+		if (i2c_acked()) {
+			i2c_write(FRAME_REG);
+			state++;
+		} else {
+			busy = 1;
+			i2c_stop();
+			state = IDLE;
+		}
 		break;
 	case RD_FRAME+3:
 		i2c_restart();
@@ -152,12 +186,23 @@ void cr14_work (void)
 		state++;
 		break;
 	case RD_FRAME+5:
-		i2c_read(1);
-		state++;
+		if (i2c_acked()) {
+			i2c_read(1);
+			state++;
+		} else {
+			error = 1;
+			i2c_stop();
+			state = IDLE;
+		}
 		break;
 	case RD_FRAME+6:
 		length = i2c_getbyte();
 		if (!length) {
+			/* No answer */
+			state = RD_FRAME+9;
+		} else if (length == 0xFF) {
+			/* CRC error */
+			error = 0;
 			state = RD_FRAME+9;
 		} else {
 			if (length > FRAME_MAX)
@@ -197,8 +242,14 @@ void cr14_work (void)
 		state++;
 		break;
 	case WR_FRAME+2:
-		i2c_write(FRAME_REG);
-		state++;
+		if (i2c_acked()) {
+			i2c_write(FRAME_REG);
+			state++;
+		} else {
+			busy = 1;
+			i2c_stop();
+			state = IDLE;
+		}
 		break;
 	case WR_FRAME+3:
 		i2c_write(length);
@@ -213,8 +264,6 @@ void cr14_work (void)
 			state++;
 		break;
 	case WR_FRAME+5:
-		if (!i2c_acked())
-			putch('N');
 		i2c_stop();
 		state = IDLE;
 		break;

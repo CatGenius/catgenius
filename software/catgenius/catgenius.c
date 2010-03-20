@@ -56,6 +56,11 @@ void main (void)
 	/* Init the hardware */
 	flags = catgenie_init();
 
+	/* Initialize the serial port */
+	serial_init();
+
+	putst("\nCatGenius\n");
+
 	/* Initialize software timers */
 	timer_init();
 
@@ -67,9 +72,6 @@ void main (void)
 
 	/* Initialize the RFID tag */
 	srix4k_init();
-
-	/* Initialize the serial port */
-	serial_init();
 
 	/* Initialize the cat sensor */
 	catsensor_init();
@@ -95,8 +97,6 @@ void main (void)
 #ifndef __DEBUG
 		CLRWDT();
 #endif
-//	putch('A');
-
 	}
 }
 
