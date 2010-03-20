@@ -106,7 +106,7 @@ void putch(unsigned char c)
 		CLRWDT();
 	}
 	TXREG=c;
-	__delay_us(60);
+	__delay_us(600);
 }
 
 //gets a character from the serial port without timeout
@@ -162,19 +162,20 @@ void putchhex(unsigned char c)
 {
 	unsigned char temp;
 
-	// transmits in hex
+	temp = c >> 4;
 
-	temp=c;
+	if (temp < 10)
+		temp += '0';
+	else
+		temp += ('A' - 10);
+	putch(temp);
 
-	c=(c >> 4);
-	if (c<10) c+=48; else c+=55;
-	putch(c);
-
-	c=temp;
-
-	c=(c & 0x0F);
-	if (c<10) c+=48; else c+=55;
-	putch(c);
+	temp = c & 0x0F;
+	if (temp < 10)
+		temp += '0';
+	else
+		temp += ('A' - 10);
+	putch(temp);
 }
 
 void putinthex(unsigned int c)
@@ -226,8 +227,8 @@ void putst(register const char *str)
 	while((*str)!=0)
 	{
 		putch(*str);
-    if (*str==13) putch(10);
-    if (*str==10) putch(13);
+		if (*str==13) putch(10);
+		if (*str==10) putch(13);
 		str++;
 	}
 }
