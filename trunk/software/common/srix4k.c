@@ -31,7 +31,7 @@
 /* Global Data								      */
 /******************************************************************************/
 
-static struct timer	timer    = EXIRED;
+static struct timer	timer    = EXPIRED;
 static unsigned char	state = 0;
 
 static unsigned char	frame[8];

@@ -22,19 +22,21 @@ extern void catsensor_event (unsigned char detected);
 
 #define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
 
-#define	DEBOUNCE_TIME		(SECOND/37)	/* Multiples of 27ms */
+#define	PING_TIME		(SECOND / 10)	/* Ping every 100 ms */
+#define	DEBOUNCE_TIME		(3 * PING_TIME)	/* 3 pings */
 
 
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
 
-static bit			pinged       = 0;
-static bit			echoed       = 0;
-static bit			detected     = 0;
-static bit			detected_old = 0;
-static bit			debounced    = 0;
-static struct timer		debouncer    = NEVER;
+static bit			pinging		= 0;
+static bit			echoed		= 0;
+static bit			detected	= 0;
+static bit			detected_old	= 0;
+static bit			debounced	= 0;
+static struct timer		debouncer	= NEVER;
+static struct timer		pingtime	= EXPIRED;
 
 
 /******************************************************************************/
@@ -84,6 +86,31 @@ void catsensor_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	if (!pinging &&
+	    timeoutexpired(&pingtime)) {
+	    	/* Set timer for next ping */
+		settimeout(&pingtime, PING_TIME);
+		/* Reset the echo */
+		echoed = 0;
+		/* Set the pinging flag to enable detection */
+		pinging = 1;
+
+		/* Select frequency */
+		PR2 = 0x54 ;
+		/* Postscaler to 1:16 
+		 * Prescaler to 1:4
+		 * Timer 2 On */
+		T2CON = 0x7D ;
+		/* Select duty cycle  */
+		CCPR1L = 0x2A ;
+		/* Set PWM mode
+		 * Select duty cycle  */
+		CCP1CON = 0x1F ;
+		/* Clear timer 2 interrupt status */
+		TMR2IF = 0;
+		/* Enable timer 2 interrupt */
+		TMR2IE = 1;
+	}
 	/* Debounce the decouples 'detect' signal */
 	if (detected != detected_old) {
 		settimeout(&debouncer, DEBOUNCE_TIME);
@@ -113,7 +140,6 @@ void catsensor_term (void)
 }
 /* End: catsensor_term */
 
-//#define RMW 1
 void catsensor_isr_timer (void)
 /******************************************************************************/
 /* Function:	Timer interrupt service routine				      */
@@ -122,35 +148,24 @@ void catsensor_isr_timer (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if (pinged) {
+	if (pinging) {
 		/* End ping in progress */
-#if RMW
-		TRISC |= CATSENSOR_LED_MASK;
-#else
-		TRISC = I2C_SCL_MASK |		/* I2C SCL */
-			I2C_SDA_MASK |		/* I2C SDA */
-			UART_RXD_MASK |		/* UART RxD */
-			CATSENSOR_LED_PORT;
-#endif
-		pinged = 0;
+		pinging = 0;
+/* Disable timer 2 interrupt */
+PR2 = 0 ;
+/* Postscaler to 1:16 
+ * Prescaler to 1:4
+ * Timer 2 On */
+T2CON = 0 ;
+/* Select duty cycle  */
+CCPR1L = 0 ;
+TMR2IE = 0;
+TMR2IF = 0;
+TMR2ON = 0;
+CCP1CON = 0;
+CATSENSOR_LED_PORT &= ~CATSENSOR_LED_MASK;
 		/* The echo is the detection */
 		detected = echoed;
-		/* Increase prescaler for long idle */
-		T2CKPS1 = 1;
-	} else {
-		/* Reset the echo for the new ping */
-		echoed = 0;
-		/* Start new ping */
-#if RMW
-		TRISC &= ~CATSENSOR_LED_MASK;
-#else
-		TRISC = I2C_SCL_MASK |		/* I2C SCL */
-			I2C_SDA_MASK |		/* I2C SDA */
-			UART_RXD_MASK ;		/* UART RxD */
-#endif
-		pinged = 1;
-		/* Decrease prescaler for short ping */
-		T2CKPS1 = 0;
 	}
 }
 /* End: catsensor_isr_timer */
@@ -164,19 +179,10 @@ void catsensor_isr_input (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if ( (pinged) &&
-	     (CATSENSOR_PORT & CATSENSOR_MASK) )
-		/* Turn off emitter to reset the receiver */
-#if RMW
-		TRISC |= CATSENSOR_LED_MASK;
-#else
-		TRISC = I2C_SCL_MASK |		/* I2C SCL */
-			I2C_SDA_MASK |		/* I2C SDA */
-			UART_RXD_MASK |		/* UART RxD */
-			CATSENSOR_LED_PORT;
-#endif
-		/* Store the echo */
+	if ( (pinging) &&
+	     !(CATSENSOR_PORT & CATSENSOR_MASK) ) {
 		echoed = 1;
+	}
 }
 /* End: catsensor_isr_input */
 
