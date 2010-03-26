@@ -41,7 +41,7 @@
 /* Global Data								      */
 /******************************************************************************/
 
-static struct timer	cartridgetimeout= EXIRED;
+static struct timer	cartridgetimeout= EXPIRED;
 static struct timer	holdtimeout	= NEVER;
 
 /* Keyboard status bits */

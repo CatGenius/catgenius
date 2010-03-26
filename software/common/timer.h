@@ -13,7 +13,7 @@
 #define HOUR		(60 * (MINUTE))		/* Number of timer ticks per hour */
 #define MILISECOND	(SECOND/1000)		/* Number of timer ticks per milisecond */
 
-#define EXIRED		{0x0000, 0x00000000}
+#define EXPIRED		{0x0000, 0x00000000}
 #define NEVER		{0xFFFF, 0xFFFFFFFF}
 
 struct timer {
