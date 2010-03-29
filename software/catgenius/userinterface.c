@@ -19,23 +19,28 @@
 /* Macros								      */
 /******************************************************************************/
 
-#define HOLDTIME		(3 * SECOND)
-#define LEVEL_TIMEOUT		(2 * SECOND)
+#define HOLDTIME		( 3 * SECOND)
+#define LEVEL_TIMEOUT		( 5 * SECOND)
+#define CAT_TIMEOUT		(10 * SECOND)
 
 #define DISP_AUTOMODE		0
 #define DISP_CARTRIDGELEVEL	1
 #define DISP_ERROR		2
 
-#define AUTO_MANUAL		0
-#define AUTO_TIMED1		1
-#define AUTO_TIMED2		2
-#define AUTO_TIMED3		3
-#define AUTO_TIMED4		4
-#define AUTO_DETECTED1ON1	5
-#define AUTO_DETECTED1ON2	6
-#define AUTO_DETECTED1ON3	7
-#define AUTO_DETECTED1ON4	8
-#define AUTO_DETECTED		9
+#define STATE_IDLE		0
+#define STATE_CAT		1
+#define STATE_RUNNING		2
+
+#define AUTO_MANUAL		0	/* Nothing automatic, manual only */
+#define AUTO_TIMED1		1	/* Full wash every 24 hours */
+#define AUTO_TIMED2		2	/* Full wash every 12 hours */
+#define AUTO_TIMED3		3	/* Full wash every 8 hours */
+#define AUTO_TIMED4		4	/* Full wash every 6 hours */
+#define AUTO_DETECTED1ON1	5	/* Full wash every use */
+#define AUTO_DETECTED1ON2	6	/* Full wash/Scoop only 1:2 uses */
+#define AUTO_DETECTED1ON3	7	/* Full wash/Scoop only 1:3 uses */
+#define AUTO_DETECTED1ON4	8	/* Full wash/Scoop only 1:4 uses */
+#define AUTO_DETECTED		9	/* Scoop only every use*/
 
 /******************************************************************************/
 /* Global Data								      */
@@ -43,6 +48,8 @@
 
 static struct timer	cartridgetimeout= EXPIRED;
 static struct timer	holdtimeout	= NEVER;
+static struct timer	autotimer	= NEVER;
+static struct timer	cattimer	= EXPIRED;
 
 /* Keyboard status bits */
 static bit		muteupevent	= 0;
@@ -50,6 +57,10 @@ static bit		locked		= 0;
 static bit		start_button	= 0;
 static bit		setup_button	= 0;
 
+static bit		cat_present	= 0;
+
+static unsigned char	state		= STATE_IDLE;
+static unsigned char	interval	= 0;
 static unsigned char	disp_mode	= DISP_AUTOMODE;
 static unsigned char	auto_mode	= AUTO_MANUAL;
 static unsigned char	cart_level	= 100;
@@ -60,11 +71,14 @@ static unsigned char	error_nr	= 0;
 /* Local Prototypes							      */
 /******************************************************************************/
 
-static void		update_display	(unsigned char mode);
-static void		setup	(void);
-static void		start	(void);
-static void		level	(void);
-static void		lock	(void);
+static void	update_display		(unsigned char mode);
+static void	setup_short		(void);
+static void	setup_long		(void);
+static void	start_short		(void);
+static void	start_long		(void);
+static void	both_short		(void);
+static void	both_long		(void);
+static void	update_autotimer	(void);
 
 
 /******************************************************************************/
@@ -98,6 +112,77 @@ void userinterface_work (void)
 		else
 			disp_mode = DISP_AUTOMODE;
 		update_display(disp_mode);
+	}
+
+	switch(state) {
+	default:
+		state = STATE_IDLE;
+	case STATE_IDLE:
+		/* Check if it's time for a timed wash */
+		if (timeoutexpired(&autotimer)) {
+			update_autotimer();
+			state = STATE_CAT;
+		}
+		break;
+	case STATE_CAT:
+		/* Wait until the cat has gone */
+		if (!cat_present && timeoutexpired(&cattimer)) {
+			switch(auto_mode) {
+			case AUTO_TIMED1:
+			case AUTO_TIMED2:
+			case AUTO_TIMED3:
+			case AUTO_TIMED4:
+			case AUTO_DETECTED1ON1:
+				litterlanguage_mode(0);
+				break;
+			case AUTO_DETECTED1ON2:
+				if (interval >= 1) {
+					litterlanguage_mode(0);
+					interval = 0;
+				} else {
+					litterlanguage_mode(1);
+					interval ++;
+				}
+			case AUTO_DETECTED1ON3:
+				if (interval >= 2) {
+					litterlanguage_mode(0);
+					interval = 0;
+				} else {
+					litterlanguage_mode(1);
+					interval ++;
+				}
+				break;
+			case AUTO_DETECTED1ON4:
+				if (interval >= 3) {
+					litterlanguage_mode(0);
+					interval = 0;
+				} else {
+					litterlanguage_mode(1);
+					interval ++;
+				}
+				break;
+			case AUTO_DETECTED:
+				litterlanguage_mode(1);
+				break;
+			case AUTO_MANUAL:
+			default:
+				/* Don't change the mode */
+				break;
+			}
+			litterlanguage_start();
+			state = STATE_RUNNING;
+
+			/* Update the display (to stop Cat LED from blinking */
+			update_display(disp_mode);
+		}
+		break;
+	case STATE_RUNNING:
+		/* Wait for the program to end */
+		if (!litterlanguage_running()) {
+			timeoutnow(&cattimer);
+			state = STATE_IDLE;
+		}
+		break;
 	}
 }
 /* userinterface_work */
@@ -138,20 +223,23 @@ void startbutton_event (unsigned char up)
 			if (locked)
 				set_LED_Locked(0xFF, 1);
 			else
-				/* Handle setup up */
-				start();
+				if (timeoutexpired(&holdtimeout))
+					/* Handle long press up */
+					start_long();
+				else
+					/* Handle short press up */
+					start_short();
 		else
 			if (!setup_button) {
 				if (timeoutexpired(&holdtimeout))
-					/* Handle long double-press up */
-					lock();
+					/* Handle long both press up */
+					both_long();
 				else
-					/* Handle short double-press up */
+					/* Handle short both press up */
 					if (locked)
 						set_LED_Locked(0xFF, 1);
 					else
-						/* Handle level check */
-						level();
+						both_short();
 				muteupevent = 0;
 			}
 	}
@@ -182,25 +270,54 @@ void setupbutton_event (unsigned char up)
 			if (locked)
 				set_LED_Locked(0xFF, 1);
 			else
-				/* Handle setup up */
-				setup();
+				if (timeoutexpired(&holdtimeout))
+					/* Handle long press up */
+					setup_long();
+				else
+					/* Handle short press up */
+					setup_short();
 		else
 			if (!start_button) {
 				if (timeoutexpired(&holdtimeout))
-					/* Handle long double-press up */
-					lock();
+					/* Handle long both press up */
+					both_long();
 				else
-					/* Handle short double-press up */
+					/* Handle short both press up */
 					if (locked)
 						set_LED_Locked(0xFF, 1);
 					else
-						/* Handle level check */
-						level();
+						both_short();
 				muteupevent = 0;
 			}
 	}
 }
 /* setupbutton_event */
+
+
+void catsensor_event (unsigned char detected)
+/******************************************************************************/
+/* Function:	catsensor_event						      */
+/*		- Handle state changes of cat sensor			      */
+/* History :	13 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
+{
+	cat_present = detected;
+
+	settimeout(&cattimer, CAT_TIMEOUT);
+
+	if ( (auto_mode == AUTO_DETECTED1ON1) ||
+	     (auto_mode == AUTO_DETECTED1ON2) ||
+	     (auto_mode == AUTO_DETECTED1ON3) ||
+	     (auto_mode == AUTO_DETECTED1ON4) ||
+	     (auto_mode == AUTO_DETECTED) ) {
+	     	if (detected && state == STATE_IDLE)
+	     		state = STATE_CAT;
+		/* Update the display */
+		update_display(disp_mode);
+	}
+}
+/* catsensor_event */
 
 
 /******************************************************************************/
@@ -224,74 +341,31 @@ static void update_display (unsigned char mode)
 		default:
 			auto_mode = 0;
 		case AUTO_MANUAL:
-			set_LED(1, 0);
-			set_LED(2, 0);
-			set_LED(3, 0);
-			set_LED(4, 0);
-			set_LED_Cat(0x00, 0);
-			break;
 		case AUTO_TIMED1:
-			set_LED(1, 1);
-			set_LED(2, 0);
-			set_LED(3, 0);
-			set_LED(4, 0);
-			set_LED_Cat(0x00, 0);
-			break;
 		case AUTO_TIMED2:
-			set_LED(1, 0);
-			set_LED(2, 1);
-			set_LED(3, 0);
-			set_LED(4, 0);
-			set_LED_Cat(0x00, 0);
-			break;
 		case AUTO_TIMED3:
-			set_LED(1, 0);
-			set_LED(2, 0);
-			set_LED(3, 1);
-			set_LED(4, 0);
-			set_LED_Cat(0x00, 0);
-			break;
 		case AUTO_TIMED4:
-			set_LED(1, 0);
-			set_LED(2, 0);
-			set_LED(3, 0);
-			set_LED(4, 1);
+			set_LED(1, auto_mode == AUTO_TIMED1);
+			set_LED(2, auto_mode == AUTO_TIMED2);
+			set_LED(3, auto_mode == AUTO_TIMED3);
+			set_LED(4, auto_mode == AUTO_TIMED4);
 			set_LED_Cat(0x00, 0);
 			break;
 		case AUTO_DETECTED1ON1:
-			set_LED(1, 1);
-			set_LED(2, 0);
-			set_LED(3, 0);
-			set_LED(4, 0);
-			set_LED_Cat(0xFF, 1);
-			break;
 		case AUTO_DETECTED1ON2:
-			set_LED(1, 1);
-			set_LED(2, 1);
-			set_LED(3, 0);
-			set_LED(4, 0);
-			set_LED_Cat(0xFF, 1);
-			break;
 		case AUTO_DETECTED1ON3:
-			set_LED(1, 1);
-			set_LED(2, 0);
-			set_LED(3, 1);
-			set_LED(4, 0);
-			set_LED_Cat(0xFF, 1);
-			break;
 		case AUTO_DETECTED1ON4:
-			set_LED(1, 1);
-			set_LED(2, 0);
-			set_LED(3, 0);
-			set_LED(4, 1);
-			set_LED_Cat(0xFF, 1);
-			break;
 		case AUTO_DETECTED:
-			set_LED(1, 0);
-			set_LED(2, 0);
-			set_LED(3, 0);
-			set_LED(4, 0);
-			set_LED_Cat(0xFF, 1);
+			set_LED(1, auto_mode != AUTO_DETECTED);
+			set_LED(2, auto_mode == AUTO_DETECTED1ON2);
+			set_LED(3, auto_mode == AUTO_DETECTED1ON3);
+			set_LED(4, auto_mode == AUTO_DETECTED1ON4);
+			if (cat_present)
+				set_LED_Cat(0x55, 1);
+			else if (state == STATE_CAT)
+				set_LED_Cat(0xFA, 1);
+			else
+				set_LED_Cat(0xFF, 1);
 			break;
 		}
 		break;
@@ -319,7 +393,7 @@ static void update_display (unsigned char mode)
 }
 
 
-static void setup (void)
+static void setup_short (void)
 {
 	switch (disp_mode) {
 	default:
@@ -328,7 +402,14 @@ static void setup (void)
 		/* Increase auto mode */
 		if (++auto_mode > AUTO_DETECTED)
 			auto_mode = AUTO_MANUAL;
+
+		/* Reset state machine */
+		state = STATE_IDLE;
+		interval = 0;
+
 		/* Reset timers and cat sensor */
+		update_autotimer();
+		timeoutnow(&cattimer);
 
 		/* Update the display */
 		update_display(disp_mode);
@@ -358,14 +439,21 @@ static void setup (void)
 	}
 }
 
-static void start (void)
+static void setup_long (void)
+{
+}
+
+static void start_short (void)
 {
 	if (!litterlanguage_running())
 		litterlanguage_start();
 }
 
+static void start_long (void)
+{
+}
 
-static void level (void)
+static void both_short (void)
 {
 	/* Swich display to cartridge level mode */
 	disp_mode = DISP_CARTRIDGELEVEL;
@@ -376,11 +464,32 @@ static void level (void)
 }
 
 
-static void lock (void)
+static void both_long (void)
 {
 	locked = !locked;
 	if (locked)
 		set_LED_Locked(0xFF, 1);
 	else
 		set_LED_Locked(0x00, 0);
+}
+
+static void update_autotimer (void)
+{
+	switch (auto_mode) {
+	case AUTO_TIMED1:
+//		settimeout(&autotimer, 24 * 60 * 60 * SECOND);
+		break;
+	case AUTO_TIMED2:
+//		settimeout(&autotimer, 12 * 60 * 60 * SECOND);
+		break;
+	case AUTO_TIMED3:
+//		settimeout(&autotimer,  8 * 60 * 60 * SECOND);
+		break;
+	case AUTO_TIMED4:
+//		settimeout(&autotimer,  6 * 60 * 60 * SECOND);
+		break;
+	default:
+//		timeoutnever(&autotimer);
+		break;
+	}
 }
