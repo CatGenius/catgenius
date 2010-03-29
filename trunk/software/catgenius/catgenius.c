@@ -100,21 +100,6 @@ void main (void)
 	}
 }
 
-void catsensor_event (unsigned char detected)
-/******************************************************************************/
-/* Function:	catsensor_event						      */
-/*		- Handle state changes of cat sensor			      */
-/* History :	13 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-	if (detected)
-		set_LED_Cat(0x55, 1);
-	else
-		set_LED_Cat(0x00, 0);
-}
-/* catsensor_event */
-
 void watersensor_event (unsigned char undetected)
 /******************************************************************************/
 /* Function:	watersensor_event					      */
