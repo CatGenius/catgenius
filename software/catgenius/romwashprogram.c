@@ -279,7 +279,8 @@ static const struct command	washprogram[] = {
 	{CMD_WAITTIME,	9170},
 	{CMD_ARM,	ARM_DOWN},	/* Dry + 48 */
 	{CMD_WAITTIME,	6474},
-	{CMD_ARM,	ARM_UP},	/* Dry + 49 */
+	{CMD_DRYER,	0},		/* Dry + 49 */
+	{CMD_ARM,	ARM_UP},
 	{CMD_WAITTIME,	18268},
 	{CMD_ARM,	ARM_DOWN},	/* Dry + 50 */
 	{CMD_BOWL,	BOWL_STOP},
