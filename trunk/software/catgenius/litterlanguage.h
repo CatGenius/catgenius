@@ -49,8 +49,7 @@ void		litterlanguage_work	(void) ;
 void		litterlanguage_term	(void) ;
 
 /* Control */
-void		litterlanguage_mode	(unsigned char	justscoop) ;
-void		litterlanguage_start	(void) ;
+void		litterlanguage_start	(unsigned char	fullwash) ;
 unsigned char	litterlanguage_running	(void) ;
 void		litterlanguage_pause	(unsigned char	pause) ;
 
