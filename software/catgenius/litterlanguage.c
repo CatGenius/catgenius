@@ -25,7 +25,7 @@
 /******************************************************************************/
 
 static unsigned char	prg_source	= 0;
-static unsigned char	prg_scooponly	= 0;
+static unsigned char	prg_fullwash	= 0;
 
 static unsigned char	cmd_state	= 0;
 static unsigned char	cmd_pointer	= 0;
@@ -121,16 +121,10 @@ void litterlanguage_term (void)
 /* litterlanguage_term */
 
 
-void litterlanguage_mode (unsigned char justscoop)
-{
-	if (!cmd_pointer)
-		prg_scooponly = justscoop ;
-}
-
-
-void litterlanguage_start (void)
+void litterlanguage_start (unsigned char fullwash)
 {
 	if (!cmd_pointer) {
+		prg_fullwash = fullwash;
 		cmd_pointer = 0;
 		cmd_state ++ ;
 	}
@@ -175,8 +169,8 @@ static void exe_command (void)
 	case CMD_START:
 		/* Check if this is a valid program for us */
 		if( ((command.arg & 0x00FF) <= CMD_LAST) && 
-		    ( (prg_scooponly && (command.arg & FLAGS_DRYRUN)) ||
-		      (!prg_scooponly && (command.arg & FLAGS_WETRUN)) ) ) {
+		    ( (!prg_fullwash && (command.arg & FLAGS_DRYRUN)) ||
+		      (prg_fullwash && (command.arg & FLAGS_WETRUN)) ) ) {
 			cmd_pointer++;
 			cmd_state -= 2;
 		} else {
@@ -194,7 +188,7 @@ static void exe_command (void)
 		cmd_state -= 2;
 		break;
 	case CMD_WATER:
-		if (!prg_scooponly) {
+		if (prg_fullwash) {
 			set_Water((unsigned char)command.arg);
 			if (command.arg)
 				settimeout(&timer_fill, MAX_FILLTIME);
@@ -205,13 +199,13 @@ static void exe_command (void)
 		cmd_state -= 2;
 		break;
 	case CMD_DOSAGE:
-		if (!prg_scooponly)
+		if (prg_fullwash)
 			set_Dosage((unsigned char)command.arg);
 		cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_PUMP:
-		if (!prg_scooponly) {
+		if (prg_fullwash) {
 			set_Pump((unsigned char)command.arg);
 			if (command.arg)
 				settimeout(&timer_drain, MAX_DRAINTIME);
@@ -222,7 +216,7 @@ static void exe_command (void)
 		cmd_state -= 2;
 		break;
 	case CMD_DRYER:
-		if (!prg_scooponly)
+		if (prg_fullwash)
 			set_Dryer((unsigned char)command.arg);
 		cmd_pointer++;
 		cmd_state -= 2;
@@ -233,7 +227,7 @@ static void exe_command (void)
 		cmd_state++;
 		break;
 	case CMD_WAITWATER:
-		if (!prg_scooponly)
+		if (prg_fullwash)
 			cmd_state++;
 		else {
 			cmd_pointer++;
@@ -241,21 +235,21 @@ static void exe_command (void)
 		}
 		break;
 	case CMD_SKIPIFDRY:
-		if (prg_scooponly)
+		if (!prg_fullwash)
 			cmd_pointer += command.arg + 1;
 		else
 			cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_SKIPIFWET:
-		if (!prg_scooponly)
+		if (prg_fullwash)
 			cmd_pointer += command.arg + 1;
 		else
 			cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_AUTODOSE:
-		if (!prg_scooponly) {
+		if (prg_fullwash) {
 			settimeout(&timer_autodose, command.arg);
 			set_Dosage(1);
 		}

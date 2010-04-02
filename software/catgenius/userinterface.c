@@ -19,9 +19,9 @@
 /* Macros								      */
 /******************************************************************************/
 
-#define HOLDTIME		( 3 * SECOND)
-#define LEVEL_TIMEOUT		( 5 * SECOND)
-#define CAT_TIMEOUT		(10 * SECOND)
+#define HOLDTIME		(2 * SECOND)	/* Consider 2 second a long button press*/
+#define LEVEL_TIMEOUT		(5 * SECOND)	/* Show the level for 5 seconds */
+#define CAT_TIMEOUT		(4 * 60 * SECOND)
 
 #define DISP_AUTOMODE		0
 #define DISP_CARTRIDGELEVEL	1
@@ -42,6 +42,29 @@
 #define AUTO_DETECTED1ON4	8	/* Full wash/Scoop only 1:4 uses */
 #define AUTO_DETECTED		9	/* Scoop only every use*/
 
+
+#define update_autotimer(mode)						\
+do {									\
+	switch (mode) {						\
+	case AUTO_TIMED1:						\
+		settimeout(&autotimer, 24 * 60 * 60 * SECOND);		\
+		break;							\
+	case AUTO_TIMED2:						\
+		settimeout(&autotimer, 12 * 60 * 60 * SECOND);		\
+		break;							\
+	case AUTO_TIMED3:						\
+		settimeout(&autotimer,  8 * 60 * 60 * SECOND);		\
+		break;							\
+	case AUTO_TIMED4:						\
+		settimeout(&autotimer,  6 * 60 * 60 * SECOND);		\
+		break;							\
+	default:							\
+		timeoutnever(&autotimer);				\
+		break;							\
+	}								\
+} while(0)
+
+
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
@@ -58,6 +81,8 @@ static bit		start_button	= 0;
 static bit		setup_button	= 0;
 
 static bit		cat_present	= 0;
+static bit		cat_detected	= 0;
+static bit		full_wash	= 0;
 
 static unsigned char	state		= STATE_IDLE;
 static unsigned char	interval	= 0;
@@ -78,7 +103,6 @@ static void	start_short		(void);
 static void	start_long		(void);
 static void	both_short		(void);
 static void	both_long		(void);
-static void	update_autotimer	(void);
 
 
 /******************************************************************************/
@@ -120,59 +144,23 @@ void userinterface_work (void)
 	case STATE_IDLE:
 		/* Check if it's time for a timed wash */
 		if (timeoutexpired(&autotimer)) {
-			update_autotimer();
-			state = STATE_CAT;
+			/* Schedule the next timed wash */
+			update_autotimer(auto_mode);
+			/* Skip the actual washing is no cat has been detected */
+			if (cat_detected) {
+				state = STATE_CAT;
+				/* Update the display */
+				update_display(disp_mode);
+			}
 		}
 		break;
 	case STATE_CAT:
 		/* Wait until the cat has gone */
 		if (!cat_present && timeoutexpired(&cattimer)) {
-			switch(auto_mode) {
-			case AUTO_TIMED1:
-			case AUTO_TIMED2:
-			case AUTO_TIMED3:
-			case AUTO_TIMED4:
-			case AUTO_DETECTED1ON1:
-				litterlanguage_mode(0);
-				break;
-			case AUTO_DETECTED1ON2:
-				if (interval >= 1) {
-					litterlanguage_mode(0);
-					interval = 0;
-				} else {
-					litterlanguage_mode(1);
-					interval ++;
-				}
-			case AUTO_DETECTED1ON3:
-				if (interval >= 2) {
-					litterlanguage_mode(0);
-					interval = 0;
-				} else {
-					litterlanguage_mode(1);
-					interval ++;
-				}
-				break;
-			case AUTO_DETECTED1ON4:
-				if (interval >= 3) {
-					litterlanguage_mode(0);
-					interval = 0;
-				} else {
-					litterlanguage_mode(1);
-					interval ++;
-				}
-				break;
-			case AUTO_DETECTED:
-				litterlanguage_mode(1);
-				break;
-			case AUTO_MANUAL:
-			default:
-				/* Don't change the mode */
-				break;
-			}
-			litterlanguage_start();
+			litterlanguage_start(full_wash);
 			state = STATE_RUNNING;
 
-			/* Update the display (to stop Cat LED from blinking */
+			/* Update the display (to stop Cat LED from blinking) */
 			update_display(disp_mode);
 		}
 		break;
@@ -180,6 +168,11 @@ void userinterface_work (void)
 		/* Wait for the program to end */
 		if (!litterlanguage_running()) {
 			timeoutnow(&cattimer);
+			cat_detected = 0;
+			if (full_wash)
+				interval = 0;
+			else
+				interval ++;
 			state = STATE_IDLE;
 		}
 		break;
@@ -302,17 +295,42 @@ void catsensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	/* Update the actual cat status */
 	cat_present = detected;
 
-	settimeout(&cattimer, CAT_TIMEOUT);
+	/* Trigger detection on rising edge only */
+	if (detected)
+		cat_detected = 1;
+
+	/* Update cat timeout on both edges, once detection is eminent */
+	if (cat_detected)
+		settimeout(&cattimer, CAT_TIMEOUT);
 
 	if ( (auto_mode == AUTO_DETECTED1ON1) ||
 	     (auto_mode == AUTO_DETECTED1ON2) ||
 	     (auto_mode == AUTO_DETECTED1ON3) ||
 	     (auto_mode == AUTO_DETECTED1ON4) ||
 	     (auto_mode == AUTO_DETECTED) ) {
-	     	if (detected && state == STATE_IDLE)
-	     		state = STATE_CAT;
+	     	if (cat_detected && state == STATE_IDLE) {
+			switch(auto_mode) {
+			case AUTO_DETECTED1ON1:
+				full_wash = 1;
+				break;
+			case AUTO_DETECTED1ON2:
+				full_wash = (interval >= 1);
+				break;
+			case AUTO_DETECTED1ON3:
+				full_wash = (interval >= 2);
+				break;
+			case AUTO_DETECTED1ON4:
+				full_wash = (interval >= 3);
+				break;
+			case AUTO_DETECTED:
+				full_wash = 0;
+				break;
+			}
+			state = STATE_CAT;
+		}
 		/* Update the display */
 		update_display(disp_mode);
 	}
@@ -362,8 +380,11 @@ static void update_display (unsigned char mode)
 			set_LED(4, auto_mode == AUTO_DETECTED1ON4);
 			if (cat_present)
 				set_LED_Cat(0x55, 1);
-			else if (state == STATE_CAT)
-				set_LED_Cat(0xFA, 1);
+			else if (cat_detected)
+				if (full_wash)
+					set_LED_Cat(0xFA, 1);
+				else
+					set_LED_Cat(0xFE, 1);
 			else
 				set_LED_Cat(0xFF, 1);
 			break;
@@ -403,13 +424,21 @@ static void setup_short (void)
 		if (++auto_mode > AUTO_DETECTED)
 			auto_mode = AUTO_MANUAL;
 
+		if ( (auto_mode == AUTO_TIMED1) ||
+		     (auto_mode == AUTO_TIMED2) ||
+		     (auto_mode == AUTO_TIMED3) ||
+		     (auto_mode == AUTO_TIMED4) ) {
+			full_wash = 1;
+		}
+
 		/* Reset state machine */
 		state = STATE_IDLE;
 		interval = 0;
 
 		/* Reset timers and cat sensor */
-		update_autotimer();
+		update_autotimer(auto_mode);
 		timeoutnow(&cattimer);
+		cat_detected = 0;
 
 		/* Update the display */
 		update_display(disp_mode);
@@ -445,12 +474,30 @@ static void setup_long (void)
 
 static void start_short (void)
 {
-	if (!litterlanguage_running())
-		litterlanguage_start();
+	if (!litterlanguage_running()) {
+		/* Scoop-only program */
+		full_wash = 0;
+		/* Start the program */
+		litterlanguage_start(full_wash);
+		/* Update the state machine */
+		state = STATE_RUNNING;
+		/* Update the display */
+		update_display(disp_mode);
+	}
 }
 
 static void start_long (void)
 {
+	if (!litterlanguage_running()) {
+		/* Full washing program */
+		full_wash = 1;
+		/* Start the program */
+		litterlanguage_start(full_wash);
+		/* Update the state machine */
+		state = STATE_RUNNING;
+		/* Update the display */
+		update_display(disp_mode);
+	}
 }
 
 static void both_short (void)
@@ -471,25 +518,4 @@ static void both_long (void)
 		set_LED_Locked(0xFF, 1);
 	else
 		set_LED_Locked(0x00, 0);
-}
-
-static void update_autotimer (void)
-{
-	switch (auto_mode) {
-	case AUTO_TIMED1:
-//		settimeout(&autotimer, 24 * 60 * 60 * SECOND);
-		break;
-	case AUTO_TIMED2:
-//		settimeout(&autotimer, 12 * 60 * 60 * SECOND);
-		break;
-	case AUTO_TIMED3:
-//		settimeout(&autotimer,  8 * 60 * 60 * SECOND);
-		break;
-	case AUTO_TIMED4:
-//		settimeout(&autotimer,  6 * 60 * 60 * SECOND);
-		break;
-	default:
-//		timeoutnever(&autotimer);
-		break;
-	}
 }
