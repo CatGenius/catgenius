@@ -21,10 +21,10 @@
 #define CMD_START	0x00	/* Designates the start of a program. Argument is CMD_LAST or-ed with flags */
 #define CMD_BOWL	0x01	/* Controls the bowl. Argument is what the bowl should do */
 #define CMD_ARM		0x02	/* Controls the arm. Argument is what the arm should do */
-#define CMD_WATER	0x03	/* Controls the water valve. Argument is */
-#define CMD_DOSAGE	0x04
-#define CMD_PUMP	0x05
-#define CMD_DRYER	0x06
+#define CMD_WATER	0x03	/* Controls the water valve. Argument is 1 for on, 0 for off */
+#define CMD_DOSAGE	0x04	/* Controls the dosage pump. Argument is 1 for on, 0 for off */
+#define CMD_PUMP	0x05	/* Controls the hopper pump. Argument is 1 for on, 0 for off */
+#define CMD_DRYER	0x06	/* Controls the dryer fan. Argument is 1 for on, 0 for off */
 
 #define CMD_WAITTIME	0x08
 #define CMD_WAITWATER	0x09
@@ -49,7 +49,7 @@ void		litterlanguage_work	(void) ;
 void		litterlanguage_term	(void) ;
 
 /* Control */
-void		litterlanguage_start	(unsigned char	fullwash) ;
+void		litterlanguage_start	(unsigned char	wet) ;
 unsigned char	litterlanguage_running	(void) ;
 void		litterlanguage_pause	(unsigned char	pause) ;
 

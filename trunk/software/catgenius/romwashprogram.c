@@ -17,17 +17,22 @@
 /* Macros								      */
 /******************************************************************************/
 
+//#define SIMULATION
+
 
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
 
-static unsigned char		cmdptr = 0;
+static unsigned int		cmdptr = 0;
 
 static const struct command	washprogram[] = {
 	{CMD_START,	CMD_LAST | 
 			FLAGS_DRYRUN |
 			FLAGS_WETRUN },
+#ifdef SIMULATION
+	{CMD_WAITTIME,	3000},
+#else /* SIMULATION */
 	{CMD_BOWL,	BOWL_CCW},	/* Scoop 1 */
 	{CMD_ARM,	ARM_DOWN},
 	{CMD_WAITTIME,	13217},
@@ -286,6 +291,7 @@ static const struct command	washprogram[] = {
 	{CMD_BOWL,	BOWL_STOP},
 	{CMD_WAITTIME,	2832},
 	{CMD_ARM,	ARM_STOP},	/* Dry + 51 */
+#endif /* SIMULATION */
 	{CMD_END,	0}
 };
 
@@ -299,12 +305,12 @@ static const struct command	washprogram[] = {
 /* Global Implementations						      */
 /******************************************************************************/
 
-void romwashprogram_getcmd (unsigned char cmd_pointer)
+void romwashprogram_reqcmd (unsigned int cmd_pointer)
 {
 	cmdptr = cmd_pointer;
 }
 
-unsigned char romwashprogram_gotcmd (struct command *command)
+unsigned char romwashprogram_getcmd (struct command *command)
 {
 	command->cmd = washprogram[cmdptr].cmd;
 	command->arg = washprogram[cmdptr].arg;
