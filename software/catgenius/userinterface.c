@@ -96,7 +96,7 @@ static unsigned char	error_nr	= 0;
 /* Local Prototypes							      */
 /******************************************************************************/
 
-static void	update_display		(unsigned char mode);
+static void	update_display		(void);
 static void	setup_short		(void);
 static void	setup_long		(void);
 static void	start_short		(void);
@@ -135,7 +135,7 @@ void userinterface_work (void)
 			disp_mode = DISP_ERROR;
 		else
 			disp_mode = DISP_AUTOMODE;
-		update_display(disp_mode);
+		update_display();
 	}
 
 	switch(state) {
@@ -150,7 +150,7 @@ void userinterface_work (void)
 			if (cat_detected) {
 				state = STATE_CAT;
 				/* Update the display */
-				update_display(disp_mode);
+				update_display();
 			}
 		}
 		break;
@@ -161,7 +161,7 @@ void userinterface_work (void)
 			state = STATE_RUNNING;
 
 			/* Update the display (to stop Cat LED from blinking) */
-			update_display(disp_mode);
+			update_display();
 		}
 		break;
 	case STATE_RUNNING:
@@ -174,6 +174,7 @@ void userinterface_work (void)
 			else
 				interval ++;
 			state = STATE_IDLE;
+			update_display();
 		}
 		break;
 	}
@@ -332,7 +333,7 @@ void catsensor_event (unsigned char detected)
 			state = STATE_CAT;
 		}
 		/* Update the display */
-		update_display(disp_mode);
+		update_display();
 	}
 }
 /* catsensor_event */
@@ -342,10 +343,8 @@ void catsensor_event (unsigned char detected)
 /* Local Implementations						      */
 /******************************************************************************/
 
-static void update_display (unsigned char mode)
+static void update_display ()
 {
-	if (mode != disp_mode)
-		return;
 	switch (disp_mode) {
 	default:
 		disp_mode = DISP_AUTOMODE;
@@ -378,9 +377,9 @@ static void update_display (unsigned char mode)
 			set_LED(2, auto_mode == AUTO_DETECTED1ON2);
 			set_LED(3, auto_mode == AUTO_DETECTED1ON3);
 			set_LED(4, auto_mode == AUTO_DETECTED1ON4);
-			if (cat_present)
+			if ((cat_present) && (state != STATE_RUNNING))
 				set_LED_Cat(0x55, 1);
-			else if (cat_detected)
+			else if ((cat_detected) && (state != STATE_RUNNING))
 				if (full_wash)
 					set_LED_Cat(0xFA, 1);
 				else
@@ -441,7 +440,7 @@ static void setup_short (void)
 		cat_detected = 0;
 
 		/* Update the display */
-		update_display(disp_mode);
+		update_display();
 		break;
 
 	case DISP_CARTRIDGELEVEL:
@@ -460,7 +459,7 @@ static void setup_short (void)
 		/* Set new timeout to return to auto- or errormode */
 		settimeout(&cartridgetimeout, LEVEL_TIMEOUT);
 		/* Update the display */
-		update_display(disp_mode);
+		update_display();
 		break;
 
 	case DISP_ERROR:
@@ -482,7 +481,7 @@ static void start_short (void)
 		/* Update the state machine */
 		state = STATE_RUNNING;
 		/* Update the display */
-		update_display(disp_mode);
+		update_display();
 	}
 }
 
@@ -496,7 +495,7 @@ static void start_long (void)
 		/* Update the state machine */
 		state = STATE_RUNNING;
 		/* Update the display */
-		update_display(disp_mode);
+		update_display();
 	}
 }
 
@@ -507,7 +506,7 @@ static void both_short (void)
 	/* Set timeout to return to auto- or errormode */
 	settimeout(&cartridgetimeout, LEVEL_TIMEOUT);
 	/* Update the display */
-	update_display(disp_mode);
+	update_display();
 }
 
 

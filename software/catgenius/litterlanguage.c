@@ -25,10 +25,10 @@
 /******************************************************************************/
 
 static unsigned char	prg_source	= 0;
-static unsigned char	prg_fullwash	= 0;
+static bit		wet_program	= 0;
 
 static unsigned char	cmd_state	= 0;
-static unsigned char	cmd_pointer	= 0;
+static unsigned int	cmd_pointer	= 0;
 static struct command	command;
 
 static struct timer	timer_waitcmd   = NEVER;
@@ -41,8 +41,8 @@ static struct timer	timer_autodose  = NEVER;
 /* Local Prototypes							      */
 /******************************************************************************/
 
-static void		get_command (unsigned char cmd_pointer);
-static unsigned char	got_command (struct command *command);
+static void		req_command (unsigned int	cmd_pointer);
+static unsigned char	get_command (struct command	*command);
 static void		exe_command (void);
 static void		wait_command (void);
 
@@ -75,10 +75,28 @@ void litterlanguage_work (void)
 	if (timeoutexpired(&timer_fill)) {
 		/* Fill error */
 		/* Pauze */
+//		set_Bowl(BOWL_STOP);
+//		set_Arm(ARM_STOP);
+//		set_Water(0);
+//		set_Dosage(0);
+//		set_Pump(0);
+//		set_Dryer(0);
+//		set_Beeper(0x01, 1);
+//		set_LED_Error(0x01, 1);
+//		return;
 	}
 	if (timeoutexpired(&timer_drain)) {
 		/* Drain error */
 		/* Pauze */
+//		set_Bowl(BOWL_STOP);
+//		set_Arm(ARM_STOP);
+//		set_Water(0);
+//		set_Dosage(0);
+//		set_Pump(0);
+//		set_Dryer(0);
+//		set_Beeper(0x05, 1);
+//		set_LED_Error(0x05, 1);
+//		return;
 	}
 
 	/* Check auto command timeouts */
@@ -91,11 +109,11 @@ void litterlanguage_work (void)
 	case 0:	/* Idle */
 		break;
 	case 1:	/* Fetch a new command*/
-		get_command(cmd_pointer);
+		req_command(cmd_pointer);
 		cmd_state ++;
 		break;
 	case 2:	/* Wait for the new command to be fetched */
-		if (got_command(&command))
+		if (get_command(&command))
 			cmd_state ++;
 		break;
 	case 3:	/* Decode and execute the command */
@@ -121,10 +139,10 @@ void litterlanguage_term (void)
 /* litterlanguage_term */
 
 
-void litterlanguage_start (unsigned char fullwash)
+void litterlanguage_start (unsigned char wet)
 {
 	if (!cmd_pointer) {
-		prg_fullwash = fullwash;
+		wet_program = wet;
 		cmd_pointer = 0;
 		cmd_state ++ ;
 	}
@@ -146,20 +164,20 @@ void litterlanguage_pause (unsigned char pause)
 /* Local Implementations						      */
 /******************************************************************************/
 
-static void get_command (unsigned char cmd_pointer)
+static void req_command (unsigned int cmd_pointer)
 {
 	switch (prg_source) {
 	case SRC_ROM:
-		romwashprogram_getcmd(cmd_pointer);
+		romwashprogram_reqcmd(cmd_pointer);
 	}
 }
 
-static unsigned char got_command (struct command *command)
+static unsigned char get_command (struct command *command)
 {
 	switch (prg_source) {
 	default:
 	case SRC_ROM:
-		return romwashprogram_gotcmd(command);
+		return romwashprogram_getcmd(command);
 	}
 }
 
@@ -169,8 +187,8 @@ static void exe_command (void)
 	case CMD_START:
 		/* Check if this is a valid program for us */
 		if( ((command.arg & 0x00FF) <= CMD_LAST) && 
-		    ( (!prg_fullwash && (command.arg & FLAGS_DRYRUN)) ||
-		      (prg_fullwash && (command.arg & FLAGS_WETRUN)) ) ) {
+		    ( (!wet_program && (command.arg & FLAGS_DRYRUN)) ||
+		      (wet_program && (command.arg & FLAGS_WETRUN)) ) ) {
 			cmd_pointer++;
 			cmd_state -= 2;
 		} else {
@@ -188,7 +206,7 @@ static void exe_command (void)
 		cmd_state -= 2;
 		break;
 	case CMD_WATER:
-		if (prg_fullwash) {
+		if (wet_program) {
 			set_Water((unsigned char)command.arg);
 			if (command.arg)
 				settimeout(&timer_fill, MAX_FILLTIME);
@@ -199,13 +217,13 @@ static void exe_command (void)
 		cmd_state -= 2;
 		break;
 	case CMD_DOSAGE:
-		if (prg_fullwash)
+		if (wet_program)
 			set_Dosage((unsigned char)command.arg);
 		cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_PUMP:
-		if (prg_fullwash) {
+		if (wet_program) {
 			set_Pump((unsigned char)command.arg);
 			if (command.arg)
 				settimeout(&timer_drain, MAX_DRAINTIME);
@@ -216,7 +234,7 @@ static void exe_command (void)
 		cmd_state -= 2;
 		break;
 	case CMD_DRYER:
-		if (prg_fullwash)
+		if (wet_program)
 			set_Dryer((unsigned char)command.arg);
 		cmd_pointer++;
 		cmd_state -= 2;
@@ -227,7 +245,7 @@ static void exe_command (void)
 		cmd_state++;
 		break;
 	case CMD_WAITWATER:
-		if (prg_fullwash)
+		if (wet_program)
 			cmd_state++;
 		else {
 			cmd_pointer++;
@@ -235,21 +253,21 @@ static void exe_command (void)
 		}
 		break;
 	case CMD_SKIPIFDRY:
-		if (!prg_fullwash)
+		if (!wet_program)
 			cmd_pointer += command.arg + 1;
 		else
 			cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_SKIPIFWET:
-		if (prg_fullwash)
+		if (wet_program)
 			cmd_pointer += command.arg + 1;
 		else
 			cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_AUTODOSE:
-		if (prg_fullwash) {
+		if (wet_program) {
 			settimeout(&timer_autodose, command.arg);
 			set_Dosage(1);
 		}

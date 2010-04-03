@@ -10,8 +10,8 @@
 
 
 /* Control */
-void		romwashprogram_getcmd	(unsigned char cmd_pointer) ;
-unsigned char	romwashprogram_gotcmd	(struct command *command) ;
+void		romwashprogram_reqcmd	(unsigned int	cmd_pointer) ;
+unsigned char	romwashprogram_getcmd	(struct command	*command) ;
 
 
 #endif /* ROMWASHPROGRAM_H */
