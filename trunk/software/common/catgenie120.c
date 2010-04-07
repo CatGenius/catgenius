@@ -118,7 +118,7 @@ unsigned char catgenie_init (void)
 	ADCON1 = 0x07;
 
 	/* Turn on the water sensor muting on permanently
-	 * It's enabled/disabled tristating it */
+	 * It's enabled/disabled by tristating it */
 	PORTA |=  WATERSENSORMUTE_MASK;
 
 	/*
@@ -208,6 +208,7 @@ void catgenie_work (void)
 			water_sensorbuffer = WATERSENSOR_PORT & WATERSENSOR_MASK;
 			/* Mute Water Sensor */
 			TRISA &= ~WATERSENSORMUTE_MASK;
+			PORTA |=  WATERSENSORMUTE_MASK;
 		} else
 			water_sensorbuffer = WATERSENSOR_PORT & WATERSENSOR_MASK;
 		/* Detect state change */
@@ -390,15 +391,15 @@ void set_Bowl (unsigned char mode)
 	switch (mode) {
 	default:
 	case BOWL_STOP:
-		BOWL_PORT &= ~(BOWL_MASK_CWCCW | BOWL_MASK_ONOFF);
+		BOWL_PORT &= ~(BOWL_CWCCW_MASK | BOWL_ONOFF_MASK);
 		break;
 	case BOWL_CW:
-		BOWL_PORT |= BOWL_MASK_CWCCW;
-		BOWL_PORT |= BOWL_MASK_ONOFF;
+		BOWL_PORT |= BOWL_CWCCW_MASK;
+		BOWL_PORT |= BOWL_ONOFF_MASK;
 		break;
 	case BOWL_CCW:
-		BOWL_PORT &= ~BOWL_MASK_CWCCW;
-		BOWL_PORT |=  BOWL_MASK_ONOFF;
+		BOWL_PORT &= ~BOWL_CWCCW_MASK;
+		BOWL_PORT |=  BOWL_ONOFF_MASK;
 		break;
 	}
 }
@@ -408,15 +409,15 @@ void set_Arm (unsigned char mode)
 	switch (mode) {
 	default:
 	case ARM_STOP:
-		ARM_PORT &= ~(ARM_MASK_UPDOWN | ARM_MASK_ONOFF);
+		ARM_PORT &= ~(ARM_UPDOWN_MASK | ARM_ONOFF_MASK);
 		break;
 	case ARM_UP:
-		ARM_PORT &= ~ARM_MASK_UPDOWN;
-		ARM_PORT |=  ARM_MASK_ONOFF;
+		ARM_PORT &= ~ARM_UPDOWN_MASK;
+		ARM_PORT |=  ARM_ONOFF_MASK;
 		break;
 	case ARM_DOWN:
-		ARM_PORT |= ARM_MASK_UPDOWN;
-		ARM_PORT |= ARM_MASK_ONOFF;
+		ARM_PORT |= ARM_UPDOWN_MASK;
+		ARM_PORT |= ARM_ONOFF_MASK;
 		break;
 	}
 }
@@ -431,6 +432,7 @@ void set_Water (unsigned char on)
 		water_filling = 0;
 		/* Mute Water Sensor */
 		TRISA &= ~WATERSENSORMUTE_MASK;
+		PORTA |=  WATERSENSORMUTE_MASK;
 	}
 }
 
@@ -459,11 +461,6 @@ void set_Dryer	(unsigned char on)
 		DRYER_PORT &= ~DRYER_MASK;
 }
 
-
-unsigned char detected_Water(void)
-{
-	return !(water_sensorbuffer & WATERSENSOR_MASK);
-}
 
 /******************************************************************************/
 /* Local Implementations						      */

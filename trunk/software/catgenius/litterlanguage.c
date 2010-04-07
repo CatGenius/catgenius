@@ -26,6 +26,7 @@
 
 static unsigned char	prg_source	= 0;
 static bit		wet_program	= 0;
+static bit		water_detected	= 0;
 
 static unsigned char	cmd_state	= 0;
 static unsigned int	cmd_pointer	= 0;
@@ -160,6 +161,25 @@ void litterlanguage_pause (unsigned char pause)
 }
 
 
+void watersensor_event (unsigned char undetected)
+/******************************************************************************/
+/* Function:	watersensor_event					      */
+/*		- Handle state changes of water sensor			      */
+/* History :	13 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
+{
+	water_detected = ! undetected;
+
+	/* Disable proper timeout on event */
+	if (water_detected)
+		timeoutnever(&timer_fill);
+	else
+		timeoutnever(&timer_drain);
+}
+/* watersensor_event */
+
+
 /******************************************************************************/
 /* Local Implementations						      */
 /******************************************************************************/
@@ -211,6 +231,7 @@ static void exe_command (void)
 			if (command.arg)
 				settimeout(&timer_fill, MAX_FILLTIME);
 			else
+				/* Disable timeout on cancelation */
 				timeoutnever(&timer_fill);
 		}
 		cmd_pointer++;
@@ -275,6 +296,7 @@ static void exe_command (void)
 		cmd_state -= 2;
 		break;
 	case CMD_END:
+		/* Disable timeouts */
 		timeoutnever(&timer_fill);
 		timeoutnever(&timer_drain);
 		cmd_pointer = 0;
@@ -298,13 +320,15 @@ static void wait_command (void)
 		break;
 	case CMD_WAITWATER:
 		if (command.arg) {
-			if (detected_Water()) {
+			if (water_detected) {
+				/* Disable timeout on poll (event may not have occured again) */
 				timeoutnever(&timer_fill);
 				cmd_pointer++;
 				cmd_state -= 3;
 			}
 		} else {
-			if (!detected_Water()) {
+			if (!water_detected) {
+				/* Disable timeout on poll (event may not have occured again) */
 				timeoutnever(&timer_drain);
 				cmd_pointer++;
 				cmd_state -= 3;
