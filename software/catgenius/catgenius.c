@@ -100,17 +100,6 @@ void main (void)
 	}
 }
 
-void watersensor_event (unsigned char undetected)
-/******************************************************************************/
-/* Function:	watersensor_event					      */
-/*		- Handle state changes of water sensor			      */
-/* History :	13 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-}
-/* watersensor_event */
-
 void heatsensor_event (unsigned char detected)
 /******************************************************************************/
 /* Function:	heatsensor_event					      */

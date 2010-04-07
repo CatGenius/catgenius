@@ -8,6 +8,9 @@
 #ifndef HARDWARE_H				/* Include file already compiled? */
 #define HARDWARE_H
 
+/* Miscelaneous */
+#define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
+
 /* Frequencies */
 #define KHZ			(1000UL)
 #define MHZ			(1000UL * (KHZ))
@@ -32,10 +35,6 @@
 /* Times */
 #define MAX_FILLTIME		((2*60+15)*SECOND)
 #define MAX_DRAINTIME		(25*SECOND)
-
-
-
-#define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
 
 /* Free pins */
 #define	NOT_USED_1_PORT		PORTA	/* Not used (R39, Absent) */
@@ -95,11 +94,11 @@
 #define DOSAGE_PORT		PORTD	/* Dosage pump on/off (RL4) */
 #define DOSAGE_MASK		BIT(3)
 #define BOWL_PORT		PORTD
-#define BOWL_MASK_CWCCW		BIT(4)	/* Bowl cw/ccw (RL7) */
-#define BOWL_MASK_ONOFF		BIT(5)	/* Bowl on/off (RL5) */
+#define BOWL_CWCCW_MASK		BIT(4)	/* Bowl cw/ccw (RL7) */
+#define BOWL_ONOFF_MASK		BIT(5)	/* Bowl on/off (RL5) */
 #define ARM_PORT		PORTD
-#define ARM_MASK_UPDOWN		BIT(6)	/* Arm up/down (RL8) */
-#define ARM_MASK_ONOFF		BIT(7)	/* Arm on/off (RL6) */
+#define ARM_UPDOWN_MASK		BIT(6)	/* Arm up/down (RL8) */
+#define ARM_ONOFF_MASK		BIT(7)	/* Arm on/off (RL6) */
 
 /* Sensors */
 #define CATSENSOR_LED_PORT	PORTC	/* Cat Sensor LED */
