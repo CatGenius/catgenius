@@ -74,20 +74,23 @@ void litterlanguage_work (void)
 {
 	/* Check error timeouts */
 	if (timeoutexpired(&timer_fill)) {
+		timeoutnever(&timer_fill);
 		/* Fill error */
+		set_LED_Error(0x01, 1);
+		set_Water(0);
 		/* Pauze */
 //		set_Bowl(BOWL_STOP);
 //		set_Arm(ARM_STOP);
-//		set_Water(0);
 //		set_Dosage(0);
 //		set_Pump(0);
 //		set_Dryer(0);
 //		set_Beeper(0x01, 1);
-//		set_LED_Error(0x01, 1);
 //		return;
 	}
 	if (timeoutexpired(&timer_drain)) {
+		timeoutnever(&timer_drain);
 		/* Drain error */
+		set_LED_Error(0x05, 1);
 		/* Pauze */
 //		set_Bowl(BOWL_STOP);
 //		set_Arm(ARM_STOP);
@@ -96,7 +99,6 @@ void litterlanguage_work (void)
 //		set_Pump(0);
 //		set_Dryer(0);
 //		set_Beeper(0x05, 1);
-//		set_LED_Error(0x05, 1);
 //		return;
 	}
 
@@ -172,9 +174,12 @@ void watersensor_event (unsigned char undetected)
 	water_detected = ! undetected;
 
 	/* Disable proper timeout on event */
-	if (water_detected)
+	if (water_detected) {
+		/* Turn off the water and disable the timeout */
+		set_Water(0);
 		timeoutnever(&timer_fill);
-	else
+	} else
+		/* Just disable the timeout, we want to continue pumping */
 		timeoutnever(&timer_drain);
 }
 /* watersensor_event */
@@ -226,14 +231,18 @@ static void exe_command (void)
 		cmd_state -= 2;
 		break;
 	case CMD_WATER:
-		if (wet_program) {
-			set_Water((unsigned char)command.arg);
+		if (wet_program)
 			if (command.arg)
-				settimeout(&timer_fill, MAX_FILLTIME);
-			else
-				/* Disable timeout on cancelation */
+				/* Don't fill if water is detected already */
+				if (!water_detected) {
+					set_Water(1);
+					settimeout(&timer_fill, MAX_FILLTIME);
+				}
+			else {
+				/* Disable timeout on filling */
+				set_Water(0);
 				timeoutnever(&timer_fill);
-		}
+			}
 		cmd_pointer++;
 		cmd_state -= 2;
 		break;
@@ -247,7 +256,9 @@ static void exe_command (void)
 		if (wet_program) {
 			set_Pump((unsigned char)command.arg);
 			if (command.arg)
-				settimeout(&timer_drain, MAX_DRAINTIME);
+				/* Only set timeout if water is still detected */
+				if (water_detected)
+					settimeout(&timer_drain, MAX_DRAINTIME);
 			else
 				timeoutnever(&timer_drain);
 		}
@@ -321,15 +332,11 @@ static void wait_command (void)
 	case CMD_WAITWATER:
 		if (command.arg) {
 			if (water_detected) {
-				/* Disable timeout on poll (event may not have occured again) */
-				timeoutnever(&timer_fill);
 				cmd_pointer++;
 				cmd_state -= 3;
 			}
 		} else {
 			if (!water_detected) {
-				/* Disable timeout on poll (event may not have occured again) */
-				timeoutnever(&timer_drain);
 				cmd_pointer++;
 				cmd_state -= 3;
 			}

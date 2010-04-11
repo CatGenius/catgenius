@@ -349,7 +349,7 @@ static void update_display ()
 	default:
 		disp_mode = DISP_AUTOMODE;
 	case DISP_AUTOMODE:
-		set_LED_Error(0x00, 0);
+//		set_LED_Error(0x00, 0);
 		if (cart_level >= 10)
 			set_LED_Cartridge(0x00, 0);
 		else
@@ -390,7 +390,7 @@ static void update_display ()
 		}
 		break;
 	case DISP_CARTRIDGELEVEL:
-		set_LED_Error(0x00, 0);
+//		set_LED_Error(0x00, 0);
 		set_LED_Cartridge(0xFF, 1);
 		set_LED(1, cart_level >= 10);
 		set_LED(2, cart_level >= 25);
