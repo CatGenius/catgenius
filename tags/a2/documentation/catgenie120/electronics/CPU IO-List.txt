@@ -1,0 +1,46 @@
+CPU	CatGenie		Pin		Signal	Signal	Description:
+Pin#:	usage:			Function(s):	dir:	Type:
+01	J18 - RX		RC7/RX/DT	I/O	ST	RC7 can also be the USART Asynchronous Receive 
+02	U5 - RL7		RD4/PSP4	I/O	ST/TTL
+03	U5 - RL5		RD5/PSP5	I/O	ST/TTL
+04	U5 - RL8		RD6/PSP6	I/O	ST/TTL
+05	U5 - RL6		RD7/PSP7	I/O	ST/TTL
+06				VSS		P		Ground reference for logic and I/O pins. 
+07				VDD		P		Positive supply for logic and I/O pins. 
+08	Start/Pause button	RB0/INT		I/O	TTL/ST	RB0 can also be the external interrupt pin. 
+09	U4 - Overheat detector	RB1		I/O	TTL
+10	WaterSensor LED		RB2		I/O	TTL
+11	U5 - RL1 & Water Sensor	(R31&R30) RB3/PGM		I/O	TTL	RB3 can also be the low voltage programming input. 
+12	NC
+13	NC
+14	CatSensor		RB4		I/O	TTL	Interrupt-on-change pin. 
+15	Auto/Setup button	RB5		I/O	TTL	Interrupt-on-change pin. 
+16	JC1 - CLK		RB6/PGC		I/O	TTL/ST	Interrupt-on-change pin or In-Circuit Debugger pin. 
+17	JC1 - DA		RB7/PGD		I/O	TTL/ST	Interrupt-on-change pin or In-Circuit Debugger pin. 
+18	JC1 - RES		MCLR/VPP	I/P	ST	Master Clear (Reset) input or programming voltage input. 
+19	R39 - Absent		RA0/AN0		I/O	TTL	RA0 can also be analog input0. 
+20	U6 Pin2			RA1/AN1		I/O	TTL	RA1 can also be analog input1. 
+21	2 LED			RA2/AN2/VREF-	I/O	TTL	RA2 can also be analog input2 or negative 
+22	3 LED			RA3/AN3/VREF+	I/O	TTL	RA3 can also be analog input3 or positive 
+23	R1 - Absent		RA4/T0CKI	I/O	ST	RA4 can also be the clock input to the Timer0 timer/ 
+24	4 LED			RA5/SS/AN4	I/O	TTL	RA5 can also be analog input4 or the slave select for 
+25	Cartridge LED		RE0/RD/AN5	I/O	ST/TTL	RE0 can also be read control for the parallel slave 
+26	Cat LED			RE1/WR/AN6	I/O	ST/TTL	RE1 can also be write control for the parallel slave 
+27	Child lock LED		RE2/CS/AN7	I/O	ST/TTL	RE2 can also be select control for the parallel slave 
+28				VDD		P		Positive supply for logic and I/O pins. 
+29				VSS		P		Ground reference for logic and I/O pins. 
+30				OSC1/CLKIN	I	ST/CMOS	Oscillator crystal input/external clock source input.
+31				OSC2/CLKOUT	O		Oscillator crystal output.
+32	Error LED		RC0/T1OSO/T1CKI	I/O	ST	RC0 can also be the Timer1 oscillator output or a 
+33	NC
+34	NC
+35	U3 - LS1		RC1/T1OSI/CCP2	I/O	ST	RC1 can also be the Timer1 oscillator input or 
+36	CatSensor LED		RC2/CCP1	I/O	ST	RC2 can also be the Capture1 input/Compare1 
+37	J16 - SCL		RC3/SCK/SCL	I/O	ST	RC3 can also be the synchronous serial clock input/ 
+38	R30 - Water Sensor	RD0/PSP0	I/O	ST/TTL
+39	U5 - RL3		RD1/PSP1	I/O	ST/TTL
+40	U3 - RL2		RD2/PSP2	I/O	ST/TTL
+41	U5 - RL4		RD3/PSP3	I/O	ST/TTL
+42	J16 - SDA		RC4/SDI/SDA	I/O	ST	RC4 can also be the SPI Data In (SPI mode) or 
+43	1 LED			RC5/SDO		I/O	ST	RC5 can also be the SPI Data Out (SPI mode). 
+44	J18 - TX		RC6/TX/CK	I/O	ST	RC6 can also be the USART Asynchronous Transmit 
