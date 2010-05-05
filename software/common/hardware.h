@@ -10,6 +10,11 @@
 
 /* Miscelaneous */
 #define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
+#define DBG			printf
+
+/* EEPROM offsets */
+#define NVM_MODE		0
+#define NVM_BOXSTATE		1
 
 /* Frequencies */
 #define KHZ			(1000UL)
@@ -34,7 +39,7 @@
 
 /* Times */
 #define MAX_FILLTIME		((2*60+15)*SECOND)
-#define MAX_DRAINTIME		(25*SECOND)
+#define MAX_DRAINTIME		(15*SECOND)
 
 /* Free pins */
 #define	NOT_USED_1_PORT		PORTA	/* Not used (R39, Absent) */

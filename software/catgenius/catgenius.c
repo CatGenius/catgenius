@@ -7,6 +7,7 @@
 /*		- Initial revision.					      */
 /******************************************************************************/
 #include <htc.h>
+#include <stdio.h>
 
 #include "../common/timer.h"
 #include "../common/hardware.h"
@@ -19,15 +20,14 @@
 #include "userinterface.h"
 #include "litterlanguage.h"
 
-
 /******************************************************************************/
 /* Macros								      */
 /******************************************************************************/
 
 #ifdef __DEBUG
-__CONFIG(XT & WDTDIS & PWRTEN & BOREN & LVPDIS & DUNPROT & WRTEN & DEBUGEN  & UNPROTECT);
+__CONFIG(XT & WDTDIS & PWRTEN & BORDIS & LVPDIS & DUNPROT & WRTEN & DEBUGEN  & UNPROTECT);
 #else
-__CONFIG(XT & WDTEN  & PWRTEN & BOREN & LVPDIS & DPROT   & WRTEN & DEBUGDIS & PROTECT);
+__CONFIG(XT & WDTEN  & PWRTEN & BOREN  & LVPDIS & DPROT   & WRTEN & DEBUGDIS & PROTECT);
 #endif
 
 
@@ -59,19 +59,31 @@ void main (void)
 	/* Initialize the serial port */
 	serial_init();
 
-	putst("\nCatGenius\n");
+	printf("\n*** CatGenius ***\n");
+	if (!POR)
+		DBG("Power-on reset\n");
+	if (!BOR)
+		DBG("Brown-out reset\n");
+	if (!TO)
+		DBG("Watchdog reset\n");
+	if (!PD)
+		DBG("Pin reset\n");
+	if (flags & START_BUTTON_HELD)
+		DBG("Start button held\n");
+	if (flags & SETUP_BUTTON_HELD)
+		DBG("Setup button held\n");
 
 	/* Initialize software timers */
 	timer_init();
 
 	/* Initialize the I2C bus */
-	i2c_init();
+//	i2c_init();
 
 	/* Initialize the RFID reader */
-	cr14_init();
+//	cr14_init();
 
 	/* Initialize the RFID tag */
-	srix4k_init();
+//	srix4k_init();
 
 	/* Initialize the cat sensor */
 	catsensor_init();
@@ -91,9 +103,14 @@ void main (void)
 		catgenie_work();
 		userinterface_work();
 		litterlanguage_work();
-		srix4k_work();
-		cr14_work();
-		i2c_work();
+//		srix4k_work();
+//		cr14_work();
+//		i2c_work();
+
+//		if (RCIF) {
+//			RCIF = 0;
+//			set_Beeper(RCREG,0);
+//		}
 #ifndef __DEBUG
 		CLRWDT();
 #endif
