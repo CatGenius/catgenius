@@ -7,6 +7,7 @@
 /*		- Initial revision.					      */
 /******************************************************************************/
 #include <htc.h>
+#include <stdio.h>
 
 #include "userinterface.h"
 #include "../common/timer.h"
@@ -96,8 +97,8 @@ static unsigned char	error_nr	= 0;
 /* Local Prototypes							      */
 /******************************************************************************/
 
+static void	set_mode		(unsigned char mode);
 static void	update_display		(void);
-static void	setup_short		(void);
 static void	setup_long		(void);
 static void	start_short		(void);
 static void	start_long		(void);
@@ -117,6 +118,8 @@ void userinterface_init (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	/* Fetch current mode from eeprom */
+	set_mode(eeprom_read(NVM_MODE));
 }
 /* userinterface_init */
 
@@ -269,7 +272,35 @@ void setupbutton_event (unsigned char up)
 					setup_long();
 				else
 					/* Handle short press up */
-					setup_short();
+					switch (disp_mode) {
+					default:
+						disp_mode = DISP_AUTOMODE;
+					case DISP_AUTOMODE:
+						set_mode((auto_mode==AUTO_DETECTED)?AUTO_MANUAL:auto_mode+1);
+						break;
+				
+					case DISP_CARTRIDGELEVEL:
+						if (cart_level < 10)
+							cart_level = 10;
+						else if (cart_level < 25)
+							cart_level = 25;
+						else if (cart_level < 50)
+							cart_level = 50;
+						else if (cart_level < 75)
+							cart_level = 75;
+						else if (cart_level < 100)
+							cart_level = 100;
+						else
+							cart_level = 0;
+						/* Set new timeout to return to auto- or errormode */
+						settimeout(&cartridgetimeout, LEVEL_TIMEOUT);
+						/* Update the display */
+						update_display();
+						break;
+				
+					case DISP_ERROR:
+						break;
+					}
 		else
 			if (!start_button) {
 				if (timeoutexpired(&holdtimeout))
@@ -298,6 +329,8 @@ void catsensor_event (unsigned char detected)
 {
 	/* Update the actual cat status */
 	cat_present = detected;
+
+	DBG("Cat %s\n", detected?"detected":"gone");
 
 	/* Trigger detection on rising edge only */
 	if (detected)
@@ -343,13 +376,45 @@ void catsensor_event (unsigned char detected)
 /* Local Implementations						      */
 /******************************************************************************/
 
-static void update_display ()
+static void set_mode (unsigned char mode)
+{
+	if (mode > AUTO_DETECTED)
+		auto_mode = AUTO_MANUAL;
+	else
+		auto_mode = mode;
+	DBG("Set mode %u\n", auto_mode);
+
+	if ( (auto_mode == AUTO_TIMED1) ||
+	     (auto_mode == AUTO_TIMED2) ||
+	     (auto_mode == AUTO_TIMED3) ||
+	     (auto_mode == AUTO_TIMED4) ) {
+		full_wash = 1;
+	}
+
+	if (state != STATE_RUNNING) {
+		/* Reset state machine */
+		state = STATE_IDLE;
+		interval = 0;
+	}
+	/* Reset timers and cat sensor */
+	update_autotimer(auto_mode);
+	timeoutnow(&cattimer);
+	cat_detected = 0;
+
+	/* Update the display */
+	update_display();
+
+	/* Store the new mode in EEPROM */
+	eeprom_write(NVM_MODE, auto_mode);
+}
+
+static void update_display (void)
 {
 	switch (disp_mode) {
 	default:
 		disp_mode = DISP_AUTOMODE;
 	case DISP_AUTOMODE:
-//		set_LED_Error(0x00, 0);
+		set_LED_Error(0x00, 0);
 		if (cart_level >= 10)
 			set_LED_Cartridge(0x00, 0);
 		else
@@ -390,7 +455,7 @@ static void update_display ()
 		}
 		break;
 	case DISP_CARTRIDGELEVEL:
-//		set_LED_Error(0x00, 0);
+		set_LED_Error(0x00, 0);
 		set_LED_Cartridge(0xFF, 1);
 		set_LED(1, cart_level >= 10);
 		set_LED(2, cart_level >= 25);
@@ -408,61 +473,6 @@ static void update_display ()
 		set_LED(2, error_nr == 2);
 		set_LED(3, error_nr == 3);
 		set_LED(4, error_nr == 4);
-		break;
-	}
-}
-
-
-static void setup_short (void)
-{
-	switch (disp_mode) {
-	default:
-		disp_mode = DISP_AUTOMODE;
-	case DISP_AUTOMODE:
-		/* Increase auto mode */
-		if (++auto_mode > AUTO_DETECTED)
-			auto_mode = AUTO_MANUAL;
-
-		if ( (auto_mode == AUTO_TIMED1) ||
-		     (auto_mode == AUTO_TIMED2) ||
-		     (auto_mode == AUTO_TIMED3) ||
-		     (auto_mode == AUTO_TIMED4) ) {
-			full_wash = 1;
-		}
-
-		/* Reset state machine */
-		state = STATE_IDLE;
-		interval = 0;
-
-		/* Reset timers and cat sensor */
-		update_autotimer(auto_mode);
-		timeoutnow(&cattimer);
-		cat_detected = 0;
-
-		/* Update the display */
-		update_display();
-		break;
-
-	case DISP_CARTRIDGELEVEL:
-		if (cart_level < 10)
-			cart_level = 10;
-		else if (cart_level < 25)
-			cart_level = 25;
-		else if (cart_level < 50)
-			cart_level = 50;
-		else if (cart_level < 75)
-			cart_level = 75;
-		else if (cart_level < 100)
-			cart_level = 100;
-		else
-			cart_level = 0;
-		/* Set new timeout to return to auto- or errormode */
-		settimeout(&cartridgetimeout, LEVEL_TIMEOUT);
-		/* Update the display */
-		update_display();
-		break;
-
-	case DISP_ERROR:
 		break;
 	}
 }

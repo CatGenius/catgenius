@@ -11,6 +11,7 @@
 #include "romwashprogram.h"
 #include "litterlanguage.h"
 #include "../common/catgenie120.h"
+#include "../common/hardware.h"
 
 
 /******************************************************************************/
@@ -25,6 +26,118 @@
 /******************************************************************************/
 
 static unsigned int		cmdptr = 0;
+
+#if 0
+static const struct command	cleanupprogram[] = {
+	{CMD_START,	CMD_LAST | 
+			FLAGS_DRYRUN |
+			FLAGS_WETRUN },
+#ifdef SIMULATION
+	{CMD_WAITTIME,	3000},
+#else /* SIMULATION */
+	{CMD_BOWL,	BOWL_CW},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	ARM_STROKE_MSEC + 1000},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	500},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_SKIPIFDRY, },
+
+	/* Pumping */
+	{CMD_PUMP,	1},
+	{CMD_WAITTIME,	BOWL_REV_MSEC},
+	{CMD_PUMP,	0},
+	{CMD_WAITTIME,	BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_PUMP,	1},
+	{CMD_WAITTIME,	2 * BOWL_REV_MSEC},
+	{CMD_PUMP,	0},
+	{CMD_WAITTIME,	BOWL_REV_MSEC / 2},
+	{CMD_BOWL,	BOWL_CW},
+	{CMD_PUMP,	1},
+	{CMD_WAITTIME,	3 * BOWL_REV_MSEC},
+	{CMD_PUMP,	0},
+
+	/* Drying */
+	{CMD_DRYER,	1},
+	{CMD_WAITTIME,	4 * BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_WAITTIME,	3 * BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CW},
+	{CMD_WAITTIME,	4 * BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_WAITTIME,	2 * BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CW},
+	{CMD_WAITTIME,	4 * BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_WAITTIME,	2 * BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CW},
+	{CMD_WAITTIME,	3 * BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_WAITTIME,	2 * BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CW},
+	{CMD_WAITTIME,	3 * BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_WAITTIME,	2 * BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CW},
+	{CMD_WAITTIME,	3 * BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_WAITTIME,	2 * BOWL_REV_MSEC},
+	{CMD_BOWL,	BOWL_CW},	/* Dry + 24 */
+	{CMD_WAITTIME,	35309},
+	{CMD_BOWL,	BOWL_CCW},	/* Dry + 25 */
+	{CMD_WAITTIME,	35309},
+	{CMD_BOWL,	BOWL_CW},	/* Dry + 26 */
+	{CMD_WAITTIME,	35308},
+	{CMD_BOWL,	BOWL_CCW},	/* Dry + 27 */
+	{CMD_WAITTIME,	35404},
+	{CMD_BOWL,	BOWL_CW},	/* Dry + 32 */
+	{CMD_WAITTIME,	35309},
+	{CMD_BOWL,	BOWL_CCW},	/* Dry + 33 */
+	{CMD_WAITTIME,	45411},
+	{CMD_BOWL,	BOWL_CW},	/* Dry + 34 */
+	{CMD_WAITTIME,	35309},
+	{CMD_BOWL,	BOWL_CCW},	/* Dry + 35 */
+	{CMD_WAITTIME,	45411},
+	{CMD_BOWL,	BOWL_CW},	/* Dry + 36 */
+	{CMD_WAITTIME,	35308},
+	{CMD_BOWL,	BOWL_CCW},	/* Dry + 37 */
+	{CMD_WAITTIME,	45411},
+	{CMD_BOWL,	BOWL_CW},	/* Dry + 38 */
+
+	/* Surfacing */
+	{CMD_WAITTIME,	BOWL_REV_MSEC + 1000},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	ARM_STROKE_MSEC / 45},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_WAITTIME,	BOWL_REV_MSEC + 1000},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	ARM_STROKE_MSEC / 45},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_WAITTIME,	BOWL_REV_MSEC + 1000},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	ARM_STROKE_MSEC / 45},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_WAITTIME,	BOWL_REV_MSEC + 1000},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	ARM_STROKE_MSEC / 45},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_WAITTIME,	BOWL_REV_MSEC + 1000},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	3 * (ARM_STROKE_MSEC / 4) + 1000},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	ARM_STROKE_MSEC / 2},
+	{CMD_DRYER,	0},
+	{CMD_BOWL,	BOWL_STOP},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	3 * (ARM_STROKE_MSEC / 4)},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	ARM_STROKE_MSEC / 5},
+	{CMD_ARM,	ARM_STOP},
+#endif /* SIMULATION */
+	{CMD_END,	0}
+};
+#endif
 
 static const struct command	washprogram[] = {
 	{CMD_START,	CMD_LAST | 
