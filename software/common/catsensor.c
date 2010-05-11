@@ -20,23 +20,21 @@ extern void catsensor_event (unsigned char detected);
 /* Macros								      */
 /******************************************************************************/
 
-#define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
-
-#define	PING_TIME		(SECOND / 10)	/* Ping every 100 ms */
-#define	DEBOUNCE_TIME		(3 * PING_TIME)	/* 3 pings */
+#define	PING_TIME	(SECOND / 10)			/* Ping every 100 ms */
+#define	DEBOUNCE_TIME	(3 * PING_TIME)			/* Debounce for 3 pings */
 
 
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
 
-static bit			pinging		= 0;
-static bit			echoed		= 0;
-static bit			detected	= 0;
-static bit			detected_old	= 0;
-static bit			debounced	= 0;
-static struct timer		debouncer	= NEVER;
-static struct timer		pingtime	= EXPIRED;
+static bit		pinging		= 0;		/* Indicates an on-going ping */
+static bit		echoed		= 0;		/* Stores an echo received */
+static bit		detected	= 0;		/* Current detection state */
+static bit		detected_old	= 0;		/* Previous detection state (to detect differences) */
+static bit		detected_dbc	= 0;		/* Debounced detection state */
+static struct timer	debouncer	= NEVER;	/* Timer to debounce detection state */
+static struct timer	pingtime	= EXPIRED;	/* Timer to schedule pings */
 
 
 /******************************************************************************/
@@ -119,8 +117,11 @@ void catsensor_work (void)
 
 	/* Notify is changed */
 	if (timeoutexpired(&debouncer)) {
-		catsensor_event(detected);
 		timeoutnever(&debouncer);
+		if (detected != detected_dbc) {
+			detected_dbc = detected;
+			catsensor_event(detected_dbc);
+		}
 	}
 } /* catsensor_work */
 
