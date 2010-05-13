@@ -22,15 +22,15 @@
 #define CMD_BOWL	0x01	/* Controls the bowl. Argument is what the bowl should do */
 #define CMD_ARM		0x02	/* Controls the arm. Argument is what the arm should do */
 #define CMD_WATER	0x03	/* Controls the water valve. Argument is 1 for on, 0 for off */
-#define CMD_DOSAGE	0x04	/* Controls the dosage pump. Argument is 1 for on, 0 for off */
-#define CMD_PUMP	0x05	/* Controls the hopper pump. Argument is 1 for on, 0 for off */
-#define CMD_DRYER	0x06	/* Controls the dryer fan. Argument is 1 for on, 0 for off */
+#define CMD_PUMP	0x04	/* Controls the hopper pump. Argument is 1 for on, 0 for off */
+#define CMD_DRYER	0x05	/* Controls the dryer fan. Argument is 1 for on, 0 for off */
 
-#define CMD_WAITTIME	0x08
-#define CMD_WAITWATER	0x09
-#define CMD_SKIPIFDRY	0x10
-#define CMD_SKIPIFWET	0x11
-#define CMD_AUTODOSE	0x12
+#define CMD_WAITTIME	0x06
+#define CMD_WAITWATER	0x07
+#define CMD_WAITDOSAGE	0x08
+#define CMD_SKIPIFDRY	0x09
+#define CMD_SKIPIFWET	0x10
+#define CMD_AUTODOSE	0x11	/* Controls the dosage pump. Argument x100 is amount in microliters */
 #define CMD_LAST	CMD_AUTODOSE
 #define CMD_END		0xFE
 #define CMD_RESERVED	0xFF

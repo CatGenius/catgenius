@@ -38,8 +38,8 @@
 #define ARM_STROKE_MSEC		13500
 
 /* Times */
-#define MAX_FILLTIME		((2*60+15)*SECOND)
-#define MAX_DRAINTIME		(15*SECOND)
+#define MAX_FILLTIME		(( 2*60+15)*SECOND)
+#define MAX_DRAINTIME		((10*60+ 0)*SECOND)
 
 /* Free pins */
 #define	NOT_USED_1_PORT		PORTA	/* Not used (R39, Absent) */

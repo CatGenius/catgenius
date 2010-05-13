@@ -189,7 +189,7 @@ static const struct command	washprogram[] = {
 	{CMD_WAITTIME,	932},
 	{CMD_ARM,	ARM_STOP},	/* Scoop 3 + 2 */
 
-	{CMD_SKIPIFDRY, 184},		/* Skip to surfacing in dry program */
+	{CMD_SKIPIFDRY, 179},		/* Skip to surfacing in dry program */
 
 	{CMD_WAITTIME,	12108},
 	{CMD_BOWL,	BOWL_CCW},	/* Scoop 3 + 3 */
@@ -204,6 +204,7 @@ static const struct command	washprogram[] = {
 	{CMD_ARM,	ARM_DOWN},	/* Scoop 3 + 7 */
 	{CMD_WAITTIME,	6602},
 	{CMD_ARM,	ARM_UP},	/* Scoop 3 + 8 */
+	{CMD_WAITWATER, 0},
 	{CMD_WATER,	1},
 	{CMD_WAITTIME,	17141},
 	{CMD_BOWL,	BOWL_CW},	/* Scoop 3 + 9 */
@@ -215,7 +216,6 @@ static const struct command	washprogram[] = {
 	{CMD_WAITTIME,	1132},
 	{CMD_ARM,	ARM_STOP},	/* Wash + 2 */
 	{CMD_WAITWATER, 1},		/* Wash + 3 */
-	{CMD_WATER,	0},
 	{CMD_WAITTIME,	63582},		/* From full program sheet */
 	{CMD_PUMP,	1},		/* Wash + 4 */
 	{CMD_WAITTIME,	25206},
@@ -234,15 +234,17 @@ static const struct command	washprogram[] = {
 	{CMD_WAITTIME,	65535},		/* Delay split in two because it exceeds maximum */
 	{CMD_WAITTIME,	81},		/* 65535 + 81 = 65616 */
 	{CMD_PUMP,	0},		/* Wash + 11 */
+	{CMD_WAITWATER, 0},
 	{CMD_WATER,	1},
 	{CMD_WAITTIME,	55418},	
 	{CMD_BOWL,	BOWL_CCW},	/* Wash + 12 */
-	{CMD_DOSAGE,	1},
-	{CMD_WAITTIME,	2601},
-	{CMD_DOSAGE,	0},		/* Wash + 13 */
+	{CMD_AUTODOSE,	3},		/* 0.26 ml */
+//	{CMD_DOSAGE,	1},
+	{CMD_WAITDOSAGE,0},
+//	{CMD_WAITTIME,	2601},
+//	{CMD_DOSAGE,	0},		/* Wash + 13 */
 	{CMD_BOWL,	BOWL_CW},
 	{CMD_WAITWATER, 1},		/* Wash + 14 */
-	{CMD_WATER,	0},
 	{CMD_WAITTIME,	44002},		/* From full program sheet */
 	{CMD_PUMP,	1},		/* Wash + 15 */
 	{CMD_WAITTIME,	25206},
@@ -261,23 +263,26 @@ static const struct command	washprogram[] = {
 	{CMD_WAITTIME,	65535},		/* Delay split in two because it exceeds maximum */
 	{CMD_WAITTIME,	10183},		/* 65535 + 10183 = 75718 */
 	{CMD_PUMP,	0},		/* Wash + 22 */
+	{CMD_WAITWATER, 0},
 	{CMD_WATER,	1},
 	{CMD_WAITTIME,	25502},
 	{CMD_ARM,	ARM_DOWN},	/* Wash + 23 */
 	{CMD_WAITTIME,	21205},
 	{CMD_ARM,	ARM_UP},	/* Wash + 24 */
 	{CMD_BOWL,	BOWL_STOP},
-	{CMD_DOSAGE,	1},
+	{CMD_AUTODOSE,	11},		/* 1.07 ml */
+//	{CMD_DOSAGE,	1},
+//	{CMD_WAITTIME,	1 * (DOSAGE_SECONDS_PER_ML / 10) * 1000},
 	{CMD_WAITTIME,	1132},
 	{CMD_ARM,	ARM_STOP},	/* Wash + 25 */
-	{CMD_WAITTIME,	9580},
-	{CMD_DOSAGE,	0},		/* Wash + 26 */
+	{CMD_WAITDOSAGE,0},
+//	{CMD_WAITTIME,	9580},
+//	{CMD_DOSAGE,	0},		/* Wash + 26 */
 	{CMD_BOWL,	BOWL_CCW},
 	{CMD_WAITTIME,	5329},
 	{CMD_BOWL,	BOWL_CW},	/* Wash + 27 */
 	{CMD_WAITTIME,	55482},
 	{CMD_WAITWATER, 1},		/* Wash + 28 */
-	{CMD_WATER,	0},
 	{CMD_WAITTIME,	39107},
 	{CMD_PUMP,	1},		/* Wash + 29 */
 	{CMD_BOWL,	BOWL_CCW},
@@ -286,10 +291,12 @@ static const struct command	washprogram[] = {
 	{CMD_BOWL,	BOWL_CW},	/* Wash + 30 */
 	{CMD_WAITTIME,	10075},
 	{CMD_BOWL,	BOWL_STOP},	/* Wash + 31 */
-	{CMD_DOSAGE,	1},
-	{CMD_WAITTIME,	9802},
+	{CMD_AUTODOSE,	10},		/* 0.98 ml */
+//	{CMD_DOSAGE,	1},
+	{CMD_WAITDOSAGE,0},
+//	{CMD_WAITTIME,	9802},
 	{CMD_BOWL,	BOWL_CW},	/* Wash + 32 */
-	{CMD_DOSAGE,	0},
+//	{CMD_DOSAGE,	0},
 	{CMD_WAITTIME,	25270},
 	{CMD_BOWL,	BOWL_CCW},	/* Dry */
 	{CMD_DRYER,	1},
@@ -316,10 +323,12 @@ static const struct command	washprogram[] = {
 	{CMD_WAITTIME,	9980},
 	{CMD_ARM,	ARM_STOP},	/* Dry + 11 */
 	{CMD_BOWL,	BOWL_STOP},
-	{CMD_DOSAGE,	1},
-	{CMD_WAITTIME,	2601},
+	{CMD_AUTODOSE,	3},		/* 0.26 ml */
+//	{CMD_DOSAGE,	1},
+	{CMD_WAITDOSAGE,0},
+//	{CMD_WAITTIME,	2601},
 	{CMD_BOWL,	BOWL_CCW},	/* Dry + 12 */
-	{CMD_DOSAGE,	0},
+//	{CMD_DOSAGE,	0},
 	{CMD_WAITTIME,	5392},
 	{CMD_ARM,	ARM_DOWN},	/* Dry + 13 */
 	{CMD_WAITTIME,	10303},
@@ -337,10 +346,12 @@ static const struct command	washprogram[] = {
 	{CMD_WAITTIME,	10380},
 	{CMD_ARM,	ARM_STOP},	/* Dry + 20 */
 	{CMD_BOWL,	BOWL_STOP},
-	{CMD_DOSAGE,	1},
-	{CMD_WAITTIME,	2601},
+	{CMD_AUTODOSE,	3},		/* 0.26 ml */
+//	{CMD_DOSAGE,	1},
+	{CMD_WAITDOSAGE,0},
+//	{CMD_WAITTIME,	2601},
 	{CMD_BOWL,	BOWL_CCW},	/* Dry + 21 */
-	{CMD_DOSAGE,	0},
+//	{CMD_DOSAGE,	0},
 	{CMD_WAITTIME,	4392},
 	{CMD_ARM,	ARM_DOWN},	/* Dry + 22 */
 	{CMD_WAITTIME,	10803},
