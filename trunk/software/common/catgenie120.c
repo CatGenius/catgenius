@@ -448,6 +448,11 @@ void set_Dosage (unsigned char on)
 		DOSAGE_PORT &= ~DOSAGE_MASK;
 }
 
+unsigned char get_Dosage (void)
+{
+	return (DOSAGE_PORT & DOSAGE_MASK);
+}
+
 void set_Pump (unsigned char on)
 {
 	if (on)
