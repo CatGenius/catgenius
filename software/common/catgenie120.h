@@ -55,6 +55,7 @@ void		set_Bowl		(unsigned char mode);
 void		set_Arm			(unsigned char mode);
 void		set_Water		(unsigned char on);
 void		set_Dosage		(unsigned char on);
+unsigned char	get_Dosage		(void);
 void		set_Pump		(unsigned char on);
 void		set_Dryer		(unsigned char on);
 
