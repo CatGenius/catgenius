@@ -99,7 +99,7 @@ void litterlanguage_work (void)
 {
 	/* Check error timeouts */
 	if (timeoutexpired(&timer_fill)) {
-		DBG("Drain timout\n");
+		DBG("Fill timeout\n");
 		timeoutnever(&timer_fill);
 		/* Fill error */
 		set_LED_Error(0x01, 1);
@@ -114,7 +114,7 @@ void litterlanguage_work (void)
 //		return;
 	}
 	if (timeoutexpired(&timer_drain)) {
-		DBG("Drain timout\n");
+		DBG("Drain timeout\n");
 		timeoutnever(&timer_drain);
 		/* Drain error */
 		set_LED_Error(0x05, 1);
@@ -131,9 +131,8 @@ void litterlanguage_work (void)
 
 	/* Check auto command timeouts */
 	if (timeoutexpired(&timer_autodose)) {
-		DBG("AutoDose timout\n");
-		set_Dosage(0);
 		timeoutnever(&timer_autodose);
+		set_Dosage(0);
 	}
 
 	switch (cmd_state) {
@@ -201,15 +200,18 @@ void watersensor_event (unsigned char undetected)
 {
 	water_detected = ! undetected;
 
-	DBG("Water %s\n", water_detected?"present":"gone");
-	/* Disable proper timeout on event */
-	if (water_detected) {
-		/* Turn off the water and disable the timeout */
-		set_Water(0);
-		timeoutnever(&timer_fill);
+	DBG("Water %s\n", water_detected?"high":"low");
+	if (cmd_state) {
+		/* Disable proper timeout on event */
+		if (water_detected) {
+			/* Turn off the water and disable the timeout */
+			set_Water(0);
+			timeoutnever(&timer_fill);
+		} else
+			/* Disable the timeout */
+			timeoutnever(&timer_drain);
 	} else
-		/* Just disable the timeout, we want to continue pumping */
-		timeoutnever(&timer_drain);
+		DBG("Box flooded!\n");
 }
 /* watersensor_event */
 
@@ -280,7 +282,7 @@ static void exe_command (void)
 		cmd_state -= 2;
 		break;
 	case CMD_WATER:
-		DBG("CMD_WATER, %s %s", command.arg?"on":"off", wet_program?"":" (nop)");
+		DBG("CMD_WATER, %s%s", command.arg?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
 			if (command.arg) {
 				eeprom_write(NVM_BOXSTATE, BOX_WET);
@@ -298,42 +300,40 @@ static void exe_command (void)
 		cmd_pointer++;
 		cmd_state -= 2;
 		break;
-	case CMD_DOSAGE:
-		DBG("CMD_DOSAGE, %s %s", command.arg?"on":"off", wet_program?"":" (nop)");
-		if (wet_program)
-			set_Dosage((unsigned char)command.arg);
-		cmd_pointer++;
-		cmd_state -= 2;
-		break;
 	case CMD_PUMP:
-		DBG("CMD_PUMP, %s %s", command.arg?"on":"off", wet_program?"":" (nop)");
-		if (wet_program) {
+		DBG("CMD_PUMP, %s%s", command.arg?"on":"off", wet_program?"":" (nop)");
+		if (wet_program)
 			set_Pump((unsigned char)command.arg);
-			if (command.arg)
-				/* Only set timeout if water is still detected */
-				if (water_detected)
-					settimeout(&timer_drain, MAX_DRAINTIME);
-			else
-				timeoutnever(&timer_drain);
-		}
 		cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_DRYER:
-		DBG("CMD_DRYER, %s %s", command.arg?"on":"off", wet_program?"":" (nop)");
+		DBG("CMD_DRYER, %s%s", command.arg?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
 			set_Dryer((unsigned char)command.arg);
 		cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_WAITTIME:
-		DBG("CMD_WAITTIME, %u ms", command.arg);
+		DBG("CMD_WAITTIME, %ums", command.arg);
 		settimeout( &timer_waitcmd,
 			    (unsigned long)command.arg * MILISECOND );
 		cmd_state++;
 		break;
 	case CMD_WAITWATER:
-		DBG("CMD_WAITWATER %s", wet_program?"":" (nop)");
+		DBG("CMD_WAITWATER, %s%s", command.arg?"high":"low", wet_program?"":" (nop)");
+		if (wet_program) {
+			if (!command.arg)
+				/* Start the drain timeout, we don't want to wait forever */
+				settimeout(&timer_drain, MAX_DRAINTIME);
+			cmd_state++;
+		} else {
+			cmd_pointer++;
+			cmd_state -= 2;
+		}
+		break;
+	case CMD_WAITDOSAGE:
+		DBG("CMD_WAITDOSAGE%s", wet_program?"":" (nop)");
 		if (wet_program)
 			cmd_state++;
 		else {
@@ -342,7 +342,7 @@ static void exe_command (void)
 		}
 		break;
 	case CMD_SKIPIFDRY:
-		DBG("CMD_SKIPIFDRY, %u %s", command.arg, wet_program?" (nop)":"");
+		DBG("CMD_SKIPIFDRY, %u%s", command.arg, wet_program?" (nop)":"");
 		if (!wet_program)
 			cmd_pointer += command.arg + 1;
 		else
@@ -350,7 +350,7 @@ static void exe_command (void)
 		cmd_state -= 2;
 		break;
 	case CMD_SKIPIFWET:
-		DBG("CMD_SKIPIFWET, %u %s", command.arg, wet_program?"":" (nop)");
+		DBG("CMD_SKIPIFWET, %u%s", command.arg, wet_program?"":" (nop)");
 		if (wet_program)
 			cmd_pointer += command.arg + 1;
 		else
@@ -358,10 +358,10 @@ static void exe_command (void)
 		cmd_state -= 2;
 		break;
 	case CMD_AUTODOSE:
-		DBG("CMD_AUTODOSE, %u ms %s", command.arg, wet_program?"":" (nop)");
+		DBG("CMD_AUTODOSE, %u.%uml%s", command.arg/10, command.arg%10, wet_program?"":" (nop)");
 		if (wet_program) {
 			settimeout(&timer_autodose,
-				   (unsigned long)command.arg * MILISECOND);
+				   (unsigned long)command.arg * SECOND * (DOSAGE_SECONDS_PER_ML / 10));
 			set_Dosage(1);
 		}
 		cmd_pointer++;
@@ -380,6 +380,7 @@ static void exe_command (void)
 		DBG("CMD_unknown: %d", command.cmd);
 		/* Program error */
 		cmd_pointer = 0;
+		cmd_state = 0;
 		break;
 	}
 	DBG("\n");
@@ -405,6 +406,12 @@ static void wait_command (void)
 				cmd_pointer++;
 				cmd_state -= 3;
 			}
+		}
+		break;
+	case CMD_WAITDOSAGE:
+		if (!get_Dosage()) {
+			cmd_pointer++;
+			cmd_state -= 3;
 		}
 		break;
 	default:
