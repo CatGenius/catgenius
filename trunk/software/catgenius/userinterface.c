@@ -149,17 +149,21 @@ void userinterface_work (void)
 		if (timeoutexpired(&autotimer)) {
 			/* Schedule the next timed wash */
 			update_autotimer(auto_mode);
+			DBG("Autotimer expired: ");
 			/* Skip the actual washing is no cat has been detected */
 			if (cat_detected) {
+				DBG("waiting...\n");
 				state = STATE_CAT;
 				/* Update the display */
 				update_display();
-			}
+			} else
+				DBG("skipping\n");
 		}
 		break;
 	case STATE_CAT:
 		/* Wait until the cat has gone */
 		if (!cat_present && timeoutexpired(&cattimer)) {
+			DBG("Cattimer expired\n");
 			litterlanguage_start(full_wash);
 			state = STATE_RUNNING;
 
@@ -330,7 +334,7 @@ void catsensor_event (unsigned char detected)
 	/* Update the actual cat status */
 	cat_present = detected;
 
-	DBG("Cat %s\n", detected?"detected":"gone");
+	DBG("Cat %s\n", detected?"in":"out");
 
 	/* Trigger detection on rising edge only */
 	if (detected)
