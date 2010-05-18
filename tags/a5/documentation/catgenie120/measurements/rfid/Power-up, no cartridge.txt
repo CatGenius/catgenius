@@ -1,0 +1,1321 @@
+Time [s],Event
+-0,0000020,Start
+0,0000400,Setup write to 0x50. +ACK
+0,0001120,Wrote 0x00 to 0x50. +ACK
+0,0001840,Wrote 0x00 to 0x50. +ACK
+0,0002498,Stop
+0,0003023,Start
+0,0003440,Setup write to 0x50. +ACK
+0,0004160,Wrote 0x00 to 0x50. +ACK
+0,0004880,Wrote 0x10 to 0x50. +ACK
+0,0005537,Stop
+0,0016295,Start
+0,0016713,Setup write to 0x50. +ACK
+0,0017433,Wrote 0x01 to 0x50. +ACK
+0,0018153,Wrote 0x02 to 0x50. +ACK
+0,0019253,Wrote 0x06 to 0x50. +ACK
+0,0019975,Wrote 0x00 to 0x50. +ACK
+0,0020633,Stop
+0,0041350,Start
+0,0041770,Setup write to 0x50. +ACK
+0,0042490,Wrote 0x01 to 0x50. +ACK
+0,0043188,Start
+0,0043560,Setup read from 0x50. +ACK
+0,0044280,Read 0x00 from 0x50. +ACK
+0,0045520,Read 0x00 from 0x50. +No ACK
+0,0046788,Stop
+0,0048013,Start
+0,0048880,Setup write to 0x50. +ACK
+0,0049600,Wrote 0x00 to 0x50. +ACK
+0,0050320,Wrote 0x00 to 0x50. +ACK
+0,0050980,Stop
+0,0052125,Start
+0,0052543,Setup write to 0x50. +ACK
+0,0053263,Wrote 0x00 to 0x50. +ACK
+0,0053983,Wrote 0x00 to 0x50. +ACK
+0,0054640,Stop
+0,0055165,Start
+0,0055583,Setup write to 0x50. +ACK
+0,0056303,Wrote 0x00 to 0x50. +ACK
+0,0057023,Wrote 0x10 to 0x50. +ACK
+0,0057680,Stop
+0,0068898,Start
+0,0069315,Setup write to 0x50. +ACK
+0,0070035,Wrote 0x01 to 0x50. +ACK
+0,0070755,Wrote 0x02 to 0x50. +ACK
+0,0071478,Wrote 0x06 to 0x50. +ACK
+0,0072198,Wrote 0x00 to 0x50. +ACK
+0,0072855,Stop
+0,0093575,Start
+0,0093993,Setup write to 0x50. +ACK
+0,0094713,Wrote 0x01 to 0x50. +ACK
+0,0095410,Start
+0,0095783,Setup read from 0x50. +ACK
+0,0096503,Read 0x00 from 0x50. +ACK
+0,0097743,Read 0x00 from 0x50. +No ACK
+0,0099460,Stop
+0,0100685,Start
+0,0101103,Setup write to 0x50. +ACK
+0,0101823,Wrote 0x00 to 0x50. +ACK
+0,0102545,Wrote 0x00 to 0x50. +ACK
+0,0103203,Stop
+0,0104348,Start
+0,0104765,Setup write to 0x50. +ACK
+0,0105485,Wrote 0x00 to 0x50. +ACK
+0,0106205,Wrote 0x00 to 0x50. +ACK
+0,0106863,Stop
+0,0107388,Start
+0,0107805,Setup write to 0x50. +ACK
+0,0108975,Wrote 0x00 to 0x50. +ACK
+0,0109695,Wrote 0x10 to 0x50. +ACK
+0,0110353,Stop
+0,0121110,Start
+0,0121528,Setup write to 0x50. +ACK
+0,0122248,Wrote 0x01 to 0x50. +ACK
+0,0122970,Wrote 0x02 to 0x50. +ACK
+0,0123690,Wrote 0x06 to 0x50. +ACK
+0,0124410,Wrote 0x00 to 0x50. +ACK
+0,0125068,Stop
+0,0145788,Start
+0,0146205,Setup write to 0x50. +ACK
+0,0146925,Wrote 0x01 to 0x50. +ACK
+0,0147623,Start
+0,0147995,Setup read from 0x50. +ACK
+0,0149165,Read 0x00 from 0x50. +ACK
+0,0150405,Read 0x00 from 0x50. +No ACK
+0,0151673,Stop
+0,0152898,Start
+0,0153315,Setup write to 0x50. +ACK
+0,0154038,Wrote 0x00 to 0x50. +ACK
+0,0154758,Wrote 0x00 to 0x50. +ACK
+0,0155415,Stop
+0,0156560,Start
+0,0156978,Setup write to 0x50. +ACK
+0,0157698,Wrote 0x00 to 0x50. +ACK
+0,0158878,Wrote 0x00 to 0x50. +ACK
+0,0159535,Stop
+0,0160060,Start
+0,0160478,Setup write to 0x50. +ACK
+0,0161198,Wrote 0x00 to 0x50. +ACK
+0,0161918,Wrote 0x10 to 0x50. +ACK
+0,0162575,Stop
+0,0173333,Start
+0,0173750,Setup write to 0x50. +ACK
+0,0174473,Wrote 0x01 to 0x50. +ACK
+0,0175193,Wrote 0x02 to 0x50. +ACK
+0,0175913,Wrote 0x06 to 0x50. +ACK
+0,0176633,Wrote 0x00 to 0x50. +ACK
+0,0177290,Stop
+0,0198000,Start
+0,0198868,Setup write to 0x50. +ACK
+0,0199588,Wrote 0x01 to 0x50. +ACK
+0,0200285,Start
+0,0200658,Setup read from 0x50. +ACK
+0,0201378,Read 0x00 from 0x50. +ACK
+0,0202618,Read 0x00 from 0x50. +No ACK
+0,0203885,Stop
+0,0205110,Start
+0,0205530,Setup write to 0x50. +ACK
+0,0206250,Wrote 0x00 to 0x50. +ACK
+0,0206970,Wrote 0x00 to 0x50. +ACK
+0,0207628,Stop
+0,0209233,Start
+0,0209650,Setup write to 0x50. +ACK
+0,0210370,Wrote 0x00 to 0x50. +ACK
+0,0211090,Wrote 0x00 to 0x50. +ACK
+0,0211748,Stop
+0,0212273,Start
+0,0212690,Setup write to 0x50. +ACK
+0,0213410,Wrote 0x00 to 0x50. +ACK
+0,0214130,Wrote 0x10 to 0x50. +ACK
+0,0214788,Stop
+0,0225545,Start
+0,0225965,Setup write to 0x50. +ACK
+0,0226685,Wrote 0x01 to 0x50. +ACK
+0,0227405,Wrote 0x02 to 0x50. +ACK
+0,0228125,Wrote 0x06 to 0x50. +ACK
+0,0229305,Wrote 0x00 to 0x50. +ACK
+0,0229963,Stop
+0,0250683,Start
+0,0251100,Setup write to 0x50. +ACK
+0,0251820,Wrote 0x01 to 0x50. +ACK
+0,0252518,Start
+0,0252890,Setup read from 0x50. +ACK
+0,0253610,Read 0x00 from 0x50. +ACK
+0,0254850,Read 0x00 from 0x50. +No ACK
+0,0256118,Stop
+0,0257345,Start
+0,0257763,Setup write to 0x50. +ACK
+0,0258933,Wrote 0x00 to 0x50. +ACK
+0,0259653,Wrote 0x00 to 0x50. +ACK
+0,0260310,Stop
+0,0261455,Start
+0,0261873,Setup write to 0x50. +ACK
+0,0262593,Wrote 0x00 to 0x50. +ACK
+0,0263313,Wrote 0x00 to 0x50. +ACK
+0,0263970,Stop
+0,0264495,Start
+0,0264913,Setup write to 0x50. +ACK
+0,0265633,Wrote 0x00 to 0x50. +ACK
+0,0266353,Wrote 0x10 to 0x50. +ACK
+0,0267013,Stop
+0,0277768,Start
+0,0278188,Setup write to 0x50. +ACK
+0,0279288,Wrote 0x01 to 0x50. +ACK
+0,0280008,Wrote 0x02 to 0x50. +ACK
+0,0280728,Wrote 0x06 to 0x50. +ACK
+0,0281448,Wrote 0x00 to 0x50. +ACK
+0,0282105,Stop
+0,0302825,Start
+0,0303243,Setup write to 0x50. +ACK
+0,0303963,Wrote 0x01 to 0x50. +ACK
+0,0304660,Start
+0,0305033,Setup read from 0x50. +ACK
+0,0305753,Read 0x00 from 0x50. +ACK
+0,0306993,Read 0x00 from 0x50. +No ACK
+0,0308263,Stop
+0,0309938,Start
+0,0310355,Setup write to 0x50. +ACK
+0,0311075,Wrote 0x00 to 0x50. +ACK
+0,0311795,Wrote 0x00 to 0x50. +ACK
+0,0312453,Stop
+0,0313598,Start
+0,0314015,Setup write to 0x50. +ACK
+0,0314735,Wrote 0x00 to 0x50. +ACK
+0,0315455,Wrote 0x00 to 0x50. +ACK
+0,0316113,Stop
+0,0316638,Start
+0,0317055,Setup write to 0x50. +ACK
+0,0317775,Wrote 0x00 to 0x50. +ACK
+0,0318948,Wrote 0x10 to 0x50. +ACK
+0,0319605,Stop
+0,0330363,Start
+0,0330780,Setup write to 0x50. +ACK
+0,0331500,Wrote 0x01 to 0x50. +ACK
+0,0332220,Wrote 0x02 to 0x50. +ACK
+0,0332940,Wrote 0x06 to 0x50. +ACK
+0,0333660,Wrote 0x00 to 0x50. +ACK
+0,0334318,Stop
+0,0355038,Start
+0,0355455,Setup write to 0x50. +ACK
+0,0356175,Wrote 0x01 to 0x50. +ACK
+0,0356873,Start
+0,0357245,Setup read from 0x50. +ACK
+0,0357965,Read 0x00 from 0x50. +ACK
+0,0359668,Read 0x00 from 0x50. +No ACK
+0,0360935,Stop
+0,0362160,Start
+0,0362578,Setup write to 0x50. +ACK
+0,0363298,Wrote 0x00 to 0x50. +ACK
+0,0364018,Wrote 0x00 to 0x50. +ACK
+0,0364675,Stop
+0,0365820,Start
+0,0366238,Setup write to 0x50. +ACK
+0,0366958,Wrote 0x00 to 0x50. +ACK
+0,0367678,Wrote 0x00 to 0x50. +ACK
+0,0368335,Stop
+0,0369310,Start
+0,0369730,Setup write to 0x50. +ACK
+0,0370450,Wrote 0x00 to 0x50. +ACK
+0,0371170,Wrote 0x10 to 0x50. +ACK
+0,0371828,Stop
+0,0382585,Start
+0,0383003,Setup write to 0x50. +ACK
+0,0383723,Wrote 0x01 to 0x50. +ACK
+0,0384443,Wrote 0x02 to 0x50. +ACK
+0,0385163,Wrote 0x06 to 0x50. +ACK
+0,0385883,Wrote 0x00 to 0x50. +ACK
+0,0386540,Stop
+0,0407250,Start
+0,0407668,Setup write to 0x50. +ACK
+0,0408388,Wrote 0x01 to 0x50. +ACK
+0,0409295,Start
+0,0409668,Setup read from 0x50. +ACK
+0,0410388,Read 0x00 from 0x50. +ACK
+0,0411630,Read 0x00 from 0x50. +No ACK
+0,0412898,Stop
+0,0414123,Start
+0,0414540,Setup write to 0x50. +ACK
+0,0415260,Wrote 0x00 to 0x50. +ACK
+0,0415980,Wrote 0x00 to 0x50. +ACK
+0,0416638,Stop
+0,0417783,Start
+0,0418200,Setup write to 0x50. +ACK
+0,0419380,Wrote 0x00 to 0x50. +ACK
+0,0420100,Wrote 0x00 to 0x50. +ACK
+0,0420760,Stop
+0,0421283,Start
+0,0421703,Setup write to 0x50. +ACK
+0,0422423,Wrote 0x00 to 0x50. +ACK
+0,0423143,Wrote 0x10 to 0x50. +ACK
+0,0423800,Stop
+0,0434558,Start
+0,0434975,Setup write to 0x50. +ACK
+0,0435695,Wrote 0x01 to 0x50. +ACK
+0,0436415,Wrote 0x02 to 0x50. +ACK
+0,0437135,Wrote 0x06 to 0x50. +ACK
+0,0437855,Wrote 0x00 to 0x50. +ACK
+0,0438973,Stop
+0,0459683,Start
+0,0460100,Setup write to 0x50. +ACK
+0,0460820,Wrote 0x01 to 0x50. +ACK
+0,0461518,Start
+0,0461890,Setup read from 0x50. +ACK
+0,0462613,Read 0x00 from 0x50. +ACK
+0,0463853,Read 0x00 from 0x50. +No ACK
+0,0465120,Stop
+0,0466345,Start
+0,0466763,Setup write to 0x50. +ACK
+0,0467483,Wrote 0x00 to 0x50. +ACK
+0,0468203,Wrote 0x00 to 0x50. +ACK
+0,0469310,Stop
+0,0470455,Start
+0,0470873,Setup write to 0x50. +ACK
+0,0471593,Wrote 0x00 to 0x50. +ACK
+0,0472315,Wrote 0x00 to 0x50. +ACK
+0,0472973,Stop
+0,0473498,Start
+0,0473915,Setup write to 0x50. +ACK
+0,0474635,Wrote 0x00 to 0x50. +ACK
+0,0475355,Wrote 0x10 to 0x50. +ACK
+0,0476013,Stop
+0,0486770,Start
+0,0487188,Setup write to 0x50. +ACK
+0,0487908,Wrote 0x01 to 0x50. +ACK
+0,0489088,Wrote 0x02 to 0x50. +ACK
+0,0489808,Wrote 0x06 to 0x50. +ACK
+0,0490528,Wrote 0x00 to 0x50. +ACK
+0,0491185,Stop
+0,0511895,Start
+0,0512313,Setup write to 0x50. +ACK
+0,0513033,Wrote 0x01 to 0x50. +ACK
+0,0513730,Start
+0,0514105,Setup read from 0x50. +ACK
+0,0514825,Read 0x00 from 0x50. +ACK
+0,0516065,Read 0x00 from 0x50. +No ACK
+0,0517333,Stop
+0,0519018,Start
+0,0519435,Setup write to 0x50. +ACK
+0,0520155,Wrote 0x00 to 0x50. +ACK
+0,0520875,Wrote 0x00 to 0x50. +ACK
+0,0521533,Stop
+0,0522678,Start
+0,0523095,Setup write to 0x50. +ACK
+0,0523818,Wrote 0x00 to 0x50. +ACK
+0,0524538,Wrote 0x00 to 0x50. +ACK
+0,0525195,Stop
+0,0525720,Start
+0,0526138,Setup write to 0x50. +ACK
+0,0526858,Wrote 0x00 to 0x50. +ACK
+0,0527578,Wrote 0x10 to 0x50. +ACK
+0,0528235,Stop
+0,0539433,Start
+0,0539850,Setup write to 0x50. +ACK
+0,0540570,Wrote 0x01 to 0x50. +ACK
+0,0541290,Wrote 0x02 to 0x50. +ACK
+0,0542010,Wrote 0x06 to 0x50. +ACK
+0,0542730,Wrote 0x00 to 0x50. +ACK
+0,0543388,Stop
+0,0564108,Start
+0,0564525,Setup write to 0x50. +ACK
+0,0565248,Wrote 0x01 to 0x50. +ACK
+0,0565945,Start
+0,0566318,Setup read from 0x50. +ACK
+0,0567038,Read 0x00 from 0x50. +ACK
+0,0568278,Read 0x00 from 0x50. +No ACK
+0,0569835,Stop
+0,0571060,Start
+0,0571478,Setup write to 0x50. +ACK
+0,0572198,Wrote 0x00 to 0x50. +ACK
+0,0572918,Wrote 0x00 to 0x50. +ACK
+0,0573575,Stop
+0,0574720,Start
+0,0575140,Setup write to 0x50. +ACK
+0,0575860,Wrote 0x00 to 0x50. +ACK
+0,0576580,Wrote 0x00 to 0x50. +ACK
+0,0577238,Stop
+0,0577763,Start
+0,0578180,Setup write to 0x50. +ACK
+0,0579360,Wrote 0x00 to 0x50. +ACK
+0,0580080,Wrote 0x10 to 0x50. +ACK
+0,0580738,Stop
+0,0591495,Start
+0,0591913,Setup write to 0x50. +ACK
+0,0592633,Wrote 0x01 to 0x50. +ACK
+0,0593353,Wrote 0x02 to 0x50. +ACK
+0,0594073,Wrote 0x06 to 0x50. +ACK
+0,0594793,Wrote 0x00 to 0x50. +ACK
+0,0595453,Stop
+0,0616170,Start
+0,0616590,Setup write to 0x50. +ACK
+0,0617310,Wrote 0x01 to 0x50. +ACK
+0,0618008,Start
+0,0618380,Setup read from 0x50. +ACK
+0,0619400,Read 0x00 from 0x50. +ACK
+0,0620640,Read 0x00 from 0x50. +No ACK
+0,0621908,Stop
+0,0623133,Start
+0,0623550,Setup write to 0x50. +ACK
+0,0624270,Wrote 0x00 to 0x50. +ACK
+0,0624990,Wrote 0x00 to 0x50. +ACK
+0,0625648,Stop
+0,0626793,Start
+0,0627213,Setup write to 0x50. +ACK
+0,0627933,Wrote 0x00 to 0x50. +ACK
+0,0629103,Wrote 0x00 to 0x50. +ACK
+0,0629760,Stop
+0,0630285,Start
+0,0630703,Setup write to 0x50. +ACK
+0,0631423,Wrote 0x00 to 0x50. +ACK
+0,0632143,Wrote 0x10 to 0x50. +ACK
+0,0632800,Stop
+0,0643558,Start
+0,0643975,Setup write to 0x50. +ACK
+0,0644695,Wrote 0x01 to 0x50. +ACK
+0,0645415,Wrote 0x02 to 0x50. +ACK
+0,0646135,Wrote 0x06 to 0x50. +ACK
+0,0646855,Wrote 0x00 to 0x50. +ACK
+0,0647515,Stop
+0,0668233,Start
+0,0669113,Setup write to 0x50. +ACK
+0,0669833,Wrote 0x01 to 0x50. +ACK
+0,0670530,Start
+0,0670903,Setup read from 0x50. +ACK
+0,0671623,Read 0x00 from 0x50. +ACK
+0,0672863,Read 0x00 from 0x50. +No ACK
+0,0674130,Stop
+0,0675355,Start
+0,0675773,Setup write to 0x50. +ACK
+0,0676493,Wrote 0x00 to 0x50. +ACK
+0,0677213,Wrote 0x00 to 0x50. +ACK
+0,0677873,Stop
+0,0679478,Start
+0,0679895,Setup write to 0x50. +ACK
+0,0680615,Wrote 0x00 to 0x50. +ACK
+0,0681335,Wrote 0x00 to 0x50. +ACK
+0,0681993,Stop
+0,0682518,Start
+0,0682935,Setup write to 0x50. +ACK
+0,0683655,Wrote 0x00 to 0x50. +ACK
+0,0684375,Wrote 0x10 to 0x50. +ACK
+0,0685033,Stop
+0,0695790,Start
+0,0696208,Setup write to 0x50. +ACK
+0,0696928,Wrote 0x01 to 0x50. +ACK
+0,0697648,Wrote 0x02 to 0x50. +ACK
+0,0698370,Wrote 0x06 to 0x50. +ACK
+0,0699390,Wrote 0x00 to 0x50. +ACK
+0,0700048,Stop
+0,0720768,Start
+0,0721185,Setup write to 0x50. +ACK
+0,0721905,Wrote 0x01 to 0x50. +ACK
+0,0722603,Start
+0,0722975,Setup read from 0x50. +ACK
+0,0723695,Read 0x00 from 0x50. +ACK
+0,0724935,Read 0x00 from 0x50. +No ACK
+0,0726203,Stop
+0,0727428,Start
+0,0727845,Setup write to 0x50. +ACK
+0,0729025,Wrote 0x00 to 0x50. +ACK
+0,0729748,Wrote 0x00 to 0x50. +ACK
+0,0730405,Stop
+0,0731550,Start
+0,0731968,Setup write to 0x50. +ACK
+0,0732688,Wrote 0x00 to 0x50. +ACK
+0,0733408,Wrote 0x00 to 0x50. +ACK
+0,0734065,Stop
+0,0734590,Start
+0,0735008,Setup write to 0x50. +ACK
+0,0735728,Wrote 0x00 to 0x50. +ACK
+0,0736448,Wrote 0x10 to 0x50. +ACK
+0,0737105,Stop
+0,0747863,Start
+0,0748280,Setup write to 0x50. +ACK
+0,0749460,Wrote 0x01 to 0x50. +ACK
+0,0750183,Wrote 0x02 to 0x50. +ACK
+0,0750903,Wrote 0x06 to 0x50. +ACK
+0,0751623,Wrote 0x00 to 0x50. +ACK
+0,0752280,Stop
+0,0773620,Start
+0,0774038,Setup write to 0x50. +ACK
+0,0774758,Wrote 0x01 to 0x50. +ACK
+0,0775455,Start
+0,0775828,Setup read from 0x50. +ACK
+0,0776548,Read 0x00 from 0x50. +ACK
+0,0777788,Read 0x00 from 0x50. +No ACK
+0,0779505,Stop
+0,0780730,Start
+0,0781150,Setup write to 0x50. +ACK
+0,0781870,Wrote 0x00 to 0x50. +ACK
+0,0782590,Wrote 0x00 to 0x50. +ACK
+0,0783248,Stop
+0,0784393,Start
+0,0784810,Setup write to 0x50. +ACK
+0,0785530,Wrote 0x00 to 0x50. +ACK
+0,0786250,Wrote 0x00 to 0x50. +ACK
+0,0786908,Stop
+0,0787433,Start
+0,0787850,Setup write to 0x50. +ACK
+0,0789030,Wrote 0x00 to 0x50. +ACK
+0,0789750,Wrote 0x10 to 0x50. +ACK
+0,0790408,Stop
+0,0801165,Start
+0,0801585,Setup write to 0x50. +ACK
+0,0802305,Wrote 0x01 to 0x50. +ACK
+0,0803025,Wrote 0x02 to 0x50. +ACK
+0,0803745,Wrote 0x06 to 0x50. +ACK
+0,0804465,Wrote 0x00 to 0x50. +ACK
+0,0805123,Stop
+0,0825843,Start
+0,0826260,Setup write to 0x50. +ACK
+0,0826980,Wrote 0x01 to 0x50. +ACK
+0,0827678,Start
+0,0828050,Setup read from 0x50. +ACK
+0,0829230,Read 0x00 from 0x50. +ACK
+0,0830470,Read 0x00 from 0x50. +No ACK
+0,0831738,Stop
+0,0832963,Start
+0,0833383,Setup write to 0x50. +ACK
+0,0834103,Wrote 0x00 to 0x50. +ACK
+0,0834823,Wrote 0x00 to 0x50. +ACK
+0,0835480,Stop
+0,0836625,Start
+0,0837043,Setup write to 0x50. +ACK
+0,0837763,Wrote 0x00 to 0x50. +ACK
+0,0838483,Wrote 0x00 to 0x50. +ACK
+0,0839360,Stop
+0,0839885,Start
+0,0840303,Setup write to 0x50. +ACK
+0,0841023,Wrote 0x00 to 0x50. +ACK
+0,0841743,Wrote 0x10 to 0x50. +ACK
+0,0842403,Stop
+0,0853158,Start
+0,0853578,Setup write to 0x50. +ACK
+0,0854298,Wrote 0x01 to 0x50. +ACK
+0,0855018,Wrote 0x02 to 0x50. +ACK
+0,0855738,Wrote 0x06 to 0x50. +ACK
+0,0856458,Wrote 0x00 to 0x50. +ACK
+0,0857115,Stop
+0,0877835,Start
+0,0878253,Setup write to 0x50. +ACK
+0,0879433,Wrote 0x01 to 0x50. +ACK
+0,0880130,Start
+0,0880503,Setup read from 0x50. +ACK
+0,0881223,Read 0x00 from 0x50. +ACK
+0,0882463,Read 0x00 from 0x50. +No ACK
+0,0883733,Stop
+0,0884958,Start
+0,0885375,Setup write to 0x50. +ACK
+0,0886095,Wrote 0x00 to 0x50. +ACK
+0,0886815,Wrote 0x00 to 0x50. +ACK
+0,0887473,Stop
+0,3116210,Start
+0,3116628,Setup write to 0x50. +ACK
+0,3117348,Wrote 0x00 to 0x50. +ACK
+0,3118068,Wrote 0x00 to 0x50. +ACK
+0,3118725,Stop
+0,3119700,Start
+0,3120118,Setup write to 0x50. +ACK
+0,3120838,Wrote 0x00 to 0x50. +ACK
+0,3121558,Wrote 0x10 to 0x50. +ACK
+0,3122215,Stop
+0,3132893,Start
+0,3133310,Setup write to 0x50. +ACK
+0,3134030,Wrote 0x01 to 0x50. +ACK
+0,3134750,Wrote 0x02 to 0x50. +ACK
+0,3135473,Wrote 0x06 to 0x50. +ACK
+0,3136193,Wrote 0x00 to 0x50. +ACK
+0,3136850,Stop
+0,3157570,Start
+0,3157988,Setup write to 0x50. +ACK
+0,3158708,Wrote 0x01 to 0x50. +ACK
+0,3159865,Start
+0,3160238,Setup read from 0x50. +ACK
+0,3160958,Read 0x00 from 0x50. +ACK
+0,3162198,Read 0x00 from 0x50. +No ACK
+0,3163465,Stop
+0,3164040,Start
+0,3164458,Setup write to 0x50. +ACK
+0,3165178,Wrote 0x00 to 0x50. +ACK
+0,3165900,Wrote 0x00 to 0x50. +ACK
+0,3166558,Stop
+0,7941533,Start
+0,7941950,Setup write to 0x50. +ACK
+0,7942670,Wrote 0x00 to 0x50. +ACK
+0,7943390,Wrote 0x00 to 0x50. +ACK
+0,7944048,Stop
+0,7944573,Start
+0,7944990,Setup write to 0x50. +ACK
+0,7945710,Wrote 0x00 to 0x50. +ACK
+0,7946433,Wrote 0x10 to 0x50. +ACK
+0,7947090,Stop
+0,7957838,Start
+0,7958255,Setup write to 0x50. +ACK
+0,7958975,Wrote 0x01 to 0x50. +ACK
+0,7959695,Wrote 0x02 to 0x50. +ACK
+0,7960875,Wrote 0x06 to 0x50. +ACK
+0,7961595,Wrote 0x00 to 0x50. +ACK
+0,7962253,Stop
+0,7982963,Start
+0,7983380,Setup write to 0x50. +ACK
+0,7984100,Wrote 0x01 to 0x50. +ACK
+0,7984798,Start
+0,7985170,Setup read from 0x50. +ACK
+0,7985890,Read 0x00 from 0x50. +ACK
+0,7987130,Read 0x00 from 0x50. +No ACK
+0,7988400,Stop
+0,7989625,Start
+0,7990043,Setup write to 0x50. +ACK
+0,7991223,Wrote 0x00 to 0x50. +ACK
+0,7991943,Wrote 0x00 to 0x50. +ACK
+0,7992600,Stop
+0,7993745,Start
+0,7994163,Setup write to 0x50. +ACK
+0,7994883,Wrote 0x00 to 0x50. +ACK
+0,7995603,Wrote 0x00 to 0x50. +ACK
+0,7996260,Stop
+0,7996785,Start
+0,7997203,Setup write to 0x50. +ACK
+0,7997925,Wrote 0x00 to 0x50. +ACK
+0,7998645,Wrote 0x10 to 0x50. +ACK
+0,7999303,Stop
+0,8010050,Start
+0,8010928,Setup write to 0x50. +ACK
+0,8011648,Wrote 0x01 to 0x50. +ACK
+0,8012368,Wrote 0x02 to 0x50. +ACK
+0,8013088,Wrote 0x06 to 0x50. +ACK
+0,8013808,Wrote 0x00 to 0x50. +ACK
+0,8014465,Stop
+0,8035175,Start
+0,8035593,Setup write to 0x50. +ACK
+0,8036313,Wrote 0x01 to 0x50. +ACK
+0,8037010,Start
+0,8037383,Setup read from 0x50. +ACK
+0,8038103,Read 0x00 from 0x50. +ACK
+0,8039345,Read 0x00 from 0x50. +No ACK
+0,8041073,Stop
+0,8042298,Start
+0,8042715,Setup write to 0x50. +ACK
+0,8043435,Wrote 0x00 to 0x50. +ACK
+0,8044155,Wrote 0x00 to 0x50. +ACK
+0,8044813,Stop
+1,3765338,Start
+1,3765758,Setup write to 0x50. +ACK
+1,3766478,Wrote 0x00 to 0x50. +ACK
+1,3767198,Wrote 0x00 to 0x50. +ACK
+1,3767855,Stop
+1,3768380,Start
+1,3768798,Setup write to 0x50. +ACK
+1,3769518,Wrote 0x00 to 0x50. +ACK
+1,3770238,Wrote 0x10 to 0x50. +ACK
+1,3770895,Stop
+1,3782163,Start
+1,3782580,Setup write to 0x50. +ACK
+1,3783300,Wrote 0x01 to 0x50. +ACK
+1,3784020,Wrote 0x02 to 0x50. +ACK
+1,3784740,Wrote 0x06 to 0x50. +ACK
+1,3785463,Wrote 0x00 to 0x50. +ACK
+1,3786120,Stop
+1,3806888,Start
+1,3807308,Setup write to 0x50. +ACK
+1,3808028,Wrote 0x01 to 0x50. +ACK
+1,3808725,Start
+1,3809098,Setup read from 0x50. +ACK
+1,3809818,Read 0x00 from 0x50. +ACK
+1,3811058,Read 0x00 from 0x50. +No ACK
+1,3812815,Stop
+1,3814040,Start
+1,3814458,Setup write to 0x50. +ACK
+1,3815178,Wrote 0x00 to 0x50. +ACK
+1,3815898,Wrote 0x00 to 0x50. +ACK
+1,3816558,Stop
+1,3817703,Start
+1,3818120,Setup write to 0x50. +ACK
+1,3818840,Wrote 0x00 to 0x50. +ACK
+1,3819560,Wrote 0x00 to 0x50. +ACK
+1,3820218,Stop
+1,3820743,Start
+1,3821160,Setup write to 0x50. +ACK
+1,3822370,Wrote 0x00 to 0x50. +ACK
+1,3823090,Wrote 0x10 to 0x50. +ACK
+1,3823748,Stop
+1,3834535,Start
+1,3834953,Setup write to 0x50. +ACK
+1,3835673,Wrote 0x01 to 0x50. +ACK
+1,3836393,Wrote 0x02 to 0x50. +ACK
+1,3837115,Wrote 0x06 to 0x50. +ACK
+1,3837835,Wrote 0x00 to 0x50. +ACK
+1,3838493,Stop
+1,3859273,Start
+1,3859690,Setup write to 0x50. +ACK
+1,3860410,Wrote 0x01 to 0x50. +ACK
+1,3861108,Start
+1,3861480,Setup read from 0x50. +ACK
+1,3862610,Read 0x00 from 0x50. +ACK
+1,3863850,Read 0x00 from 0x50. +No ACK
+1,3865118,Stop
+1,3866343,Start
+1,3866760,Setup write to 0x50. +ACK
+1,3867480,Wrote 0x00 to 0x50. +ACK
+1,3868203,Wrote 0x00 to 0x50. +ACK
+1,3868860,Stop
+2,3766630,Start
+2,3767048,Setup write to 0x50. +ACK
+2,3767768,Wrote 0x00 to 0x50. +ACK
+2,3768490,Wrote 0x00 to 0x50. +ACK
+2,3769148,Stop
+2,3769673,Start
+2,3770090,Setup write to 0x50. +ACK
+2,3770810,Wrote 0x00 to 0x50. +ACK
+2,3771530,Wrote 0x10 to 0x50. +ACK
+2,3772188,Stop
+2,3782935,Start
+2,3783353,Setup write to 0x50. +ACK
+2,3784073,Wrote 0x01 to 0x50. +ACK
+2,3785003,Wrote 0x02 to 0x50. +ACK
+2,3785723,Wrote 0x06 to 0x50. +ACK
+2,3786443,Wrote 0x00 to 0x50. +ACK
+2,3787100,Stop
+2,3807810,Start
+2,3808228,Setup write to 0x50. +ACK
+2,3808950,Wrote 0x01 to 0x50. +ACK
+2,3809645,Start
+2,3810020,Setup read from 0x50. +ACK
+2,3810740,Read 0x00 from 0x50. +ACK
+2,3811980,Read 0x00 from 0x50. +No ACK
+2,3813248,Stop
+2,3814933,Start
+2,3815350,Setup write to 0x50. +ACK
+2,3816070,Wrote 0x00 to 0x50. +ACK
+2,3816790,Wrote 0x00 to 0x50. +ACK
+2,3817448,Stop
+2,3818593,Start
+2,3819010,Setup write to 0x50. +ACK
+2,3819733,Wrote 0x00 to 0x50. +ACK
+2,3820453,Wrote 0x00 to 0x50. +ACK
+2,3821110,Stop
+2,3821635,Start
+2,3822053,Setup write to 0x50. +ACK
+2,3822773,Wrote 0x00 to 0x50. +ACK
+2,3823493,Wrote 0x10 to 0x50. +ACK
+2,3824610,Stop
+2,3835368,Start
+2,3835785,Setup write to 0x50. +ACK
+2,3836505,Wrote 0x01 to 0x50. +ACK
+2,3837225,Wrote 0x02 to 0x50. +ACK
+2,3837945,Wrote 0x06 to 0x50. +ACK
+2,3838665,Wrote 0x00 to 0x50. +ACK
+2,3839323,Stop
+2,3860043,Start
+2,3860463,Setup write to 0x50. +ACK
+2,3861183,Wrote 0x01 to 0x50. +ACK
+2,3861880,Start
+2,3862253,Setup read from 0x50. +ACK
+2,3862973,Read 0x00 from 0x50. +ACK
+2,3864673,Read 0x00 from 0x50. +No ACK
+2,3865940,Stop
+2,3867165,Start
+2,3867583,Setup write to 0x50. +ACK
+2,3868303,Wrote 0x00 to 0x50. +ACK
+2,3869023,Wrote 0x00 to 0x50. +ACK
+2,3869680,Stop
+3,3769863,Start
+3,3770280,Setup write to 0x50. +ACK
+3,3771003,Wrote 0x00 to 0x50. +ACK
+3,3771723,Wrote 0x00 to 0x50. +ACK
+3,3772380,Stop
+3,3772905,Start
+3,3773323,Setup write to 0x50. +ACK
+3,3774043,Wrote 0x00 to 0x50. +ACK
+3,3774763,Wrote 0x10 to 0x50. +ACK
+3,3775420,Stop
+3,3786168,Start
+3,3787035,Setup write to 0x50. +ACK
+3,3787755,Wrote 0x01 to 0x50. +ACK
+3,3788475,Wrote 0x02 to 0x50. +ACK
+3,3789195,Wrote 0x06 to 0x50. +ACK
+3,3789915,Wrote 0x00 to 0x50. +ACK
+3,3790573,Stop
+3,3811293,Start
+3,3811710,Setup write to 0x50. +ACK
+3,3812433,Wrote 0x01 to 0x50. +ACK
+3,3813130,Start
+3,3813503,Setup read from 0x50. +ACK
+3,3814223,Read 0x00 from 0x50. +ACK
+3,3815463,Read 0x00 from 0x50. +No ACK
+3,3817180,Stop
+3,3818405,Start
+3,3818823,Setup write to 0x50. +ACK
+3,3819543,Wrote 0x00 to 0x50. +ACK
+3,3820263,Wrote 0x00 to 0x50. +ACK
+3,3820920,Stop
+3,3822065,Start
+3,3822485,Setup write to 0x50. +ACK
+3,3823205,Wrote 0x00 to 0x50. +ACK
+3,3823925,Wrote 0x00 to 0x50. +ACK
+3,3824583,Stop
+3,3825108,Start
+3,3825525,Setup write to 0x50. +ACK
+3,3826245,Wrote 0x00 to 0x50. +ACK
+3,3827415,Wrote 0x10 to 0x50. +ACK
+3,3828073,Stop
+3,3838830,Start
+3,3839248,Setup write to 0x50. +ACK
+3,3839968,Wrote 0x01 to 0x50. +ACK
+3,3840688,Wrote 0x02 to 0x50. +ACK
+3,3841408,Wrote 0x06 to 0x50. +ACK
+3,3842128,Wrote 0x00 to 0x50. +ACK
+3,3842788,Stop
+3,3863505,Start
+3,3863925,Setup write to 0x50. +ACK
+3,3864645,Wrote 0x01 to 0x50. +ACK
+3,3865343,Start
+3,3865715,Setup read from 0x50. +ACK
+3,3866435,Read 0x00 from 0x50. +ACK
+3,3867965,Read 0x00 from 0x50. +No ACK
+3,3869233,Stop
+3,3870458,Start
+3,3870875,Setup write to 0x50. +ACK
+3,3871595,Wrote 0x00 to 0x50. +ACK
+3,3872315,Wrote 0x00 to 0x50. +ACK
+3,3872973,Stop
+4,3771765,Start
+4,3772183,Setup write to 0x50. +ACK
+4,3772903,Wrote 0x00 to 0x50. +ACK
+4,3773623,Wrote 0x00 to 0x50. +ACK
+4,3774283,Stop
+4,3774808,Start
+4,3775225,Setup write to 0x50. +ACK
+4,3775945,Wrote 0x00 to 0x50. +ACK
+4,3776665,Wrote 0x10 to 0x50. +ACK
+4,3777323,Stop
+4,3788080,Start
+4,3788498,Setup write to 0x50. +ACK
+4,3789678,Wrote 0x01 to 0x50. +ACK
+4,3790398,Wrote 0x02 to 0x50. +ACK
+4,3791118,Wrote 0x06 to 0x50. +ACK
+4,3791838,Wrote 0x00 to 0x50. +ACK
+4,3792495,Stop
+4,3813205,Start
+4,3813623,Setup write to 0x50. +ACK
+4,3814343,Wrote 0x01 to 0x50. +ACK
+4,3815040,Start
+4,3815415,Setup read from 0x50. +ACK
+4,3816135,Read 0x00 from 0x50. +ACK
+4,3817375,Read 0x00 from 0x50. +No ACK
+4,3818643,Stop
+4,3820328,Start
+4,3820745,Setup write to 0x50. +ACK
+4,3821465,Wrote 0x00 to 0x50. +ACK
+4,3822185,Wrote 0x00 to 0x50. +ACK
+4,3822843,Stop
+4,3823988,Start
+4,3824405,Setup write to 0x50. +ACK
+4,3825128,Wrote 0x00 to 0x50. +ACK
+4,3825848,Wrote 0x00 to 0x50. +ACK
+4,3826505,Stop
+4,3827030,Start
+4,3827448,Setup write to 0x50. +ACK
+4,3828168,Wrote 0x00 to 0x50. +ACK
+4,3828888,Wrote 0x10 to 0x50. +ACK
+4,3829845,Stop
+4,3840603,Start
+4,3841020,Setup write to 0x50. +ACK
+4,3841740,Wrote 0x01 to 0x50. +ACK
+4,3842460,Wrote 0x02 to 0x50. +ACK
+4,3843180,Wrote 0x06 to 0x50. +ACK
+4,3843900,Wrote 0x00 to 0x50. +ACK
+4,3844558,Stop
+4,3865268,Start
+4,3865685,Setup write to 0x50. +ACK
+4,3866408,Wrote 0x01 to 0x50. +ACK
+4,3867103,Start
+4,3867478,Setup read from 0x50. +ACK
+4,3868198,Read 0x00 from 0x50. +ACK
+4,3869898,Read 0x00 from 0x50. +No ACK
+4,3871165,Stop
+4,3872390,Start
+4,3872808,Setup write to 0x50. +ACK
+4,3873528,Wrote 0x00 to 0x50. +ACK
+4,3874248,Wrote 0x00 to 0x50. +ACK
+4,3874905,Stop
+5,3773718,Start
+5,3774135,Setup write to 0x50. +ACK
+5,3774855,Wrote 0x00 to 0x50. +ACK
+5,3775575,Wrote 0x00 to 0x50. +ACK
+5,3776233,Stop
+5,3776758,Start
+5,3777178,Setup write to 0x50. +ACK
+5,3777898,Wrote 0x00 to 0x50. +ACK
+5,3778618,Wrote 0x10 to 0x50. +ACK
+5,3779275,Stop
+5,3790033,Start
+5,3790450,Setup write to 0x50. +ACK
+5,3791170,Wrote 0x01 to 0x50. +ACK
+5,3792340,Wrote 0x02 to 0x50. +ACK
+5,3793060,Wrote 0x06 to 0x50. +ACK
+5,3793780,Wrote 0x00 to 0x50. +ACK
+5,3794438,Stop
+5,3815158,Start
+5,3815575,Setup write to 0x50. +ACK
+5,3816295,Wrote 0x01 to 0x50. +ACK
+5,3816993,Start
+5,3817365,Setup read from 0x50. +ACK
+5,3818088,Read 0x00 from 0x50. +ACK
+5,3819328,Read 0x00 from 0x50. +No ACK
+5,3820595,Stop
+5,3822270,Start
+5,3822688,Setup write to 0x50. +ACK
+5,3823408,Wrote 0x00 to 0x50. +ACK
+5,3824128,Wrote 0x00 to 0x50. +ACK
+5,3824785,Stop
+5,3825930,Start
+5,3826348,Setup write to 0x50. +ACK
+5,3827068,Wrote 0x00 to 0x50. +ACK
+5,3827788,Wrote 0x00 to 0x50. +ACK
+5,3828448,Stop
+5,3828970,Start
+5,3829390,Setup write to 0x50. +ACK
+5,3830110,Wrote 0x00 to 0x50. +ACK
+5,3830830,Wrote 0x10 to 0x50. +ACK
+5,3831948,Stop
+5,3842695,Start
+5,3843113,Setup write to 0x50. +ACK
+5,3843833,Wrote 0x01 to 0x50. +ACK
+5,3844553,Wrote 0x02 to 0x50. +ACK
+5,3845273,Wrote 0x06 to 0x50. +ACK
+5,3845993,Wrote 0x00 to 0x50. +ACK
+5,3846650,Stop
+5,3867370,Start
+5,3867788,Setup write to 0x50. +ACK
+5,3868508,Wrote 0x01 to 0x50. +ACK
+5,3869205,Start
+5,3869580,Setup read from 0x50. +ACK
+5,3870300,Read 0x00 from 0x50. +ACK
+5,3872000,Read 0x00 from 0x50. +No ACK
+5,3873268,Stop
+5,3874493,Start
+5,3874910,Setup write to 0x50. +ACK
+5,3875630,Wrote 0x00 to 0x50. +ACK
+5,3876350,Wrote 0x00 to 0x50. +ACK
+5,3877008,Stop
+6,3777360,Start
+6,3777778,Setup write to 0x50. +ACK
+6,3778498,Wrote 0x00 to 0x50. +ACK
+6,3779218,Wrote 0x00 to 0x50. +ACK
+6,3779875,Stop
+6,3780400,Start
+6,3780820,Setup write to 0x50. +ACK
+6,3781540,Wrote 0x00 to 0x50. +ACK
+6,3782260,Wrote 0x10 to 0x50. +ACK
+6,3782918,Stop
+6,3793695,Start
+6,3794603,Setup write to 0x50. +ACK
+6,3795323,Wrote 0x01 to 0x50. +ACK
+6,3796043,Wrote 0x02 to 0x50. +ACK
+6,3796763,Wrote 0x06 to 0x50. +ACK
+6,3797483,Wrote 0x00 to 0x50. +ACK
+6,3798140,Stop
+6,3818920,Start
+6,3819338,Setup write to 0x50. +ACK
+6,3820058,Wrote 0x01 to 0x50. +ACK
+6,3820755,Start
+6,3821128,Setup read from 0x50. +ACK
+6,3821850,Read 0x00 from 0x50. +ACK
+6,3823090,Read 0x00 from 0x50. +No ACK
+6,3824848,Stop
+6,3826073,Start
+6,3826490,Setup write to 0x50. +ACK
+6,3827210,Wrote 0x00 to 0x50. +ACK
+6,3827930,Wrote 0x00 to 0x50. +ACK
+6,3828588,Stop
+6,3829733,Start
+6,3830150,Setup write to 0x50. +ACK
+6,3830870,Wrote 0x00 to 0x50. +ACK
+6,3831590,Wrote 0x00 to 0x50. +ACK
+6,3832250,Stop
+6,3832773,Start
+6,3833193,Setup write to 0x50. +ACK
+6,3834403,Wrote 0x00 to 0x50. +ACK
+6,3835123,Wrote 0x10 to 0x50. +ACK
+6,3835780,Stop
+6,3846558,Start
+6,3846975,Setup write to 0x50. +ACK
+6,3847695,Wrote 0x01 to 0x50. +ACK
+6,3848415,Wrote 0x02 to 0x50. +ACK
+6,3849135,Wrote 0x06 to 0x50. +ACK
+6,3849855,Wrote 0x00 to 0x50. +ACK
+6,3850513,Stop
+6,3871293,Start
+6,3871710,Setup write to 0x50. +ACK
+6,3872430,Wrote 0x01 to 0x50. +ACK
+6,3873128,Start
+6,3873503,Setup read from 0x50. +ACK
+6,3874713,Read 0x00 from 0x50. +ACK
+6,3875953,Read 0x00 from 0x50. +No ACK
+6,3877220,Stop
+6,3878445,Start
+6,3878863,Setup write to 0x50. +ACK
+6,3879583,Wrote 0x00 to 0x50. +ACK
+6,3880303,Wrote 0x00 to 0x50. +ACK
+6,3880960,Stop
+7,3778743,Start
+7,3779160,Setup write to 0x50. +ACK
+7,3779880,Wrote 0x00 to 0x50. +ACK
+7,3780600,Wrote 0x00 to 0x50. +ACK
+7,3781258,Stop
+7,3781783,Start
+7,3782200,Setup write to 0x50. +ACK
+7,3782920,Wrote 0x00 to 0x50. +ACK
+7,3783640,Wrote 0x10 to 0x50. +ACK
+7,3784300,Stop
+7,3795045,Start
+7,3795465,Setup write to 0x50. +ACK
+7,3796185,Wrote 0x01 to 0x50. +ACK
+7,3797205,Wrote 0x02 to 0x50. +ACK
+7,3797925,Wrote 0x06 to 0x50. +ACK
+7,3798645,Wrote 0x00 to 0x50. +ACK
+7,3799303,Stop
+7,3820023,Start
+7,3820440,Setup write to 0x50. +ACK
+7,3821160,Wrote 0x01 to 0x50. +ACK
+7,3821858,Start
+7,3822230,Setup read from 0x50. +ACK
+7,3822950,Read 0x00 from 0x50. +ACK
+7,3824190,Read 0x00 from 0x50. +No ACK
+7,3825460,Stop
+7,3827135,Start
+7,3827553,Setup write to 0x50. +ACK
+7,3828273,Wrote 0x00 to 0x50. +ACK
+7,3828993,Wrote 0x00 to 0x50. +ACK
+7,3829650,Stop
+7,3830795,Start
+7,3831213,Setup write to 0x50. +ACK
+7,3831933,Wrote 0x00 to 0x50. +ACK
+7,3832653,Wrote 0x00 to 0x50. +ACK
+7,3833310,Stop
+7,3833835,Start
+7,3834253,Setup write to 0x50. +ACK
+7,3834973,Wrote 0x00 to 0x50. +ACK
+7,3835695,Wrote 0x10 to 0x50. +ACK
+7,3836813,Stop
+7,3847560,Start
+7,3847978,Setup write to 0x50. +ACK
+7,3848698,Wrote 0x01 to 0x50. +ACK
+7,3849418,Wrote 0x02 to 0x50. +ACK
+7,3850138,Wrote 0x06 to 0x50. +ACK
+7,3850858,Wrote 0x00 to 0x50. +ACK
+7,3851515,Stop
+7,3872235,Start
+7,3872653,Setup write to 0x50. +ACK
+7,3873373,Wrote 0x01 to 0x50. +ACK
+7,3874070,Start
+7,3874443,Setup read from 0x50. +ACK
+7,3875163,Read 0x00 from 0x50. +ACK
+7,3876865,Read 0x00 from 0x50. +No ACK
+7,3878133,Stop
+7,3879358,Start
+7,3879775,Setup write to 0x50. +ACK
+7,3880495,Wrote 0x00 to 0x50. +ACK
+7,3881215,Wrote 0x00 to 0x50. +ACK
+7,3881873,Stop
+8,3781945,Start
+8,3782363,Setup write to 0x50. +ACK
+8,3783083,Wrote 0x00 to 0x50. +ACK
+8,3783803,Wrote 0x00 to 0x50. +ACK
+8,3784460,Stop
+8,3784985,Start
+8,3785403,Setup write to 0x50. +ACK
+8,3786123,Wrote 0x00 to 0x50. +ACK
+8,3786843,Wrote 0x10 to 0x50. +ACK
+8,3787503,Stop
+8,3798258,Start
+8,3798678,Setup write to 0x50. +ACK
+8,3799618,Wrote 0x01 to 0x50. +ACK
+8,3800338,Wrote 0x02 to 0x50. +ACK
+8,3801058,Wrote 0x06 to 0x50. +ACK
+8,3801778,Wrote 0x00 to 0x50. +ACK
+8,3802435,Stop
+8,3823155,Start
+8,3823573,Setup write to 0x50. +ACK
+8,3824293,Wrote 0x01 to 0x50. +ACK
+8,3824990,Start
+8,3825363,Setup read from 0x50. +ACK
+8,3826083,Read 0x00 from 0x50. +ACK
+8,3827323,Read 0x00 from 0x50. +No ACK
+8,3828593,Stop
+8,3830278,Start
+8,3830695,Setup write to 0x50. +ACK
+8,3831415,Wrote 0x00 to 0x50. +ACK
+8,3832135,Wrote 0x00 to 0x50. +ACK
+8,3832793,Stop
+8,3833938,Start
+8,3834355,Setup write to 0x50. +ACK
+8,3835075,Wrote 0x00 to 0x50. +ACK
+8,3835795,Wrote 0x00 to 0x50. +ACK
+8,3836453,Stop
+8,3836978,Start
+8,3837395,Setup write to 0x50. +ACK
+8,3838115,Wrote 0x00 to 0x50. +ACK
+8,3839298,Wrote 0x10 to 0x50. +ACK
+8,3839955,Stop
+8,3850713,Start
+8,3851130,Setup write to 0x50. +ACK
+8,3851850,Wrote 0x01 to 0x50. +ACK
+8,3852570,Wrote 0x02 to 0x50. +ACK
+8,3853290,Wrote 0x06 to 0x50. +ACK
+8,3854010,Wrote 0x00 to 0x50. +ACK
+8,3854668,Stop
+8,3875388,Start
+8,3875805,Setup write to 0x50. +ACK
+8,3876525,Wrote 0x01 to 0x50. +ACK
+8,3877223,Start
+8,3877595,Setup read from 0x50. +ACK
+8,3878315,Read 0x00 from 0x50. +ACK
+8,3880005,Read 0x00 from 0x50. +No ACK
+8,3881275,Stop
+8,3882500,Start
+8,3882918,Setup write to 0x50. +ACK
+8,3883638,Wrote 0x00 to 0x50. +ACK
+8,3884358,Wrote 0x00 to 0x50. +ACK
+8,3885015,Stop
+9,3783898,Start
+9,3784315,Setup write to 0x50. +ACK
+9,3785035,Wrote 0x00 to 0x50. +ACK
+9,3785755,Wrote 0x00 to 0x50. +ACK
+9,3786413,Stop
+9,3786938,Start
+9,3787355,Setup write to 0x50. +ACK
+9,3788075,Wrote 0x00 to 0x50. +ACK
+9,3788795,Wrote 0x10 to 0x50. +ACK
+9,3789453,Stop
+9,3800210,Start
+9,3800628,Setup write to 0x50. +ACK
+9,3801800,Wrote 0x01 to 0x50. +ACK
+9,3802520,Wrote 0x02 to 0x50. +ACK
+9,3803240,Wrote 0x06 to 0x50. +ACK
+9,3803960,Wrote 0x00 to 0x50. +ACK
+9,3804618,Stop
+9,3825338,Start
+9,3825755,Setup write to 0x50. +ACK
+9,3826475,Wrote 0x01 to 0x50. +ACK
+9,3827173,Start
+9,3827545,Setup read from 0x50. +ACK
+9,3828265,Read 0x00 from 0x50. +ACK
+9,3829505,Read 0x00 from 0x50. +No ACK
+9,3830773,Stop
+9,3832458,Start
+9,3832878,Setup write to 0x50. +ACK
+9,3833598,Wrote 0x00 to 0x50. +ACK
+9,3834318,Wrote 0x00 to 0x50. +ACK
+9,3834975,Stop
+9,3836120,Start
+9,3836538,Setup write to 0x50. +ACK
+9,3837258,Wrote 0x00 to 0x50. +ACK
+9,3837978,Wrote 0x00 to 0x50. +ACK
+9,3838635,Stop
+9,3839160,Start
+9,3839578,Setup write to 0x50. +ACK
+9,3840298,Wrote 0x00 to 0x50. +ACK
+9,3841018,Wrote 0x10 to 0x50. +ACK
+9,3841975,Stop
+9,3852723,Start
+9,3853143,Setup write to 0x50. +ACK
+9,3853863,Wrote 0x01 to 0x50. +ACK
+9,3854583,Wrote 0x02 to 0x50. +ACK
+9,3855303,Wrote 0x06 to 0x50. +ACK
+9,3856023,Wrote 0x00 to 0x50. +ACK
+9,3856680,Stop
+9,3877400,Start
+9,3877818,Setup write to 0x50. +ACK
+9,3878538,Wrote 0x01 to 0x50. +ACK
+9,3879235,Start
+9,3879608,Setup read from 0x50. +ACK
+9,3880328,Read 0x00 from 0x50. +ACK
+9,3882028,Read 0x00 from 0x50. +No ACK
+9,3883295,Stop
+9,3884520,Start
+9,3884940,Setup write to 0x50. +ACK
+9,3885660,Wrote 0x00 to 0x50. +ACK
+9,3886380,Wrote 0x00 to 0x50. +ACK
+9,3887038,Stop
+10,3787060,Start
+10,3787478,Setup write to 0x50. +ACK
+10,3788198,Wrote 0x00 to 0x50. +ACK
+10,3788918,Wrote 0x00 to 0x50. +ACK
+10,3789575,Stop
+10,3790100,Start
+10,3790518,Setup write to 0x50. +ACK
+10,3791238,Wrote 0x00 to 0x50. +ACK
+10,3791958,Wrote 0x10 to 0x50. +ACK
+10,3792615,Stop
+10,3803373,Start
+10,3804250,Setup write to 0x50. +ACK
+10,3804970,Wrote 0x01 to 0x50. +ACK
+10,3805693,Wrote 0x02 to 0x50. +ACK
+10,3806413,Wrote 0x06 to 0x50. +ACK
+10,3807133,Wrote 0x00 to 0x50. +ACK
+10,3807790,Stop
+10,3828500,Start
+10,3828918,Setup write to 0x50. +ACK
+10,3829638,Wrote 0x01 to 0x50. +ACK
+10,3830335,Start
+10,3830708,Setup read from 0x50. +ACK
+10,3831428,Read 0x00 from 0x50. +ACK
+10,3832668,Read 0x00 from 0x50. +No ACK
+10,3834395,Stop
+10,3835620,Start
+10,3836040,Setup write to 0x50. +ACK
+10,3836760,Wrote 0x00 to 0x50. +ACK
+10,3837480,Wrote 0x00 to 0x50. +ACK
+10,3838138,Stop
+10,3839283,Start
+10,3839700,Setup write to 0x50. +ACK
+10,3840420,Wrote 0x00 to 0x50. +ACK
+10,3841140,Wrote 0x00 to 0x50. +ACK
+10,3841798,Stop
+10,3842323,Start
+10,3842740,Setup write to 0x50. +ACK
+10,3843460,Wrote 0x00 to 0x50. +ACK
+10,3844470,Wrote 0x10 to 0x50. +ACK
+10,3845128,Stop
+10,3855885,Start
+10,3856303,Setup write to 0x50. +ACK
+10,3857025,Wrote 0x01 to 0x50. +ACK
+10,3857745,Wrote 0x02 to 0x50. +ACK
+10,3858465,Wrote 0x06 to 0x50. +ACK
+10,3859185,Wrote 0x00 to 0x50. +ACK
+10,3859843,Stop
+10,3880563,Start
+10,3880980,Setup write to 0x50. +ACK
+10,3881700,Wrote 0x01 to 0x50. +ACK
+10,3882398,Start
+10,3882770,Setup read from 0x50. +ACK
+10,3883490,Read 0x00 from 0x50. +ACK
+10,3885020,Read 0x00 from 0x50. +No ACK
+10,3886288,Stop
+10,3887513,Start
+10,3887933,Setup write to 0x50. +ACK
+10,3888653,Wrote 0x00 to 0x50. +ACK
+10,3889373,Wrote 0x00 to 0x50. +ACK
+10,3890030,Stop
+11,3789393,Start
+11,3789810,Setup write to 0x50. +ACK
+11,3790530,Wrote 0x00 to 0x50. +ACK
+11,3791250,Wrote 0x00 to 0x50. +ACK
+11,3791908,Stop
+11,3792433,Start
+11,3792850,Setup write to 0x50. +ACK
+11,3793570,Wrote 0x00 to 0x50. +ACK
+11,3794290,Wrote 0x10 to 0x50. +ACK
+11,3794948,Stop
+11,3805735,Start
+11,3806643,Setup write to 0x50. +ACK
+11,3807363,Wrote 0x01 to 0x50. +ACK
+11,3808083,Wrote 0x02 to 0x50. +ACK
+11,3808805,Wrote 0x06 to 0x50. +ACK
+11,3809525,Wrote 0x00 to 0x50. +ACK
+11,3810183,Stop
+11,3830963,Start
+11,3831380,Setup write to 0x50. +ACK
+11,3832100,Wrote 0x01 to 0x50. +ACK
+11,3832798,Start
+11,3833170,Setup read from 0x50. +ACK
+11,3833890,Read 0x00 from 0x50. +ACK
+11,3835130,Read 0x00 from 0x50. +No ACK
+11,3836888,Stop
+11,3838113,Start
+11,3838530,Setup write to 0x50. +ACK
+11,3839250,Wrote 0x00 to 0x50. +ACK
+11,3839973,Wrote 0x00 to 0x50. +ACK
+11,3840630,Stop
+11,3841775,Start
+11,3842193,Setup write to 0x50. +ACK
+11,3842913,Wrote 0x00 to 0x50. +ACK
+11,3843633,Wrote 0x00 to 0x50. +ACK
+11,3844290,Stop
+11,3844815,Start
+11,3845233,Setup write to 0x50. +ACK
+11,3845953,Wrote 0x00 to 0x50. +ACK
+11,3846923,Wrote 0x10 to 0x50. +ACK
+11,3847580,Stop
+11,3858368,Start
+11,3858785,Setup write to 0x50. +ACK
+11,3859505,Wrote 0x01 to 0x50. +ACK
+11,3860228,Wrote 0x02 to 0x50. +ACK
+11,3860948,Wrote 0x06 to 0x50. +ACK
+11,3861668,Wrote 0x00 to 0x50. +ACK
+11,3862325,Stop
+11,3883105,Start
+11,3883523,Setup write to 0x50. +ACK
+11,3884243,Wrote 0x01 to 0x50. +ACK
+11,3884940,Start
+11,3885313,Setup read from 0x50. +ACK
+11,3886513,Read 0x00 from 0x50. +ACK
+11,3887753,Read 0x00 from 0x50. +No ACK
+11,3889020,Stop
+11,3890245,Start
+11,3890663,Setup write to 0x50. +ACK
+11,3891385,Wrote 0x00 to 0x50. +ACK
+11,3892105,Wrote 0x00 to 0x50. +ACK
+11,3892763,Stop
+12,3791923,Start
+12,3792343,Setup write to 0x50. +ACK
+12,3793063,Wrote 0x00 to 0x50. +ACK
+12,3793783,Wrote 0x00 to 0x50. +ACK
+12,3794440,Stop
+12,3794965,Start
+12,3795383,Setup write to 0x50. +ACK
+12,3796103,Wrote 0x00 to 0x50. +ACK
+12,3796823,Wrote 0x10 to 0x50. +ACK
+12,3797480,Stop
+12,3808238,Start
+12,3809115,Setup write to 0x50. +ACK
+12,3809835,Wrote 0x01 to 0x50. +ACK
+12,3810555,Wrote 0x02 to 0x50. +ACK
+12,3811275,Wrote 0x06 to 0x50. +ACK
+12,3811995,Wrote 0x00 to 0x50. +ACK
+12,3812655,Stop
+12,3833363,Start
+12,3833783,Setup write to 0x50. +ACK
+12,3834503,Wrote 0x01 to 0x50. +ACK
+12,3835200,Start
+12,3835573,Setup read from 0x50. +ACK
+12,3836293,Read 0x00 from 0x50. +ACK
+12,3837533,Read 0x00 from 0x50. +No ACK
+12,3839260,Stop
+12,3840485,Start
+12,3840903,Setup write to 0x50. +ACK
+12,3841623,Wrote 0x00 to 0x50. +ACK
+12,3842343,Wrote 0x00 to 0x50. +ACK
+12,3843000,Stop
+12,3844145,Start
+12,3844565,Setup write to 0x50. +ACK
+12,3845285,Wrote 0x00 to 0x50. +ACK
+12,3846005,Wrote 0x00 to 0x50. +ACK
+12,3846663,Stop
+12,3847188,Start
+12,3847605,Setup write to 0x50. +ACK
+12,3848325,Wrote 0x00 to 0x50. +ACK
+12,3849335,Wrote 0x10 to 0x50. +ACK
+12,3849993,Stop
+12,3860750,Start
+12,3861168,Setup write to 0x50. +ACK
+12,3861888,Wrote 0x01 to 0x50. +ACK
+12,3862608,Wrote 0x02 to 0x50. +ACK
+12,3863328,Wrote 0x06 to 0x50. +ACK
+12,3864050,Wrote 0x00 to 0x50. +ACK
+12,3864708,Stop
+12,3885425,Start
+12,3885845,Setup write to 0x50. +ACK
+12,3886565,Wrote 0x01 to 0x50. +ACK
+12,3887263,Start
+12,3887635,Setup read from 0x50. +ACK
+12,3888355,Read 0x00 from 0x50. +ACK
+12,3889885,Read 0x00 from 0x50. +No ACK
+12,3891153,Stop
+12,3892378,Start
+12,3892795,Setup write to 0x50. +ACK
+12,3893515,Wrote 0x00 to 0x50. +ACK
+12,3894235,Wrote 0x00 to 0x50. +ACK
+12,3894895,Stop
