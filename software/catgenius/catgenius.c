@@ -42,6 +42,14 @@ static unsigned char	PORTB_old;
 /* Local Prototypes							      */
 /******************************************************************************/
 
+static void dumpports(void)
+{
+	printf("TRISB = 0x%02X, PORTB = 0x%02X\n", TRISB, PORTB);
+	printf("TRISC = 0x%02X, PORTC = 0x%02X\n", TRISC, PORTC);
+	printf("TRISD = 0x%02X, PORTD = 0x%02X\n", TRISD, PORTD);
+	printf("TRISE = 0x%02X, PORTE = 0x%02X\n", TRISE, PORTE);
+}
+
 static void interrupt_init (void);
 
 
@@ -107,10 +115,24 @@ void main (void)
 //		cr14_work();
 //		i2c_work();
 
-//		if (RCIF) {
-//			RCIF = 0;
-//			set_Beeper(RCREG,0);
-//		}
+		while (RCIF) {
+			char dummy ;
+			if (OERR)
+			{
+				TXEN=0;
+				TXEN=1;
+				CREN=0;
+				CREN=1;
+			}
+			if (FERR)
+			{
+				dummy=RCREG;
+				TXEN=0;
+				TXEN=1;
+			} else
+				if (RCREG == '\n')
+					dumpports();
+		}
 #ifndef __DEBUG
 		CLRWDT();
 #endif
