@@ -203,21 +203,27 @@ void catgenie_work (void)
 
 	/* Poll the water sensor */
 	if (timeoutexpired(&water_sensortimer)) {
+		struct timer	mute_timer;
 		/* Set new polling timeout */
 		settimeout(&water_sensortimer, WATERSENSORPOLLING);
-		if (!water_filling) {
+		if (!water_filling)
 			/* Unmute Water Sensor */
 			TRISA |= WATERSENSORMUTE_MASK;
-			__delay_us(750);
+		/* Set timeout to wait for reflection */
+		settimeout(&mute_timer, 2 * MILISECOND);
+		do {
+			/* 0 == no reflection == water detected */
 			water_sensorbuffer = WATERSENSOR_PORT & WATERSENSOR_MASK;
+		} while (!water_sensorbuffer &&
+			 !timeoutexpired(&mute_timer));
+		if (!water_filling){
 			/* Mute Water Sensor */
 			TRISA &= ~WATERSENSORMUTE_MASK;
 			PORTA |=  WATERSENSORMUTE_MASK;
-		} else
-			water_sensorbuffer = WATERSENSOR_PORT & WATERSENSOR_MASK;
+		}
 		/* Detect state change */
 		if (water_sensorbuffer != water_sensorbuffer_old) {
-		/* Postpone the debouncer */
+			/* Postpone the debouncer */
 			settimeout(&debouncers[DEBOUNCER_SENSOR_WATER].timer,
 				   debouncers[DEBOUNCER_SENSOR_WATER].timeout);
 			water_sensorbuffer_old = water_sensorbuffer;
