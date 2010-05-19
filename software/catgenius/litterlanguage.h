@@ -14,8 +14,8 @@
 #define SRC_EEPROM	3
 
 #define FLAGS_AUTORUN	0x0100	/* Start program without user intervention */
-#define FLAGS_DRYRUN	0x0200	/* Program supports dry cleaning */
-#define FLAGS_WETRUN	0x0400	/* Program supports wet cleaning */
+#define FLAGS_DRYRUN	0x0200	/* Program supports dry mode */
+#define FLAGS_WETRUN	0x0400	/* Program supports wet mode */
 #define FLASH_OVERWRITE	0x0800	/* Program will be copied to FLASH to replace standard program */
 
 #define CMD_START	0x00	/* Designates the start of a program. Argument is CMD_LAST or-ed with flags */
@@ -25,11 +25,11 @@
 #define CMD_PUMP	0x04	/* Controls the hopper pump. Argument is 1 for on, 0 for off */
 #define CMD_DRYER	0x05	/* Controls the dryer fan. Argument is 1 for on, 0 for off */
 
-#define CMD_WAITTIME	0x06
-#define CMD_WAITWATER	0x07
-#define CMD_WAITDOSAGE	0x08
-#define CMD_SKIPIFDRY	0x09
-#define CMD_SKIPIFWET	0x10
+#define CMD_WAITTIME	0x06	/* Waits a period of time. Argument is period in milliseconds */
+#define CMD_WAITWATER	0x07	/* Waits for a water sensor state. Argument is state: 1 for high, 0 for low */
+#define CMD_WAITDOSAGE	0x08	/* Waits for autodosage to complete. Argument is ignored */
+#define CMD_SKIPIFDRY	0x09	/* Skips argument instructions if the program runs in dry mode */
+#define CMD_SKIPIFWET	0x10	/* Skips argument instructions if the program runs in wet mode */
 #define CMD_AUTODOSE	0x11	/* Controls the dosage pump. Argument x100 is amount in microliters */
 #define CMD_LAST	CMD_AUTODOSE
 #define CMD_END		0xFE

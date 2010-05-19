@@ -25,7 +25,7 @@
 /* Global Data								      */
 /******************************************************************************/
 
-static unsigned int		cmdptr = 0;
+static struct command		const * cmd_address = 0;
 
 #if 0
 static const struct command	cleanupprogram[] = {
@@ -139,7 +139,7 @@ static const struct command	cleanupprogram[] = {
 };
 #endif
 
-static const struct command	washprogram[] = {
+const struct command	washprogram[] = {
 	{CMD_START,	CMD_LAST | 
 			FLAGS_DRYRUN |
 			FLAGS_WETRUN },
@@ -429,15 +429,14 @@ static const struct command	washprogram[] = {
 /* Global Implementations						      */
 /******************************************************************************/
 
-void romwashprogram_reqcmd (unsigned int cmd_pointer)
+void romwashprogram_reqcmd (struct command const * address)
 {
-	cmdptr = cmd_pointer;
+	cmd_address = address;
 }
 
-unsigned char romwashprogram_getcmd (struct command *command)
+unsigned char romwashprogram_getcmd (struct command * const command)
 {
-	command->cmd = washprogram[cmdptr].cmd;
-	command->arg = washprogram[cmdptr].arg;
+	*command = *cmd_address;
 
 	return 1;
 }
