@@ -34,7 +34,7 @@ static bit		wet_program	= 0;
 static bit		water_detected	= 0;
 
 static unsigned char	cmd_state	= 0;
-static unsigned int	cmd_pointer	= 0;
+static struct command	const * cmd_pointer	= 0;
 static struct command	cur_command;
 
 static struct timer	timer_waitcmd   = NEVER;
@@ -48,7 +48,7 @@ static struct timer	timer_autodose  = NEVER;
 /******************************************************************************/
 
 static void		litterlanguage_cleanup (unsigned char wet);
-static void		req_command (unsigned int	cmd_pointer);
+static void		req_command (struct command	const *command);
 static unsigned char	get_command (struct command	*command);
 static void		exe_command (void);
 static void		wait_command (void);
@@ -171,10 +171,11 @@ void litterlanguage_term (void)
 
 void litterlanguage_start (unsigned char wet)
 {
+	extern const struct command	washprogram[];
 	if (!cmd_state) {
 		switch (prg_source) {
 		case SRC_ROM:
-			cmd_pointer = 0;
+			cmd_pointer = &washprogram[0];
 			break;
 		}
 		wet_program = wet;
@@ -244,19 +245,20 @@ void watersensor_event (unsigned char undetected)
 
 static void litterlanguage_cleanup (unsigned char wet)
 {
+	extern const struct command	washprogram[];
 	if (!cmd_state) {
 		wet_program = wet;
 		if (wet_program) {
 			set_Bowl(BOWL_CW);
-			cmd_pointer = 116;
+			cmd_pointer = &washprogram[116];
 		} else
-			cmd_pointer = 37;
+			cmd_pointer = &washprogram[37];
 		cmd_state ++ ;
 	}
 }
 
 
-static void req_command (unsigned int command)
+static void req_command (struct command const *command)
 {
 	switch (prg_source) {
 	case SRC_ROM:
@@ -275,7 +277,7 @@ static unsigned char get_command (struct command *command)
 
 static void exe_command (void)
 {
-	DBG("Line %d: ", cmd_pointer);
+	DBG("IP %u: ", cmd_pointer);
 	switch (cur_command.cmd) {
 	case CMD_START:
 		DBG("CMD_START, %s", wet_program?"wet":"dry");
