@@ -35,7 +35,7 @@ static bit		water_detected	= 0;
 
 static unsigned char	cmd_state	= 0;
 static unsigned int	cmd_pointer	= 0;
-static struct command	command;
+static struct command	cur_command;
 
 static struct timer	timer_waitcmd   = NEVER;
 static struct timer	timer_fill      = NEVER;
@@ -143,7 +143,7 @@ void litterlanguage_work (void)
 		cmd_state ++;
 		break;
 	case 2:	/* Wait for the new command to be fetched */
-		if (get_command(&command))
+		if (get_command(&cur_command))
 			cmd_state ++;
 		break;
 	case 3:	/* Decode and execute the command */
@@ -172,8 +172,12 @@ void litterlanguage_term (void)
 void litterlanguage_start (unsigned char wet)
 {
 	if (!cmd_state) {
+		switch (prg_source) {
+		case SRC_ROM:
+			cmd_pointer = 0;
+			break;
+		}
 		wet_program = wet;
-		cmd_pointer = 0;
 		cmd_state ++ ;
 	}
 }
@@ -190,6 +194,25 @@ void litterlanguage_pause (unsigned char pause)
 }
 
 
+void litterlanguage_stop (void)
+{
+	if (cmd_state) {
+		/* Stop all actuators */
+		set_Bowl(BOWL_STOP);
+		set_Arm(ARM_STOP);
+		set_Water(0);
+		set_Dosage(0);
+		set_Pump(0);
+		set_Dryer(0);
+		/* Disable timeouts */
+		timeoutnever(&timer_fill);
+		timeoutnever(&timer_drain);
+		timeoutnever(&timer_autodose);
+		cmd_state = 0;
+	}
+}
+
+
 void watersensor_event (unsigned char undetected)
 /******************************************************************************/
 /* Function:	watersensor_event					      */
@@ -198,20 +221,19 @@ void watersensor_event (unsigned char undetected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	water_detected = ! undetected;
+	water_detected = !undetected;
 
 	DBG("Water %s\n", water_detected?"high":"low");
 	if (cmd_state) {
-		/* Disable proper timeout on event */
+		/* Disable timeout on event */
 		if (water_detected) {
 			/* Turn off the water and disable the timeout */
 			set_Water(0);
 			timeoutnever(&timer_fill);
-		} else
-			/* Disable the timeout */
-			timeoutnever(&timer_drain);
+		}
 	} else
-		DBG("Box flooded!\n");
+		if (water_detected)
+			DBG("Box flooded!\n");
 }
 /* watersensor_event */
 
@@ -234,11 +256,11 @@ static void litterlanguage_cleanup (unsigned char wet)
 }
 
 
-static void req_command (unsigned int cmd_pointer)
+static void req_command (unsigned int command)
 {
 	switch (prg_source) {
 	case SRC_ROM:
-		romwashprogram_reqcmd(cmd_pointer);
+		romwashprogram_reqcmd(command);
 	}
 }
 
@@ -254,13 +276,13 @@ static unsigned char get_command (struct command *command)
 static void exe_command (void)
 {
 	DBG("Line %d: ", cmd_pointer);
-	switch (command.cmd) {
+	switch (cur_command.cmd) {
 	case CMD_START:
 		DBG("CMD_START, %s", wet_program?"wet":"dry");
 		/* Check if this is a valid program for us */
-		if( ((command.arg & 0x00FF) <= CMD_LAST) && 
-		    ( (!wet_program && (command.arg & FLAGS_DRYRUN)) ||
-		      (wet_program && (command.arg & FLAGS_WETRUN)) ) ) {
+		if( ((cur_command.arg & 0x00FF) <= CMD_LAST) && 
+		    ( (!wet_program && (cur_command.arg & FLAGS_DRYRUN)) ||
+		      (wet_program && (cur_command.arg & FLAGS_WETRUN)) ) ) {
 			eeprom_write(NVM_BOXSTATE, BOX_MESSY);
 			cmd_pointer++;
 			cmd_state -= 2;
@@ -270,21 +292,21 @@ static void exe_command (void)
 		}
 		break;
 	case CMD_BOWL:
-		DBG("CMD_BOWL, %s", (command.arg == BOWL_STOP)?"BOWL_STOP":((command.arg == BOWL_CW)?"BOWL_CW":"BOWL_CCW"));
-		set_Bowl((unsigned char)command.arg);
+		DBG("CMD_BOWL, %s", (cur_command.arg == BOWL_STOP)?"BOWL_STOP":((cur_command.arg == BOWL_CW)?"BOWL_CW":"BOWL_CCW"));
+		set_Bowl((unsigned char)cur_command.arg);
 		cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_ARM:
-		DBG("CMD_ARM, %s", (command.arg == ARM_STOP)?"ARM_STOP":((command.arg == ARM_DOWN)?"ARM_DOWN":"ARM_UP"));
-		set_Arm((unsigned char)command.arg);
+		DBG("CMD_ARM, %s", (cur_command.arg == ARM_STOP)?"ARM_STOP":((cur_command.arg == ARM_DOWN)?"ARM_DOWN":"ARM_UP"));
+		set_Arm((unsigned char)cur_command.arg);
 		cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_WATER:
-		DBG("CMD_WATER, %s%s", command.arg?"on":"off", wet_program?"":" (nop)");
+		DBG("CMD_WATER, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
-			if (command.arg) {
+			if (cur_command.arg) {
 				eeprom_write(NVM_BOXSTATE, BOX_WET);
 				/* Don't fill if water is detected already */
 				if (!water_detected) {
@@ -301,29 +323,29 @@ static void exe_command (void)
 		cmd_state -= 2;
 		break;
 	case CMD_PUMP:
-		DBG("CMD_PUMP, %s%s", command.arg?"on":"off", wet_program?"":" (nop)");
+		DBG("CMD_PUMP, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
-			set_Pump((unsigned char)command.arg);
+			set_Pump((unsigned char)cur_command.arg);
 		cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_DRYER:
-		DBG("CMD_DRYER, %s%s", command.arg?"on":"off", wet_program?"":" (nop)");
+		DBG("CMD_DRYER, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
-			set_Dryer((unsigned char)command.arg);
+			set_Dryer((unsigned char)cur_command.arg);
 		cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_WAITTIME:
-		DBG("CMD_WAITTIME, %ums", command.arg);
+		DBG("CMD_WAITTIME, %ums", cur_command.arg);
 		settimeout( &timer_waitcmd,
-			    (unsigned long)command.arg * MILISECOND );
+			    (unsigned long)cur_command.arg * MILISECOND );
 		cmd_state++;
 		break;
 	case CMD_WAITWATER:
-		DBG("CMD_WAITWATER, %s%s", command.arg?"high":"low", wet_program?"":" (nop)");
+		DBG("CMD_WAITWATER, %s%s", cur_command.arg?"high":"low", wet_program?"":" (nop)");
 		if (wet_program) {
-			if (!command.arg)
+			if (!cur_command.arg)
 				/* Start the drain timeout, we don't want to wait forever */
 				settimeout(&timer_drain, MAX_DRAINTIME);
 			cmd_state++;
@@ -342,26 +364,26 @@ static void exe_command (void)
 		}
 		break;
 	case CMD_SKIPIFDRY:
-		DBG("CMD_SKIPIFDRY, %u%s", command.arg, wet_program?" (nop)":"");
+		DBG("CMD_SKIPIFDRY, %u%s", cur_command.arg, wet_program?" (nop)":"");
 		if (!wet_program)
-			cmd_pointer += command.arg + 1;
+			cmd_pointer += cur_command.arg + 1;
 		else
 			cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_SKIPIFWET:
-		DBG("CMD_SKIPIFWET, %u%s", command.arg, wet_program?"":" (nop)");
+		DBG("CMD_SKIPIFWET, %u%s", cur_command.arg, wet_program?"":" (nop)");
 		if (wet_program)
-			cmd_pointer += command.arg + 1;
+			cmd_pointer += cur_command.arg + 1;
 		else
 			cmd_pointer++;
 		cmd_state -= 2;
 		break;
 	case CMD_AUTODOSE:
-		DBG("CMD_AUTODOSE, %u.%uml%s", command.arg/10, command.arg%10, wet_program?"":" (nop)");
+		DBG("CMD_AUTODOSE, %u.%uml%s", cur_command.arg/10, cur_command.arg%10, wet_program?"":" (nop)");
 		if (wet_program) {
 			settimeout(&timer_autodose,
-				   (unsigned long)command.arg * SECOND * (DOSAGE_SECONDS_PER_ML / 10));
+				   (unsigned long)cur_command.arg * SECOND * (DOSAGE_SECONDS_PER_ML / 10));
 			set_Dosage(1);
 		}
 		cmd_pointer++;
@@ -369,18 +391,13 @@ static void exe_command (void)
 		break;
 	case CMD_END:
 		DBG("CMD_END");
-		/* Disable timeouts */
-		timeoutnever(&timer_fill);
-		timeoutnever(&timer_drain);
-		cmd_pointer = 0;
-		cmd_state = 0;
 		eeprom_write(NVM_BOXSTATE, BOX_TIDY);
+		litterlanguage_stop();
 		break;
 	default:
-		DBG("CMD_unknown: %d", command.cmd);
 		/* Program error */
-		cmd_pointer = 0;
-		cmd_state = 0;
+		DBG("CMD_unknown: %d", cur_command.arg);
+		litterlanguage_stop();
 		break;
 	}
 	DBG("\n");
@@ -388,7 +405,7 @@ static void exe_command (void)
 
 static void wait_command (void)
 {
-	switch (command.cmd) {
+	switch (cur_command.cmd) {
 	case CMD_WAITTIME:
 		if (timeoutexpired(&timer_waitcmd)) {
 			cmd_pointer++;
@@ -396,13 +413,15 @@ static void wait_command (void)
 		}
 		break;
 	case CMD_WAITWATER:
-		if (command.arg) {
+		if (cur_command.arg) {
 			if (water_detected) {
 				cmd_pointer++;
 				cmd_state -= 3;
 			}
 		} else {
 			if (!water_detected) {
+				/* Disable the timeout */
+				timeoutnever(&timer_drain);
 				cmd_pointer++;
 				cmd_state -= 3;
 			}
