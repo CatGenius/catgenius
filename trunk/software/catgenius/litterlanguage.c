@@ -277,12 +277,14 @@ static unsigned char get_command (struct command *command)
 
 static void exe_command (void)
 {
-	DBG("IP %u: ", cmd_pointer);
+	static struct command	const * ret_address;
+
+	DBG("IP 0x%04X: ", cmd_pointer);
 	switch (cur_command.cmd) {
 	case CMD_START:
 		DBG("CMD_START, %s", wet_program?"wet":"dry");
 		/* Check if this is a valid program for us */
-		if( ((cur_command.arg & 0x00FF) <= CMD_LAST) && 
+		if( ((cur_command.arg & 0x00FF) <= CMD_END) && 
 		    ( (!wet_program && (cur_command.arg & FLAGS_DRYRUN)) ||
 		      (wet_program && (cur_command.arg & FLAGS_WETRUN)) ) ) {
 			eeprom_write(NVM_BOXSTATE, BOX_MESSY);
@@ -391,6 +393,17 @@ static void exe_command (void)
 		cmd_pointer++;
 		cmd_state -= 2;
 		break;
+	case CMD_CALL:
+		DBG("CMD_CALL, 0x%04X", cur_command.arg);
+		ret_address = cmd_pointer + 1;
+		cmd_pointer = (struct command const*)cur_command.arg;
+		cmd_state -= 2;
+		break;
+	case CMD_RETURN:
+		DBG("CMD_RETURN, 0x%04X", ret_address);
+		cmd_pointer = ret_address;
+		cmd_state -= 2;
+		break;
 	case CMD_END:
 		DBG("CMD_END");
 		eeprom_write(NVM_BOXSTATE, BOX_TIDY);
@@ -398,7 +411,7 @@ static void exe_command (void)
 		break;
 	default:
 		/* Program error */
-		DBG("CMD_unknown: %d", cur_command.arg);
+		DBG("CMD_unknown: 0x%X", cur_command.arg);
 		litterlanguage_stop();
 		break;
 	}
