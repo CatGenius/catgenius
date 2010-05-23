@@ -27,6 +27,37 @@
 
 static struct command		const * cmd_address = 0;
 
+/*
+ * Subroutine to pull the arm up and shake it off
+ * Pre:  Bowl rotating
+ *       Arm down
+ * Post: Arm up and stopped
+ */
+static const struct command	arm_up[] = {
+	/* Arm up to 80% */
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	10671},
+	/* Arm down to 30% */
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	6602},
+	/* Arm up to 100% */
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	17204},
+	/* Wiggle the arm a bit */
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	1000},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	1000},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	1000},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	1000},
+	/* Arm stop */
+	{CMD_ARM,	ARM_STOP},
+
+	{CMD_RETURN,	0}
+};
+
 const struct command	washprogram[] = {
 	{CMD_START,	CMD_LAST | 
 			FLAGS_DRYRUN |
@@ -48,12 +79,7 @@ const struct command	washprogram[] = {
 	{CMD_WAITTIME,	532},
 	{CMD_ARM,	ARM_STOP},	/* Scoop 1 + 5 */
 	{CMD_WAITTIME,	25206},
-	{CMD_ARM,	ARM_UP},	/* Scoop 1 + 6 */
-	{CMD_WAITTIME,	10671},
-	{CMD_ARM,	ARM_DOWN},	/* Scoop 1 + 7 */
-	{CMD_WAITTIME,	6602},
-	{CMD_ARM,	ARM_UP},	/* Scoop 1 + 8 */
-	{CMD_WAITTIME,	17204},
+	{CMD_CALL,	(unsigned int)arm_up},
 	{CMD_ARM,	ARM_DOWN},	/* Scoop 2 */
 	{CMD_WAITTIME,	12703},
 	{CMD_ARM,	ARM_STOP},	/* Scoop 2 + 1 */
@@ -64,12 +90,7 @@ const struct command	washprogram[] = {
 	{CMD_WAITTIME,	532},
 	{CMD_ARM,	ARM_STOP},	/* Scoop 2 + 4 */
 	{CMD_WAITTIME,	25206},
-	{CMD_ARM,	ARM_UP},	/* Scoop 2 + 5 */
-	{CMD_WAITTIME,	10671},
-	{CMD_ARM,	ARM_DOWN},	/* Scoop 2 + 6 */
-	{CMD_WAITTIME,	6601},
-	{CMD_ARM,	ARM_UP},	/* Scoop 2 + 7 */
-	{CMD_WAITTIME,	20141},
+	{CMD_CALL,	(unsigned int)arm_up},
 	{CMD_BOWL,	BOWL_CW},	/* Scoop 3 */
 	{CMD_ARM,	ARM_DOWN},
 	{CMD_WAITTIME,	21769},
@@ -77,7 +98,7 @@ const struct command	washprogram[] = {
 	{CMD_WAITTIME,	932},
 	{CMD_ARM,	ARM_STOP},	/* Scoop 3 + 2 */
 
-	{CMD_SKIPIFDRY, 179},		/* Skip to surfacing in dry program */
+	{CMD_SKIPIFDRY, 173},		/* Skip to surfacing in dry program */
 
 	{CMD_WAITTIME,	12108},
 	{CMD_BOWL,	BOWL_CCW},	/* Scoop 3 + 3 */
@@ -87,17 +108,11 @@ const struct command	washprogram[] = {
 	{CMD_WAITTIME,	532},
 	{CMD_ARM,	ARM_STOP},	/* Scoop 3 + 5 */
 	{CMD_WAITTIME,	24206},
-	{CMD_ARM,	ARM_UP},	/* Scoop 3 + 6 */
-	{CMD_WAITTIME,	10571},
-	{CMD_ARM,	ARM_DOWN},	/* Scoop 3 + 7 */
-	{CMD_WAITTIME,	6602},
-	{CMD_ARM,	ARM_UP},	/* Scoop 3 + 8 */
+	{CMD_CALL,	(unsigned int)arm_up},
 	/* Wash the bowl */
 	{CMD_WAITWATER, 0},
 	{CMD_WATER,	1},
-	{CMD_WAITTIME,	17141},
 	{CMD_BOWL,	BOWL_CW},	/* Scoop 3 + 9 */
-	{CMD_ARM,	ARM_STOP},
 	{CMD_WAITTIME,	18768},
 	{CMD_ARM,	ARM_DOWN},	/* Wash */
 	{CMD_WAITTIME,	25206},
