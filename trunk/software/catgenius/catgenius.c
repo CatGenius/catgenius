@@ -25,7 +25,7 @@
 /******************************************************************************/
 
 #ifdef __DEBUG
-__CONFIG(XT & WDTDIS & PWRTEN & BORDIS & LVPDIS & DUNPROT & WRTEN & DEBUGEN  & UNPROTECT);
+__CONFIG(XT & WDTDIS & PWRTEN & BORDIS & LVPDIS & DUNPROT & WRTEN & DEBUGDIS & UNPROTECT);
 #else
 __CONFIG(XT & WDTEN  & PWRTEN & BOREN  & LVPDIS & DPROT   & WRTEN & DEBUGDIS & PROTECT);
 #endif
