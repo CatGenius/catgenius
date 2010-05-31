@@ -245,14 +245,11 @@ void watersensor_event (unsigned char undetected)
 
 static void litterlanguage_cleanup (unsigned char wet)
 {
-	extern const struct command	washprogram[];
+	extern const struct command	cleanupprogram[];
 	if (!cmd_state) {
+		prg_source = SRC_ROM;
+		cmd_pointer = &cleanupprogram[0];
 		wet_program = wet;
-		if (wet_program) {
-			set_Bowl(BOWL_CW);
-			cmd_pointer = &washprogram[116];
-		} else
-			cmd_pointer = &washprogram[37];
 		cmd_state ++ ;
 	}
 }
