@@ -496,7 +496,9 @@ static void start_short (void)
 		state = STATE_RUNNING;
 		/* Update the display */
 		update_display();
-	}
+	} else
+		/* Pause current program */
+		litterlanguage_pause(0);
 }
 
 static void start_long (void)
@@ -510,7 +512,9 @@ static void start_long (void)
 		state = STATE_RUNNING;
 		/* Update the display */
 		update_display();
-	}
+	} else
+		/* Stop the program, state machine will do the rest */
+		litterlanguage_stop();
 }
 
 static void both_short (void)
