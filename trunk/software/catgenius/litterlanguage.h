@@ -51,6 +51,7 @@ void		litterlanguage_term	(void) ;
 void		litterlanguage_start	(unsigned char	wet) ;
 unsigned char	litterlanguage_running	(void) ;
 void		litterlanguage_pause	(unsigned char	pause) ;
+void		litterlanguage_stop	(void) ;
 
 
 #endif /* LIITERLANGUAGE_H */
