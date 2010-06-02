@@ -110,7 +110,7 @@ static void	both_long		(void);
 /* Global Implementations						      */
 /******************************************************************************/
 
-void userinterface_init (void)
+void userinterface_init (unsigned char flags)
 /******************************************************************************/
 /* Function:	userinterface_init					      */
 /*		- Initialize the CatGenius user interface		      */
@@ -118,6 +118,15 @@ void userinterface_init (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	if ((flags & START_BUTTON_HELD) &&
+	    (flags & SETUP_BUTTON_HELD)) {
+		/* User wants to reset non-volatile settings */
+		eeprom_write(NVM_MODE, AUTO_MANUAL);
+		eeprom_write(NVM_KEYUNDLOCK, 0xFF);
+	}
+
+	/* Restore key lock mode from eeprom */
+	locked = !eeprom_read(NVM_KEYUNDLOCK);
 	/* Restore current mode from eeprom */
 	set_mode(eeprom_read(NVM_MODE));
 }
@@ -483,6 +492,10 @@ static void update_display (void)
 		set_LED(4, error_nr == 4);
 		break;
 	}
+	if (locked)
+		set_LED_Locked(0xFF, 1);
+	else
+		set_LED_Locked(0x00, 0);
 }
 
 static void setup_long (void)
@@ -535,8 +548,7 @@ static void both_short (void)
 static void both_long (void)
 {
 	locked = !locked;
-	if (locked)
-		set_LED_Locked(0xFF, 1);
-	else
-		set_LED_Locked(0x00, 0);
+	eeprom_write(NVM_KEYUNDLOCK, !locked);
+	/* Update the display */
+	update_display();
 }
