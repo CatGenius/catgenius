@@ -14,7 +14,8 @@
 
 /* EEPROM offsets */
 #define NVM_MODE		0
-#define NVM_BOXSTATE		1
+#define NVM_KEYUNDLOCK		1
+#define NVM_BOXSTATE		2
 
 /* Frequencies */
 #define KHZ			(1000UL)

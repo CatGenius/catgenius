@@ -97,7 +97,7 @@ void main (void)
 	catsensor_init();
 
 	/* Initialize the user interface */
-	userinterface_init();
+	userinterface_init(flags);
 
 	/* Initialize the washing program */
 	litterlanguage_init(flags);
