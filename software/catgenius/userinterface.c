@@ -118,7 +118,7 @@ void userinterface_init (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	/* Fetch current mode from eeprom */
+	/* Restore current mode from eeprom */
 	set_mode(eeprom_read(NVM_MODE));
 }
 /* userinterface_init */
@@ -209,8 +209,11 @@ void startbutton_event (unsigned char up)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if (!up) {
-		start_button = 1;
+	if (start_button == !up)
+		return;
+	start_button = !up;
+
+	if (start_button) {
 		settimeout(&holdtimeout, HOLDTIME);
 		if (setup_button)
 			muteupevent = 1;
@@ -219,7 +222,6 @@ void startbutton_event (unsigned char up)
 		else
 			set_LED_Locked(0x55, 1);
 	} else {
-		start_button = 0;
 		if (!muteupevent) 
 			if (locked)
 				set_LED_Locked(0xFF, 1);
@@ -256,8 +258,11 @@ void setupbutton_event (unsigned char up)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if (!up) {
-		setup_button = 1;
+	if (setup_button == !up)
+		return;
+	setup_button = !up;
+
+	if (setup_button) {
 		settimeout(&holdtimeout, HOLDTIME);
 		if (start_button)
 			muteupevent = 1;
@@ -266,7 +271,6 @@ void setupbutton_event (unsigned char up)
 		else
 			set_LED_Locked(0x55, 1);
 	} else {
-		setup_button = 0;
 		if (!muteupevent)
 			if (locked)
 				set_LED_Locked(0xFF, 1);
