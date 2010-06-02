@@ -64,7 +64,7 @@ static void		wait_command (void);
 /* Global Implementations						      */
 /******************************************************************************/
 
-void litterlanguage_init (void)
+void litterlanguage_init (unsigned char flags)
 /******************************************************************************/
 /* Function:	litterlanguage_init					      */
 /*		- Initialize the CatGenius LitterLanguage interpreter	      */
@@ -72,25 +72,41 @@ void litterlanguage_init (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	DBG("Box is ");
-	switch (eeprom_read(NVM_BOXSTATE)){
-	case BOX_TIDY:
-		DBG("tidy");
-		break;
-	case BOX_MESSY:
-		DBG("messy");
-		litterlanguage_cleanup(0);
-		break;
-	case BOX_WET:
-		DBG("wet");
-		litterlanguage_cleanup(1);
-		break;
-	default:
-		DBG("unknown");
-		eeprom_write(NVM_BOXSTATE, BOX_TIDY);
-		break;
+	switch(flags & (START_BUTTON_HELD | SETUP_BUTTON_HELD)) {
+		case 0:
+			DBG("Box is ");
+			switch (eeprom_read(NVM_BOXSTATE)){
+			case BOX_TIDY:
+				DBG("tidy");
+				break;
+			case BOX_MESSY:
+				DBG("messy");
+				litterlanguage_cleanup(0);
+				break;
+			case BOX_WET:
+				DBG("wet");
+				litterlanguage_cleanup(1);
+				break;
+			default:
+				DBG("unknown");
+				eeprom_write(NVM_BOXSTATE, BOX_TIDY);
+				break;
+			}
+			DBG("\n");
+			break;
+		case START_BUTTON_HELD:
+			/* User wants to force a wet cleanup cycle */
+			DBG("Wet cleanup forced\n");
+			litterlanguage_cleanup(1);
+			break;
+		case SETUP_BUTTON_HELD:
+			/* User wants to use GenieDiag */
+			break;
+		default: /* compiler doesn't understand case START_BUTTON_HELD | SETUP_BUTTON_HELD: */
+			/* User wants to reset box state */
+			eeprom_write(NVM_BOXSTATE, BOX_TIDY);
+			break;
 	}
-	DBG("\n");
 }
 /* litterlanguage_init */
 

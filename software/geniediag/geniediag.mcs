@@ -9,7 +9,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
@@ -22,7 +22,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
@@ -35,7 +35,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
@@ -48,25 +48,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
 [File004]
-Location=Z:\Sources\catgenius\software\geniediag\water.p1
-Folder=Intermediary
-DeviceName=PIC16F877A
-LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
-LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
-LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
-PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
-SuiteArgsString=
-ToolArgsString=C9=1
-TraceCmdString=
-DebugOptions=
-[File005]
 Location=Z:\Sources\catgenius\software\geniediag\catsensor.p1
 Folder=Intermediary
 DeviceName=PIC16F877A
@@ -74,12 +61,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File006]
+[File005]
 Location=Z:\Sources\catgenius\software\geniediag\userinterface.p1
 Folder=Intermediary
 DeviceName=PIC16F877A
@@ -87,12 +74,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File007]
+[File006]
 Location=Z:\Sources\catgenius\software\geniediag\geniediag.cof
 Folder=Output
 DeviceName=PIC16F877A
@@ -100,12 +87,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File008]
+[File007]
 Location=Z:\Sources\catgenius\software\geniediag\geniediag.hex
 Folder=Output
 DeviceName=PIC16F877A
@@ -113,12 +100,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File009]
+[File008]
 Location=Z:\Sources\catgenius\software\geniediag\geniediag.sym
 Folder=Output
 DeviceName=PIC16F877A
@@ -126,12 +113,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File010]
+[File009]
 Location=Z:\Sources\catgenius\software\geniediag\geniediag.map
 Folder=Output
 DeviceName=PIC16F877A
@@ -139,12 +126,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File011]
+[File010]
 Location=Z:\Sources\catgenius\software\geniediag\geniediag.hxl
 Folder=Output
 DeviceName=PIC16F877A
@@ -152,12 +139,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File012]
+[File011]
 Location=Z:\Sources\catgenius\software\geniediag\startup.lst
 Folder=Output
 DeviceName=PIC16F877A
@@ -165,12 +152,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File013]
+[File012]
 Location=Z:\Sources\catgenius\software\geniediag\startup.rlf
 Folder=Output
 DeviceName=PIC16F877A
@@ -178,12 +165,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File014]
+[File013]
 Location=Z:\Sources\catgenius\software\geniediag\doprnt.p1
 Folder=Output
 DeviceName=PIC16F877A
@@ -191,12 +178,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File015]
+[File014]
 Location=Z:\Sources\catgenius\software\geniediag\doprnt.pre
 Folder=Output
 DeviceName=PIC16F877A
@@ -204,12 +191,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File016]
+[File015]
 Location=Z:\Sources\catgenius\software\geniediag\geniediag.obj
 Folder=Output
 DeviceName=PIC16F877A
@@ -217,12 +204,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File017]
+[File016]
 Location=Z:\Sources\catgenius\software\geniediag\geniediag.lst
 Folder=Output
 DeviceName=PIC16F877A
@@ -230,12 +217,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File018]
+[File017]
 Location=Z:\Sources\catgenius\software\geniediag\geniediag.rlf
 Folder=Output
 DeviceName=PIC16F877A
@@ -243,12 +230,12 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
 DebugOptions=
-[File019]
+[File018]
 Location=Z:\Sources\catgenius\software\geniediag\geniediag.sdb
 Folder=Output
 DeviceName=PIC16F877A
@@ -256,7 +243,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\water.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|geniediag.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|userinterface.c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C9=1
 TraceCmdString=
