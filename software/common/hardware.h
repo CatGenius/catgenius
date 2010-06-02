@@ -88,8 +88,8 @@
 #define LED_LOCKED_MASK		BIT(2)
 
 /* Actuators */
-#define WATERSENSORMUTE_PORT	PORTA	/* Mute Water Sensor */
-#define WATERSENSORMUTE_MASK	BIT(1)
+#define WATERSENSORANALOG_PORT	PORTA	/* Analog water sensor input */
+#define WATERSENSORANALOG_MASK	BIT(1)
 #define	WATERSENSORPULLUP_PORT	PORTD	/* Pull-up for water sensor input */
 #define	WATERSENSORPULLUP_MASK	BIT(0)
 #define PUMP_PORT		PORTD	/* Pump on/off (RL3) */

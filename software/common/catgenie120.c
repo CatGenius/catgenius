@@ -112,14 +112,11 @@ unsigned char catgenie_init (void)
 	 * Setup port A
 	 */
 	TRISA = NOT_USED_1_MASK      |	/* Not used (R39, Absent) */
-		NOT_USED_2_MASK      ;	/* Not used (R1, Absent) */
+		NOT_USED_2_MASK      |	/* Not used (R1, Absent) */
+		WATERSENSORANALOG_MASK;	/* Analog water sensor input */
 	PORTA = 0x00;
 	/* Disable ADC */
 	ADCON1 = 0x07;
-
-	/* Turn on the water sensor muting on permanently
-	 * It's enabled/disabled by tristating it */
-	PORTA |=  WATERSENSORMUTE_MASK;
 
 	/*
 	 * Setup port B
@@ -138,9 +135,6 @@ unsigned char catgenie_init (void)
 	RBIF = 0;
 	/* Enable interrupts */
 	RBIE = 1;
-
-	/* Switch on the water sensor LED permanently */
-	PORTB |= WATERSENSOR_LED_MASK;
 
 	PORTB_old = STARTBUTTON_MASK |
 		    SETUPBUTTON_MASK |
@@ -207,8 +201,8 @@ void catgenie_work (void)
 		/* Set new polling timeout */
 		settimeout(&water_sensortimer, WATERSENSORPOLLING);
 		if (!water_filling)
-			/* Unmute Water Sensor */
-			TRISA |= WATERSENSORMUTE_MASK;
+			/* Unmute Water Sensor by switching on the LED */
+			PORTB |= WATERSENSOR_LED_MASK;
 		/* Set timeout to wait for reflection */
 		settimeout(&mute_timer, 2 * MILISECOND);
 		do {
@@ -217,9 +211,8 @@ void catgenie_work (void)
 		} while (!water_sensorbuffer &&
 			 !timeoutexpired(&mute_timer));
 		if (!water_filling){
-			/* Mute Water Sensor */
-			TRISA &= ~WATERSENSORMUTE_MASK;
-			PORTA |=  WATERSENSORMUTE_MASK;
+			/* Mute Water Sensor by switching off the LED */
+			PORTB &= ~WATERSENSOR_LED_MASK;
 		}
 		/* Detect state change */
 		if (water_sensorbuffer != water_sensorbuffer_old) {
@@ -436,13 +429,12 @@ void set_Water (unsigned char on)
 {
 	if (on) {
 		water_filling = 1;
-		/* Unmute Water Sensor */
-		TRISA |= WATERSENSORMUTE_MASK;
+		/* Unmute Water Sensor by switching on the LED */
+		PORTB |= WATERSENSOR_LED_MASK;
 	} else {
 		water_filling = 0;
-		/* Mute Water Sensor */
-		TRISA &= ~WATERSENSORMUTE_MASK;
-		PORTA |=  WATERSENSORMUTE_MASK;
+		/* Mute Water Sensor by switching off the LED */
+		PORTB &= ~WATERSENSOR_LED_MASK;
 	}
 }
 
