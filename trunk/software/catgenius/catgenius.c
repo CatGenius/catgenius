@@ -100,7 +100,7 @@ void main (void)
 	userinterface_init();
 
 	/* Initialize the washing program */
-	litterlanguage_init();
+	litterlanguage_init(flags);
 
 	/* Initialize interrupts */
 	interrupt_init();

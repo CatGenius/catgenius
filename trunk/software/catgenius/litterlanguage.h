@@ -43,7 +43,7 @@ struct command {
 
 
 /* Generic */
-void		litterlanguage_init	(void) ;
+void		litterlanguage_init	(unsigned char	flags) ;
 void		litterlanguage_work	(void) ;
 void		litterlanguage_term	(void) ;
 
