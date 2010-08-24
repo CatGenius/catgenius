@@ -35,6 +35,10 @@ __CONFIG(XT & WDTEN  & PWRTEN & BOREN  & LVPDIS & DPROT   & WRTEN & DEBUGDIS & P
 /* Global Data								      */
 /******************************************************************************/
 
+#ifdef __RESETBITS_ADDR
+extern bit		__powerdown; 
+extern bit		__timeout; 
+#endif /* __RESETBITS_ADDR */
 static unsigned char	PORTB_old;
 
 
@@ -68,18 +72,20 @@ void main (void)
 	serial_init();
 
 	printf("\n*** CatGenius ***\n");
+#ifdef __RESETBITS_ADDR
 	if (!POR)
 		DBG("Power-on reset\n");
 	if (!BOR)
 		DBG("Brown-out reset\n");
-	if (!TO)
+	if (!__timeout)
 		DBG("Watchdog reset\n");
-	if (!PD)
+	if (!__powerdown)
 		DBG("Pin reset\n");
 	if (flags & START_BUTTON_HELD)
 		DBG("Start button held\n");
 	if (flags & SETUP_BUTTON_HELD)
 		DBG("Setup button held\n");
+#endif /* __RESETBITS_ADDR */
 
 	/* Initialize software timers */
 	timer_init();
