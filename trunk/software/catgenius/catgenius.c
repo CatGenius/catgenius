@@ -72,20 +72,28 @@ void main (void)
 	serial_init();
 
 	printf("\n*** CatGenius ***\n");
-#ifdef __RESETBITS_ADDR
 	if (!POR)
 		DBG("Power-on reset\n");
-	if (!BOR)
+	else if (!BOR)
 		DBG("Brown-out reset\n");
-	if (!__timeout)
+#ifdef __RESETBITS_ADDR
+	else if (!__timeout)
 		DBG("Watchdog reset\n");
-	if (!__powerdown)
+	else if (!__powerdown)
+		DBG("Pin reset (sleep)\n");
+	else
 		DBG("Pin reset\n");
+#else
+	else
+		DBG("Unknown reset\n");
+#endif /* __RESETBITS_ADDR */
+	POR = 1;
+	BOR = 1;
+
 	if (flags & START_BUTTON_HELD)
 		DBG("Start button held\n");
 	if (flags & SETUP_BUTTON_HELD)
 		DBG("Setup button held\n");
-#endif /* __RESETBITS_ADDR */
 
 	/* Initialize software timers */
 	timer_init();
