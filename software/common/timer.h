@@ -31,7 +31,7 @@ void		timer_isr		(void) ;
 void		settimeout		(struct timer		* const timer_p,
 					 unsigned long		  const timout) ;
 
-void		PostponeTimeout		(struct timer		* const timer_p,
+void		postponetimeout		(struct timer		* const timer_p,
 					 unsigned long		  const postpone) ;
 
 void		timeoutnow		(struct timer		* const timer_p) ;
@@ -40,12 +40,14 @@ void		timeoutnever		(struct timer		* const timer_p) ;
 
 unsigned char	timeoutexpired		(struct timer	 const	* const timer_p) ;
 
+unsigned char	timeoutneverexpires	(struct timer	 const	* const timer_p) ;
+
 void		gettimestamp		(struct timer		* const ticks) ;
 
-unsigned long	TimeStampAge		(struct timer	 const	* const timer_p) ;
+unsigned long	timestampage		(struct timer	 const	* const timer_p) ;
 
-void		Delay			(unsigned long		* const delay) ;
+void		delay			(unsigned long		* const delay) ;
 
-void		MicroDelay		(unsigned short		  const delay_us) ;
+void		microdelay		(unsigned short		  const delay_us) ;
 
 #endif /* TIMER_H */
