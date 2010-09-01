@@ -2,9 +2,9 @@
 /* File    :	timer.c							      */
 /* Function:	Timer module						      */
 /* Author  :	Robert Delien						      */
-/*		Copyright (C) 2010, Clockwork Engineering		      */
+/*		Copyright (C) 1999-2010, Clockwork Engineering		      */
 /* History :	10 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
+/*		- Ported from other project.				      */
 /******************************************************************************/
 #include <htc.h>
 
@@ -14,6 +14,11 @@
 /******************************************************************************/
 /* Macros								      */
 /******************************************************************************/
+
+struct longshort {
+	unsigned long	ls_longTicks ;	/* Least significant long */
+	unsigned short	ms_shortTicks ;	/* Most significant short */
+} ;
 
 
 /******************************************************************************/
@@ -37,7 +42,7 @@ void timer_init (void)
 /* Function:	Module initialisation routine				      */
 /*		- Initializes the module				      */
 /* History :	10 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
+/*		- Ported from other project.				      */
 /******************************************************************************/
 {
 	/*
@@ -65,7 +70,7 @@ void timer_term (void)
 /* Function:	Module initialisation routine				      */
 /*		- Terminates the module					      */
 /* History :	10 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
+/*		- Ported from other project.				      */
 /******************************************************************************/
 {
 	/* Disable timer interrupt */
@@ -82,14 +87,11 @@ void settimeout (struct timer	* const timer_p,
 /* Function:	settimeout						      */
 /*		- Calculate a requested timeout				      */
 /* History :	11 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
+/*		- Ported from other project.				      */
 /******************************************************************************/
 {
-	unsigned long	tempLongTicks;		/* Overflow detection buffer */
-	struct {
-		unsigned long	ls_longTicks ;	/* Least significant long */
-		unsigned short	ms_shortTicks ;	/* Most significant short */
-	} *longshort = timer_p;
+	unsigned long		tempLongTicks;		/* Overflow detection buffer */
+	struct longshort	*longshort = (struct longshort*)timer_p;
 
 	/* Fetch the current time */
 	gettimestamp(timer_p);
@@ -111,35 +113,33 @@ void settimeout (struct timer	* const timer_p,
 /* End: settimeout */
 
 
-#if 0
-void TMR_PostponeTimeout (struct timer * const timer_p,
-                          unsigned long      const postpone)
-////////////////////////////////////////////////////////////////////////////////
-// Function:       TMR_PosponeTimeout                                         //
-//                 - Add the requested timeout to the given timeout           //
-// History :       24 Jul 2004 by R. Delien:                                  //
-//                 - Initial revision.                                        //
-////////////////////////////////////////////////////////////////////////////////
+void postponetimeout (struct timer	* const timer_p,
+		      unsigned long	  const postpone)
+/******************************************************************************/
+/* Function:	postponetimeout						      */
+/*		- Add the requested timeout to the given timer		      */
+/* History :	25 Aug 2010 by R. Delien:				      */
+/*		- Ported from other project.				      */
+/******************************************************************************/
 {
-  unsigned long       tempTicksWord;  // Rollover detection buffer
+	unsigned long		tempLongTicks;		/* Overflow detection buffer */
+	struct longshort	*longshort = (struct longshort*)timer_p;
 
-  // Temporarilly store the Long-part of the given timeout
-  tempTicksWord = timer_p->t_ticksCalc.u32_lsLong;
+	/* If no postponement is required, we're done */
+	if (!postpone)
+		return;
 
-  // Add the timout to the Long-part of the given timeout
-  timer_p->t_ticksCalc.u32_lsLong += postpone;
+	/* Store lower value-before-adding to detect an overflow */
+	tempLongTicks = longshort->ls_longTicks;
 
-  // Check if the Long-part has rolled over and increase
-  // the Short-part if so
-  if (timer_p->t_ticksCalc.u32_lsLong < tempTicksWord)
-  {
-    timer_p->t_ticksCalc.u16_msShort ++;
-  }
+	/* Add the requested postponement */
+	longshort->ls_longTicks += postpone;
 
-  return;
+  	/* Carry an overflow to the most significant part */
+	if (longshort->ls_longTicks <= tempLongTicks)
+		longshort->ms_shortTicks++;
 }
-// End: TMR_PosponeTimeout
-#endif
+/* End: postponetimeout */
 
 
 void timeoutnow (struct timer * const timer_p)
@@ -147,7 +147,7 @@ void timeoutnow (struct timer * const timer_p)
 /* Function:	timeoutnow						      */
 /*		- Expire the given timer immediately			      */
 /* History :	13 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
+/*		- Ported from other project.				      */
 /******************************************************************************/
 {
 	timer_p->timer1    = 0x0000;
@@ -161,7 +161,7 @@ void timeoutnever (struct timer * const timer_p)
 /* Function:	timeoutnever						      */
 /*		- Make sure the given timer will not expire anymore	      */
 /* History :	13 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
+/*		- Ported from other project.				      */
 /******************************************************************************/
 {
 	timer_p->timer1    = 0xFFFF;
@@ -175,7 +175,7 @@ unsigned char timeoutexpired (struct timer const * const timer_p)
 /* Function:	timeoutexpired						      */
 /*		- Check if a given timeout has expired			      */
 /* History :	11 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
+/*		- Ported from other project.				      */
 /******************************************************************************/
 {
 	struct timer	currentTime;
@@ -197,12 +197,25 @@ unsigned char timeoutexpired (struct timer const * const timer_p)
 /* End: timeoutexpired */
 
 
+unsigned char timeoutneverexpires (struct timer	 const	* const timer_p)
+/******************************************************************************/
+/* Function:	timeoutneverexpires					      */
+/*		- Check if a given timeout is disabled			      */
+/* History :	11 Feb 2010 by R. Delien:				      */
+/*		- Ported from other project.				      */
+/******************************************************************************/
+{
+	return (timer_p->timer1    == 0xFFFF &&
+		timer_p->overflows == 0xFFFFFFFF);
+}
+
+
 void gettimestamp (struct timer * const ticks)
 /******************************************************************************/
 /* Function:	gettimestamp:						      */
 /*		- Fetch current ticks accurately, without stopping the timer  */
 /* History :	10 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
+/*		- Ported from other project.				      */
 /******************************************************************************/
 {
 	volatile unsigned char	temp;
@@ -230,144 +243,135 @@ void gettimestamp (struct timer * const ticks)
 /* End: gettimestamp */
 
 
+unsigned long timestampage (struct timer const * const pt_timestamp)
+/******************************************************************************/
+/* Function:	timestampage						      */
+/*		- Calculate the time between now and the time the given	      */
+/*		  timestamp was set					      */
+/* History :	25 Aug 2010 by R. Delien:				      */
+/*		- Ported from other project.				      */
+/******************************************************************************/
+{
+	unsigned long		age = 0;
+	struct longshort	cur_longshort;
+	struct longshort	*tmr_longshort = (struct longshort*)pt_timestamp;
+
+	/* Fetch the current time */
+	gettimestamp ((struct timer*)&cur_longshort);
+
+	/* Check overflows to detect a future time stamp */
+	if (cur_longshort.ms_shortTicks >= tmr_longshort->ms_shortTicks) {
+		switch (cur_longshort.ms_shortTicks - tmr_longshort->ms_shortTicks) {
+		case 0: /* Most Significant Shorts are equal */
+			if (cur_longshort.ls_longTicks > tmr_longshort->ls_longTicks) {
+				/* Past time stamp: Just subtract the Least Significant Longs */
+				age = cur_longshort.ls_longTicks - tmr_longshort->ls_longTicks;
+			} else {
+				/* Future or current time stamp */
+				age = 0;
+			}
+			break;
+
+		case 1: /* Most Significant Long is increased just by 1 */
+			if (cur_longshort.ls_longTicks < tmr_longshort->ls_longTicks) {
+				/* The Least Significant Long has only wrapped around */
+				age = (0xFFFFFFFF - (tmr_longshort->ls_longTicks - cur_longshort.ls_longTicks)) + 1;
+			} else {
+				/* The The stamp has just aged beyond the maximum */
+				age = 0xFFFFFFFF;
+			}
+			break;
+
+		default: /* Most Significant Long is increased by two of more */
+			/* The time stamp is ancient, older than 49 days! */
+			age = 0xFFFFFFFF;
+			break;
+		}
+	} else
+		/* Future time stamp */
+		age = 0;
+
+	return (age);
+}
+/* End: timestampage */
+
+
 #if 0
-unsigned long TMR_TimeStampAge (struct timer const * const pt_timestamp)
-////////////////////////////////////////////////////////////////////////////////
-// Function:       TMR_TimeStampAge                                           //
-//                 - Calculate the time now and the time the give timestamp   //
-//                   was set                                                  //
-// History :       24 Jul 2004 by R. Delien:                                  //
-//                 - Initial revision.                                        //
-////////////////////////////////////////////////////////////////////////////////
+void delay (unsigned long const delay)
+/******************************************************************************/
+/* Function:	delay							      */
+/*		- Hold up the processor for the specified nr of ticks	      */
+/* History :	25 Aug 2010 by R. Delien:				      */
+/*		- Ported from other project.				      */
+/******************************************************************************/
 {
-  unsigned long       age         = 0;
-  struct timer    currentTime;
+	struct timer timeoutTime;
 
-  // Fetch the current time
-  gettimestamp (&currentTime);
+	/* Set a timout */
+	TMR_SetTimeout (&timeoutTime, delay);
 
-  // Check Most Significant Short for future time stamps
-  if (currentTime.t_ticksCalc.u16_msShort >= pt_timestamp->t_ticksCalc.u16_msShort)
-  {
-    switch (currentTime.t_ticksCalc.u16_msShort - pt_timestamp->t_ticksCalc.u16_msShort)
-    {
-      case 0: // Most Significant Short is the same
-        if (currentTime.t_ticksCalc.u32_lsLong > pt_timestamp->t_ticksCalc.u32_lsLong)
-        {
-          // Past time stamp: Just subtract the Least Significant LWords
-          age = currentTime.t_ticksCalc.u32_lsLong - pt_timestamp->t_ticksCalc.u32_lsLong;
-        }
-        else
-        {
-          // Future or current time stamp
-          age = 0;
-        }
-        break;
+	/* Wait for it to expire */
+	while (!TMR_CheckTimeout (&timeoutTime))
+	{
+		/* Just wait... */
+		;
+	}
 
-      case 1: // Most Significant LWord is increased just by 1
-        if (currentTime.t_ticksCalc.u32_lsLong < pt_timestamp->t_ticksCalc.u32_lsLong)
-        {
-          // The Least Significant LWords has only wrapped around
-          age = (0xFFFFFFFF - (pt_timestamp->t_ticksCalc.u32_lsLong - currentTime.t_ticksCalc.u32_lsLong)) + 1;
-        }
-        else
-        {
-          // The The stamp has just aged beyond the maximum
-          age = 0xFFFFFFFF;
-        }
-        break;
-
-      default: // Most Significant LWord is increased by two of more
-        // The time stamp is ancient, older than 49 days!
-        age = 0xFFFFFFFF;
-        break;
-    }
-  }
-  else
-  {
-    // Future time stamp
-    age = 0;
-  }
-
-  return (age);
+	return;
 }
-// End: TMR_TimeStampAge
+/* End: delay */
 
 
-void TMR_Delay (unsigned long const delay)
-////////////////////////////////////////////////////////////////////////////////
-// Function:       TMR_Delay                                                  //
-//                 - Hold up the processor for the specified nr of ticks      //
-// History :       24 Jul 2004 by R. Delien:                                  //
-//                 - Initial revision.                                        //
-////////////////////////////////////////////////////////////////////////////////
+void microdelay (unsigned short const delay_us)
+/******************************************************************************/
+/* Function:	microdelay						      */
+/*		- Hold up the processor for the specified nr microseconds     */
+/* History :	25 Aug 2010 by R. Delien:				      */
+/*		- Ported from other project.				      */
+/******************************************************************************/
 {
-  struct timer timeoutTime;
+	unsigned char            u8_old_tmr3_dr[2];
+	unsigned short volatile *pu16_old_tmr3 = (unsigned short volatile *)&(u8_old_tmr3_dr[0]);
 
-  // Set a timout
-  TMR_SetTimeout (&timeoutTime, delay);
+	unsigned char            u8_cur_tmr3_dr[2];
+	unsigned short volatile *pu16_cur_tmr3 = (unsigned short volatile *)&(u8_cur_tmr3_dr[0]);
 
-  // Wait for it to expire
-  while (!TMR_CheckTimeout (&timeoutTime))
-  {
-    // Just wait...
-;
-  }
+	unsigned int             u24_ticks_to_wait;
+	unsigned int             u24_ticks_waited = 0;
 
-  return;
+	// Store TMR3 value first, for highest accuracy
+	u8_old_tmr3_dr[0] = TMR3_DR_L; // Read the lower byte first, this will also latch the higher byte
+	u8_old_tmr3_dr[1] = TMR3_DR_H; // Read the latched higher byte
+
+	// Ticks-per-us is 12.5. To keep the 0.5, we use ticks-per-10us which is 125.
+	// To calculate the proper nr of ticks to wait, the delay must be multiplied
+	// by 10 too.
+	u24_ticks_to_wait = (delay_us * TICKS_PER_10_US) / 10;
+
+	while (u24_ticks_waited < u24_ticks_to_wait)
+	{
+		// Fetch the current TMR3 value
+		u8_cur_tmr3_dr[0] = TMR3_DR_L; // Read the lower byte first, this will also latch the higher byte
+		u8_cur_tmr3_dr[1] = TMR3_DR_H; // Read the latched higher byte
+
+		// Check if the timer has decreased and if it rolled under
+		if (*pu16_cur_tmr3 < *pu16_old_tmr3)
+		{
+			// Timer has decreased, just add the difference
+			u24_ticks_waited += (*pu16_old_tmr3 - *pu16_cur_tmr3);
+		}
+		else if (*pu16_cur_tmr3 > *pu16_old_tmr3)
+		{
+			// Timer has rolled under.
+			u24_ticks_waited += *pu16_old_tmr3 + (TMR3_RELOAD_VALUE - *pu16_cur_tmr3);
+		}
+
+		*pu16_old_tmr3 = *pu16_cur_tmr3;
+	}
+
+	return;
 }
-// End: TMR_Delay
-
-
-void TMR_MicroDelay (unsigned short const delay_us)
-////////////////////////////////////////////////////////////////////////////////
-// Function:       TMR_Delay                                                  //
-//                 - Hold up the processor for the specified nr of ticks      //
-// History :       24 Jul 2004 by R. Delien:                                  //
-//                 - Initial revision.                                        //
-////////////////////////////////////////////////////////////////////////////////
-{
-  unsigned char            u8_old_tmr3_dr[2];
-  unsigned short volatile *pu16_old_tmr3 = (unsigned short volatile *)&(u8_old_tmr3_dr[0]);
-
-  unsigned char            u8_cur_tmr3_dr[2];
-  unsigned short volatile *pu16_cur_tmr3 = (unsigned short volatile *)&(u8_cur_tmr3_dr[0]);
-
-  unsigned int             u24_ticks_to_wait;
-  unsigned int             u24_ticks_waited = 0;
-
-  // Store TMR3 value first, for highest accuracy
-  u8_old_tmr3_dr[0] = TMR3_DR_L; // Read the lower byte first, this will also latch the higher byte
-  u8_old_tmr3_dr[1] = TMR3_DR_H; // Read the latched higher byte
-
-  // Ticks-per-us is 12.5. To keep the 0.5, we use ticks-per-10us which is 125.
-  // To calculate the proper nr of ticks to wait, the delay must be multiplied
-  // by 10 too.
-  u24_ticks_to_wait = (delay_us * TICKS_PER_10_US) / 10;
-
-  while (u24_ticks_waited < u24_ticks_to_wait)
-  {
-    // Fetch the current TMR3 value
-    u8_cur_tmr3_dr[0] = TMR3_DR_L; // Read the lower byte first, this will also latch the higher byte
-    u8_cur_tmr3_dr[1] = TMR3_DR_H; // Read the latched higher byte
-
-    // Check if the timer has decreased and if it rolled under
-    if (*pu16_cur_tmr3 < *pu16_old_tmr3)
-    {
-      // Timer has decreased, just add the difference
-      u24_ticks_waited += (*pu16_old_tmr3 - *pu16_cur_tmr3);
-    }
-    else if (*pu16_cur_tmr3 > *pu16_old_tmr3)
-    {
-      // Timer has rolled under.
-      u24_ticks_waited += *pu16_old_tmr3 + (TMR3_RELOAD_VALUE - *pu16_cur_tmr3);
-    }
-
-    *pu16_old_tmr3 = *pu16_cur_tmr3;
-  }
-
-  return;
-}
+/* End: microdelay */
 #endif
 
 
@@ -385,5 +389,9 @@ void timer_isr (void)
 {
 	/* Increase the number of timer overflows */
 	overflows++;
+	if (overflows >= 0xFFFE0000) {
+//		printf("RIP\n");
+		while(1);
+	}
 }
 /* End: timer1_isr */
