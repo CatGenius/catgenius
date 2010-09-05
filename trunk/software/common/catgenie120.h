@@ -17,7 +17,7 @@
 #define RESERVED_3		0x10
 #define RESERVED_4		0x20
 #define RESERVED_5		0x40
-#define RESERVED_6		0x80
+#define POWER_FAILURE		0x80
 
 
 /* Bowl modi */

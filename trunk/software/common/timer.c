@@ -7,6 +7,7 @@
 /*		- Ported from other project.				      */
 /******************************************************************************/
 #include <htc.h>
+#include <stdio.h>
 
 #include "timer.h"
 
@@ -263,33 +264,26 @@ unsigned long timestampage (struct timer const * const pt_timestamp)
 	if (cur_longshort.ms_shortTicks >= tmr_longshort->ms_shortTicks) {
 		switch (cur_longshort.ms_shortTicks - tmr_longshort->ms_shortTicks) {
 		case 0: /* Most Significant Shorts are equal */
-			if (cur_longshort.ls_longTicks > tmr_longshort->ls_longTicks) {
+			if (cur_longshort.ls_longTicks > tmr_longshort->ls_longTicks)
 				/* Past time stamp: Just subtract the Least Significant Longs */
 				age = cur_longshort.ls_longTicks - tmr_longshort->ls_longTicks;
-			} else {
-				/* Future or current time stamp */
-				age = 0;
-			}
 			break;
 
 		case 1: /* Most Significant Long is increased just by 1 */
-			if (cur_longshort.ls_longTicks < tmr_longshort->ls_longTicks) {
+			if (cur_longshort.ls_longTicks < tmr_longshort->ls_longTicks)
 				/* The Least Significant Long has only wrapped around */
 				age = (0xFFFFFFFF - (tmr_longshort->ls_longTicks - cur_longshort.ls_longTicks)) + 1;
-			} else {
-				/* The The stamp has just aged beyond the maximum */
+			else
+				/* The The stamp has just aged beyond the maximum of 9.5 hours */
 				age = 0xFFFFFFFF;
-			}
 			break;
 
 		default: /* Most Significant Long is increased by two of more */
-			/* The time stamp is ancient, older than 49 days! */
+			/* The time stamp is ancient, way older than 9.5 hours */
 			age = 0xFFFFFFFF;
 			break;
 		}
-	} else
-		/* Future time stamp */
-		age = 0;
+	}
 
 	return (age);
 }
@@ -389,8 +383,14 @@ void timer_isr (void)
 {
 	/* Increase the number of timer overflows */
 	overflows++;
-	if (overflows >= 0xFFFE0000) {
-//		printf("RIP\n");
+
+	/* If the combined timer ever reaches 0xFFFF00000000, the maximum settable
+	 * timeout of 0xFFFFFFFF will be equal to the magic value for NEVER. This
+	 * would seriously mess things up, so all we can do is reset, after a
+	 * respectable up-time of 71 years */
+	if (overflows >= 0xFFFF0000) {
+		overflows = 0;
+		printf("RIP\n");
 		while(1);
 	}
 }
