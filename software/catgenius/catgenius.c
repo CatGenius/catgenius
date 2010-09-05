@@ -10,6 +10,7 @@
 #include <stdio.h>
 
 #include "../common/timer.h"
+#include "../common/rtc.h"
 #include "../common/hardware.h"
 #include "../common/serial.h"
 #include "../common/i2c.h"
@@ -39,20 +40,13 @@ __CONFIG(XT & WDTEN  & PWRTEN & BOREN  & LVPDIS & DPROT   & WRTEN & DEBUGDIS & P
 extern bit		__powerdown; 
 extern bit		__timeout; 
 #endif /* __RESETBITS_ADDR */
+
 static unsigned char	PORTB_old;
 
 
 /******************************************************************************/
 /* Local Prototypes							      */
 /******************************************************************************/
-
-static void dumpports(void)
-{
-	printf("TRISB = 0x%02X, PORTB = 0x%02X\n", TRISB, PORTB);
-	printf("TRISC = 0x%02X, PORTC = 0x%02X\n", TRISC, PORTC);
-	printf("TRISD = 0x%02X, PORTD = 0x%02X\n", TRISD, PORTD);
-	printf("TRISE = 0x%02X, PORTE = 0x%02X\n", TRISE, PORTE);
-}
 
 static void interrupt_init (void);
 
@@ -72,10 +66,13 @@ void main (void)
 	serial_init();
 
 	printf("\n*** CatGenius ***\n");
-	if (!POR)
+	if (!POR) {
 		DBG("Power-on reset\n");
-	else if (!BOR)
+		flags |= POWER_FAILURE;
+	} else if (!BOR) {
 		DBG("Brown-out reset\n");
+		flags |= POWER_FAILURE;
+	}
 #ifdef __RESETBITS_ADDR
 	else if (!__timeout)
 		DBG("Watchdog reset\n");
@@ -97,6 +94,9 @@ void main (void)
 
 	/* Initialize software timers */
 	timer_init();
+
+	/* Initialize real time clock */
+	rtc_init(flags);
 
 	/* Initialize the I2C bus */
 //	i2c_init();
@@ -121,6 +121,7 @@ void main (void)
 
 	/* Execute the run loop */
 	for(;;){
+		rtc_work();
 		catsensor_work();
 		catgenie_work();
 		userinterface_work();
@@ -144,8 +145,23 @@ void main (void)
 				TXEN=0;
 				TXEN=1;
 			} else
-				if (RCREG == '\n')
-					dumpports();
+				switch (RCREG) {
+				case 'm':
+					incminutes();
+					printtime();
+					break;
+				case 'h':
+					inchours();
+					printtime();
+					break;
+				case 'w':
+					incweekday();
+					printtime();
+					break;
+				case '\n':
+					printtime();
+					break;
+				}
 		}
 #ifndef __DEBUG
 		CLRWDT();
