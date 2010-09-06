@@ -390,7 +390,8 @@ void timer_isr (void)
 	 * respectable up-time of 71 years */
 	if (overflows >= 0xFFFF0000) {
 		overflows = 0;
-		printf("RIP\n");
+		/* TODO: This print make the linker crash... */
+//		printf("RIP\n");
 		while(1);
 	}
 }
