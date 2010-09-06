@@ -37,8 +37,8 @@ __CONFIG(XT & WDTEN  & PWRTEN & BOREN  & LVPDIS & DPROT   & WRTEN & DEBUGDIS & P
 /******************************************************************************/
 
 #ifdef __RESETBITS_ADDR
-extern bit		__powerdown; 
-extern bit		__timeout; 
+extern bit		__powerdown;
+extern bit		__timeout;
 #endif /* __RESETBITS_ADDR */
 
 static unsigned char	PORTB_old;
@@ -149,17 +149,21 @@ void main (void)
 				case 'm':
 					incminutes();
 					printtime();
+					DBG("\n");
 					break;
 				case 'h':
 					inchours();
 					printtime();
+					DBG("\n");
 					break;
 				case 'w':
 					incweekday();
 					printtime();
+					DBG("\n");
 					break;
 				case '\n':
 					printtime();
+					DBG("\n");
 					break;
 				}
 		}
