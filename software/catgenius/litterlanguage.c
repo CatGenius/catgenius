@@ -287,10 +287,10 @@ void watersensor_event (unsigned char undetected)
 			set_Water(0);
 			timeoutnever(&timer_fill);
 			printtime();
-			DBG("Filled");
+			DBG("Filled\n");
 		} else {
 			printtime();
-			DBG("Drained");
+			DBG("Drained\n");
 		}
 	} else
 		if (water_detected)
@@ -358,7 +358,7 @@ static void exe_command (void)
 				/* Don't fill if water is detected already */
 				if (!water_detected) {
 					printtime();
-					DBG("Filling");
+					DBG("Filling\n");
 					set_Water(1);
 					settimeout(&timer_fill, MAX_FILLTIME);
 //					gettimestamp(&timer_fill);
@@ -376,7 +376,7 @@ static void exe_command (void)
 //		DBG("CMD_PUMP, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
 		if (wet_program) {
 			printtime();
-			DBG("Draining");
+			DBG("Draining\n");
 			set_Pump((unsigned char)cur_command.arg);
 		}
 		cmd_pointer++;
