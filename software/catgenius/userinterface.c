@@ -11,6 +11,7 @@
 
 #include "userinterface.h"
 #include "../common/timer.h"
+#include "../common/rtc.h"
 #include "../common/hardware.h"
 #include "../common/catgenie120.h"
 #include "litterlanguage.h"
@@ -347,6 +348,7 @@ void catsensor_event (unsigned char detected)
 	/* Update the actual cat status */
 	cat_present = detected;
 
+	printtime();
 	DBG("Cat %s\n", detected?"in":"out");
 
 	/* Trigger detection on rising edge only */

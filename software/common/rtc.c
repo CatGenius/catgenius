@@ -99,7 +99,7 @@ void rtc_term (void)
 
 void printtime (void)
 {
-	printf( "%d %d:%.2d.%.2d\n",
+	printf( "%d %d:%.2d.%.2d ",
 		currenttime.weekday, currenttime.hours,
 		currenttime.minutes, currenttime.seconds );
 }

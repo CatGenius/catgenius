@@ -12,6 +12,7 @@
 #include "litterlanguage.h"
 #include "romwashprogram.h"
 #include "../common/timer.h"
+#include "../common/rtc.h"
 #include "../common/catgenie120.h"
 #include "../common/hardware.h"
 
@@ -35,18 +36,18 @@
 /* Global Data								      */
 /******************************************************************************/
 
-static unsigned char	prg_source	= 0;
-static bit		wet_program	= 0;
-static bit		water_detected	= 0;
+static unsigned char	prg_source		= 0;
+static bit		wet_program		= 0;
+static bit		water_detected		= 0;
 
-static unsigned char	cmd_state	= STATE_IDLE;
+static unsigned char	cmd_state		= STATE_IDLE;
 static struct command	const * cmd_pointer	= 0;
 static struct command	cur_command;
 
-static struct timer	timer_waitcmd   = NEVER;
-static struct timer	timer_fill      = NEVER;
-static struct timer	timer_drain     = NEVER;
-static struct timer	timer_autodose  = NEVER;
+static struct timer	timer_waitcmd   	= NEVER;
+static struct timer	timer_fill      	= NEVER;
+static struct timer	timer_drain     	= NEVER;
+static struct timer	timer_autodose  	= NEVER;
 
 
 /******************************************************************************/
@@ -166,11 +167,12 @@ void litterlanguage_work (void)
 		/* no break; */
 	case STATE_GET_START:	/* Wait for the start command to be fetched */
 		if (get_command(&cur_command)) {
+			printtime();
 			DBG("IP 0x%04X: ", cmd_pointer);
 			if (cur_command.cmd == CMD_START) {
 				DBG("CMD_START, %s", wet_program?"wet":"dry");
 				/* Check if this is a valid program for us */
-				if( ((cur_command.arg & 0x00FF) <= CMD_END) && 
+				if( ((cur_command.arg & 0x00FF) <= CMD_END) &&
 				    ( (!wet_program && (cur_command.arg & FLAGS_DRYRUN)) ||
 				      (wet_program && (cur_command.arg & FLAGS_WETRUN)) ) ) {
 					eeprom_write(NVM_BOXSTATE, BOX_MESSY);
@@ -221,6 +223,8 @@ void litterlanguage_start (unsigned char wet)
 {
 	extern const struct command	washprogram[];
 	if (cmd_state == STATE_IDLE) {
+		/* TODO: Stack overflow if we're printing here */
+//		DBG("Starting %s program\n", wet?"wet":"dry");
 		switch (prg_source) {
 		case SRC_ROM:
 			cmd_pointer = &washprogram[0];
@@ -246,6 +250,8 @@ void litterlanguage_pause (unsigned char pause)
 void litterlanguage_stop (void)
 {
 	if (cmd_state != STATE_IDLE) {
+		/* TODO: Stack overflow if we're printing here */
+//		DBG("Stopping program\n");
 		/* Stop all actuators */
 		set_Bowl(BOWL_STOP);
 		set_Arm(ARM_STOP);
@@ -280,6 +286,11 @@ void watersensor_event (unsigned char undetected)
 			/* Turn off the water and disable the timeout */
 			set_Water(0);
 			timeoutnever(&timer_fill);
+			printtime();
+			DBG("Filled");
+		} else {
+			printtime();
+			DBG("Drained");
 		}
 	} else
 		if (water_detected)
@@ -325,31 +336,34 @@ static void exe_command (void)
 {
 	static struct command	const * ret_address;
 
-	DBG("IP 0x%04X: ", cmd_pointer);
+//	DBG("IP 0x%04X: ", cmd_pointer);
 	switch (cur_command.cmd) {
 	case CMD_BOWL:
-		DBG("CMD_BOWL, %s", (cur_command.arg == BOWL_STOP)?"BOWL_STOP":((cur_command.arg == BOWL_CW)?"BOWL_CW":"BOWL_CCW"));
+//		DBG("CMD_BOWL, %s", (cur_command.arg == BOWL_STOP)?"BOWL_STOP":((cur_command.arg == BOWL_CW)?"BOWL_CW":"BOWL_CCW"));
 		set_Bowl((unsigned char)cur_command.arg);
 		cmd_pointer++;
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_ARM:
-		DBG("CMD_ARM, %s", (cur_command.arg == ARM_STOP)?"ARM_STOP":((cur_command.arg == ARM_DOWN)?"ARM_DOWN":"ARM_UP"));
+//		DBG("CMD_ARM, %s", (cur_command.arg == ARM_STOP)?"ARM_STOP":((cur_command.arg == ARM_DOWN)?"ARM_DOWN":"ARM_UP"));
 		set_Arm((unsigned char)cur_command.arg);
 		cmd_pointer++;
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_WATER:
-		DBG("CMD_WATER, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
+//		DBG("CMD_WATER, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
 			if (cur_command.arg) {
 				eeprom_write(NVM_BOXSTATE, BOX_WET);
 				/* Don't fill if water is detected already */
 				if (!water_detected) {
+					printtime();
+					DBG("Filling");
 					set_Water(1);
 					settimeout(&timer_fill, MAX_FILLTIME);
-				} else
-					DBG(" (skipped)");
+//					gettimestamp(&timer_fill);
+				} //else
+//					DBG(" (skipped)");
 			} else {
 				/* Disable timeout on filling */
 				set_Water(0);
@@ -359,27 +373,30 @@ static void exe_command (void)
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_PUMP:
-		DBG("CMD_PUMP, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
-		if (wet_program)
+//		DBG("CMD_PUMP, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
+		if (wet_program) {
+			printtime();
+			DBG("Draining");
 			set_Pump((unsigned char)cur_command.arg);
+		}
 		cmd_pointer++;
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_DRYER:
-		DBG("CMD_DRYER, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
+//		DBG("CMD_DRYER, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
 			set_Dryer((unsigned char)cur_command.arg);
 		cmd_pointer++;
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_WAITTIME:
-		DBG("CMD_WAITTIME, %ums", cur_command.arg);
+//		DBG("CMD_WAITTIME, %ums", cur_command.arg);
 		settimeout( &timer_waitcmd,
 			    (unsigned long)cur_command.arg * MILISECOND );
 		cmd_state = STATE_WAIT_CMD;
 		break;
 	case CMD_WAITWATER:
-		DBG("CMD_WAITWATER, %s%s", cur_command.arg?"high":"low", wet_program?"":" (nop)");
+//		DBG("CMD_WAITWATER, %s%s", cur_command.arg?"high":"low", wet_program?"":" (nop)");
 		if (wet_program) {
 			if (!cur_command.arg)
 				/* Start the drain timeout, we don't want to wait forever */
@@ -391,7 +408,7 @@ static void exe_command (void)
 		}
 		break;
 	case CMD_WAITDOSAGE:
-		DBG("CMD_WAITDOSAGE%s", wet_program?"":" (nop)");
+//		DBG("CMD_WAITDOSAGE%s", wet_program?"":" (nop)");
 		if (wet_program)
 			cmd_state = STATE_WAIT_CMD;
 		else {
@@ -400,7 +417,7 @@ static void exe_command (void)
 		}
 		break;
 	case CMD_SKIPIFDRY:
-		DBG("CMD_SKIPIFDRY, %u%s", cur_command.arg, wet_program?" (nop)":"");
+//		DBG("CMD_SKIPIFDRY, %u%s", cur_command.arg, wet_program?" (nop)":"");
 		if (!wet_program)
 			cmd_pointer += cur_command.arg + 1;
 		else
@@ -408,7 +425,7 @@ static void exe_command (void)
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_SKIPIFWET:
-		DBG("CMD_SKIPIFWET, %u%s", cur_command.arg, wet_program?"":" (nop)");
+//		DBG("CMD_SKIPIFWET, %u%s", cur_command.arg, wet_program?"":" (nop)");
 		if (wet_program)
 			cmd_pointer += cur_command.arg + 1;
 		else
@@ -416,7 +433,7 @@ static void exe_command (void)
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_AUTODOSE:
-		DBG("CMD_AUTODOSE, %u.%uml%s", cur_command.arg/10, cur_command.arg%10, wet_program?"":" (nop)");
+//		DBG("CMD_AUTODOSE, %u.%uml%s", cur_command.arg/10, cur_command.arg%10, wet_program?"":" (nop)");
 		if (wet_program) {
 			settimeout(&timer_autodose,
 				   (unsigned long)cur_command.arg * SECOND * (DOSAGE_SECONDS_PER_ML / 10));
@@ -426,32 +443,32 @@ static void exe_command (void)
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_CALL:
-		DBG("CMD_CALL, 0x%04X", cur_command.arg);
+//		DBG("CMD_CALL, 0x%04X", cur_command.arg);
 		ret_address = cmd_pointer + 1;
 		cmd_pointer = (struct command const*)cur_command.arg;
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_RETURN:
-		DBG("CMD_RETURN, 0x%04X", ret_address);
+//		DBG("CMD_RETURN, 0x%04X", ret_address);
 		cmd_pointer = ret_address;
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_END:
-		DBG("CMD_END");
+//		DBG("CMD_END");
 		eeprom_write(NVM_BOXSTATE, BOX_TIDY);
 		litterlanguage_stop();
 		break;
 	case CMD_START:
-		DBG("CMD_START, unexpected");
+//		DBG("CMD_START, unexpected");
 		litterlanguage_stop();
 		break;
 	default:
 		/* Program error */
-		DBG("CMD_unknown: 0x%X", cur_command.arg);
+//		DBG("CMD_unknown: 0x%X", cur_command.arg);
 		litterlanguage_stop();
 		break;
 	}
-	DBG("\n");
+//	DBG("\n");
 }
 
 static void wait_command (void)
