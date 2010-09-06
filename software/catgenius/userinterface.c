@@ -231,7 +231,7 @@ void startbutton_event (unsigned char up)
 		else
 			set_LED_Locked(0x55, 1);
 	} else {
-		if (!muteupevent) 
+		if (!muteupevent)
 			if (locked)
 				set_LED_Locked(0xFF, 1);
 			else
@@ -295,7 +295,7 @@ void setupbutton_event (unsigned char up)
 					case DISP_AUTOMODE:
 						set_mode((auto_mode==AUTO_DETECTED)?AUTO_MANUAL:auto_mode+1);
 						break;
-				
+
 					case DISP_CARTRIDGELEVEL:
 						if (cart_level < 10)
 							cart_level = 10;
@@ -314,7 +314,7 @@ void setupbutton_event (unsigned char up)
 						/* Update the display */
 						update_display();
 						break;
-				
+
 					case DISP_ERROR:
 						break;
 					}
@@ -353,9 +353,12 @@ void catsensor_event (unsigned char detected)
 	if (detected)
 		cat_detected = 1;
 
-	/* Update cat timeout on both edges, once detection is eminent */
+	/* Update cat timeout once detection is eminent */
 	if (cat_detected)
-		settimeout(&cattimer, CAT_TIMEOUT);
+		if (detected)
+			timeoutnever(&cattimer);				\
+		else
+			settimeout(&cattimer, CAT_TIMEOUT);
 
 	if ( (auto_mode == AUTO_DETECTED1ON1) ||
 	     (auto_mode == AUTO_DETECTED1ON2) ||
