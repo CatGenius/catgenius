@@ -107,7 +107,7 @@ void printtime (void)
 
 void incminutes (void)
 {
-	postponetimeout(&second, SECOND);
+	settimeout(&second, SECOND);
 	if (++currenttime.minutes >=60)
 		currenttime.minutes = 0;
 	printtime();
@@ -116,7 +116,7 @@ void incminutes (void)
 
 void inchours (void)
 {
-	postponetimeout(&second, SECOND);
+	settimeout(&second, SECOND);
 	if (++currenttime.hours >=23)
 		currenttime.hours = 0;
 }
@@ -124,7 +124,7 @@ void inchours (void)
 
 void incweekday (void)
 {
-	postponetimeout(&second, SECOND);
+	settimeout(&second, SECOND);
 	if (++currenttime.weekday >=7)
 		currenttime.weekday = 0;
 }
