@@ -173,7 +173,7 @@ unsigned char catgenie_init (void)
 	}
 
 	/* Fill out the return flags */
-	temp = 0;	
+	temp = 0;
 	if (!(STARTBUTTON_PORT & STARTBUTTON_MASK))
 		temp |= START_BUTTON_HELD;
 	if (!(SETUPBUTTON_PORT & SETUPBUTTON_MASK))
@@ -192,28 +192,25 @@ void catgenie_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	unsigned char	temp ;
+	unsigned char	temp = 0;
 	unsigned char	status ;
 
 	/* Poll the water sensor */
 	if (timeoutexpired(&water_sensortimer)) {
-		struct timer	mute_timer;
 		/* Set new polling timeout */
 		settimeout(&water_sensortimer, WATERSENSORPOLLING);
 		if (!water_filling)
 			/* Unmute Water Sensor by switching on the LED */
 			PORTB |= WATERSENSOR_LED_MASK;
-		/* Set timeout to wait for reflection */
-		settimeout(&mute_timer, 2 * MILISECOND);
 		do {
 			/* 0 == no reflection == water detected */
-			water_sensorbuffer = WATERSENSOR_PORT & WATERSENSOR_MASK;
-		} while (!water_sensorbuffer &&
-			 !timeoutexpired(&mute_timer));
-		if (!water_filling){
+			if (water_sensorbuffer = WATERSENSOR_PORT & WATERSENSOR_MASK)
+				break;
+			temp++;
+		} while (temp <= 125); /* TODO: Verify if 125 loops is ~2ms */
+		if (!water_filling)
 			/* Mute Water Sensor by switching off the LED */
 			PORTB &= ~WATERSENSOR_LED_MASK;
-		}
 		/* Detect state change */
 		if (water_sensorbuffer != water_sensorbuffer_old) {
 			/* Postpone the debouncer */
