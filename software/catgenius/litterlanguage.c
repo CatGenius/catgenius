@@ -454,7 +454,7 @@ static void exe_command (void)
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_END:
-//		DBG("CMD_END");
+		DBG("CMD_END");
 		eeprom_write(NVM_BOXSTATE, BOX_TIDY);
 		litterlanguage_stop();
 		break;
