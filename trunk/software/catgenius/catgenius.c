@@ -99,10 +99,7 @@ void main (void)
 	rtc_init(flags);
 
 	/* Initialize the I2C bus */
-//	i2c_init();
-
-	/* Initialize the RFID reader */
-//	cr14_init();
+	i2c_init();
 
 	/* Initialize the RFID tag */
 //	srix4k_init();
@@ -126,9 +123,7 @@ void main (void)
 		catgenie_work();
 		userinterface_work();
 		litterlanguage_work();
-//		srix4k_work();
-//		cr14_work();
-//		i2c_work();
+		srix4k_work();
 
 		while (RCIF) {
 			char dummy ;

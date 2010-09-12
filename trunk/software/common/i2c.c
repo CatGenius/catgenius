@@ -18,27 +18,17 @@
 
 #define BUS_FREQ	100000	/* 400kHz bus frequency */
 
-#define IDLE		0
-#define START		1
-#define RESTART		3
-#define WRITE		5
-#define READ		7
-#define STOP		11
-
 
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
 
-static unsigned char	state	= 0;
-static unsigned char	data	= 0;
-static bit		ack	= 0;
-static bit		error	= 0;
-
 
 /******************************************************************************/
 /* Local Prototypes							      */
 /******************************************************************************/
+
+static unsigned char i2c_waitready(void);
 
 
 /******************************************************************************/
@@ -60,11 +50,11 @@ void i2c_init (void)
 	/* Set I2C bus frequency */
 	SSPADD = ((_XTAL_FREQ/4) / BUS_FREQ) /*-1*/;
 
-	CKE = 1;	// use I2C levels      worked also with '0'
-	SMP = 1;	// disable slew rate control  worked also with '0'
-	
-	PSPIF=0;	// clear SSPIF interrupt flag
-	BCLIF=0;	// clear bus collision flag
+	CKE = 1;	/* Use I2C levels TODO: Why? Worked also with '0' */
+	SMP = 1;	/* Disable slew rate control TODO: Why? Worked also with '0' */
+
+	PSPIF=0;	/* Clear I2C interrupt flag */
+	BCLIF=0;	/* Clear collision interrupt flag */
 }
 /* End: i2c_init */
 
@@ -77,84 +67,6 @@ void i2c_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	/* Nothing to do here if busy */
-	if ((SSPCON2 & 0x1F) | RW)
-		return;
-
-	switch (state) {
-	case IDLE:
-		break;
-
-	case START:
-		/* Start condition */
-		SEN = 1;
-		/* Wait for not-busy */
-		state++;
-		break;
-	case START+1:
-		/* Ready */
-		state = IDLE;
-		break;
-
-	case RESTART:
-		/* Repeated start condition */
-		RSEN = 1;
-		/* Wait for not-busy */
-		state++;
-		break;
-	case RESTART+1:
-		/* Ready */
-		state = IDLE;
-		break;
-
-	case WRITE:
-		/* Write data */
-		SSPBUF = data;
-		/* Wait for not-busy */
-		state++;
-		break;
-	case WRITE+1:
-		/* Store (n)ack */
-		ack = !ACKSTAT;
-		/* Ready */
-		state = IDLE;
-		break;
-
-	case READ:
-		/* Enable reading */
-		RCEN = 1;
-		/* Wait for not-busy */
-		state++;
-		break;
-	case READ+1:
-		/* Read data */
-		data = SSPBUF;
-		/* Wait for not-busy */
-		state++;
-		break;
-	case READ+2:
-		/* Send (n)ack */
-		ACKDT = ack?0:1;
-		ACKEN = 1;
-		/* Wait for not-busy */
-		state++;
-		break;
-	case READ+3:
-		/* Ready */
-		state = IDLE;
-		break;
-
-	case STOP:
-		/* Stop condition */
-		PEN = 1;
-		/* Wait for not-busy */
-		state++;
-		break;
-	case STOP+1:
-		/* Ready */
-		state = IDLE;
-		break;
-	}
 } /* i2c_work */
 
 
@@ -169,56 +81,62 @@ void i2c_term (void)
 }
 /* End: i2c_term */
 
-unsigned char i2c_busy(void)
-{
-	return (state != IDLE);
-}
-
 void i2c_start(void)
 {
-	state = START;
+	i2c_waitready();
+	/* Start condition */
+	SEN = 1;
 }
 
 void i2c_restart(void)
 {
-	state = RESTART;
+	i2c_waitready();
+	/* Repeated start condition */
+	RSEN = 1;
 }
 
-void i2c_address(unsigned char byte, unsigned char read)
+void i2c_read(unsigned char *byte, unsigned char ack)
 {
-	data = byte << 1;
-	if (read)
-		data |= 0x01;
-	state = WRITE;
+	i2c_waitready();
+	/* Enable reading */
+	RCEN = 1;
+
+	i2c_waitready();
+	/* Read data */
+	if (byte)
+		*byte = SSPBUF;
+
+	i2c_waitready();
+	/* Send (n)ack */
+	ACKDT = ack?0:1;
+	ACKEN = 1;
 }
 
-void i2c_read(unsigned char ackbyte)
+unsigned char i2c_write(unsigned char byte)
 {
-	ack = ackbyte;
-	state = READ;
-}
-
-unsigned char i2c_getbyte(void)
-{
-	return data;
-}
-
-void i2c_write(unsigned char byte)
-{
-	data = byte;
-	state = WRITE;
+	i2c_waitready();
+	/* Write data */
+	SSPBUF = byte;
+	return(!ACKSTAT);
 }
 
 void i2c_stop(void)
 {
-	state = STOP;
-}
-
-unsigned char i2c_acked (void)
-{
-	return ack;
+	i2c_waitready();
+	/* Stop condition */
+	PEN = 1;
 }
 
 /******************************************************************************/
 /* Local Implementations						      */
 /******************************************************************************/
+
+static unsigned char i2c_waitready(void)
+{
+	/* Using a simple timeout for resource reasons */
+	unsigned char timeout = 255;
+
+	while(((SSPCON2 & 0x1F) | RW) && timeout)
+		timeout--;
+	return ((SSPCON2 & 0x1F) | RW);
+}
