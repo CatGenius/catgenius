@@ -7,6 +7,7 @@
 /*		- Initial revision.					      */
 /******************************************************************************/
 #include <htc.h>
+#include <stdio.h>
 
 #include "srix4k.h"
 #include "hardware.h"
@@ -31,11 +32,11 @@
 /* Global Data								      */
 /******************************************************************************/
 
-static struct timer	timer    = EXPIRED;
-static unsigned char	state = 0;
+static struct timer	timer	= EXPIRED;
+static unsigned char	state	= 0;
+static unsigned long	cid[2]	= {0, 0};
 
-static unsigned char	frame[8];
-static unsigned char	block = 0;
+//static unsigned char	block	= 0;
 
 /******************************************************************************/
 /* Local Prototypes							      */
@@ -66,106 +67,96 @@ void srix4k_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if( (state == IDLE) &&
-	    timeoutexpired(&timer) ){
-		state++;
-	}
-
-	if (cr14_busy())
-		return;
+	unsigned char	error = 0;
+	unsigned char	frame[4];
+	unsigned char	length;
 
 	switch (state) {
 	case IDLE:
+		if (timeoutexpired(&timer))
+			state++;
 		break;
 	case 1:
 		/* Turn on the carrier */
-		cr14_writeparamreg(0x10);
+		if (cr14_writeparamreg(0x10)) {
+			error = 1;
+			goto out;
+		}
 		state++;
 		break;
 	case 2:
 		/* Send an Init frame */
 		frame[0] = 0x06;
 		frame[1] = 0x00;
-		cr14_writeframe(frame, 2);
+		if (cr14_writeframe(frame, 2)) {
+			error = 2;
+			goto off;
+		}
 		state++;
 		break;
 	case 3:
-		/* Read the response */
-		cr14_readframe();
+		/* Read the assigned node ID */
+		length = sizeof(frame);
+		if (cr14_readframe(frame, &length)) {
+			error = 3;
+			goto off;
+		}
 		state++;
 		break;
 	case 4:
-		/* Fetch the response */
-		cr14_getframe(frame);
-		state++;
-	case 5:
-		/* Select the chip */
+		/* Select the node */
 		frame[1] = frame[0];
 		frame[0] = 0x0E;
-		cr14_writeframe(frame, 2);
+		if (cr14_writeframe(frame, 2)) {
+			error = 5;
+			goto off;
+		}
+		state++;
+		break;
+	case 5:
+		/* Read the response */
+		length = sizeof(frame);
+		if (cr14_readframe(frame, &length)) {
+			error = 6;
+			goto off;
+		}
 		state++;
 		break;
 	case 6:
-		/* Read the response */
-		cr14_readframe();
+		/* Request the unique ID */
+		frame[0] = 0x0B;
+		if (cr14_writeframe(frame, 1)) {
+			error = 8;
+			goto off;
+		}
 		state++;
 		break;
 	case 7:
-		/* Fetch the response */
-		cr14_getframe(frame);
+		/* Read the requested ID */
+		length = sizeof(cid);
+		if (cr14_readframe((unsigned char *)cid, &length)) {
+			error = 9;
+			goto off;
+		}
+		if (length != 8) {
+			error = 10;
+			goto off;
+		}
+//		printf("ID: %d 0x%.8lX%.8lX\n", length, cid[1], cid[0]);
 		state++;
+state = 14;
+#if 0
 	case 8:
-		/* Get the unique ID */
-putchhex(TRISC);
-putch('\r');
-putch('\n');
-		frame[0] = 0x0B;
-		cr14_writeframe(frame, 1);
-		state++;
-		break;
-	case 9:
-		/* Read the response */
-		cr14_readframe();
-		state++;
-		break;
-	case 10:
-		/* Fetch the response */
-		cr14_getframe(frame);
-		putst("Unique ID: ");
-		putchhex(frame[7]);
-		putch(' ');
-		putchhex(frame[6]);
-		putch(' ');
-		putchhex(frame[5]);
-		putch(' ');
-		putchhex(frame[4]);
-		putch(' ');
-		putchhex(frame[3]);
-		putch(' ');
-		putchhex(frame[2]);
-		putch(' ');
-		putchhex(frame[1]);
-		putch(' ');
-		putchhex(frame[0]);
-		putch('\r');
-		putch('\n');
-		block = 0;
-		state++;
-	case 11:
 		/* Get the unique ID */
 		frame[0] = 0x08;
 		frame[1] = block;
 		cr14_writeframe(frame, 2);
 		state++;
 		break;
-	case 12:
+	case 9:
 		/* Read the response */
-		cr14_readframe();
-		state++;
-		break;
-	case 13:
-		/* Fetch the response */
-		cr14_getframe(frame);
+		length = 8;
+		cr14_readframe(frame, &length);
 		putst("Block ");
 		putchhex(block);
 		putch(' ');
@@ -178,24 +169,33 @@ putch('\n');
 		putch(' ');
 		putchhex(frame[0]);
 		putch(' ');
-		putch('\r');
 		putch('\n');
 		block++;
 		if (block > 127)
 			block = 255;
 		if (block)
-			state = 11;
+			state = 8;
 		else
 			state++;
 		break;
-	case 14:
-		/* Turn off the carrier */
-		cr14_writeparamreg(0x00);
-		state = IDLE;
-		settimeout(&timer, 3*SECOND);
-		break;
+#endif
+	default:
+		goto off;
 	}
 
+	return;
+
+off:
+	/* Turn off the carrier */
+	cr14_writeparamreg(0x00);
+out:
+	/* Reset state machine */
+	state = IDLE;
+	/* Schedule next time */
+	settimeout(&timer, 3*SECOND);
+	if (error)
+		printf("Err %d\n", error);
+	return;
 } /* srix4k_work */
 
 
