@@ -122,6 +122,7 @@ void litterlanguage_work (void)
 {
 	/* Check error timeouts */
 	if (timeoutexpired(&timer_fill)) {
+		printtime();
 		DBG("Fill timeout\n");
 		timeoutnever(&timer_fill);
 		/* Fill error */
@@ -137,6 +138,7 @@ void litterlanguage_work (void)
 //		return;
 	}
 	if (timeoutexpired(&timer_drain)) {
+		printtime();
 		DBG("Drain timeout\n");
 		timeoutnever(&timer_drain);
 		/* Drain error */
@@ -279,6 +281,7 @@ void watersensor_event (unsigned char undetected)
 {
 	water_detected = !undetected;
 
+	printtime();
 	DBG("Water %s\n", water_detected?"high":"low");
 	if (cmd_state != STATE_IDLE) {
 		/* Disable timeout on event */
@@ -293,8 +296,10 @@ void watersensor_event (unsigned char undetected)
 			DBG("Drained\n");
 		}
 	} else
-		if (water_detected)
+		if (water_detected) {
+			printtime();
 			DBG("Box flooded!\n");
+		}
 }
 /* watersensor_event */
 
@@ -454,7 +459,8 @@ static void exe_command (void)
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_END:
-		DBG("CMD_END");
+		printtime();
+		DBG("CMD_END\n");
 		eeprom_write(NVM_BOXSTATE, BOX_TIDY);
 		litterlanguage_stop();
 		break;
