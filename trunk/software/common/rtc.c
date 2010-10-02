@@ -51,8 +51,8 @@ void rtc_init (unsigned char flags)
 	if (flags & POWER_FAILURE) {
 		currenttime.seconds = 0;
 		currenttime.minutes = 0;
-		currenttime.hours   = 0;  
-		currenttime.weekday = 0;  
+		currenttime.hours   = 0;
+		currenttime.weekday = 0;
 	}
 }
 /* rtc_init */
