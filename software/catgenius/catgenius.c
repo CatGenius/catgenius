@@ -126,21 +126,22 @@ void main (void)
 		srix4k_work();
 
 		while (RCIF) {
-			char dummy ;
+			char rxd ;
 			if (OERR)
 			{
-				TXEN=0;
-				TXEN=1;
-				CREN=0;
-				CREN=1;
+				TXEN = 0;
+				TXEN = 1;
+				CREN = 0;
+				CREN = 1;
 			}
 			if (FERR)
 			{
-				dummy=RCREG;
-				TXEN=0;
-				TXEN=1;
-			} else
-				switch (RCREG) {
+				rxd = RCREG;
+				TXEN = 0;
+				TXEN = 1;
+			} else {
+				rxd = RCREG;
+				switch (rxd) {
 				case 'm':
 					incminutes();
 					printtime();
@@ -161,6 +162,7 @@ void main (void)
 					DBG("\n");
 					break;
 				}
+			}
 		}
 #ifndef __DEBUG
 		CLRWDT();

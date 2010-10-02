@@ -31,6 +31,11 @@ __CONFIG(XT & WDTEN  & PWRTEN & BOREN  & LVPDIS & DPROT   & WRTEN & DEBUGDIS & P
 /* Global Data								      */
 /******************************************************************************/
 
+#ifdef __RESETBITS_ADDR
+extern bit		__powerdown;
+extern bit		__timeout;
+#endif /* __RESETBITS_ADDR */
+
 static unsigned char	PORTB_old;
 
 
@@ -63,14 +68,26 @@ void main (void)
 	serial_init();
 
 	printf("\n*** GenieDiag ***\n");
-	if (!POR)
+	if (!POR) {
 		DBG("Power-on reset\n");
-	if (!BOR)
+		flags |= POWER_FAILURE;
+	} else if (!BOR) {
 		DBG("Brown-out reset\n");
-	if (!TO)
+		flags |= POWER_FAILURE;
+	}
+#ifdef __RESETBITS_ADDR
+	else if (!__timeout)
 		DBG("Watchdog reset\n");
-	if (!PD)
+	else if (!__powerdown)
+		DBG("Pin reset (sleep)\n");
+	else
 		DBG("Pin reset\n");
+#else
+	else
+		DBG("Unknown reset\n");
+#endif /* __RESETBITS_ADDR */
+	POR = 1;
+	BOR = 1;
 	if (flags & START_BUTTON_HELD)
 		DBG("Start button held\n");
 	if (flags & SETUP_BUTTON_HELD)
@@ -95,19 +112,19 @@ void main (void)
 		userinterface_work();
 
 		while (RCIF) {
-			char dummy ;
+			char rxd ;
 			if (OERR)
 			{
-				TXEN=0;
-				TXEN=1;
-				CREN=0;
-				CREN=1;
+				TXEN = 0;
+				TXEN = 1;
+				CREN = 0;
+				CREN = 1;
 			}
 			if (FERR)
 			{
-				dummy=RCREG;
-				TXEN=0;
-				TXEN=1;
+				rxd = RCREG;
+				TXEN = 0;
+				TXEN = 1;
 			} else
 				if (RCREG == '\n')
 					dumpports();

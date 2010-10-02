@@ -159,6 +159,7 @@ void userinterface_work (void)
 		if (timeoutexpired(&autotimer)) {
 			/* Schedule the next timed wash */
 			update_autotimer(auto_mode);
+			printtime();
 			DBG("Autotimer expired: ");
 			/* Skip the actual washing is no cat has been detected */
 			if (cat_detected) {
@@ -173,6 +174,7 @@ void userinterface_work (void)
 	case STATE_CAT:
 		/* Wait until the cat has gone */
 		if (!cat_present && timeoutexpired(&cattimer)) {
+			printtime();
 			DBG("Cattimer expired\n");
 			litterlanguage_start(full_wash);
 			state = STATE_RUNNING;

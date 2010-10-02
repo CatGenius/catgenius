@@ -65,10 +65,10 @@ struct debouncer {
 	void		(*handler)(unsigned char);
 };
 static struct debouncer	debouncers[DEBOUNCER_MAX] = {
-	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &STARTBUTTON_PORT,   STARTBUTTON_MASK, startbutton_event},
-	{{0xFFFF, 0xFFFFFFFF}, BUTTON_DEBOUNCE,      0, &SETUPBUTTON_PORT,   SETUPBUTTON_MASK, setupbutton_event},
-	{{0xFFFF, 0xFFFFFFFF}, WATERSENSOR_DEBOUNCE, 0, &water_sensorbuffer, WATERSENSOR_MASK, watersensor_event},
-	{{0xFFFF, 0xFFFFFFFF}, HEATSENSOR_DEBOUNCE,  0, &HEATSENSOR_PORT,    HEATSENSOR_MASK,  heatsensor_event}
+	{NEVER, BUTTON_DEBOUNCE,      0, &STARTBUTTON_PORT,   STARTBUTTON_MASK, startbutton_event},
+	{NEVER, BUTTON_DEBOUNCE,      0, &SETUPBUTTON_PORT,   SETUPBUTTON_MASK, setupbutton_event},
+	{NEVER, WATERSENSOR_DEBOUNCE, 0, &water_sensorbuffer, WATERSENSOR_MASK, watersensor_event},
+	{NEVER, HEATSENSOR_DEBOUNCE,  0, &HEATSENSOR_PORT,    HEATSENSOR_MASK,  heatsensor_event}
 };
 
 struct pacer {
@@ -81,11 +81,11 @@ struct pacer {
 	unsigned char	port_mask;
 };
 static struct pacer	pacers[PACER_MAX] = {
-	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &BEEPER_PORT,        BEEPER_MASK},
-	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &LED_ERROR_PORT,     LED_ERROR_MASK},
-	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &LED_LOCKED_PORT,    LED_LOCKED_MASK},
-	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &LED_CARTRIDGE_PORT, LED_CARTRIDGE_MASK},
-	{{0x0000, 0x00000000}, 0x01, 0x00, 0, &LED_CAT_PORT,       LED_CAT_MASK}
+	{EXPIRED, 0x01, 0x00, 0, &BEEPER_PORT,        BEEPER_MASK},
+	{EXPIRED, 0x01, 0x00, 0, &LED_ERROR_PORT,     LED_ERROR_MASK},
+	{EXPIRED, 0x01, 0x00, 0, &LED_LOCKED_PORT,    LED_LOCKED_MASK},
+	{EXPIRED, 0x01, 0x00, 0, &LED_CARTRIDGE_PORT, LED_CARTRIDGE_MASK},
+	{EXPIRED, 0x01, 0x00, 0, &LED_CAT_PORT,       LED_CAT_MASK}
 };
 
 
