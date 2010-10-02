@@ -271,7 +271,7 @@ void litterlanguage_stop (void)
 }
 
 
-void watersensor_event (unsigned char undetected)
+void watersensor_event (unsigned char detected)
 /******************************************************************************/
 /* Function:	watersensor_event					      */
 /*		- Handle state changes of water sensor			      */
@@ -279,7 +279,7 @@ void watersensor_event (unsigned char undetected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	water_detected = !undetected;
+	water_detected = detected;
 
 	printtime();
 	DBG("Water %s\n", water_detected?"high":"low");

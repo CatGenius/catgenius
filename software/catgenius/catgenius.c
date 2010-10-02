@@ -17,6 +17,7 @@
 #include "../common/cr14.h"
 #include "../common/srix4k.h"
 #include "../common/catsensor.h"
+#include "../common/watersensor.h"
 #include "../common/catgenie120.h"
 #include "userinterface.h"
 #include "litterlanguage.h"
@@ -107,6 +108,9 @@ void main (void)
 	/* Initialize the cat sensor */
 	catsensor_init();
 
+	/* Initialize the cat sensor */
+	watersensor_init();
+
 	/* Initialize the user interface */
 	userinterface_init(flags);
 
@@ -120,6 +124,7 @@ void main (void)
 	for(;;){
 		rtc_work();
 		catsensor_work();
+		watersensor_work();
 		catgenie_work();
 		userinterface_work();
 		litterlanguage_work();

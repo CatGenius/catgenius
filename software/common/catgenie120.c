@@ -12,7 +12,6 @@
 #include "hardware.h"
 #include "timer.h"
 
-extern void watersensor_event (unsigned char undetected);
 extern void heatsensor_event  (unsigned char detected);
 extern void startbutton_event (unsigned char up);
 extern void setupbutton_event (unsigned char up);
@@ -23,18 +22,15 @@ extern void setupbutton_event (unsigned char up);
 /******************************************************************************/
 
 /* Timing configuration */
-#define WATERSENSORPOLLING	(SECOND/10)	/*  100ms*/
 #define BUTTON_DEBOUNCE		(SECOND/20)	/*   50ms */
-#define WATERSENSOR_DEBOUNCE	(SECOND)	/* 1000ms */
 #define HEATSENSOR_DEBOUNCE	(SECOND/20)	/*   50ms */
 #define PACER_BITTIME		(SECOND/8)	/*  125ms */
 
 /* Debouncers */
 #define DEBOUNCER_BUTTON_START	0
 #define DEBOUNCER_BUTTON_SETUP	1
-#define DEBOUNCER_SENSOR_WATER	2
-#define DEBOUNCER_SENSOR_HEAT	3
-#define DEBOUNCER_MAX		4
+#define DEBOUNCER_SENSOR_HEAT	2
+#define DEBOUNCER_MAX		3
 
 /* Pacers */
 #define PACER_BEEPER		0
@@ -51,11 +47,6 @@ extern void setupbutton_event (unsigned char up);
 
 static unsigned char	PORTB_old;
 
-static struct timer	water_sensortimer      = EXPIRED;
-static unsigned char	water_sensorbuffer     = WATERSENSOR_MASK;
-static unsigned char	water_sensorbuffer_old = WATERSENSOR_MASK;
-static bit		water_filling          = 0;
-
 struct debouncer {
 	struct timer	timer;
 	unsigned long	timeout;
@@ -67,7 +58,6 @@ struct debouncer {
 static struct debouncer	debouncers[DEBOUNCER_MAX] = {
 	{NEVER, BUTTON_DEBOUNCE,      0, &STARTBUTTON_PORT,   STARTBUTTON_MASK, startbutton_event},
 	{NEVER, BUTTON_DEBOUNCE,      0, &SETUPBUTTON_PORT,   SETUPBUTTON_MASK, setupbutton_event},
-	{NEVER, WATERSENSOR_DEBOUNCE, 0, &water_sensorbuffer, WATERSENSOR_MASK, watersensor_event},
 	{NEVER, HEATSENSOR_DEBOUNCE,  0, &HEATSENSOR_PORT,    HEATSENSOR_MASK,  heatsensor_event}
 };
 
@@ -100,7 +90,7 @@ static struct pacer	pacers[PACER_MAX] = {
 
 unsigned char catgenie_init (void)
 /******************************************************************************/
-/* Function:	init_catgenie						      */
+/* Function:	catgenie_init						      */
 /*		- Initialize the CatGenie 120 hardware			      */
 /* History :	12 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
@@ -186,39 +176,14 @@ unsigned char catgenie_init (void)
 
 void catgenie_work (void)
 /******************************************************************************/
-/* Function:	do_catgenie						      */
+/* Function:	catgenie_work						      */
 /*		- Worker function for the CatGenie 120 hardware		      */
 /* History :	12 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
 	unsigned char	temp = 0;
-	unsigned char	status ;
-
-	/* Poll the water sensor */
-	if (timeoutexpired(&water_sensortimer)) {
-		/* Set new polling timeout */
-		settimeout(&water_sensortimer, WATERSENSORPOLLING);
-		if (!water_filling)
-			/* Unmute Water Sensor by switching on the LED */
-			PORTB |= WATERSENSOR_LED_MASK;
-		do {
-			/* 0 == no reflection == water detected */
-			if (water_sensorbuffer = WATERSENSOR_PORT & WATERSENSOR_MASK)
-				break;
-			temp++;
-		} while (temp <= 125); /* TODO: Verify if 125 loops is ~2ms */
-		if (!water_filling)
-			/* Mute Water Sensor by switching off the LED */
-			PORTB &= ~WATERSENSOR_LED_MASK;
-		/* Detect state change */
-		if (water_sensorbuffer != water_sensorbuffer_old) {
-			/* Postpone the debouncer */
-			settimeout(&debouncers[DEBOUNCER_SENSOR_WATER].timer,
-				   debouncers[DEBOUNCER_SENSOR_WATER].timeout);
-			water_sensorbuffer_old = water_sensorbuffer;
-		}
-	}
+	unsigned char	status;
 
 	/* Poll critical Port B inputs for changes */
 	status    = PORTB;
@@ -273,7 +238,7 @@ void catgenie_work (void)
 
 void catgenie_term (void)
 /******************************************************************************/
-/* Function:	term_catgenie						      */
+/* Function:	catgenie_term						      */
 /*		- Initialize the CatGenie 120 hardware			      */
 /* History :	10 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
@@ -424,15 +389,12 @@ void set_Arm (unsigned char mode)
 
 void set_Water (unsigned char on)
 {
-	if (on) {
-		water_filling = 1;
+	if (on)
 		/* Unmute Water Sensor by switching on the LED */
-		PORTB |= WATERSENSOR_LED_MASK;
-	} else {
-		water_filling = 0;
+		WATERSENSOR_LED_PORT |= WATERSENSOR_LED_MASK;
+	else
 		/* Mute Water Sensor by switching off the LED */
-		PORTB &= ~WATERSENSOR_LED_MASK;
-	}
+		WATERSENSOR_LED_PORT &= ~WATERSENSOR_LED_MASK;
 }
 
 void set_Dosage (unsigned char on)
