@@ -21,9 +21,9 @@
 /* Macros								      */
 /******************************************************************************/
 
-#define BOX_TIDY	0
-#define BOX_MESSY	1
-#define BOX_WET		2
+#define BOX_TIDY		0
+#define BOX_MESSY		1
+#define BOX_WET			2
 
 #define STATE_IDLE		0
 #define STATE_FETCH_START	1
@@ -177,7 +177,8 @@ void litterlanguage_work (void)
 				if( ((cur_command.arg & 0x00FF) <= CMD_END) &&
 				    ( (!wet_program && (cur_command.arg & FLAGS_DRYRUN)) ||
 				      (wet_program && (cur_command.arg & FLAGS_WETRUN)) ) ) {
-					eeprom_write(NVM_BOXSTATE, BOX_MESSY);
+				      	if (eeprom_read(NVM_BOXSTATE) < BOX_MESSY)
+						eeprom_write(NVM_BOXSTATE, BOX_MESSY);
 					cmd_pointer++;
 					cmd_state = STATE_FETCH_CMD;
 				} else {
@@ -359,7 +360,8 @@ static void exe_command (void)
 //		DBG("CMD_WATER, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
 			if (cur_command.arg) {
-				eeprom_write(NVM_BOXSTATE, BOX_WET);
+			      	if (eeprom_read(NVM_BOXSTATE) < BOX_WET)
+					eeprom_write(NVM_BOXSTATE, BOX_WET);
 				/* Don't fill if water is detected already */
 				if (!water_detected) {
 					printtime();
