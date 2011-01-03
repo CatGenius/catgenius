@@ -117,6 +117,7 @@ unsigned char i2c_write(unsigned char byte)
 	i2c_waitready();
 	/* Write data */
 	SSPBUF = byte;
+	i2c_waitready();
 	return(!ACKSTAT);
 }
 
