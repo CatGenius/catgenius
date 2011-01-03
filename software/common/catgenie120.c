@@ -1,6 +1,6 @@
 /******************************************************************************/
-/* File    :	timer.h							      */
-/* Function:	Timer module						      */
+/* File    :	catgenie.c							      */
+/* Function:	Catgenie 120 hardware support module						      */
 /* Author  :	Robert Delien						      */
 /*		Copyright (C) 2010, Clockwork Engineering		      */
 /* History :	12 Feb 2010 by R. Delien:				      */
@@ -221,7 +221,7 @@ void catgenie_work (void)
 
 			/* Set a time for the next execution time */
 			settimeout(&pacers[temp].timer, PACER_BITTIME);
-			/* Copy the current pattern bit to the beeper */
+			/* Copy the current pattern bit to the output */
 			if (pacers[temp].pattern & tempmask)
 				*pacers[temp].port |= pacers[temp].port_mask;
 			else
@@ -235,17 +235,20 @@ void catgenie_work (void)
 			}
 		}
 }
+/* End: catgenie_work */
+
 
 void catgenie_term (void)
 /******************************************************************************/
 /* Function:	catgenie_term						      */
-/*		- Initialize the CatGenie 120 hardware			      */
+/*		- Terminate the CatGenie 120 hardware			      */
 /* History :	10 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
 }
 /* End: term_catgenie */
+
 
 void set_LED (unsigned char led, unsigned char on)
 {
@@ -277,6 +280,7 @@ void set_LED (unsigned char led, unsigned char on)
 		*port &= ~mask;
 }
 
+
 void set_LED_Error (unsigned char pattern, unsigned char repeat)
 {
 	if( repeat &&
@@ -284,13 +288,16 @@ void set_LED_Error (unsigned char pattern, unsigned char repeat)
 	    (pacers[PACER_LED_ERROR].repeat == repeat) )
 		return;
 
+	/* Expire the bit timer */
+//	timeoutnow(&pacers[PACER_LED_ERROR].timer); TODO: Possible stack overflow
 	/* Reset the mask to the first bit */
 	pacers[PACER_LED_ERROR].mask = 0x01;
-	/* Copy the beep pattern */
+	/* Copy the blink pattern */
 	pacers[PACER_LED_ERROR].pattern = pattern;
 	/* Copy the repeat flag */
 	pacers[PACER_LED_ERROR].repeat = repeat;
 }
+
 
 void set_LED_Locked (unsigned char pattern, unsigned char repeat)
 {
@@ -299,13 +306,16 @@ void set_LED_Locked (unsigned char pattern, unsigned char repeat)
 	    (pacers[PACER_LED_LOCKED].repeat == repeat) )
 		return;
 
+	/* Expire the bit timer */
+//	timeoutnow(&pacers[PACER_LED_LOCKED].timer); TODO: Possible stack overflow
 	/* Reset the mask to the first bit */
 	pacers[PACER_LED_LOCKED].mask = 0x01;
-	/* Copy the beep pattern */
+	/* Copy the blink pattern */
 	pacers[PACER_LED_LOCKED].pattern = pattern;
 	/* Copy the repeat flag */
 	pacers[PACER_LED_LOCKED].repeat = repeat;
 }
+
 
 void set_LED_Cartridge (unsigned char pattern, unsigned char repeat)
 {
@@ -314,13 +324,16 @@ void set_LED_Cartridge (unsigned char pattern, unsigned char repeat)
 	    (pacers[PACER_LED_CARTRIDGE].repeat == repeat) )
 		return;
 
+	/* Expire the bit timer */
+//	timeoutnow(&pacers[PACER_LED_CARTRIDGE].timer); TODO: Possible stack overflow
 	/* Reset the mask to the first bit */
 	pacers[PACER_LED_CARTRIDGE].mask = 0x01;
-	/* Copy the beep pattern */
+	/* Copy the blink pattern */
 	pacers[PACER_LED_CARTRIDGE].pattern = pattern;
 	/* Copy the repeat flag */
 	pacers[PACER_LED_CARTRIDGE].repeat = repeat;
 }
+
 
 void set_LED_Cat (unsigned char pattern, unsigned char repeat)
 {
@@ -328,13 +341,17 @@ void set_LED_Cat (unsigned char pattern, unsigned char repeat)
 	    (pacers[PACER_LED_CAT].pattern == pattern) &&
 	    (pacers[PACER_LED_CAT].repeat == repeat) )
 		return;
+
+	/* Expire the bit timer */
+//	timeoutnow(&pacers[PACER_LED_CAT].timer); TODO: Possible stack overflow
 	/* Reset the mask to the first bit */
 	pacers[PACER_LED_CAT].mask = 0x01;
-	/* Copy the beep pattern */
+	/* Copy the blink pattern */
 	pacers[PACER_LED_CAT].pattern = pattern;
 	/* Copy the repeat flag */
 	pacers[PACER_LED_CAT].repeat = repeat;
 }
+
 
 void set_Beeper (unsigned char pattern, unsigned char repeat)
 {
@@ -343,6 +360,8 @@ void set_Beeper (unsigned char pattern, unsigned char repeat)
 	    (pacers[PACER_BEEPER].repeat == repeat) )
 		return;
 
+	/* Expire the bit timer */
+//	timeoutnow(&pacers[PACER_BEEPER].timer); TODO: Possible stack overflow
 	/* Reset the mask to the first bit */
 	pacers[PACER_BEEPER].mask = 0x01;
 	/* Copy the beep pattern */
@@ -350,6 +369,7 @@ void set_Beeper (unsigned char pattern, unsigned char repeat)
 	/* Copy the repeat flag */
 	pacers[PACER_BEEPER].repeat = repeat;
 }
+
 
 void set_Bowl (unsigned char mode)
 {
@@ -369,6 +389,7 @@ void set_Bowl (unsigned char mode)
 	}
 }
 
+
 void set_Arm (unsigned char mode)
 {
 	switch (mode) {
@@ -387,6 +408,7 @@ void set_Arm (unsigned char mode)
 	}
 }
 
+
 void set_Water (unsigned char on)
 {
 	if (on)
@@ -397,6 +419,7 @@ void set_Water (unsigned char on)
 		WATERSENSOR_LED_PORT &= ~WATERSENSOR_LED_MASK;
 }
 
+
 void set_Dosage (unsigned char on)
 {
 	if (on)
@@ -405,10 +428,12 @@ void set_Dosage (unsigned char on)
 		DOSAGE_PORT &= ~DOSAGE_MASK;
 }
 
+
 unsigned char get_Dosage (void)
 {
 	return (DOSAGE_PORT & DOSAGE_MASK);
 }
+
 
 void set_Pump (unsigned char on)
 {
