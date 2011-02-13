@@ -101,6 +101,11 @@ void srix4k_work (void)
 			error = 3;
 			goto off;
 		}
+		if (length != 1) {
+			printf("length = %d\n", length);
+			error = 4;
+			goto off;
+		}
 		state++;
 		break;
 	case 4:
@@ -120,11 +125,16 @@ void srix4k_work (void)
 			error = 6;
 			goto off;
 		}
+		if (length != 0) {
+			printf("length = %d\n", length);
+			error = 7;
+			goto off;
+		}
 		state++;
 		break;
 	case 6:
 		/* Request the unique ID */
-		frame[0] = 0x0B;
+		frame[0] = 0x0B;	/* Command 0x0B */
 		if (cr14_writeframe(frame, 1)) {
 			error = 8;
 			goto off;
@@ -139,47 +149,35 @@ void srix4k_work (void)
 			goto off;
 		}
 		if (length != 8) {
+			printf("length = %d\n", length);
 			error = 10;
 			goto off;
 		}
-//		printf("ID: %d 0x%.8lX%.8lX\n", length, cid[1], cid[0]);
+//		printf("ID: 0x%.8lX%.8lX\n", cid[1], cid[0]);
 		state++;
-state = 14;
-#if 0
 	case 8:
-		/* Get the unique ID */
-		frame[0] = 0x08;
-		frame[1] = block;
-		cr14_writeframe(frame, 2);
+		/* Get the key */
+		frame[0] = 0x08;	/* Command 0x08 */
+		frame[1] = 0x0F;	/* Block nr. */
+		if (cr14_writeframe(frame, 2)) {
+			error = 11;
+			goto off;
+		}
 		state++;
 		break;
 	case 9:
 		/* Read the response */
-		length = 8;
-		cr14_readframe(frame, &length);
-		putst("Block ");
-		putchhex(block);
-		putch(' ');
-		putch(' ');
-		putchhex(frame[3]);
-		putch(' ');
-		putchhex(frame[2]);
-		putch(' ');
-		putchhex(frame[1]);
-		putch(' ');
-		putchhex(frame[0]);
-		putch(' ');
-		putch('\n');
-		block++;
-		if (block > 127)
-			block = 255;
-		if (block)
-			state = 8;
-		else
-			state++;
-		break;
-#endif
-	default:
+		length = sizeof(frame);
+		if (cr14_readframe(frame, &length)) {
+			error = 12;
+			goto off;
+		}
+		if (length != 4) {
+			printf("length = %d\n", length);
+			error = 13;
+			goto off;
+		}
+//		printf("Key: 0x%.8lX\n", (unsigned long *)frame);
 		goto off;
 	}
 

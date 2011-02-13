@@ -22,7 +22,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c|Z:\Sources\catgenius\software\common\watersensor .c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=1,2 FE=31 EC=1 F0=0 EF=1 EE=0 104=0 E9= C4=0 F2= F3= F4= F8=1 F5=0 F9=0 FA=0 FB=0 C0=1 C1=1 BD=0 BC=0 BB=0 BF=0 BE=0 B8= 101=0 103= 102=0 BA= FF=0 100=0 106=0 109=0 10A=1 10B=0 10C=0 10E=0 10F=1 110=0 118=0 116=0 117= 10D=0 114=-1 113=-1 111=0 115=-1 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
 TraceCmdString=
@@ -35,7 +35,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c|Z:\Sources\catgenius\software\common\watersensor .c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=1,2 FE=31 EC=1 F0=0 EF=1 EE=0 104=0 E9= C4=0 F2= F3= F4= F8=1 F5=0 F9=0 FA=0 FB=0 C0=1 C1=1 BD=0 BC=0 BB=0 BF=0 BE=0 B8= 101=0 103= 102=0 BA= FF=0 100=0 106=0 109=0 10A=1 10B=0 10C=0 10E=0 10F=1 110=0 118=0 116=0 117= 10D=0 114=-1 113=-1 111=0 115=-1 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
 TraceCmdString=
@@ -61,7 +61,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c|Z:\Sources\catgenius\software\common\watersensor .c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=1,2 FE=31 EC=1 F0=0 EF=1 EE=0 104=0 E9= C4=0 F2= F3= F4= F8=1 F5=0 F9=0 FA=0 FB=0 C0=1 C1=1 BD=0 BC=0 BB=0 BF=0 BE=0 B8= 101=0 103= 102=0 BA= FF=0 100=0 106=0 109=0 10A=1 10B=0 10C=0 10E=0 10F=1 110=0 118=0 116=0 117= 10D=0 114=-1 113=-1 111=0 115=-1 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
 TraceCmdString=
@@ -74,7 +74,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c|Z:\Sources\catgenius\software\common\watersensor .c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=1,2 FE=31 EC=1 F0=0 EF=1 EE=0 104=0 E9= C4=0 F2= F3= F4= F8=1 F5=0 F9=0 FA=0 FB=0 C0=1 C1=1 BD=0 BC=0 BB=0 BF=0 BE=0 B8= 101=0 103= 102=0 BA= FF=0 100=0 106=0 109=0 10A=1 10B=0 10C=0 10E=0 10F=1 110=0 118=0 116=0 117= 10D=0 114=-1 113=-1 111=0 115=-1 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
 TraceCmdString=
@@ -87,7 +87,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c|Z:\Sources\catgenius\software\common\watersensor .c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=1,2 FE=31 EC=1 F0=0 EF=1 EE=0 104=0 E9= C4=0 F2= F3= F4= F8=1 F5=0 F9=0 FA=0 FB=0 C0=1 C1=1 BD=0 BC=0 BB=0 BF=0 BE=0 B8= 101=0 103= 102=0 BA= FF=0 100=0 106=0 109=0 10A=1 10B=0 10C=0 10E=0 10F=1 110=0 118=0 116=0 117= 10D=0 114=-1 113=-1 111=0 115=-1 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
 TraceCmdString=
@@ -100,7 +100,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c|Z:\Sources\catgenius\software\common\watersensor .c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=1,2 FE=31 EC=1 F0=0 EF=1 EE=0 104=0 E9= C4=0 F2= F3= F4= F8=1 F5=0 F9=0 FA=0 FB=0 C0=1 C1=1 BD=0 BC=0 BB=0 BF=0 BE=0 B8= 101=0 103= 102=0 BA= FF=0 100=0 106=0 109=0 10A=1 10B=0 10C=0 10E=0 10F=1 110=0 118=0 116=0 117= 10D=0 114=-1 113=-1 111=0 115=-1 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
 TraceCmdString=
@@ -113,7 +113,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c|Z:\Sources\catgenius\software\common\watersensor .c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=1,2 FE=31 EC=1 F0=0 EF=1 EE=0 104=0 E9= C4=0 F2= F3= F4= F8=1 F5=0 F9=0 FA=0 FB=0 C0=1 C1=1 BD=0 BC=0 BB=0 BF=0 BE=0 B8= 101=0 103= 102=0 BA= FF=0 100=0 106=0 109=0 10A=1 10B=0 10C=0 10E=0 10F=1 110=0 118=0 116=0 117= 10D=0 114=-1 113=-1 111=0 115=-1 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
 TraceCmdString=
@@ -126,7 +126,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c|Z:\Sources\catgenius\software\common\watersensor .c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=1,2 FE=31 EC=1 F0=0 EF=1 EE=0 104=0 E9= C4=0 F2= F3= F4= F8=1 F5=0 F9=0 FA=0 FB=0 C0=1 C1=1 BD=0 BC=0 BB=0 BF=0 BE=0 B8= 101=0 103= 102=0 BA= FF=0 100=0 106=0 109=0 10A=1 10B=0 10C=0 10E=0 10F=1 110=0 118=0 116=0 117= 10D=0 114=-1 113=-1 111=0 115=-1 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
 TraceCmdString=
@@ -152,7 +152,7 @@ LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.70\bin\picc.exe
 PPAD=$(BINDIR)||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
-SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c||<obj>||<lib>||<lkr>||
+SOLK=<src>|userinterface.c|romwashprogram.c|litterlanguage.c|Z:\Sources\catgenius\software\common\catgenie120.c|Z:\Sources\catgenius\software\common\catsensor.c|Z:\Sources\catgenius\software\common\timer.c|Z:\Sources\catgenius\software\common\serial.c|Z:\Sources\catgenius\software\common\i2c.c|Z:\Sources\catgenius\software\common\cr14.c|Z:\Sources\catgenius\software\common\srix4k.c|catgenius.c|Z:\Sources\catgenius\software\common\rtc.c|Z:\Sources\catgenius\software\common\watersensor .c||<obj>||<lib>||<lkr>||
 SuiteArgsString=
 ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=1,2 FE=31 EC=1 F0=0 EF=1 EE=0 104=0 E9= C4=0 F2= F3= F4= F8=1 F5=0 F9=0 FA=0 FB=0 C0=1 C1=1 BD=0 BC=0 BB=0 BF=0 BE=0 B8= 101=0 103= 102=0 BA= FF=0 100=0 106=0 109=0 10A=1 10B=0 10C=0 10E=0 10F=1 110=0 118=0 116=0 117= 10D=0 114=-1 113=-1 111=0 115=-1 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
 TraceCmdString=

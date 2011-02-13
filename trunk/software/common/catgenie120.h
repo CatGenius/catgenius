@@ -10,8 +10,8 @@
 
 
 /* Init return flags */
-#define START_BUTTON_HELD	0x01
-#define SETUP_BUTTON_HELD	0x02
+#define START_BUTTON		0x01
+#define SETUP_BUTTON		0x02
 #define RESERVED_1		0x04
 #define RESERVED_2		0x08
 #define RESERVED_3		0x10

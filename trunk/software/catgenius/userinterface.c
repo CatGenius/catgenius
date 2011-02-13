@@ -119,8 +119,8 @@ void userinterface_init (unsigned char flags)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if ((flags & START_BUTTON_HELD) &&
-	    (flags & SETUP_BUTTON_HELD)) {
+	if( (flags & START_BUTTON) &&
+	    (flags & SETUP_BUTTON) ) {
 		/* User wants to reset non-volatile settings */
 		eeprom_write(NVM_MODE, AUTO_MANUAL);
 		eeprom_write(NVM_KEYUNDLOCK, 0xFF);
