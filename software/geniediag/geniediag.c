@@ -88,9 +88,9 @@ void main (void)
 #endif /* __RESETBITS_ADDR */
 	POR = 1;
 	BOR = 1;
-	if (flags & START_BUTTON_HELD)
+	if (flags & START_BUTTON)
 		DBG("Start button held\n");
-	if (flags & SETUP_BUTTON_HELD)
+	if (flags & SETUP_BUTTON)
 		DBG("Setup button held\n");
 
 	/* Initialize software timers */

@@ -1,0 +1,8 @@
+Known bugs
+==========
+Cartridge level not decreasing by washing cycle not implemented
+Pause function not implemented
+Water sensor relay ticking
+
+Solved bugs
+===========

@@ -165,9 +165,9 @@ unsigned char catgenie_init (void)
 	/* Fill out the return flags */
 	temp = 0;
 	if (!(STARTBUTTON_PORT & STARTBUTTON_MASK))
-		temp |= START_BUTTON_HELD;
+		temp |= START_BUTTON;
 	if (!(SETUPBUTTON_PORT & SETUPBUTTON_MASK))
-		temp |= SETUP_BUTTON_HELD;
+		temp |= SETUP_BUTTON;
 
 	return temp;
 }
