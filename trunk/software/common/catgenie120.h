@@ -52,13 +52,16 @@ void		set_Beeper		(unsigned char pattern,
 
 /* Actuators */
 void		set_Bowl		(unsigned char mode);
+unsigned char	get_Bowl		(void);
 void		set_Arm			(unsigned char mode);
+unsigned char	get_Arm			(void);
 void		set_Water		(unsigned char on);
+unsigned char	get_Water		(void);
 void		set_Dosage		(unsigned char on);
 unsigned char	get_Dosage		(void);
 void		set_Pump		(unsigned char on);
+unsigned char	get_Pump		(void);
 void		set_Dryer		(unsigned char on);
-
-unsigned char	detected_Water		(void);
+unsigned char	get_Dryer		(void);
 
 #endif /* CATGENIE120_H */
