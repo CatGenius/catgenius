@@ -9,10 +9,10 @@
 #include <htc.h>
 #include <stdio.h>
 
-#include "srix4k.h"
-#include "hardware.h"
-#include "cr14.h"
+#include "hardware.h"			/* Flexible hardware configuration */
 
+#include "srix4k.h"
+#include "cr14.h"
 #include "timer.h"
 #include "serial.h"
 

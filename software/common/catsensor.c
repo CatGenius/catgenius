@@ -8,10 +8,10 @@
 /******************************************************************************/
 #include <htc.h>
 
+#include "hardware.h"			/* Flexible hardware configuration */
+
 #include "catsensor.h"
-#include "hardware.h"
 #include "timer.h"
-#include "catgenie120.h"
 
 extern void catsensor_event (unsigned char detected);
 

@@ -11,7 +11,6 @@
 #include "romwashprogram.h"
 #include "litterlanguage.h"
 #include "../common/catgenie120.h"
-#include "../common/hardware.h"
 
 
 /******************************************************************************/
@@ -177,7 +176,7 @@ const struct command	surface[] = {
 };
 
 const struct command	cleanupprogram[] = {
-	{CMD_START,	CMD_END | 
+	{CMD_START,	CMD_END |
 			FLAGS_DRYRUN |
 			FLAGS_WETRUN },
 #ifdef SIMULATION
@@ -201,7 +200,7 @@ const struct command	cleanupprogram[] = {
 
 
 const struct command	washprogram[] = {
-	{CMD_START,	CMD_END | 
+	{CMD_START,	CMD_END |
 			FLAGS_DRYRUN |
 			FLAGS_WETRUN },
 #ifdef SIMULATION
@@ -283,7 +282,7 @@ const struct command	washprogram[] = {
 	{CMD_CALL,	(unsigned int)drain},
 	/* Wash the bowl */
 	{CMD_WATER,	1},
-	{CMD_WAITTIME,	55418},	
+	{CMD_WAITTIME,	55418},
 	{CMD_BOWL,	BOWL_CCW},	/* Wash + 12 */
 	{CMD_AUTODOSE,	3},		/* 0.26 ml */
 	{CMD_WAITDOSAGE,0},

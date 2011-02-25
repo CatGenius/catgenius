@@ -1,6 +1,6 @@
 /******************************************************************************/
-/* File    :	catgenie.c							      */
-/* Function:	Catgenie 120 hardware support module						      */
+/* File    :	catgenie120.c						      */
+/* Function:	Catgenie 120 hardware support module			      */
 /* Author  :	Robert Delien						      */
 /*		Copyright (C) 2010, Clockwork Engineering		      */
 /* History :	12 Feb 2010 by R. Delien:				      */
@@ -8,8 +8,8 @@
 /******************************************************************************/
 #include <htc.h>
 
-#include "catgenie120.h"
-#include "hardware.h"
+#include "hardware.h"			/* Flexible hardware configuration */
+
 #include "timer.h"
 
 extern void heatsensor_event  (unsigned char detected);
@@ -165,9 +165,9 @@ unsigned char catgenie_init (void)
 	/* Fill out the return flags */
 	temp = 0;
 	if (!(STARTBUTTON_PORT & STARTBUTTON_MASK))
-		temp |= START_BUTTON;
+		temp |= START_BUTTON_HELD;
 	if (!(SETUPBUTTON_PORT & SETUPBUTTON_MASK))
-		temp |= SETUP_BUTTON;
+		temp |= SETUP_BUTTON_HELD;
 
 	return temp;
 }

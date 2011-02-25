@@ -14,7 +14,6 @@
 #include "../common/timer.h"
 #include "../common/rtc.h"
 #include "../common/catgenie120.h"
-#include "../common/hardware.h"
 
 
 /******************************************************************************/
@@ -73,7 +72,7 @@ void litterlanguage_init (unsigned char flags)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	switch(flags & (START_BUTTON | SETUP_BUTTON)) {
+	switch(flags & BUTTONS) {
 		case 0:
 			DBG("Box is ");
 			switch (eeprom_read(NVM_BOXSTATE)){
@@ -95,15 +94,16 @@ void litterlanguage_init (unsigned char flags)
 			}
 			DBG("\n");
 			break;
-		case START_BUTTON:
+		case START_BUTTON_HELD:
 			/* User wants to force a wet cleanup cycle */
 			DBG("Wet cleanup forced\n");
 			litterlanguage_cleanup(1);
 			break;
-		case SETUP_BUTTON:
+		case SETUP_BUTTON_HELD:
 			/* User wants to use GenieDiag */
 			break;
-		default: /* compiler doesn't understand case START_BUTTON | SETUP_BUTTON: */
+		case START_BUTTON_HELD | SETUP_BUTTON_HELD:
+		default:
 			/* User wants to reset box state */
 			eeprom_write(NVM_BOXSTATE, BOX_TIDY);
 			break;
@@ -161,12 +161,14 @@ void litterlanguage_work (void)
 	}
 
 	switch (cmd_state) {
-	case STATE_IDLE:		/* Idle */
+	case STATE_IDLE:	/* Idle */
 		break;
+
 	case STATE_FETCH_START:	/* Fetch the start command*/
 		req_command(cmd_pointer);
 		cmd_state = STATE_GET_START;
 		/* no break; */
+
 	case STATE_GET_START:	/* Wait for the start command to be fetched */
 		if (get_command(&cur_command)) {
 			printtime();
@@ -192,16 +194,19 @@ void litterlanguage_work (void)
 			DBG("\n");
 		}
 		break;
+
 	case STATE_FETCH_CMD:	/* Fetch the next command*/
 		req_command(cmd_pointer);
 		cmd_state = STATE_GET_CMD;
 		/* no break; */
+
 	case STATE_GET_CMD:	/* Wait for the start command to be fetched */
 		if (get_command(&cur_command)) {
 			/* Decode and execute the command */
 			exe_command();
 		}
 		break;
+
 	case STATE_WAIT_CMD:	/* Wait for the command to finish */
 		wait_command();
 		break;

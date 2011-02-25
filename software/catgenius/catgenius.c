@@ -11,7 +11,6 @@
 
 #include "../common/timer.h"
 #include "../common/rtc.h"
-#include "../common/hardware.h"
 #include "../common/serial.h"
 #include "../common/i2c.h"
 #include "../common/cr14.h"
@@ -88,9 +87,9 @@ void main (void)
 	POR = 1;
 	BOR = 1;
 
-	if (flags & START_BUTTON)
+	if (flags & START_BUTTON_HELD)
 		DBG("Start button held\n");
-	if (flags & SETUP_BUTTON)
+	if (flags & SETUP_BUTTON_HELD)
 		DBG("Setup button held\n");
 
 	/* Initialize software timers */
