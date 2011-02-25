@@ -9,11 +9,11 @@
 #include <htc.h>
 #include <stdio.h>
 
+#include "../common/hardware.h"		/* Flexible hardware configuration */
+
 #include "../common/timer.h"
-#include "../common/hardware.h"
 #include "../common/serial.h"
 #include "../common/catsensor.h"
-#include "../common/catgenie120.h"
 #include "userinterface.h"
 
 /******************************************************************************/

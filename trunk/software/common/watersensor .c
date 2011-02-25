@@ -8,8 +8,9 @@
 /******************************************************************************/
 #include <htc.h>
 
+#include "hardware.h"			/* Flexible hardware configuration */
+
 #include "watersensor.h"
-#include "hardware.h"
 #include "timer.h"
 
 extern void watersensor_event (unsigned char detected);

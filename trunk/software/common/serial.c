@@ -1,5 +1,6 @@
 #include <htc.h>
-#include "hardware.h"
+
+#include "hardware.h"			/* Flexible hardware configuration */
 
 #define BITRATE		19200		
 #define	BITRATE_ERROR	4

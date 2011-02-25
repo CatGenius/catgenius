@@ -9,10 +9,10 @@
 #include <htc.h>
 #include <stdio.h>
 
+#include "hardware.h"			/* Flexible hardware configuration */
+
 #include "rtc.h"
 #include "timer.h"
-#include "hardware.h"
-#include "catgenie120.h"
 
 
 /******************************************************************************/

@@ -12,7 +12,6 @@
 #include "userinterface.h"
 #include "../common/timer.h"
 #include "../common/rtc.h"
-#include "../common/hardware.h"
 #include "../common/catgenie120.h"
 #include "litterlanguage.h"
 
@@ -47,7 +46,7 @@
 
 #define update_autotimer(mode)						\
 do {									\
-	switch (mode) {						\
+	switch (mode) {							\
 	case AUTO_TIMED1:						\
 		settimeout(&autotimer, 24 * 60 * 60 * SECOND);		\
 		break;							\
@@ -119,8 +118,8 @@ void userinterface_init (unsigned char flags)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if( (flags & START_BUTTON) &&
-	    (flags & SETUP_BUTTON) ) {
+	if ((flags & START_BUTTON_HELD) &&
+	    (flags & SETUP_BUTTON_HELD)) {
 		/* User wants to reset non-volatile settings */
 		eeprom_write(NVM_MODE, AUTO_MANUAL);
 		eeprom_write(NVM_KEYUNDLOCK, 0xFF);
