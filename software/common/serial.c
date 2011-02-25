@@ -2,9 +2,6 @@
 
 #include "hardware.h"			/* Flexible hardware configuration */
 
-#define BITRATE		19200		
-#define	BITRATE_ERROR	4
-
 #if ((_XTAL_FREQ/(16UL * BITRATE))-1UL) < 256UL
 #  define SPBRG_SET (_XTAL_FREQ/(16UL * BITRATE))-1
 #  define BRGH_SET 1
