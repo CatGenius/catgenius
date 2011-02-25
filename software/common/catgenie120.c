@@ -390,6 +390,18 @@ void set_Bowl (unsigned char mode)
 }
 
 
+unsigned char get_Bowl (void)
+{
+	switch (BOWL_PORT & (BOWL_CWCCW_MASK | BOWL_ONOFF_MASK)) {
+	case BOWL_ONOFF_MASK:
+		return (BOWL_CCW);
+	case BOWL_ONOFF_MASK | BOWL_CWCCW_MASK:
+		return (BOWL_CW);
+	}
+	return (BOWL_STOP);
+}
+
+
 void set_Arm (unsigned char mode)
 {
 	switch (mode) {
@@ -409,6 +421,18 @@ void set_Arm (unsigned char mode)
 }
 
 
+unsigned char get_Arm (void)
+{
+	switch (ARM_PORT & (ARM_UPDOWN_MASK | ARM_ONOFF_MASK)) {
+	case ARM_ONOFF_MASK:
+		return (ARM_UP);
+	case ARM_ONOFF_MASK | ARM_UPDOWN_MASK:
+		return (ARM_DOWN);
+	}
+	return (ARM_STOP);
+}
+
+
 void set_Water (unsigned char on)
 {
 	if (on)
@@ -417,6 +441,12 @@ void set_Water (unsigned char on)
 	else
 		/* Mute Water Sensor by switching off the LED */
 		WATERSENSOR_LED_PORT &= ~WATERSENSOR_LED_MASK;
+}
+
+
+unsigned char get_Water (void)
+{
+	return (WATERSENSOR_LED_PORT & WATERSENSOR_LED_MASK);
 }
 
 
@@ -444,12 +474,24 @@ void set_Pump (unsigned char on)
 }
 
 
+unsigned char get_Pump (void)
+{
+	return (PUMP_PORT & PUMP_MASK);
+}
+
+
 void set_Dryer	(unsigned char on)
 {
 	if (on)
 		DRYER_PORT |= DRYER_MASK;
 	else
 		DRYER_PORT &= ~DRYER_MASK;
+}
+
+
+unsigned char get_Dryer (void)
+{
+	return (DRYER_PORT & DRYER_MASK);
 }
 
 
