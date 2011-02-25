@@ -21,6 +21,10 @@
 #define _XTAL_FREQ		(4UL * MHZ)	/* Crystal frequency */
 #define MAINS_FREQ		50		/* 50 Hz mains frequency */
 
+/* Serial port */
+#define BITRATE			19200
+#define	BITRATE_ERROR		4
+
 /* Times */
 #define MAX_FILLTIME		(( 2*60+15)*SECOND)
 #define MAX_DRAINTIME		((10*60+ 0)*SECOND)
