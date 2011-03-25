@@ -8,6 +8,7 @@
 /******************************************************************************/
 #include <htc.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "litterlanguage.h"
 #include "romwashprogram.h"
@@ -346,6 +347,7 @@ static unsigned char get_command (struct command *command)
 static void exe_command (void)
 {
 	static struct command	const * ret_address;
+	unsigned int			temp;
 
 //	DBG("IP 0x%04X: ", cmd_pointer);
 	switch (cur_command.cmd) {
@@ -457,7 +459,10 @@ static void exe_command (void)
 	case CMD_CALL:
 //		DBG("CMD_CALL, 0x%04X", cur_command.arg);
 		ret_address = cmd_pointer + 1;
-		cmd_pointer = (struct command const*)cur_command.arg;
+		/* DIRTY HACK: Set highest bit, which seems to get lost due to compiler limitation */
+		temp = 0x8000 | cur_command.arg;
+		/* HACK: memcpy instead of casting to work around compiler limitation */
+		memcpy(&cmd_pointer, &temp, sizeof(cmd_pointer));
 		cmd_state = STATE_FETCH_CMD;
 		break;
 	case CMD_RETURN:
