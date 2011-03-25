@@ -59,7 +59,7 @@ void catsensor_init (void)
 	 */
 	/* Select frequency */
 	PR2 = 0x54 ;
-	/* Postscaler to 1:16 
+	/* Postscaler to 1:16
 	 * Prescaler to 1:4
 	 * Timer 2 On */
 	T2CON = 0x7D ;
@@ -95,7 +95,7 @@ void catsensor_work (void)
 
 		/* Select frequency */
 		PR2 = 0x54 ;
-		/* Postscaler to 1:16 
+		/* Postscaler to 1:16
 		 * Prescaler to 1:4
 		 * Timer 2 On */
 		T2CON = 0x7D ;
@@ -154,7 +154,7 @@ void catsensor_isr_timer (void)
 		pinging = 0;
 /* Disable timer 2 interrupt */
 PR2 = 0 ;
-/* Postscaler to 1:16 
+/* Postscaler to 1:16
  * Prescaler to 1:4
  * Timer 2 On */
 T2CON = 0 ;

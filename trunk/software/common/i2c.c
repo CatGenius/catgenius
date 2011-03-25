@@ -138,7 +138,7 @@ static unsigned char i2c_waitready(void)
 	/* Using a simple timeout for resource reasons */
 	unsigned char timeout = 255;
 
-	while(((SSPCON2 & 0x1F) | RW) && timeout)
+	while(((SSPCON2 & 0x1F) | R_nW) && timeout)
 		timeout--;
-	return ((SSPCON2 & 0x1F) | RW);
+	return ((SSPCON2 & 0x1F) | R_nW);
 }
