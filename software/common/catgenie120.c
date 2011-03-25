@@ -120,7 +120,7 @@ unsigned char catgenie_init (void)
 		NOT_USED_4_MASK  ;	/* PGM Data */
 	PORTB = 0x00;
 	/* Turn on internal weak pull-up resitors on inputs */
-	RBPU = 0;
+	nRBPU = 0;
 	/* Clear the interrupt status */
 	RBIF = 0;
 	/* Enable interrupts */
