@@ -39,8 +39,14 @@
 static unsigned char	prg_source		= 0;
 static bit		wet_program		= 0;
 static bit		water_detected		= 0;
+static bit		overheat_detected	= 0;
 static bit		paused			= 0;
+static bit		error_fill		= 0;
+static bit		error_drain		= 0;
+static bit		error_flood		= 0;
+static bit		error_dryer		= 0;
 
+/* Program execution variables */
 static unsigned char	cmd_state		= STATE_IDLE;
 static struct command	const * cmd_pointer	= 0;
 static struct command	cur_command;
@@ -122,38 +128,43 @@ void litterlanguage_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	/* Check error timeouts */
-	if (timeoutexpired(&timer_fill)) {
-		printtime();
-		DBG("Fill timeout\n");
-		timeoutnever(&timer_fill);
-		/* Fill error */
-		set_LED_Error(0x01, 1);
-		set_Water(0);
-		/* Pauze */
-//		set_Bowl(BOWL_STOP);
-//		set_Arm(ARM_STOP);
-//		set_Dosage(0);
-//		set_Pump(0);
-//		set_Dryer(0);
-//		set_Beeper(0x01, 1);
-//		return;
-	}
-	if (timeoutexpired(&timer_drain)) {
-		printtime();
-		DBG("Drain timeout\n");
-		timeoutnever(&timer_drain);
-		/* Drain error */
-		set_LED_Error(0x05, 1);
-		/* Pauze */
-//		set_Bowl(BOWL_STOP);
-//		set_Arm(ARM_STOP);
-//		set_Water(0);
-//		set_Dosage(0);
-//		set_Pump(0);
-//		set_Dryer(0);
-//		set_Beeper(0x05, 1);
-//		return;
+	if( (cmd_state != STATE_IDLE) &&
+	    !paused ){
+		/* Check for filling timeout */
+		if( !water_detected &&
+		    get_Water() &&
+		    timeoutexpired(&timer_fill) ){
+			printtime();
+			DBG("Fill timeout\n");
+			timeoutnever(&timer_fill);
+			/* Fill error */
+			error_fill = 1;
+			/* Pauze */
+			litterlanguage_pause(1);
+		}
+
+		/* Check for draining timeout */
+		if( water_detected &&
+		    get_Pump() &&
+		    timeoutexpired(&timer_drain) ){
+			printtime();
+			DBG("Drain timeout\n");
+			timeoutnever(&timer_drain);
+			/* Drain error */
+			error_drain = 1;
+			/* Pauze */
+			litterlanguage_pause(1);
+		}
+		/* Check for overheating error */
+		if( overheat_detected &&
+		    get_Dryer() ){
+			printtime();
+			DBG("Overheating\n");
+			/* Overheat error */
+			error_dryer = 1;
+			/* Pauze */
+			litterlanguage_pause(1);
+		}
 	}
 
 	/* Check auto command timeouts */
@@ -297,9 +308,16 @@ void litterlanguage_pause (unsigned char pause)
 		/* Restore timer context */
 		if (context.wait != 0xFFFFFFFF)
 			settimeout(&timer_waitcmd, context.wait);
-		if (context.fill != 0xFFFFFFFF)
+		if (error_fill) {
+			error_fill = 0;
+			settimeout(&timer_fill, MAX_FILLTIME);
+		}
+		else if (context.fill != 0xFFFFFFFF)
 			settimeout(&timer_fill, context.fill);
-		if (context.drain != 0xFFFFFFFF)
+		if (error_drain) {
+			error_drain = 0;
+			settimeout(&timer_drain, MAX_DRAINTIME);
+		} else if (context.drain != 0xFFFFFFFF)
 			settimeout(&timer_drain, context.drain);
 		if (context.autodose != 0xFFFFFFFF)
 			settimeout(&timer_autodose, context.autodose);
@@ -309,6 +327,7 @@ void litterlanguage_pause (unsigned char pause)
 		set_Dosage(context.dosage);
 		set_Pump(context.pump);
 		set_Dryer(context.dryer);
+		error_dryer = 0;
 	}
 	paused = pause;
 }
@@ -375,6 +394,19 @@ void watersensor_event (unsigned char detected)
 		}
 }
 /* watersensor_event */
+
+
+void heatsensor_event (unsigned char detected)
+/******************************************************************************/
+/* Function:	heatsensor_event					      */
+/*		- Handle state changes of over-heat sensor		      */
+/* History :	13 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
+{
+	overheat_detected = detected;
+}
+/* heatsensor_event */
 
 
 /******************************************************************************/

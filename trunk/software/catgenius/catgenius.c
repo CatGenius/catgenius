@@ -174,17 +174,6 @@ void main (void)
 	}
 }
 
-void heatsensor_event (unsigned char detected)
-/******************************************************************************/
-/* Function:	heatsensor_event					      */
-/*		- Handle state changes of over-heat sensor		      */
-/* History :	13 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-}
-/* heatsensor_event */
-
 
 /******************************************************************************/
 /* Local Implementations						      */
