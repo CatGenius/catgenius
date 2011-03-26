@@ -520,8 +520,8 @@ static void start_short (void)
 		/* Update the display */
 		update_display();
 	} else
-		/* Pause current program */
-		litterlanguage_pause(0);
+		/* Toggle pause current program */
+		litterlanguage_pause(!litterlanguage_paused());
 }
 
 static void start_long (void)
