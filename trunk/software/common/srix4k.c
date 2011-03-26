@@ -102,7 +102,7 @@ void srix4k_work (void)
 			goto off;
 		}
 		if (length != 1) {
-			printf("length = %d\n", length);
+			DBG("length = %d\n", length);
 			error = 4;
 			goto off;
 		}
@@ -126,7 +126,7 @@ void srix4k_work (void)
 			goto off;
 		}
 		if (length != 0) {
-			printf("length = %d\n", length);
+			DBG("length = %d\n", length);
 			error = 7;
 			goto off;
 		}
@@ -149,11 +149,11 @@ void srix4k_work (void)
 			goto off;
 		}
 		if (length != 8) {
-			printf("length = %d\n", length);
+			DBG("length = %d\n", length);
 			error = 10;
 			goto off;
 		}
-//		printf("ID: 0x%.8lX%.8lX\n", cid[1], cid[0]);
+//		DBG("ID: 0x%.8lX%.8lX\n", cid[1], cid[0]);
 		state++;
 	case 8:
 		/* Get the key */
@@ -173,11 +173,11 @@ void srix4k_work (void)
 			goto off;
 		}
 		if (length != 4) {
-			printf("length = %d\n", length);
+			DBG("length = %d\n", length);
 			error = 13;
 			goto off;
 		}
-//		printf("Key: 0x%.8lX\n", (unsigned long *)frame);
+//		DBG("Key: 0x%.8lX\n", (unsigned long *)frame);
 		goto off;
 	}
 
@@ -192,7 +192,7 @@ out:
 	/* Schedule next time */
 	settimeout(&timer, 3*SECOND);
 	if (error)
-		printf("Err %d\n", error);
+		DBG("Err %d\n", error);
 	return;
 } /* srix4k_work */
 
