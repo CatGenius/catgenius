@@ -184,16 +184,17 @@ unsigned char timeoutexpired (struct timer const * const timer_p)
 	/* Fetch the current time */
 	gettimestamp (&currentTime);
 
-	if (currentTime.overflows == timer_p->overflows)
+	if (currentTime.overflows == timer_p->overflows) {
 		if (currentTime.timer1 >= timer_p->timer1)
 			return 1;
 		else
 			return 0;
-	else
+	} else {
 		if (currentTime.overflows > timer_p->overflows)
 			return 1;
 		else
 			return 0;
+	}
 }
 /* End: timeoutexpired */
 
@@ -209,6 +210,7 @@ unsigned char timeoutneverexpires (struct timer	 const	* const timer_p)
 	return (timer_p->timer1    == 0xFFFF &&
 		timer_p->overflows == 0xFFFFFFFF);
 }
+/* End: timeoutneverexpires */
 
 
 void gettimestamp (struct timer * const ticks)
@@ -244,50 +246,49 @@ void gettimestamp (struct timer * const ticks)
 /* End: gettimestamp */
 
 
-unsigned long timestampage (struct timer const * const pt_timestamp)
+unsigned long timestampdiff (struct timer	const	* const early_p,
+			     struct timer	const	* const late_p)
 /******************************************************************************/
-/* Function:	timestampage						      */
-/*		- Calculate the time between now and the time the given	      */
-/*		  timestamp was set					      */
-/* History :	25 Aug 2010 by R. Delien:				      */
-/*		- Ported from other project.				      */
+/* Function:	timeoutleft						      */
+/*		- Returns the number of ticks between early_p and late_p      */
+/* History :	22 Feb 2011 by R. Delien:				      */
+/*		- First implementation.					      */
 /******************************************************************************/
 {
-	unsigned long		age = 0;
-	struct longshort	cur_longshort;
-	struct longshort	*tmr_longshort = (struct longshort*)pt_timestamp;
+	unsigned long		diff = 0;
+	struct longshort	*early_longshort = (struct longshort*)early_p;
+	struct longshort	*late_longshort  = (struct longshort*)late_p;
 
-	/* Fetch the current time */
-	gettimestamp ((struct timer*)&cur_longshort);
-
-	/* Check overflows to detect a future time stamp */
-	if (cur_longshort.ms_shortTicks >= tmr_longshort->ms_shortTicks) {
-		switch (cur_longshort.ms_shortTicks - tmr_longshort->ms_shortTicks) {
+	/* Check Most Significant Shorts to quickly detect a negative difference */
+	if (early_longshort->ms_shortTicks >= late_longshort->ms_shortTicks) {
+		switch (early_longshort->ms_shortTicks - late_longshort->ms_shortTicks) {
 		case 0: /* Most Significant Shorts are equal */
-			if (cur_longshort.ls_longTicks > tmr_longshort->ls_longTicks)
-				/* Past time stamp: Just subtract the Least Significant Longs */
-				age = cur_longshort.ls_longTicks - tmr_longshort->ls_longTicks;
+			if (early_longshort->ls_longTicks > late_longshort->ls_longTicks) {
+				/* Positive difference: Just subtract the Least Significant Longs */
+				diff = early_longshort->ls_longTicks - late_longshort->ls_longTicks;
+			}
 			break;
 
 		case 1: /* Most Significant Long is increased just by 1 */
-			if (cur_longshort.ls_longTicks < tmr_longshort->ls_longTicks)
+			if (early_longshort->ls_longTicks < late_longshort->ls_longTicks) {
 				/* The Least Significant Long has only wrapped around */
-				age = (0xFFFFFFFF - (tmr_longshort->ls_longTicks - cur_longshort.ls_longTicks)) + 1;
-			else
-				/* The The stamp has just aged beyond the maximum of 9.5 hours */
-				age = 0xFFFFFFFF;
+				diff = (0xFFFFFFFF - (late_longshort->ls_longTicks - early_longshort->ls_longTicks)) + 1;
+			} else {
+				/* The difference is positive, but just larger than the maximum of 9.5 hours */
+				diff = 0xFFFFFFFF;
+			}
 			break;
 
 		default: /* Most Significant Long is increased by two of more */
-			/* The time stamp is ancient, way older than 9.5 hours */
-			age = 0xFFFFFFFF;
+			/* The difference is positive, but way larger than the maximum of 9.5 hours */
+			diff = 0xFFFFFFFF;
 			break;
 		}
 	}
 
-	return (age);
+	return (diff);
 }
-/* End: timestampage */
+/* End: timestampdiff */
 
 
 #if 0
@@ -386,8 +387,7 @@ void timer_isr (void)
 	 * respectable up-time of 71 years */
 	if (overflows >= 0xFFFF0000) {
 		overflows = 0;
-		/* TODO: This print make the linker crash... */
-//		printf("RIP\n");
+		/* TODO: Reset here instead */
 		while(1);
 	}
 }

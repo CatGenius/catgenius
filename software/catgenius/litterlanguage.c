@@ -39,6 +39,7 @@
 static unsigned char	prg_source		= 0;
 static bit		wet_program		= 0;
 static bit		water_detected		= 0;
+static bit		paused			= 0;
 
 static unsigned char	cmd_state		= STATE_IDLE;
 static struct command	const * cmd_pointer	= 0;
@@ -253,6 +254,69 @@ unsigned char litterlanguage_running (void)
 
 void litterlanguage_pause (unsigned char pause)
 {
+	static struct {
+		unsigned char	bowl;
+		unsigned char	arm;
+		unsigned char	pump;
+		unsigned char	dosage;
+		unsigned char	dryer;
+		unsigned long	wait;
+		unsigned long	fill;
+		unsigned long	drain;
+		unsigned long	autodose;
+	} context;
+
+	if (pause) {
+		struct timer	timer_now;
+
+		/* Save hardware context */
+		context.bowl = get_Bowl();
+		set_Bowl(BOWL_STOP);
+		context.arm = get_Arm();
+		set_Arm(ARM_STOP);
+		context.dosage = get_Dosage();
+		set_Dosage(0);
+		context.pump = get_Pump();
+		set_Pump(0);
+		context.dryer = get_Dryer();
+		set_Dryer(0);
+		/* Save timer context */
+		gettimestamp (&timer_now);
+		/* We take a little shortcut here, not first checking timeoutexpired() and timeoutneverexpires()
+		 * Expired timer will result in negative difference, returning 0: settimeout(0) during restoring will repoduced a practically expired timer
+		 * Neverexpiring timer will result in huge difference, returning 0xFFFFFFFF: We will catch this during restoring */
+		context.wait = timestampdiff(&timer_now, &timer_waitcmd);
+		timeoutnever(&timer_waitcmd);
+		context.fill = timestampdiff(&timer_now, &timer_fill);
+		timeoutnever(&timer_fill);
+		context.drain = timestampdiff(&timer_now, &timer_drain);
+		timeoutnever(&timer_drain);
+		context.autodose =  timestampdiff(&timer_now, &timer_autodose);
+		timeoutnever(&timer_autodose);
+	} else {
+		/* Restore timer context */
+		if (context.wait != 0xFFFFFFFF)
+			settimeout(&timer_waitcmd, context.wait);
+		if (context.fill != 0xFFFFFFFF)
+			settimeout(&timer_fill, context.fill);
+		if (context.drain != 0xFFFFFFFF)
+			settimeout(&timer_drain, context.drain);
+		if (context.autodose != 0xFFFFFFFF)
+			settimeout(&timer_autodose, context.autodose);
+		/* Restore hardware context */
+		set_Bowl(context.bowl);
+		set_Arm(context.arm);
+		set_Dosage(context.dosage);
+		set_Pump(context.pump);
+		set_Dryer(context.dryer);
+	}
+	paused = pause;
+}
+
+
+unsigned char litterlanguage_paused (void)
+{
+	return (paused);
 }
 
 
@@ -274,6 +338,8 @@ void litterlanguage_stop (void)
 		timeoutnever(&timer_autodose);
 		/* Stop the state machine */
 		cmd_state = STATE_IDLE;
+		/* Reset pause sate */
+		paused = 0;
 	}
 }
 

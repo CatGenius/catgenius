@@ -44,7 +44,8 @@ unsigned char	timeoutneverexpires	(struct timer	 const	* const timer_p) ;
 
 void		gettimestamp		(struct timer		* const ticks) ;
 
-unsigned long	timestampage		(struct timer	 const	* const timer_p) ;
+unsigned long	timestampdiff		(struct timer	const	* const early_p,
+					 struct timer	const	* const late_p) ;
 
 void		delay			(unsigned long		* const delay) ;
 
