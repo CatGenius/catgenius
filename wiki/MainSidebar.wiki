@@ -1,0 +1,6 @@
+#summary Sidebar.
+
+  * [CatGenius]
+  * [ReleaseNotes Release Notes]
+  * Wiki
+    * [http://code.google.com/p/catgenius/w/list All Pages]
