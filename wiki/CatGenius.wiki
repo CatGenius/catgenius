@@ -1,0 +1,5 @@
+#Main page
+
+= Introduction =
+
+Welcome to the CatGenius project. CatGenius is alternative firmware for the CatGenie automated cat toilet. This project contains the source code, but also a vast amount of infomation gathered over the last couple of years, suchs as diagrams, photos, datasheets and measurement results.
