@@ -1,6 +1,9 @@
 #summary Sidebar.
 
   * [CatGenius]
-  * [ReleaseNotes Release Notes]
+  * [Manuals User's Manuals]
+  * [Howtos How to's]
+  * [KnowledgeBase Knowledge Base]
+  * [ReleaseHistory Release History]
   * Wiki
     * [http://code.google.com/p/catgenius/w/list All Pages]
