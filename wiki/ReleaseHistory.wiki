@@ -3,7 +3,7 @@
 Beta releases are not full featured, but they will clean your box and will generally not make a mess.<br>
 
 *2010-09-06 Beta release B03 (SVN r124, tag b03)*<br>
-catgenius_B03.hex<br>
+[http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B03.hex catgenius_B03.hex]<br>
 Summary:
  * Washing program debug information replaced with timing related debug information
  * Missing rtc.c added, erroneous rtc.h.bak removed
@@ -17,13 +17,13 @@ Summary:
  * Key lock state saved and restored in/from non-volatile memory
 <br>
 *2010-06-02 Beta release B02 (SVN r112, tag b02)*<br>
-catgenius_B02.hex<br>
+[http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B02.hex catgenius_B02.hex]<br>
 Summary:
  * Holding start button at power-up forces a cleanup cycle in dry mode
  * Water sensor muted by turning off the LED instead of sourcing OpAmp inpute
 <br>
 *2010-05-31 Beta release B01 (SVN r109, tag b01)*<br>
-catgenius_B01.hex<br>
+[http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B01.hex catgenius_B01.hex]<br>
 Summary:
  * Reject programs not beginning with a LitterLanguage CMD_START
  * Exported litterlanguage_stop
@@ -40,7 +40,7 @@ Summary:
 Alpha releases are posted here for reference only and are not recommended to be used.
 <br>
 *2010-05-18 Alpha release A05 (SVN r98, no tag)*<br>
-catgenius_A05.hex<br>
+[http://code.google.com/p/catgenius/downloads/detail?name=catgenius_A05.hex catgenius_A05.hex]<br>
 Summary:
  * Debug prints added to user interface
  * Water sensor algo changed to maximized waiting.
@@ -50,7 +50,7 @@ Summary:
  * Cat sensor debouncing fixed.
 <br>
 *2010-05-05 Alpha release A04 (SVN r91, no tag)*<br>
-catgenius_A04.hex<br>
+[http://code.google.com/p/catgenius/downloads/detail?name=catgenius_A04.hex catgenius_A04.hex]<br>
 Summary:
  * Debug output added to user interface and litter language
  * Mode saved and restored from EEPROM
@@ -60,7 +60,7 @@ Summary:
  * New tag dumps added, including maintenance cartridge.
 <br>
 *2010-04-11 Alpha release A03 (SVN r86, no tag)*<br>
-catgenius_A03.hex<br>
+[http://code.google.com/p/catgenius/downloads/detail?name=catgenius_A03.hex catgenius_A03.hex]<br>
 Summary:
  * Tools added
  * Water sensor handled by litterlanguage.c
@@ -69,7 +69,7 @@ Summary:
  * Electronic diagrams updated
 <br>
 *2010-04-03 Alpha release A02 (SVN r80, no tag)*<br>
-catgenius_A02.hex<br>
+[http://code.google.com/p/catgenius/downloads/detail?name=catgenius_A02.hex catgenius_A02.hex]<br>
 Summary:
  * Overflow bug in LitterLanguage program counter fixed
  * Cat detection dependent program improved.
@@ -81,7 +81,7 @@ Summary:
  * Return flags filled out
 <br>
 *2010-03-16 Alpha release A01 (SVN r73, no tag)*<br>
-catgenius_A01.hex<br>
+[http://code.google.com/p/catgenius/downloads/detail?name=catgenius_A01.hex catgenius_A01.hex]<br>
 Summary:
  * Programming cable photos added.
  * ID restored for tag dump 3
