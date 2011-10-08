@@ -2,7 +2,7 @@
 
 Beta releases are not full featured, but they will clean your box and will generally not make a mess.<br>
 
-*2010-09-06 Beta release B03 (SVN r124, tag b03)*<br>
+*2010-09-06 Beta release B03 (SVN r124, tag [http://code.google.com/p/catgenius/source/browse/#svn%2Ftags%2Fb03 b03])*<br>
 [http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B03.hex catgenius_B03.hex]<br>
 Summary:
  * Washing program debug information replaced with timing related debug information
@@ -16,13 +16,13 @@ Summary:
  * Diagrams updated (and repository test from new Windows 7 installation)
  * Key lock state saved and restored in/from non-volatile memory
 <br>
-*2010-06-02 Beta release B02 (SVN r112, tag b02)*<br>
+*2010-06-02 Beta release B02 (SVN r112, tag [http://code.google.com/p/catgenius/source/browse/#svn%2Ftags%2Fb02 b02])*<br>
 [http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B02.hex catgenius_B02.hex]<br>
 Summary:
  * Holding start button at power-up forces a cleanup cycle in dry mode
  * Water sensor muted by turning off the LED instead of sourcing OpAmp inpute
 <br>
-*2010-05-31 Beta release B01 (SVN r109, tag b01)*<br>
+*2010-05-31 Beta release B01 (SVN r109, tag [http://code.google.com/p/catgenius/source/browse/#svn%2Ftags%2Fb01 b01])*<br>
 [http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B01.hex catgenius_B01.hex]<br>
 Summary:
  * Reject programs not beginning with a LitterLanguage CMD_START
