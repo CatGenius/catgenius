@@ -1,0 +1,158 @@
+=Release History=
+
+Beta releases are not full featured, but they will clean your box and will generally not make a mess.<br>
+
+*2010-09-06 Beta release B03 (SVN r124, tag b03)*<br>
+catgenius_B03.hex<br>
+Summary:
+ * Washing program debug information replaced with timing related debug information
+ * Missing rtc.c added, erroneous rtc.h.bak removed
+ * Cat activated program triggers upon leaving only, to make sure no program is started if the cat needs more than the timeout (4 min) to do its business.
+ * Worked-around linker crash, TODO added.
+ * Real Time Clock added.
+ * Timestamp age function added for time measurement purposes.
+ * Fixed reset cause print at boot time.
+ * Reset bits added, using HT-PICC compiler version 9.80.
+ * Diagrams updated (and repository test from new Windows 7 installation)
+ * Key lock state saved and restored in/from non-volatile memory
+<br>
+*2010-06-02 Beta release B02 (SVN r112, tag b02)*<br>
+catgenius_B02.hex<br>
+Summary:
+ * Holding start button at power-up forces a cleanup cycle in dry mode
+ * Water sensor muted by turning off the LED instead of sourcing OpAmp inpute
+<br>
+*2010-05-31 Beta release B01 (SVN r109, tag b01)*<br>
+catgenius_B01.hex<br>
+Summary:
+ * Reject programs not beginning with a LitterLanguage CMD_START
+ * Exported litterlanguage_stop
+ * Pause and stop functions added to user interface.
+ * Cleanup programs fixed
+ * First version of GenieDiag added
+ * Dedicated debug pins disabled to allow normal use
+ * arm_up routine added to ROM wash program
+ * Cleaned up the ROM wash program a bit
+ * Call and Return instructions implemented in LitterLanguage to extend it with subroutines, limiting the required memory for washing programs.
+ * LitterLanguage prepared for implementation of subroutines.
+ * LitterLanguage: symbol name disambiguation, drain timeout fixed, stop function added.
+<br>
+Alpha releases are posted here for reference only and are not recommended to be used.
+<br>
+*2010-05-18 Alpha release A05 (SVN r98, no tag)*<br>
+catgenius_A05.hex<br>
+Summary:
+ * Debug prints added to user interface
+ * Water sensor algo changed to maximized waiting.
+ * Port dump debug utility added to main program.
+ * Washing program improved with autodosage, waitdosage and waitwater low before switching on water.
+ * Dosage pump getter function added.
+ * Cat sensor debouncing fixed.
+<br>
+*2010-05-05 Alpha release A04 (SVN r91, no tag)*<br>
+catgenius_A04.hex<br>
+Summary:
+ * Debug output added to user interface and litter language
+ * Mode saved and restored from EEPROM
+ * Box state saved and restored from EEPROM
+ * Cleanup program added
+ * Sorted out cartridge dumps
+ * New tag dumps added, including maintenance cartridge.
+<br>
+*2010-04-11 Alpha release A03 (SVN r86, no tag)*<br>
+catgenius_A03.hex<br>
+Summary:
+ * Tools added
+ * Water sensor handled by litterlanguage.c
+ * Water sensor mute pin activated when taking it out of tristate
+ * Water timeouts handled differently
+ * Electronic diagrams updated
+<br>
+*2010-04-03 Alpha release A02 (SVN r80, no tag)*<br>
+catgenius_A02.hex<br>
+Summary:
+ * Overflow bug in LitterLanguage program counter fixed
+ * Cat detection dependent program improved.
+ * Added missing dryer stop in standard program
+ * First implementation of auto program
+ * Catsensor changed for coexistence with I2C and Pacer
+ * Work-around implemented for conflict between cat sensor en RFID tag reader
+ * Fixed initial state of buttons
+ * Return flags filled out
+<br>
+*2010-03-16 Alpha release A01 (SVN r73, no tag)*<br>
+catgenius_A01.hex<br>
+Summary:
+ * Programming cable photos added.
+ * ID restored for tag dump 3
+ * Tag dumps added
+ * Implemented access to RFID tag
+ * I2C state machine fixed
+ * cr14 RFID reader implementation added
+ * srix4k RFID tag implementation added
+ * Work-around for RMW conflict in catsensor/i2c implemented
+ * First attempt to read the cartridge
+ * Fully commented power-up with cartridge present I2C measurement.
+ * Update photos, added hardware.h, updated project file
+ * Scoop only program shortened
+ * Removed empty testprograms folder
+ * HEX file added
+ * Software directory restructured
+ * Retuned water sensor
+ * Cartridge level added to user interface
+ * Water sensor bug fixed
+ * Bug fix actuator functions
+ * litterlanguage added
+ * Gear teeth documented
+ * Flags set according to debug setting
+ * Implemented the remaining part of the standard washing program
+ * Analyzed the rest of the standard washing program
+ * Standard washing program extended up until drying
+ * Diagrams updated
+ * Washing program analyzed up until drying
+ * Bug fix on LitterLanguage interpreter
+ * Byte code program interpreter added and program converted.
+ * State machine macros reduced
+ * Washing program analysis added
+ * Washing program extended with partial washing
+ * Washing program separated
+ * Operational modi added to user interface
+ * Scoop-only test program implemented
+ * Bowl CW/CCW reversed
+ * Button behavior implemented
+ * Valve reimplemented after water sensor changes
+ * Water sensor reimplemented to enable hardware overflow protection
+ * Washing program made human readable
+ * Timing corrected
+ * Washing program measurements files added
+ * Initial revision of user interface added
+ * Initial revision of empty CatGenius application added
+ * Separated common functionality and test application
+ * Common files moved to common directory
+ * Folder for common files added
+ * Water sensor implemented
+ * Bug fixed: Timout not expired after calling handler
+ * Cat sensor made interrupt driven
+ * Cat sensor extracted to a separate file
+ * First implementation of cat sensor.
+ * Polling for inputs added
+ * Function pointers to debouncers added
+ * Actuators added
+ * Structurized debouncers
+ * Structural pacers implemented
+ * Beeper pace implemented
+ * Buttons added
+ * Diagrams added and components in a dedicated directory
+ * My old manual relay diagrams added.
+ * Jaime's mechanical improvements added.
+ * New PCB specific pcb folder added. My manual PCB drawing moved from below and Jaime's electronic PCB drawings added.
+ * Initial revision of catgenie120 board added.
+ * Implemented timeout setting and evaluation.
+ * Project files updated
+ * Typo in PIC part number fixed.
+ * First test with ported timer from MeterMaid project. Implemented on the real CG120 platform, shows a 0.95Hz blinking error LED. (Hey, it's a start, isn't it?)
+ * Empty test program 'runleds' added.
+ * Data sheets on RFID reader, RFID chip and opto-coupler added.
+ * I2C data traffic logs to RFID reader added.
+ * First check-in of gathered information.
+ * Initial repository creation
