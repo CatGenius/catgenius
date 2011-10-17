@@ -1,7 +1,8 @@
 #summary Sidebar.
 
   * [CatGenius]
-  * [Manuals User's Manuals]
+  * [Manuals]
+    * [CatGeniusUsersManual CatGenius User's Manual]
   * [Howtos How to's]
   * [KnowledgeBase Knowledge Base]
   * [ReleaseHistory Release History]
