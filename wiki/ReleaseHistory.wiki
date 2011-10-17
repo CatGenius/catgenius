@@ -2,6 +2,17 @@
 
 Beta releases are not full featured, but they will clean your box and will generally not make a mess.<br>
 
+*2010-10-02 Beta release B03 (SVN r132, no tag)*<br>
+[http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B03b.hex catgenius_B03b.hex]<br>
+Summary:
+ * Water sensor algorithm improved to reduce ticking and isolated to a separate file.
+ * Extra time stamps added to logging.
+ * End of washing program logged again.
+ * Simplified I2C implementation
+ * Shortened water sensor polling loop to reduce possible ticking.
+ * Fixed resetting of seconds prescaler when setting RTC.
+ * Newline added after fill/drain logging
+<br>
 *2010-09-06 Beta release B03 (SVN r124, tag [http://code.google.com/p/catgenius/source/browse/#svn%2Ftags%2Fb03 b03])*<br>
 [http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B03.hex catgenius_B03.hex]<br>
 Summary:
