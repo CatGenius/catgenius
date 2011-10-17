@@ -1,0 +1,67 @@
+=Introduction=
+I intend to make a fully illustrated user's manual on how to operate a cat box augmented with CatGenius firmware, but for now I think it's better to spend my time improving the actual software. I think in this project we're all geek enough to figure out how to use it without manual anyway. However, not to repeat myself too many times, I'm starting out with a couple of pointers.<br>
+<br>
+=Operations=
+==Responsiveness==
+As soon as you have upgraded your cat box, you will notice that it has become much more responsive to the buttons. CatGenius never misses the press of a button. Every press is confirmed by a 125ms beep at button-down. If you manage to press a button more frequently than 8 times per second, the separate beeps will merge into a single tone, but still every button stroke is encounted for.<br>
+<br>
+The actual function of the button is in fact not triggered upon _pressing_ the button, but upon _releasing_ it. This won't affect the responsiveness noticed by the user and it gives software the opportunity to measures the duration of a button stroke and to determine whether it was a long or a short button press before acting upon it.<br>
+<br>
+==Button operations==
+The 2 buttons on the keyboard allow a total of six operations:
+ # A short press of the start button
+ # A long press of the start button (> 2 sec.)
+ # A short press of the setup button
+ # A long press of the setup button (> 2 sec.)
+ # A short press of both buttons
+ # A long press of both buttons (> 2 sec.)
+The first five are pretty straight forward, but the 6th may need a little elaboration. If you press a button, software will check if the other button happens to be pressed at that time. If that is the case, from that time on software knows that it's dealing with a press of both buttons. This will suppress the release action of the first button, because it's clear that a different function is desired, but it will also reset the press timer to differ a long from a short press. So in theory it is possible to press and hold one button for a very long time, then press the second button and release both buttons within 2 seconds: This will be considered a _short_ press of both buttons. This is not a bug, this is by design. If you operate the buttons like any normal person would do, they will behave exactly as expected.<br>
+<br>
+==Startup modes==
+CatGenius can be started in for modes. The desired mode can be selected by pressing and holding one or more buttons while plugging the box into an AC outlet:
+ # No button held while plugging in: Normal operation mode.
+ # Start button held while plugging in: Forced cleanup mode. The box will initiate a cleanup cycle, draining, drying and surfacing the box. When finished, normal operation mode is assumed.
+ # Setup button held while plugging in: GenieDiag diagnostics mode (not implemented yet).
+ # Both start and setup button held while plugging in: Reset everything to default.
+<br>
+==Key lock==
+The key lock can be activated by pressing both buttons for longer than 2 seconds. The software will not let you know if this time has already passed by acting, this is still on the to-do list. It will only act upon release of the two buttons. If the key lock is active, the Child Lock LED will be lit. When active, no other button function will work, except for pressing both buttons for longer than 2 seconds, in order to release the key lock. When locked, any press of any button will make the Child Lock LED blink to indicate the active key lock.<br>
+<br>
+=Control panel states=
+The whole control panel has 3 different states. In each state the function of the buttons and level indicator differs, except for the key lock, which will work from any state.<br>
+<br>
+==State 1: Normal operation==
+This state is indicated by both the Cartridge LED and the Error LED being either off or blinking. The level indicator LEDs shows the auto washing mode the box is setup for:
+ * Mode 0, all level indicator LEDs and the Cat LED off: Manual operation only, no program is started automatically
+ * Mode 1, level indicator LED 1 is lit: One full wash per 24 hours.
+ * Mode 2, level indicator LED 2 is lit: Two full washes per 24 hours.
+ * Mode 3, level indicator LED 3 is lit: Three full washes per 24 hours.
+ * Mode 4, level indicator LED 4 is lit: Four full washes per 24 hours.
+ * Mode 5, level indicator LED 1 and the Cat LED are lit: Full wash after every visit.
+ * Mode 6, level indicator LED 1, LED 2 and the Cat LED are lit: Full wash once every second visit, scoop-only on the other visit.
+ * Mode 7, level indicator LED 1, LED 3 and the Cat LED are lit: Full wash once every third visit, scoop-only on the other two visits.
+ * Mode 8, level indicator LED 1, LED 4 and the Cat LED are lit: Full wash once every fourth visit, scoop-only on the other three visits.
+ * Mode 9, all level indicator LEDs off and the Cat LED lit: Scoop-only after each visit.
+Please note for mode 1...4 that a washing cycle is skipped if no cat was detected since the last full wash.<br>
+Please note for mode 5...9 that instead of being lit, the Cat LED can also blink. A 50/50 blink pattern indicates a cat is currently being detected. A 80/20 blink pattern indicates that a cat has been detected and that a cycle is pending.<br>
+<br>
+===Idle===
+When no program is running, pressing the setup button shortly cycles through the modes above, resetting the time if a timer mode is selected. A long press of the setup button will be ignored. Pressing the start button shortly will start a scoop-only cycle. A long press will start a full washing cycle. This will not influence the timer for mode 1...4, but the next timer cycle may be skipped if no cat was detected since the manual cycle finished. Neither will it influence the interval for full-wash/scoop-only ratio for mode 6...8.<br>
+<br>
+===Running===
+If a program is running, the setup button behaves the same as if the box were in idle.<br>
+A short press of the start button will pause the program (not implemented yet).<br>
+A long press of the start button will abort the running program.<br>
+<br>
+==State 2: Cartridge Level==
+This state is indicated by the Cartridge LED being lit.<br>
+The level indicator LEDs shows level of cleaning fluids left in the cartridge.
+ * 100%
+ * 75%
+ * 50%
+ * 25%
+ * 10%
+Pressing the setup button shortly cycles through the cartridge levels above. A long press of the setup button is ignored. The control panel reverts to Normal state (of Error state, if in error) 5 seconds after the last key was pressed.<br>
+
+===State 3: Error===
+This is not implemented yet.
