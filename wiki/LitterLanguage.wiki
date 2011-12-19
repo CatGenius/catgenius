@@ -1,0 +1,71 @@
+#Description of LitterLanguage, the 'programming language' for the washing program.
+
+= CatGenius application program =
+
+The actual CatGenius application is fully written in the ANSI C programming language. The application is the part of software that monitors the buttons and sensor, and controls the relays in order to start or stop motors. It determines what to do if a button is pressed, starts a timer upon cat detection and evaluates this timer to start a washing cycle when it expires. If fact it does a lot more, but this is just to get an idea of the level the application is working on.
+
+= Washing program =
+
+The sequence of when, how and what motors/valve are turned on and off, and how the water sensor is evaluated is what we call a washing program. Or coarse this sequence of behavior could be programmed as a part of the application program, but that would make it rather cumbersome to alter the washing program. A washing program implemented that way would also occupy a lot of memory because a lot of sequences are repeated a couple of times. So I came up with a solution, originally intended to save memory, that will make the washing program a lot more versatile: _LitterLanguage_.
+
+= A program within a program =
+
+LitterLanguage is a very small programming language I came up with that allows you to write your own washing program. It has a very limited set of washing program specific instructions. A washing program is just a sequence of these instructions. The CatGenius application will execute the instruction of this sequence like a play list.<br>
+An instruction is always shaped like this:<br>
+{{{
+struct command {
+	unsigned char	cmd;
+	unsigned int	arg;
+};
+}}}
+And the instructions currently supported for the cmd part are:
+{{{
+#define CMD_START	0x00	/* Designates the start of a program. Argument is CMD_LAST or-ed with flags */
+#define CMD_BOWL	0x01	/* Controls the bowl. Argument is what the bowl should do */
+#define CMD_ARM		0x02	/* Controls the arm. Argument is what the arm should do */
+#define CMD_WATER	0x03	/* Controls the water valve. Argument is 1 for on, 0 for off */
+#define CMD_PUMP	0x04	/* Controls the hopper pump. Argument is 1 for on, 0 for off */
+#define CMD_DRYER	0x05	/* Controls the dryer fan. Argument is 1 for on, 0 for off */
+#define CMD_AUTODOSE	0x06	/* Controls the dosage pump. Argument x100 is amount in microliters */
+#define CMD_WAITTIME	0x07	/* Waits a period of time. Argument is period in milliseconds */
+#define CMD_WAITWATER	0x08	/* Waits for a water sensor state. Argument is state: 1 for high, 0 for low */
+#define CMD_WAITDOSAGE	0x09	/* Waits for autodosage to complete. Argument is ignored */
+#define CMD_SKIPIFDRY	0x0A	/* Skips argument instructions if the program runs in dry mode */
+#define CMD_SKIPIFWET	0x0B	/* Skips argument instructions if the program runs in wet mode */
+#define CMD_CALL	0x0C	/* Call a subroutine. Argument is the address on the program medium */
+#define CMD_RETURN	0x0D	/* Return from all a subroutine. Argument is ignored */
+#define CMD_END		0x0E
+}}}
+As most programmers would know, the hexadecimal numbers are the actual instructions. The defined names are mnemonics to make programming easier.
+
+= Example =
+If you would like to create a washing program that will start rotating the bowl counter clockwise, lower the arm for 15 second, wait for 30 second, rise the arm for 15 second and finally stop the bowl from rotating, your program would look like this:
+{{{
+const struct command	washprogram[] = {
+	{CMD_START,	CMD_END | 
+			FLAGS_DRYRUN |
+			FLAGS_WETRUN },
+	{CMD_BOWL,	BOWL_CCW},
+	{CMD_ARM,	ARM_DOWN},
+	{CMD_WAITTIME,	15000},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_WAITTIME,	30000},
+	{CMD_ARM,	ARM_UP},
+	{CMD_WAITTIME,	15000},
+	{CMD_ARM,	ARM_STOP},
+	{CMD_BOWL,	BOWL_STOP},
+	{CMD_END,	0}
+};
+}}}
+The first command designates the start of the program. As an argument it takes the value of the End command to verify compatibilities between different versions of LitterLanguage. It also takes to flags to indicate this program can run in both dry and wet mode.<br>
+The second command starts rotating the bowl counter clockwise. Here too BOWL_CCW is just a mnemonic for a numerical value that you don't need to remember this way.<br>
+Immediately after the second command has been executed, the third command will start lowering the arm. The fourth command will pause program execution for 15 seconds (15000ms), waiting for the arm to reach the bottom position. Of coarse the full stroke time of the arm in milliseconds is available as a mnemonic too: ARM_STROKE_MSEC. And half a stroke would be <tt>ARM_STROKE_MSEC/2</tt>. Next the fifth command will stop the arm from moving and so on.<br>
+The las command indicates the end of the program and will stop program execution.
+
+= Built-in programs =
+
+For now two programs are built-in the CatGenius application. The washing program that will clean the box in wet mode, and will scoop-only in dry mode. The cleanup program will bring back the box to an operation state if it was reset while a washing program was running. This could be cause by a power failure, but also by a non recoverable programming error.
+
+= Program sources =
+
+Besides running built-in programs, we are considering to run programs from other sources, such as the memory on a cartridge tag. An externally connected computer could even feed a program over the serial port. That way people can create their own washing programs and share them on the forum.
