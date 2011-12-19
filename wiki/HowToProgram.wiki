@@ -9,17 +9,18 @@ To open the box, the water must be disconnected. If you're intending to open it 
 = The controller board =
 
 The controller board is attached to the front shell by four smaller screws. This is a photo of the controller board:<br>
-catgeniusCG120%20controller%20board.jpg<br>
+http://catgenius.googlecode.com/svn/wiki/images/CG120_controller_board.jpg<br>
 The photo looks like it's up-side-down, and in fact it is, but in this photo it matches the orientation of how it is mounted to the front shell.<br>
 The component resembling a black stamp, designated U2 on the left top of the board is the micro controller. It's a PIC16F877A, made by MicroChip. The 5-pin connector right below it, designated JC1 PROG, is the programming connector. This is the connector we will use to program new firmware into the micro controller.<br>
 The 4 pads for non-mounted connector J18 are interesting to us as well. They are connected to the micro controller's built-in serial port, which is very useful for debugging information. I will write a separate page on how to connect this serial port.<br>
 
 = The programmer =
 
-To reprogram the micro controller, you will require a special PIC programmer. You can use a MicroChip PICkit2 or PICkit3 programmer, available for about $35.<br>
-catgeniuspickit3.jpg<br>
+To reprogram the micro controller, you will require a special PIC programmer. You can use a MicroChip PICkit2 (as I'm using) or PICkit3 programmer, available for about $35.<br>
+http://catgenius.googlecode.com/svn/wiki/images/pickit3.jpg<br>
 A MicroChip ICD may work as well, but that would be a bit over-kill. A third party imitation programmer may work too, but it that case you're on your own.<br>
 A PICkit programmer usually comes with a test target, which is nice to experiment with, but you won't be needed that for this project, so the $35 version without it will do.<br>
+
 
 = The Cable =
 
@@ -34,8 +35,18 @@ To connect the PICkit programmer to the controller board, a specially made cable
 ||6 = Auxiliary||Not Connected||
 
 When properly made, the cable should looks like this on the front:<br>
-catgeniusProgramming%20cable%20-%20front.jpg<br>
+http://catgenius.googlecode.com/svn/wiki/images/Programming_cable_front.jpg<br>
 And like this on the rear:<br>
-catgeniusProgramming%20cable%20-%20rear.jpg<br>
+http://catgenius.googlecode.com/svn/wiki/images/Programming_cable_rear.jpg<br>
 The 6-pin side is connected to the PICkit programmer, with pin one (the red lead) aligned to the end of the connector marked with a white triangle. The 5-pin side connected to connector JC1 of the CG120 controller board, with pin one (the end with the 3 grey wires) aligned to the end marked VCC.<br>
 I recommend you to make this cable no longer that 20cm, 40cm at maximum, to prevent signal integrity problems.
+
+= Programming =
+To program the micro controller, start the PICkit application (*not* MPLab):<br>
+{{{Start menu -> Microchip -> PICkit 2 v2.11}}}<br>
+In this program, first select the Midrange device family in the Device Family menu.<br>
+Next, erase the chip by pressing the Erase button. This will also clear any HEX file you may already have loaded.<br>
+Now import the HEX file that needs to be programmed:<br>
+{{{    file -> Import Hex}}}<br>
+Finally, program the device by pressing the Write button.<br>
+Optionally you may want to press the Verify button to make sure everything is written correctly.
