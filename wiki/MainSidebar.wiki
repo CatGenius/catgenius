@@ -5,7 +5,8 @@
     * [CatGeniusUsersManual CatGenius User's Manual]
   * [Howtos How to's]
     * [HowToOpenPU How to open the processing unit]
-    * [HowToProgram How program the firmware]
+    * [HowToProgram How to program the firmware]
+    * [HowToAddSerialPort How to add a serial port]
   * [KnowledgeBase Knowledge Base]
   * [ReleaseHistory Release History]
   * Wiki
