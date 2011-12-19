@@ -1,0 +1,43 @@
+#Description on how to add a serial port to the CatGenie controller board
+
+= Introduction =
+
+It is not absolutely necessary to have a serial port installed in order to upgrade your box to CatGenius. You box will run as well without is as it does with. But for beta testing it is handy to have this port available because the software uses it to log what it's doing and what it's state is. This information may be crucial to diagnose problems.<br>
+Additionally, the serial port will give you access to more advanced features of CatGenius in future releases of the firmware.
+
+= The Port =
+
+The micro controller used (PIC16F877a.pdf) offers a Universal Asynchronous Receiver/Transmitter (UART), know to most of us a serial port or COM port. The CatGenie controller board already has traces that lead the pins of this interface to a connector. However, this connector was not mounted while assembling the board. Many manufacturers do this because their production type is mostly just an evolved prototype and to save costs they can simply leave off the components not used for normal operation.<br>
+<br>
+On our board the UART signals are available on non-mounted connector J18. The meaning of each pin is even silk screened on the board:
+||Pin||Signal||Function||
+||1||GND||Ground||
+||2||Tx||Data transmit||
+||3||Rx||Data receive||
+||4||5v||Power supply||
+
+To most of us familiar with serial ports, these signals will look familiar.
+
+= TTL =
+
+The UART offered by the micro controller on our board uses different signaling levels, known as TTL. The main difference with RS-232 is the signaling level used:<br>
+A signal is valid as a _mark_ when it's voltage is ~5v.<br>
+A signal is valid as a _space_ when it's voltage is 0v.<br>
+Interfacing these two signals directly would produce a space on RS-232 if a _mark_ is issued on the TTL side, and an invalid signal if a _space_ is issued. Fortunately a couple of clever integrated circuits are on the marked to solve this commonly occurring problem.
+
+
+= RS-232 =
+
+Unfortunately these signals cannot be connected to a serial port directly. Common PCs have serial ports using UARTs too, but these ports are using the RS-232 specification for their signaling. Of the the many things this specification dictates is the signaling level:<br>
+A signal is valid as a _mark_ when it's voltage is between -3v and -15v.<br>
+A signal is valid as a _space_ when it's voltage is between 3v and 15v.<br>
+Please note that the range between -3v and 3v is not covered. A signal within this range is considered to be invalid, a feature used to detect defective cabling. To make our controller UART signal compatible with the UART of a PC, we must adapt it to meet the RS-232 standard.<br>
+
+= The level shifter =
+
+Circuits that convert one type of signaling level into another type are commonly referred to as level shifters. A very common one is made by [http://www.maxim-ic.com/quick_view2.cfm/qv_pk/1798 Maxim] under the type number MAX232, but other manufactures offer similar circuits as well. Using the application note diagram in the data sheet you can build your level shifter with very few extra external components.
+But since we're not the first ones who need to solve this problem, many ready made boards are on the market, all at a price too low to switch on the soldering iron for:
+  * [http://www.futurlec.com/Mini_RS232_TTL_5V.shtml Futurlec]
+  * [http://www.sparkfun.com/commerce/product_info.php?products_id=133 Sparcfun]
+  * [http://www.acroname.com/robotics/parts/R115-INT-BRD-KIT.html Acroname]
+When you buy a ready made converter, be sure to get a 5 volt version. There are also 3.3 volt and even 1.8 volt version available, but those will not work and will probably be damaged when connected.
