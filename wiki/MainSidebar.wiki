@@ -4,6 +4,7 @@
   * [Manuals]
     * [CatGeniusUsersManual CatGenius User's Manual]
   * [Howtos How to's]
+    * [HowToOpenPU How to open the processing unit]
   * [KnowledgeBase Knowledge Base]
   * [ReleaseHistory Release History]
   * Wiki
