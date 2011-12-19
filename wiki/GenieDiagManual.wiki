@@ -1,0 +1,19 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+GenieDiag is a diagnostics application for people who have converted their CatGenie catbox into a CatGenius. It allows you to test separate functions of the hardware. It also allows Beta testers to drain their box and check the status of the water sensor in case a bad software version has messed things up.
+
+= Usage =
+
+Just program the GenieDiag application into your catbox, overwriting the CatGenius application. Once programmed, the test mode can be selected using the setup button. The level indicator LEDs will indicate the actual test mode:
+  # LED1: Test the bowl, start button will alternate between CW, CCW and stop.
+  # LED2: Test the arm, start button will alternate between down, up and stop.
+  # LED1 & LED2: Test the dosage pump, start button will alternate between on and off.
+  # LED3: Test the hopper pump, start button will alternate between on and off.
+  # LED1 & LED3: Test the dryer, start button will alternate between on and off.
+  # LED2 & LED3: Test the water valve, start button will alternate between on and off.
+Please note that selecting another test will not stop the currently test. So you can test the arm while the bowl is rotating.<br>
+When testing the water valve, the water will go in protection when the maximum level is reached, but the test will not be turned off. If you don't turn it off by pressing the start button again, and the water gets below the maximum, the protection will go off and the water will start running again.<br>
+<br>
+The Cat LED will indicates when the cat detector sees something. The Error LED will indicates if water is detected.
