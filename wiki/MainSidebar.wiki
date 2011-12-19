@@ -9,6 +9,9 @@
     * [HowToProgram How to program the firmware]
     * [HowToAddSerialPort How to add a serial port]
   * [KnowledgeBase Knowledge Base]
+    * [WaterSensor How the water sensor works]
+    * [DimLED The dim LED problem]
+    * [LitterLanguage LitterLanguage]
   * [ReleaseHistory Release History]
   * Wiki
     * [http://code.google.com/p/catgenius/w/list All Pages]
