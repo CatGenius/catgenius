@@ -7,7 +7,7 @@ Additionally, the serial port will give you access to more advanced features of 
 
 = The Port =
 
-The micro controller used (PIC16F877a.pdf) offers a Universal Asynchronous Receiver/Transmitter (UART), know to most of us a serial port or COM port. The CatGenie controller board already has traces that lead the pins of this interface to a connector. However, this connector was not mounted while assembling the board. Many manufacturers do this because their production type is mostly just an evolved prototype and to save costs they can simply leave off the components not used for normal operation.<br>
+The micro controller used ([http://code.google.com/p/catgenius/source/browse/trunk/documentation/catgenie120/electronics/components/PIC16F877a.pdf PIC16F877a.pdf]) offers a Universal Asynchronous Receiver/Transmitter (UART), know to most of us a serial port or COM port. The CatGenie controller board already has traces that lead the pins of this interface to a connector. However, this connector was not mounted while assembling the board. Many manufacturers do this because their production type is mostly just an evolved prototype and to save costs they can simply leave off the components not used for normal operation.<br>
 <br>
 On our board the UART signals are available on non-mounted connector J18. The meaning of each pin is even silk screened on the board:
 ||Pin||Signal||Function||
@@ -41,3 +41,30 @@ But since we're not the first ones who need to solve this problem, many ready ma
   * [http://www.sparkfun.com/commerce/product_info.php?products_id=133 Sparcfun]
   * [http://www.acroname.com/robotics/parts/R115-INT-BRD-KIT.html Acroname]
 When you buy a ready made converter, be sure to get a 5 volt version. There are also 3.3 volt and even 1.8 volt version available, but those will not work and will probably be damaged when connected.
+
+= Connecting the converter =
+
+Connecting the converter is actually straight forward. The ground signal should be connected to the ground signal and the supply voltage to the 5v. However, some manufacturers use a somewhat ambiguous labeling of the other two signals, Tx and Rx.<br>
+Most manufacturers label the signals as what they do on the connector they are part of. So the signal labeled Rx is an input signal and needs to be connected to the output signal of the controller board, Tx.
+But some manufacturers label the signal as a function of the board. In that case the signal labeled Rx is an output signal, carrying the signal the board is receiving on it 9-pin D-connector.<br>
+So the best thing to do is to to check the datasheet of the integrated circuit used. In case of a MAX232, pin 9 and 12 are TTL outputs, pin 10 and 11 are TTL inputs. Follow the traces from the pin marked Rx on converter board and if this pin ends at either of the 2 input pins of the MAX232, it needs to be connected to the Tx pin of the CG controller board. If it would be connector to either of the 2 output pins (unlikely), it should be connected to the Rx pin of the CG controller board. After that, the remaining Rx/Tx lines on the converter/controller can be interconnected too and that finishes the serial port.<br>
+
+= Connecting it to your computer =
+
+The serial port as described above can be connected to a regular PC directly using a straight (_not_ cross) cable with a male and a female 9-pin D-connector. This cable can easily be as long as 15 meters, but in that case it may be a better idea to use a serial port over Ethernet extender.<br>
+I have very good experiences with the [http://www.netmedia.com/siteplayer/telnet/index.html NetMedia SitePlayer]. The charming part of those is that they are in fact TelNet servers, so they are compatible to a board range of telnet programs. But they can also be used in conjunction with a Windows driver that just adds an extra serial port to your computer. A development suit is available for these as well, so it could even be turned into a stand alone CatGenius server with a website on it to configure and control it.<br>
+
+= Receiving the data =
+
+Now the CatGenius is connected to your computer, all you need is a serial terminal emulation program to read the data from the serial port, display it on your screen and optionally save it to a file. Windows has a - somewhat dated - standard program for this on board: Hyperterm. Alternatively you can use free and better alternatives as [http://ttssh2.sourceforge.jp Teraterm], [http://www.putty.org Putty] or [http://www.extraputty.com ExtraPutty], which I like the best.<br>
+
+= Communication parameters =
+CatGenius firmware communicates over the serial port at 19200 bits per second, with 8 data bits, no parity and 1 stop bit. At the end of each line, it send a line feed (LF) character only, as Unix like computers do. If you are running on Windows, you may need/want to configure your terminal emulation program to add a carriage return (CR) character itself. ExtraPutty has a feature for this: 'Implicit CR in every LF' under Terminal options.<br>
+<br>
+When your computer is connected, your terminal emulator is running, everything is configured properly and you power up your box with CatGenius installed, it should announce itself as below:<br>
+{{{
+*** CatGenius ***
+Power-on reset
+Brown-out reset
+Set mode 0
+}}}
