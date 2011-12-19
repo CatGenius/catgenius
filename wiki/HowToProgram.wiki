@@ -1,0 +1,41 @@
+#Description on how to reprogram the CatGenie controller
+
+= Opening the box =
+
+The PU (processing unit) housing is build from three shells. The front shell, hold the GenieEyes cat sensor and the control panel. The rear shell, has air intake holes in it and a hole for the water intake. And the bottom shell, containing the cogs for the bowl, the scooper, the water sensor. etc.<br>
+<br>
+To open the box, the water must be disconnected. If you're intending to open it frequently, you could replace the the standard hose with a fast-clicking garden hose system, such as Gardena makes here in Europe. After the mains and the water have been disconnected, the PU can be opened by removing four Philips screws on the rear. This requires a very long screwdriver for 3 of the four screws. You would do well placing the PU on a towel with the front shell down. Be careful not to push is down too much, otherwise you may push the cat sensor into the shell. After the screws have been removed, the front shell and the bottom shell are no long held together either, but you should be able to do everything you need with just the rear shell removed.
+
+= The controller board =
+
+The controller board is attached to the front shell by four smaller screws. This is a photo of the controller board:<br>
+catgeniusCG120%20controller%20board.jpg<br>
+The photo looks like it's up-side-down, and in fact it is, but in this photo it matches the orientation of how it is mounted to the front shell.<br>
+The component resembling a black stamp, designated U2 on the left top of the board is the micro controller. It's a PIC16F877A, made by MicroChip. The 5-pin connector right below it, designated JC1 PROG, is the programming connector. This is the connector we will use to program new firmware into the micro controller.<br>
+The 4 pads for non-mounted connector J18 are interesting to us as well. They are connected to the micro controller's built-in serial port, which is very useful for debugging information. I will write a separate page on how to connect this serial port.<br>
+
+= The programmer =
+
+To reprogram the micro controller, you will require a special PIC programmer. You can use a MicroChip PICkit2 or PICkit3 programmer, available for about $35.<br>
+catgeniuspickit3.jpg<br>
+A MicroChip ICD may work as well, but that would be a bit over-kill. A third party imitation programmer may work too, but it that case you're on your own.<br>
+A PICkit programmer usually comes with a test target, which is nice to experiment with, but you won't be needed that for this project, so the $35 version without it will do.<br>
+
+= The Cable =
+
+To connect the PICkit programmer to the controller board, a specially made cable is required because both connectors are not pin compatible. A connection table of which pin of the PICkit to connect to what pin of the controller board is shown below:<br>
+||PICkit:||Controller, JC1 PROG:||
+||# = Name||# = Name||
+||1 = VPP/MCLR||4 = RES||
+||2 = VDD Target||1 = VCC||
+||3 = VSS (ground)||5 = GND||
+||4 = ICSPDAT/PGD||2 = DA||
+||5 = ICSPCLK/PGC||3 = CLK||
+||6 = Auxiliary||Not Connected||
+
+When properly made, the cable should looks like this on the front:<br>
+catgeniusProgramming%20cable%20-%20front.jpg<br>
+And like this on the rear:<br>
+catgeniusProgramming%20cable%20-%20rear.jpg<br>
+The 6-pin side is connected to the PICkit programmer, with pin one (the red lead) aligned to the end of the connector marked with a white triangle. The 5-pin side connected to connector JC1 of the CG120 controller board, with pin one (the end with the 3 grey wires) aligned to the end marked VCC.<br>
+I recommend you to make this cable no longer that 20cm, 40cm at maximum, to prevent signal integrity problems.
