@@ -1,0 +1,23 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+Besides my CatGenius upgraded box, I also have two standard boxes, for reference and just to accommodate our guys in case CatGenius fails. Two days ago one standard box started giving me the three beep salute. I cleaned the light guide, but to no avail. The beeping is scaring away the cats, so when I came home tonight I decided to diagnose the problem.
+
+= The IR LED =
+
+As explained on another page in this group, the water sensor uses an IR emitter to determine if the maximum level of water has been reached. It also explains that detection is caused by a lack of reflection in the light pipe. The three beep salute means that the box thinks it cannot drain the water. But with the water already gone, this situation could be considered a false positive. So something else be causing the lacking reflection.<br>
+<br>
+In a thread on [http://www.litterbox-central.com/litter-box/post19929.html litterbox-central.com] somebody suggested a burned out LED and a user named ku4zs made pictures of his complaining box. I decided to do the same, using a decent Panasonic Full HD camcorder (camcorders tend to be a bit more sensitive to IR) and I took the following picture of my working box's IR LED:<br>
+http://catgenius.googlecode.com/svn/wiki/images/led_new.jpg<br>
+Next I took a picture of my faulty box's IR LED:<br>
+http://catgenius.googlecode.com/svn/wiki/images/led_broken.jpg<br>
+That's quite a difference! The light conditions of the environment are almost similar, see the identical whiteness of the box's bottom. The angles are not quite similar: For the second picture I had to more the camera a bit to catch the extra light from the reflector as well. Under similar angles, the second photo would be even worse.<br>
+<br>
+LEDs usually don't burn out slowly, that's mentioned in the forum as well. But this one is! A faulty power supply was suggested, but in that case the other LEDs on the control panel would fade along with it, which they don't. Not too mention that the difference in voltage to cause a difference like this would probably prevent the micro controller from running at all.<br>
+<br>
+Another cause of the LED to dim might be a burned out I/O port of the micro controller. This would be even worse and it would make repair a lot harder.<br>
+<br>
+Now to be on the safe side, I took an oscilloscope and an optical sensor to see if the intensity is constant over time. This to make sure the IR LED isn't pulse code modulated somehow. In that case a camera would just average that out over the exposure time. But it wasn't; On both boxes the IR LED produces a nice continues DC light. No AC component whatsoever.<br>
+<br>
+CatGenius does pulse it's LED most of the time - when no water is needed in the box. Not to save the LED (which now turns out to be a nice side effect), but to mute the sensor more efficiently and to spare the sensor from high currents. A previous version of the page on the water sensor explains how CatGenius used to operate the sensor, which is probably quite similar to the way stock firmware does it. That's truly surprising.
