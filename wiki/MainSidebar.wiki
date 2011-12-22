@@ -8,6 +8,7 @@
     * [HowToOpenPU How to open the processing unit]
     * [HowToProgram How to program the firmware]
     * [HowToAddSerialPort How to add a serial port]
+    * [HowToGardena How to install Gardena quick connect]
   * [KnowledgeBase Knowledge Base]
     * [WaterSensor How the water sensor works]
     * [DimLED The dim LED problem]
