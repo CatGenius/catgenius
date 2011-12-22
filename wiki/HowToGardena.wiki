@@ -1,0 +1,48 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+When moving around the processing unit (PU) a lot, to swap it to another box, to take it to the lab or to open it for measuring, the water hose is alway in the way. And removing the hose alway seems to end with a puddle of water on the floor. There is a sequence to prevent this:
+  # Close the faucet.
+  # Bend the hose upward, directly under the faucet, to prevent water from running down the hose and onto the floor.
+  # Loosen the hose on the faucet end, just a little bit, but enough for water to escape though the tread.
+  # Lift the PU above the level of the faucet.
+  # Loosen the hose on the PU end until water starts running out of the faucet side.
+  # While keeping the PU at above faucet level, detach the hose from the PU and put the PU aside.
+  # Finally, lift the hose as high as it goes, starting with the detached PU end, to let out the remaining water.
+In practice it's a little less cumbersome as it appears written down, but still it's a hassle. Especially when you need to do this often.<br>
+<br>
+Besides that, I have two boxes sharing the same faucet. When I detach the hose for one box, the closed faucet will disable the second box (or other appliance) from working. So I decided to solve this problem.
+
+= The Gardena quick connect system =
+
+The system is actually a garden watering hose system, well known here in Europe. It may be available in the US too. But here many other brands make compatible connectors, so I'm sure the connection system or at least something similar it available in the US as well.<br>
+<br>
+The European version of the CatGenie is fully compatible with the Gardena system; The thread on the water inlet and it's diameter are the same as used on faucets here.<br>
+http://catgenius.googlecode.com/svn/wiki/images/Gardena_male.jpg<br>
+<br>
+So a Gardena 36002 male connector with female thread, pictured above, directly fits the water inlet at the back of the processing unit. Compatible versions are available. Hozelock makes ugly orange versions, Karcher make nice brass versions. I picked Gardena because I thought the sleeve with the treat would be long enough to push the rear shell of the housing agains the water valve, keeping the PU closed without screws. But it doesn't so the brass Karcher version would have been nicer.<br>
+<br>
+Now here comes the disadvantage of the system, which probably applies to most of you: *Because the water inlet of the PU is a bit recessed, the space around it is very limited and the knurled sleeve doesn't provide much grip (especially when wet), it's nearly impossible to mount the male connector on the rear of the PU tightly enough for it not to leak*. Trust me, I thought it was tightly fitted, but when I came down to the garage in the morning, a whole night of dripping had filled the box to the rim. And if you do get it tight enough, using an adjustable pipe wrench, it's a drama to take it off again. And it needs to be removed to open the box, which I still do regularly.<br>
+<br>
+The solution to this problem is not for the faint of heart. It involves the rear shell of the PU and a large drill:<br>
+http://catgenius.googlecode.com/svn/wiki/images/Drill.JPG<br>
+If you haven't voided your warranty until now, this certainly will: Enlarge the water inlet hole until in generously fits the rim of the Gardena connector. But don't make it too large: On the inside of the rear shell, there's a rim around the hole. *A thin ring of this rim should remain* to make things fit nicely. So keep the drill in the middle of the hole; Drills this big tend to go one side, which may remove too much of the inner shell's rim.<br>
+<br>
+When you think the hole is big enough, attach the Gardena connector to the water inlet. Tighten it gently and put back the rear shell to see if it fits. If it fits, remove the rear shell again and tighten the Gardena connector further. While tightening, hold the water inlet/valve combination to prevent straining the plastic shrank it is mounted to. Be careful not to over-tighen the connector. The connector should have a rubber gasket inside, so it doesn't require to be tightened very hard.<br>
+http://catgenius.googlecode.com/svn/wiki/images/Gardena_inlet.JPG<br>
+At this point you may want to verify if the connector is mounted water-tight by attaching a pressurized hose and waiting for some time for leaks to appear. If there aren't any leaks, the PU can be closed again.<br>
+http://catgenius.googlecode.com/svn/wiki/images/Gardena_at_rear_shell.JPG<br>
+Now connect the hose, open the tap and your box is ready to be used again.<br>
+http://catgenius.googlecode.com/svn/wiki/images/Gardena_connected.JPG<br>
+The female connectors come in different types. I chose the Premium line, because I liked the alloy nut. I figured it needed to be extra reliable because of the indoor use, but it probably won't make any difference. More importantly, I choose an auto-stop version. This means that the water flow is blocked when it is not mated to it's male counter part, allowing me to disconnect the box without closing the faucet, leaving my second box operational and preventing a puddle of water on the floor.<br>
+<br>
+When disconnecting, some residual water may still come from the box side, but that's no more than a couple of drops.<br>
+http://catgenius.googlecode.com/svn/wiki/images/Gardena_disconnected.JPG<br>
+<br>
+One final but important remark: When reconnecting the hose under pressure, you have to fight the water pressure while pushing to connector onto the box. The shrank that holds the water valve/inlet in place may not be designed to take that much force. I haven't had any problems there yet, but being careful never hurts.
+
+= The faucet side =
+
+On the faucet side of the hose an auto-stop connector is not required because the tap must be closet before disconnecting the hose on that side anyway. One might consider use an auto-stop connector anyway, because some residual water may splash from the hose due to pressure relief.<br>
+http://catgenius.googlecode.com/svn/wiki/images/Gardena_at_faucet.JPG
