@@ -121,7 +121,7 @@ void startbutton_event (unsigned char up)
 			set_LED_Locked(0x55, 1);
 	} else {
 		start_button = 0;
-		if (!muteupevent) 
+		if (!muteupevent)
 			if (locked)
 				set_LED_Locked(0xFF, 1);
 			else

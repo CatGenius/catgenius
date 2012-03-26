@@ -302,7 +302,7 @@ void litterlanguage_pause (unsigned char pause)
 		timeoutnever(&timer_fill);
 		context.drain = timestampdiff(&timer_now, &timer_drain);
 		timeoutnever(&timer_drain);
-		context.autodose =  timestampdiff(&timer_now, &timer_autodose);
+		context.autodose = timestampdiff(&timer_now, &timer_autodose);
 		timeoutnever(&timer_autodose);
 	} else {
 		/* Restore timer context */
