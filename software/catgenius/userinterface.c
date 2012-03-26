@@ -9,10 +9,11 @@
 #include <htc.h>
 #include <stdio.h>
 
+#include "../common/hardware.h"		/* Flexible hardware configuration */
+
 #include "userinterface.h"
 #include "../common/timer.h"
 #include "../common/rtc.h"
-#include "../common/catgenie120.h"
 #include "litterlanguage.h"
 
 

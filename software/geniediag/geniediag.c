@@ -21,9 +21,9 @@
 /******************************************************************************/
 
 #ifdef __DEBUG
-__CONFIG(XT & WDTDIS & PWRTEN & BORDIS & LVPDIS & DUNPROT & WRTEN & DEBUGDIS & UNPROTECT);
+__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_ON & BOREN_OFF & LVP_OFF & CPD_OFF & WRT_OFF & DEBUG_OFF & CP_OFF);
 #else
-__CONFIG(XT & WDTEN  & PWRTEN & BOREN  & LVPDIS & DPROT   & WRTEN & DEBUGDIS & PROTECT);
+__CONFIG(FOSC_XT & WDTE_ON  & PWRTE_ON & BOREN_ON  & LVP_OFF & CPD_ON  & WRT_OFF & DEBUG_OFF & CP_ON);
 #endif
 
 
@@ -68,10 +68,10 @@ void main (void)
 	serial_init();
 
 	printf("\n*** GenieDiag ***\n");
-	if (!POR) {
+	if (!nPOR) {
 		DBG("Power-on reset\n");
 		flags |= POWER_FAILURE;
-	} else if (!BOR) {
+	} else if (!nBOR) {
 		DBG("Brown-out reset\n");
 		flags |= POWER_FAILURE;
 	}
@@ -86,11 +86,12 @@ void main (void)
 	else
 		DBG("Unknown reset\n");
 #endif /* __RESETBITS_ADDR */
-	POR = 1;
-	BOR = 1;
-	if (flags & START_BUTTON)
+	nPOR = 1;
+	nBOR = 1;
+
+	if (flags & START_BUTTON_HELD)
 		DBG("Start button held\n");
-	if (flags & SETUP_BUTTON)
+	if (flags & SETUP_BUTTON_HELD)
 		DBG("Setup button held\n");
 
 	/* Initialize software timers */
