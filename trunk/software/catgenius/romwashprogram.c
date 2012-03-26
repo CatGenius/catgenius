@@ -8,9 +8,10 @@
 /******************************************************************************/
 #include <htc.h>
 
+#include "../common/hardware.h"		/* Flexible hardware configuration */
+
 #include "romwashprogram.h"
 #include "litterlanguage.h"
-#include "../common/catgenie120.h"
 
 
 /******************************************************************************/

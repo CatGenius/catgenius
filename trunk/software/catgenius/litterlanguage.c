@@ -10,11 +10,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "../common/hardware.h"		/* Flexible hardware configuration */
+
 #include "litterlanguage.h"
 #include "romwashprogram.h"
 #include "../common/timer.h"
 #include "../common/rtc.h"
-#include "../common/catgenie120.h"
 
 
 /******************************************************************************/

@@ -3,11 +3,11 @@
  * files on different hardware platforms in the same repository.
  */
 #if defined HW_CATGENIE120
-#  include "catgenie120.h"
+#  include "../common/catgenie120.h"
 #elif defined HW_CARTRIDGEGENIUS_WS0
-#  include "cartridgegenius.h"
+#  include "../common/cartridgegenius.h"
 #elif defined HW_CARTRIDGEGENIUS_WS1
-#  include "cartridgegenius.h"
+#  include "../common/cartridgegenius.h"
 #else
    /*
     * If you get this error, you need to add either one of the above
