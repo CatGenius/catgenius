@@ -14,6 +14,7 @@
 #include "../common/timer.h"
 #include "../common/serial.h"
 #include "../common/catsensor.h"
+#include "../common/cmdline.h"
 #include "userinterface.h"
 
 /******************************************************************************/
@@ -36,20 +37,19 @@ extern bit		__powerdown;
 extern bit		__timeout;
 #endif /* __RESETBITS_ADDR */
 
+/* command line commands */
+const struct command	commands[] = {
+	{"echo", echo},
+	{"ports", dumpports},
+	{"", NULL}
+};
+
 static unsigned char	PORTB_old;
 
 
 /******************************************************************************/
 /* Local Prototypes							      */
 /******************************************************************************/
-
-static void dumpports(void)
-{
-	printf("TRISB = 0x%02X, PORTB = 0x%02X\n", TRISB, PORTB);
-	printf("TRISC = 0x%02X, PORTC = 0x%02X\n", TRISC, PORTC);
-	printf("TRISD = 0x%02X, PORTD = 0x%02X\n", TRISD, PORTD);
-	printf("TRISE = 0x%02X, PORTE = 0x%02X\n", TRISE, PORTE);
-}
 
 static void interrupt_init (void);
 
@@ -103,6 +103,9 @@ void main (void)
 	/* Initialize the user interface */
 	userinterface_init();
 
+	/* Initialize the command line interface */
+	cmdline_init();
+
 	/* Initialize interrupts */
 	interrupt_init();
 
@@ -111,25 +114,7 @@ void main (void)
 		catsensor_work();
 		catgenie_work();
 		userinterface_work();
-
-		while (RCIF) {
-			char rxd ;
-			if (OERR)
-			{
-				TXEN = 0;
-				TXEN = 1;
-				CREN = 0;
-				CREN = 1;
-			}
-			if (FERR)
-			{
-				rxd = RCREG;
-				TXEN = 0;
-				TXEN = 1;
-			} else
-				if (RCREG == '\n')
-					dumpports();
-		}
+		cmdline_work();
 #ifndef __DEBUG
 		CLRWDT();
 #endif
