@@ -29,33 +29,33 @@
 #define STATE_IDLE		0
 #define STATE_FETCH_START	1
 #define STATE_GET_START		2
-#define STATE_FETCH_CMD		3
-#define STATE_GET_CMD		4
-#define STATE_WAIT_CMD		5
+#define STATE_FETCH_INS		3
+#define STATE_GET_INS		4
+#define STATE_WAIT_INS		5
 
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
 
-static unsigned char	prg_source		= 0;
-static bit		wet_program		= 0;
-static bit		water_detected		= 0;
-static bit		overheat_detected	= 0;
-static bit		paused			= 0;
-static bit		error_fill		= 0;
-static bit		error_drain		= 0;
-static bit		error_flood		= 0;
-static bit		error_dryer		= 0;
+static unsigned char		prg_source		= 0;
+static bit			wet_program		= 0;
+static bit			water_detected		= 0;
+static bit			overheat_detected	= 0;
+static bit			paused			= 0;
+static bit			error_fill		= 0;
+static bit			error_drain		= 0;
+static bit			error_flood		= 0;
+static bit			error_dryer		= 0;
 
 /* Program execution variables */
-static unsigned char	cmd_state		= STATE_IDLE;
-static struct command	const * cmd_pointer	= 0;
-static struct command	cur_command;
+static unsigned char		ins_state		= STATE_IDLE;
+static struct instruction	const * ins_pointer	= 0;
+static struct instruction	cur_instruction;
 
-static struct timer	timer_waitcmd   	= NEVER;
-static struct timer	timer_fill      	= NEVER;
-static struct timer	timer_drain     	= NEVER;
-static struct timer	timer_autodose  	= NEVER;
+static struct timer		timer_waitins   	= NEVER;
+static struct timer		timer_fill      	= NEVER;
+static struct timer		timer_drain     	= NEVER;
+static struct timer		timer_autodose  	= NEVER;
 
 
 /******************************************************************************/
@@ -63,10 +63,10 @@ static struct timer	timer_autodose  	= NEVER;
 /******************************************************************************/
 
 static void		litterlanguage_cleanup (unsigned char wet);
-static void		req_command (struct command	const *command);
-static unsigned char	get_command (struct command	*command);
-static void		exe_command (void);
-static void		wait_command (void);
+static void		req_instruction (struct instruction	const *instruction);
+static unsigned char	get_instruction (struct instruction	*instruction);
+static void		exe_instruction (void);
+static void		wait_instruction (void);
 
 
 /******************************************************************************/
@@ -129,7 +129,7 @@ void litterlanguage_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if( (cmd_state != STATE_IDLE) &&
+	if( (ins_state != STATE_IDLE) &&
 	    !paused ){
 		/* Check for filling timeout */
 		if( !water_detected &&
@@ -168,61 +168,61 @@ void litterlanguage_work (void)
 		}
 	}
 
-	/* Check auto command timeouts */
+	/* Check auto instruction timeouts */
 	if (timeoutexpired(&timer_autodose)) {
 		timeoutnever(&timer_autodose);
 		set_Dosage(0);
 	}
 
-	switch (cmd_state) {
+	switch (ins_state) {
 	case STATE_IDLE:	/* Idle */
 		break;
 
-	case STATE_FETCH_START:	/* Fetch the start command*/
-		req_command(cmd_pointer);
-		cmd_state = STATE_GET_START;
+	case STATE_FETCH_START:	/* Fetch the start instruction */
+		req_instruction(ins_pointer);
+		ins_state = STATE_GET_START;
 		/* no break; */
 
-	case STATE_GET_START:	/* Wait for the start command to be fetched */
-		if (get_command(&cur_command)) {
+	case STATE_GET_START:	/* Wait for the start instruction to be fetched */
+		if (get_instruction(&cur_instruction)) {
 			printtime();
-			DBG("IP 0x%04X: ", cmd_pointer);
-			if (cur_command.cmd == CMD_START) {
-				DBG("CMD_START, %s", wet_program?"wet":"dry");
+			DBG("IP 0x%04X: ", ins_pointer);
+			if (cur_instruction.opcode == INS_START) {
+				DBG("INS_START, %s", wet_program?"wet":"dry");
 				/* Check if this is a valid program for us */
-				if( ((cur_command.arg & 0x00FF) <= CMD_END) &&
-				    ( (!wet_program && (cur_command.arg & FLAGS_DRYRUN)) ||
-				      (wet_program && (cur_command.arg & FLAGS_WETRUN)) ) ) {
+				if( ((cur_instruction.operant & 0x00FF) <= INS_END) &&
+				    ( (!wet_program && (cur_instruction.operant & FLAGS_DRYRUN)) ||
+				      (wet_program && (cur_instruction.operant & FLAGS_WETRUN)) ) ) {
 				      	if (eeprom_read(NVM_BOXSTATE) < BOX_MESSY)
 						eeprom_write(NVM_BOXSTATE, BOX_MESSY);
-					cmd_pointer++;
-					cmd_state = STATE_FETCH_CMD;
+					ins_pointer++;
+					ins_state = STATE_FETCH_INS;
 				} else {
-					cmd_state = STATE_IDLE;
+					ins_state = STATE_IDLE;
 					DBG(", incompatible");
 				}
 			} else {
-				cmd_state = STATE_IDLE;
-				DBG(", no start: 0x%X", cur_command.cmd);
+				ins_state = STATE_IDLE;
+				DBG(", no start: 0x%X", cur_instruction.opcode);
 			}
 			DBG("\n");
 		}
 		break;
 
-	case STATE_FETCH_CMD:	/* Fetch the next command*/
-		req_command(cmd_pointer);
-		cmd_state = STATE_GET_CMD;
+	case STATE_FETCH_INS:	/* Fetch the next instruction */
+		req_instruction(ins_pointer);
+		ins_state = STATE_GET_INS;
 		/* no break; */
 
-	case STATE_GET_CMD:	/* Wait for the start command to be fetched */
-		if (get_command(&cur_command)) {
-			/* Decode and execute the command */
-			exe_command();
+	case STATE_GET_INS:	/* Wait for the start instruction to be fetched */
+		if (get_instruction(&cur_instruction)) {
+			/* Decode and execute the instruction */
+			exe_instruction();
 		}
 		break;
 
-	case STATE_WAIT_CMD:	/* Wait for the command to finish */
-		wait_command();
+	case STATE_WAIT_INS:	/* Wait for the instruction to finish */
+		wait_instruction();
 		break;
 	}
 }
@@ -243,24 +243,24 @@ void litterlanguage_term (void)
 
 void litterlanguage_start (unsigned char wet)
 {
-	extern const struct command	washprogram[];
-	if (cmd_state == STATE_IDLE) {
+	extern const struct instruction	washprogram[];
+	if (ins_state == STATE_IDLE) {
 		/* TODO: Stack overflow if we're printing here */
 //		DBG("Starting %s program\n", wet?"wet":"dry");
 		switch (prg_source) {
 		case SRC_ROM:
-			cmd_pointer = &washprogram[0];
+			ins_pointer = &washprogram[0];
 			break;
 		}
 		wet_program = wet;
-		cmd_state = STATE_FETCH_START ;
+		ins_state = STATE_FETCH_START ;
 	}
 }
 
 
 unsigned char litterlanguage_running (void)
 {
-	return (cmd_state != STATE_IDLE);
+	return (ins_state != STATE_IDLE);
 }
 
 
@@ -297,8 +297,8 @@ void litterlanguage_pause (unsigned char pause)
 		/* We take a little shortcut here, not first checking timeoutexpired() and timeoutneverexpires()
 		 * Expired timer will result in negative difference, returning 0: settimeout(0) during restoring will repoduced a practically expired timer
 		 * Neverexpiring timer will result in huge difference, returning 0xFFFFFFFF: We will catch this during restoring */
-		context.wait = timestampdiff(&timer_now, &timer_waitcmd);
-		timeoutnever(&timer_waitcmd);
+		context.wait = timestampdiff(&timer_now, &timer_waitins);
+		timeoutnever(&timer_waitins);
 		context.fill = timestampdiff(&timer_now, &timer_fill);
 		timeoutnever(&timer_fill);
 		context.drain = timestampdiff(&timer_now, &timer_drain);
@@ -308,7 +308,7 @@ void litterlanguage_pause (unsigned char pause)
 	} else {
 		/* Restore timer context */
 		if (context.wait != 0xFFFFFFFF)
-			settimeout(&timer_waitcmd, context.wait);
+			settimeout(&timer_waitins, context.wait);
 		if (error_fill) {
 			error_fill = 0;
 			settimeout(&timer_fill, MAX_FILLTIME);
@@ -342,7 +342,7 @@ unsigned char litterlanguage_paused (void)
 
 void litterlanguage_stop (void)
 {
-	if (cmd_state != STATE_IDLE) {
+	if (ins_state != STATE_IDLE) {
 		/* TODO: Stack overflow if we're printing here */
 //		DBG("Stopping program\n");
 		/* Stop all actuators */
@@ -357,7 +357,7 @@ void litterlanguage_stop (void)
 		timeoutnever(&timer_drain);
 		timeoutnever(&timer_autodose);
 		/* Stop the state machine */
-		cmd_state = STATE_IDLE;
+		ins_state = STATE_IDLE;
 		/* Reset pause sate */
 		paused = 0;
 	}
@@ -376,7 +376,7 @@ void watersensor_event (unsigned char detected)
 
 	printtime();
 	DBG("Water %s\n", water_detected?"high":"low");
-	if (cmd_state != STATE_IDLE) {
+	if (ins_state != STATE_IDLE) {
 		/* Disable timeout on event */
 		if (water_detected) {
 			/* Turn off the water and disable the timeout */
@@ -416,56 +416,56 @@ void heatsensor_event (unsigned char detected)
 
 static void litterlanguage_cleanup (unsigned char wet)
 {
-	extern const struct command	cleanupprogram[];
-	if (cmd_state == STATE_IDLE) {
+	extern const struct instruction	cleanupprogram[];
+	if (ins_state == STATE_IDLE) {
 		prg_source = SRC_ROM;
-		cmd_pointer = &cleanupprogram[0];
+		ins_pointer = &cleanupprogram[0];
 		wet_program = wet;
-		cmd_state = STATE_FETCH_START ;
+		ins_state = STATE_FETCH_START ;
 	}
 }
 
 
-static void req_command (struct command const *command)
+static void req_instruction (struct instruction const *instruction)
 {
 	switch (prg_source) {
 	case SRC_ROM:
-		romwashprogram_reqcmd(command);
+		romwashprogram_reqins(instruction);
 	}
 }
 
-static unsigned char get_command (struct command *command)
+static unsigned char get_instruction (struct instruction *instruction)
 {
 	switch (prg_source) {
 	default:
 	case SRC_ROM:
-		return romwashprogram_getcmd(command);
+		return romwashprogram_getins(instruction);
 	}
 }
 
-static void exe_command (void)
+static void exe_instruction (void)
 {
-	static struct command	const * ret_address;
+	static struct instruction	const * ret_address;
 	unsigned int			temp;
 
-//	DBG("IP 0x%04X: ", cmd_pointer);
-	switch (cur_command.cmd) {
-	case CMD_BOWL:
-//		DBG("CMD_BOWL, %s", (cur_command.arg == BOWL_STOP)?"BOWL_STOP":((cur_command.arg == BOWL_CW)?"BOWL_CW":"BOWL_CCW"));
-		set_Bowl((unsigned char)cur_command.arg);
-		cmd_pointer++;
-		cmd_state = STATE_FETCH_CMD;
+//	DBG("IP 0x%04X: ", ins_pointer);
+	switch (cur_instruction.opcode) {
+	case INS_BOWL:
+//		DBG("INS_BOWL, %s", (cur_instruction.operant == BOWL_STOP)?"BOWL_STOP":((cur_instruction.operant == BOWL_CW)?"BOWL_CW":"BOWL_CCW"));
+		set_Bowl((unsigned char)cur_instruction.operant);
+		ins_pointer++;
+		ins_state = STATE_FETCH_INS;
 		break;
-	case CMD_ARM:
-//		DBG("CMD_ARM, %s", (cur_command.arg == ARM_STOP)?"ARM_STOP":((cur_command.arg == ARM_DOWN)?"ARM_DOWN":"ARM_UP"));
-		set_Arm((unsigned char)cur_command.arg);
-		cmd_pointer++;
-		cmd_state = STATE_FETCH_CMD;
+	case INS_ARM:
+//		DBG("INS_ARM, %s", (cur_instruction.operant == ARM_STOP)?"ARM_STOP":((cur_instruction.operant == ARM_DOWN)?"ARM_DOWN":"ARM_UP"));
+		set_Arm((unsigned char)cur_instruction.operant);
+		ins_pointer++;
+		ins_state = STATE_FETCH_INS;
 		break;
-	case CMD_WATER:
-//		DBG("CMD_WATER, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
+	case INS_WATER:
+//		DBG("INS_WATER, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
-			if (cur_command.arg) {
+			if (cur_instruction.operant) {
 			      	if (eeprom_read(NVM_BOXSTATE) < BOX_WET)
 					eeprom_write(NVM_BOXSTATE, BOX_WET);
 				/* Don't fill if water is detected already */
@@ -482,145 +482,145 @@ static void exe_command (void)
 				set_Water(0);
 				timeoutnever(&timer_fill);
 			}
-		cmd_pointer++;
-		cmd_state = STATE_FETCH_CMD;
+		ins_pointer++;
+		ins_state = STATE_FETCH_INS;
 		break;
-	case CMD_PUMP:
-//		DBG("CMD_PUMP, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
+	case INS_PUMP:
+//		DBG("INS_PUMP, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
 		if (wet_program) {
 			printtime();
 			DBG("Draining\n");
-			set_Pump((unsigned char)cur_command.arg);
+			set_Pump((unsigned char)cur_instruction.operant);
 		}
-		cmd_pointer++;
-		cmd_state = STATE_FETCH_CMD;
+		ins_pointer++;
+		ins_state = STATE_FETCH_INS;
 		break;
-	case CMD_DRYER:
-//		DBG("CMD_DRYER, %s%s", cur_command.arg?"on":"off", wet_program?"":" (nop)");
+	case INS_DRYER:
+//		DBG("INS_DRYER, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
-			set_Dryer((unsigned char)cur_command.arg);
-		cmd_pointer++;
-		cmd_state = STATE_FETCH_CMD;
+			set_Dryer((unsigned char)cur_instruction.operant);
+		ins_pointer++;
+		ins_state = STATE_FETCH_INS;
 		break;
-	case CMD_WAITTIME:
-//		DBG("CMD_WAITTIME, %ums", cur_command.arg);
-		settimeout( &timer_waitcmd,
-			    (unsigned long)cur_command.arg * MILISECOND );
-		cmd_state = STATE_WAIT_CMD;
+	case INS_WAITTIME:
+//		DBG("INS_WAITTIME, %ums", cur_instruction.operant);
+		settimeout( &timer_waitins,
+			    (unsigned long)cur_instruction.operant * MILISECOND );
+		ins_state = STATE_WAIT_INS;
 		break;
-	case CMD_WAITWATER:
-//		DBG("CMD_WAITWATER, %s%s", cur_command.arg?"high":"low", wet_program?"":" (nop)");
+	case INS_WAITWATER:
+//		DBG("INS_WAITWATER, %s%s", cur_instruction.operant?"high":"low", wet_program?"":" (nop)");
 		if (wet_program) {
-			if (!cur_command.arg)
+			if (!cur_instruction.operant)
 				/* Start the drain timeout, we don't want to wait forever */
 				settimeout(&timer_drain, MAX_DRAINTIME);
-			cmd_state = STATE_WAIT_CMD;
+			ins_state = STATE_WAIT_INS;
 		} else {
-			cmd_pointer++;
-			cmd_state = STATE_FETCH_CMD;
+			ins_pointer++;
+			ins_state = STATE_FETCH_INS;
 		}
 		break;
-	case CMD_WAITDOSAGE:
-//		DBG("CMD_WAITDOSAGE%s", wet_program?"":" (nop)");
+	case INS_WAITDOSAGE:
+//		DBG("INS_WAITDOSAGE%s", wet_program?"":" (nop)");
 		if (wet_program)
-			cmd_state = STATE_WAIT_CMD;
+			ins_state = STATE_WAIT_INS;
 		else {
-			cmd_pointer++;
-			cmd_state = STATE_FETCH_CMD;
+			ins_pointer++;
+			ins_state = STATE_FETCH_INS;
 		}
 		break;
-	case CMD_SKIPIFDRY:
-//		DBG("CMD_SKIPIFDRY, %u%s", cur_command.arg, wet_program?" (nop)":"");
+	case INS_SKIPIFDRY:
+//		DBG("INS_SKIPIFDRY, %u%s", cur_instruction.operant, wet_program?" (nop)":"");
 		if (!wet_program)
-			cmd_pointer += cur_command.arg + 1;
+			ins_pointer += cur_instruction.operant + 1;
 		else
-			cmd_pointer++;
-		cmd_state = STATE_FETCH_CMD;
+			ins_pointer++;
+		ins_state = STATE_FETCH_INS;
 		break;
-	case CMD_SKIPIFWET:
-//		DBG("CMD_SKIPIFWET, %u%s", cur_command.arg, wet_program?"":" (nop)");
+	case INS_SKIPIFWET:
+//		DBG("INS_SKIPIFWET, %u%s", cur_instruction.operant, wet_program?"":" (nop)");
 		if (wet_program)
-			cmd_pointer += cur_command.arg + 1;
+			ins_pointer += cur_instruction.operant + 1;
 		else
-			cmd_pointer++;
-		cmd_state = STATE_FETCH_CMD;
+			ins_pointer++;
+		ins_state = STATE_FETCH_INS;
 		break;
-	case CMD_AUTODOSE:
-//		DBG("CMD_AUTODOSE, %u.%uml%s", cur_command.arg/10, cur_command.arg%10, wet_program?"":" (nop)");
+	case INS_AUTODOSE:
+//		DBG("INS_AUTODOSE, %u.%uml%s", cur_instruction.operant/10, cur_instruction.operant%10, wet_program?"":" (nop)");
 		if (wet_program) {
 			settimeout(&timer_autodose,
-				   (unsigned long)cur_command.arg * SECOND * (DOSAGE_SECONDS_PER_ML / 10));
+				   (unsigned long)cur_instruction.operant * SECOND * (DOSAGE_SECONDS_PER_ML / 10));
 			set_Dosage(1);
 		}
-		cmd_pointer++;
-		cmd_state = STATE_FETCH_CMD;
+		ins_pointer++;
+		ins_state = STATE_FETCH_INS;
 		break;
-	case CMD_CALL:
-//		DBG("CMD_CALL, 0x%04X", cur_command.arg);
-		ret_address = cmd_pointer + 1;
+	case INS_CALL:
+//		DBG("INS_CALL, 0x%04X", cur_instruction.operant);
+		ret_address = ins_pointer + 1;
 		/* DIRTY HACK: Set highest bit, which seems to get lost due to compiler limitation */
-		temp = 0x8000 | cur_command.arg;
+		temp = 0x8000 | cur_instruction.operant;
 		/* HACK: memcpy instead of casting to work around compiler limitation */
-		memcpy(&cmd_pointer, &temp, sizeof(cmd_pointer));
-		cmd_state = STATE_FETCH_CMD;
+		memcpy(&ins_pointer, &temp, sizeof(ins_pointer));
+		ins_state = STATE_FETCH_INS;
 		break;
-	case CMD_RETURN:
-//		DBG("CMD_RETURN, 0x%04X", ret_address);
-		cmd_pointer = ret_address;
-		cmd_state = STATE_FETCH_CMD;
+	case INS_RETURN:
+//		DBG("INS_RETURN, 0x%04X", ret_address);
+		ins_pointer = ret_address;
+		ins_state = STATE_FETCH_INS;
 		break;
-	case CMD_END:
+	case INS_END:
 		printtime();
-		DBG("CMD_END\n");
+		DBG("INS_END\n");
 		eeprom_write(NVM_BOXSTATE, BOX_TIDY);
 		litterlanguage_stop();
 		break;
-	case CMD_START:
-//		DBG("CMD_START, unexpected");
+	case INS_START:
+//		DBG("INS_START, unexpected");
 		litterlanguage_stop();
 		break;
 	default:
 		/* Program error */
-//		DBG("CMD_unknown: 0x%X", cur_command.arg);
+//		DBG("INS_unknown: 0x%X", cur_instruction.operant);
 		litterlanguage_stop();
 		break;
 	}
 //	DBG("\n");
 }
 
-static void wait_command (void)
+static void wait_instruction (void)
 {
-	switch (cur_command.cmd) {
-	case CMD_WAITTIME:
-		if (timeoutexpired(&timer_waitcmd)) {
-			cmd_pointer++;
-			cmd_state = STATE_FETCH_CMD;
+	switch (cur_instruction.opcode) {
+	case INS_WAITTIME:
+		if (timeoutexpired(&timer_waitins)) {
+			ins_pointer++;
+			ins_state = STATE_FETCH_INS;
 		}
 		break;
-	case CMD_WAITWATER:
-		if (cur_command.arg) {
+	case INS_WAITWATER:
+		if (cur_instruction.operant) {
 			if (water_detected) {
-				cmd_pointer++;
-				cmd_state = STATE_FETCH_CMD;
+				ins_pointer++;
+				ins_state = STATE_FETCH_INS;
 			}
 		} else {
 			if (!water_detected) {
 				/* Disable the timeout */
 				timeoutnever(&timer_drain);
-				cmd_pointer++;
-				cmd_state = STATE_FETCH_CMD;
+				ins_pointer++;
+				ins_state = STATE_FETCH_INS;
 			}
 		}
 		break;
-	case CMD_WAITDOSAGE:
+	case INS_WAITDOSAGE:
 		if (!get_Dosage()) {
-			cmd_pointer++;
-			cmd_state = STATE_FETCH_CMD;
+			ins_pointer++;
+			ins_state = STATE_FETCH_INS;
 		}
 		break;
 	default:
-		cmd_pointer++;
-		cmd_state = STATE_FETCH_CMD;
+		ins_pointer++;
+		ins_state = STATE_FETCH_INS;
 		break;
 	}
 }
