@@ -358,7 +358,7 @@ void litterlanguage_stop (void)
 		timeoutnever(&timer_autodose);
 		/* Stop the state machine */
 		ins_state = STATE_IDLE;
-		/* Reset pause sate */
+		/* Reset pause state */
 		paused = 0;
 	}
 }
