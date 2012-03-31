@@ -54,7 +54,7 @@ void i2c_init (void)
 	CKE = 1;	/* Use I2C levels TODO: Why? Worked also with '0' */
 	SMP = 1;	/* Disable slew rate control TODO: Why? Worked also with '0' */
 
-	PSPIF=0;	/* Clear I2C interrupt flag */
+	SSPIF=0;	/* Clear I2C interrupt flag */
 	BCLIF=0;	/* Clear collision interrupt flag */
 }
 /* End: i2c_init */
