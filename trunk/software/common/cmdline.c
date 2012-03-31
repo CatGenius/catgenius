@@ -11,20 +11,21 @@
 #include <string.h>
 
 #include "cmdline.h"
+#include "serial.h"
+
 
 /******************************************************************************/
 /* Macros								      */
 /******************************************************************************/
 
 #define PROMPT		"# "
-#define BUFFER_MAX	16
 
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
 
 extern const struct command	commands[];
-static char			linebuffer[BUFFER_MAX];
+static char			linebuffer[LINEBUFFER_MAX];
 static char			localecho = 1;
 
 
@@ -63,19 +64,10 @@ void cmdline_work (void)
 /*		- Ported from other project.				      */
 /******************************************************************************/
 {
-	if (RCIF) {
-		char rxd ;
-		if ((OERR) || (FERR)) {
-			TXEN = 0;
-			CREN = 0;
-			rxd = RCREG;
-			CREN = 1;
-			TXEN = 1;
-		} else {
-			rxd = RCREG;
-			proc_char(rxd);
-		}
-	}
+	char rxd ;
+
+	while (readch(&rxd))
+		proc_char(rxd);
 }
 /* End: cmdline_work */
 
@@ -101,7 +93,7 @@ static void proc_char (char rxd)
 	static char curcolumn = 0;
 
 	if ((rxd >= ' ') && (rxd <= '~')) {
-		if (curcolumn < (BUFFER_MAX-1)) {
+		if (curcolumn < (LINEBUFFER_MAX-1)) {
 			/* Add readable characters to the line as long as the buffer permits */
 			linebuffer[curcolumn] = rxd;
 			curcolumn++;
@@ -186,9 +178,9 @@ static int cmd2index(char *cmd)
 int echo(char *args)
 {
 	if (strlen(args)) {
-		if (!strncmp (args, "on", BUFFER_MAX))
+		if (!strncmp (args, "on", LINEBUFFER_MAX))
 			localecho = 1;
-		else if (!strncmp (args, "off", BUFFER_MAX))
+		else if (!strncmp (args, "off", LINEBUFFER_MAX))
 			localecho = 0;
 		else
 			/* Syntax error */

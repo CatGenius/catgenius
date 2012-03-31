@@ -107,15 +107,27 @@ void putch(unsigned char c)
 	__delay_us(600);
 }
 
-//gets a character from the serial port without timeout
-unsigned char getch(void)
+unsigned char readch(char *ch)
 {
-	while(!RCIF)
-	{
-		CLRWDT();
-		clear_usart_errors_inline;
+	if (!RCIF)
+		return (0);
+
+	if (OERR) {
+		TXEN = 0;
+		TXEN = 1;
+		CREN = 0;
+		CREN = 1;
+		return (0);
 	}
-	return RCREG;
+	if (FERR) {
+		*ch  = RCREG;
+		TXEN = 0;
+		TXEN = 1;
+		return (0);
+	}
+
+	*ch  = RCREG;
+	return (1);
 }
 
 unsigned char getch_timeout(void)
