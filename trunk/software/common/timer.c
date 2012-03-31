@@ -50,7 +50,13 @@ void timer_init (void)
 	 * Initialize timer 1
 	 */
 	/* Select Fosc/4 as source */
+#if (defined HW_CATGENIE120)
 	TMR1CS = 0;
+#elif (defined HW_CATGENIE120PLUS)
+	/* TODO: Why doesn't TMR1CS work? */
+	TMR1CS0 = 0;
+	TMR1CS1 = 0;
+#endif
 	/* Set prescaler to 1:8 */
 	T1CKPS1 = 1;
 	T1CKPS0 = 1;

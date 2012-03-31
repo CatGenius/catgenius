@@ -21,10 +21,20 @@
 /* Macros								      */
 /******************************************************************************/
 
-#ifdef __DEBUG
-__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_ON & BOREN_OFF & LVP_OFF & CPD_OFF & WRT_OFF & DEBUG_OFF & CP_OFF);
-#else
-__CONFIG(FOSC_XT & WDTE_ON  & PWRTE_ON & BOREN_ON  & LVP_OFF & CPD_ON  & WRT_OFF & DEBUG_OFF & CP_ON);
+#if (defined HW_CATGENIE120)
+#  ifdef __DEBUG
+	__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_ON & BOREN_OFF & LVP_OFF & CPD_OFF & WRT_OFF & DEBUG_OFF & CP_OFF);
+#  else
+	__CONFIG(FOSC_XT & WDTE_ON  & PWRTE_ON & BOREN_ON  & LVP_OFF & CPD_ON  & WRT_OFF & DEBUG_OFF & CP_ON);
+#  endif
+#elif (defined HW_CATGENIE120PLUS)
+#  ifdef __DEBUG
+	__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_ON & MCLRE_ON & CP_OFF & CPD_OFF & BOREN_OFF & CLKOUTEN_OFF & IESO_OFF & FCMEN_OFF);
+	__CONFIG(WRT_OFF & /* VCAPEN_OFF &*/ PLLEN_OFF & STVREN_ON & BORV_HI & LVP_OFF);
+#  else
+	__CONFIG(FOSC_XT & WDTE_ON  & PWRTE_ON & MCLRE_ON & CP_ON  & CPD_ON  & BOREN_ON  & CLKOUTEN_OFF & IESO_OFF & FCMEN_OFF);
+	__CONFIG(WRT_OFF & /* VCAPEN_OFF &*/ PLLEN_OFF & STVREN_ON & BORV_HI & LVP_OFF);
+#  endif
 #endif
 
 
@@ -156,11 +166,20 @@ static void interrupt isr (void)
 		catsensor_isr_timer();
 	}
 	/* Port B interrupt */
+#if (defined HW_CATGENIE120)
 	if (RBIF) {
-		/* Reset interrupt */
-		RBIF = 0;
+#elif (defined HW_CATGENIE120PLUS)
+	if (IOCIF) {
+#endif
 		/* Detected changes */
 		temp = PORTB ^ PORTB_old;
+		/* Reset interrupt */
+#if (defined HW_CATGENIE120)
+		RBIF = 0;
+#elif (defined HW_CATGENIE120PLUS)
+		IOCBF = 0;
+		IOCIF = 0;
+#endif
 		/* Handle interrupt */
 		if (temp & CATSENSOR_MASK)
 			catsensor_isr_input();
