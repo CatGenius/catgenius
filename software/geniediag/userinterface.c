@@ -34,6 +34,11 @@
 
 static struct timer	holdtimeout	= NEVER;
 
+/* Event statuses */
+bit			cat_detected	= 0;
+bit			water_low	= 0;
+bit			overheated	= 0;
+
 /* Keyboard status bits */
 static bit		muteupevent	= 0;
 static bit		locked		= 0;
@@ -204,9 +209,11 @@ void catsensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	DBG("Cat %s\n", detected?"in":"out");
+	cat_detected = detected;
 
-	if (detected)
+	DBG("Cat: %s\n", cat_detected?"in":"out");
+
+	if (cat_detected)
 		set_LED_Cat(0xFF, 1);
 	else
 		set_LED_Cat(0x00, 1);
@@ -222,9 +229,11 @@ void watersensor_event (unsigned char undetected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	DBG("Water %s\n", undetected?"low":"high");
+	water_low = undetected;
 
-	if (!undetected)
+	DBG("Water: %s\n", water_low?"low":"high");
+
+	if (!water_low)
 		set_LED_Error(0xFF, 1);
 	else
 		set_LED_Error(0x00, 1);
@@ -240,7 +249,9 @@ void heatsensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	DBG("Overheat %s\n", detected?"yes":"no");
+	overheated = detected;
+
+	DBG("Overheat: %s\n", overheated?"yes":"no");
 }
 /* heatsensor_event */
 
