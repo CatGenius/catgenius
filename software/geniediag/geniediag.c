@@ -13,8 +13,10 @@
 
 #include "../common/timer.h"
 #include "../common/serial.h"
+#include "../common/i2c.h"
 #include "../common/catsensor.h"
 #include "../common/cmdline.h"
+#include "../common/cmdline_tag.h"
 #include "../common/cmdline_box.h"
 #include "userinterface.h"
 
@@ -61,6 +63,7 @@ const struct command	commands[] = {
 	{"cat", cat},
 	{"water", water},
 	{"heat", heat},
+	{"tag", tag},
 	{"", NULL}
 };
 
@@ -116,6 +119,9 @@ void main (void)
 
 	/* Initialize software timers */
 	timer_init();
+
+	/* Initialize the I2C bus */
+	i2c_init();
 
 	/* Initialize the cat sensor */
 	catsensor_init();
