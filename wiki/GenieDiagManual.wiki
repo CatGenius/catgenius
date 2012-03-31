@@ -17,3 +17,56 @@ Please note that selecting another test will not stop the currently test. So you
 When testing the water valve, the water will go in protection when the maximum level is reached, but the test will not be turned off. If you don't turn it off by pressing the start button again, and the water gets below the maximum, the protection will go off and the water will start running again.<br>
 <br>
 The Cat LED will indicates when the cat detector sees something. The Error LED will indicates if water is detected.
+
+= Serial port =
+
+GenieDiag offers a command line interface on the serial port of the CatGenie box. The serial parameters are as follows:
+  * 19200 b/s bit rate
+  * 8 data bits
+  * No parity
+  * 1 stop bit
+  * No local echo
+When powering up your box with GenieDiag installed, it will present itself with a prompt, inviting you to type a command:
+{{{
+*** GenieDiag ***
+Power-on reset
+#
+}}}
+The command set offers commands to fully control your box. With these commands, you could in theory run your own washing program from a PC, sending these commands to GenieDiag. To make communication easier for a PC (yet more difficult for a person), you can turn remote echo off, using the echo command:
+{{{
+# echo
+Echo: on
+# echo off
+Echo: off
+}}}
+As shown above, most commands can be used to request the current state if no argument is given.
+
+== Box control commands ==
+  * *bowl*, shows the status of the bowl
+  * *bowl cw*, starts turning the bowl in clockwise direction
+  * *bowl ccw*, starts turning the bowl in counter-clockwise direction
+  * *bowl stop*, stops the bowl from turning
+  * *arm*, shows the status of the arm
+  * *arm down*, starts moving the arm down
+  * *arm up*, starts moving the arm up
+  * *arm stop*, stops moving the arm
+  * *dosage*, shows that status of the dosage pump
+  * *dosage on*, switches on the dosage pump
+  * *dosage off*, switches off the dosage pump
+  * *tap*, shows the status of the water tap
+  * *tap on*, turns on the water tap (until water is detected)
+  * *tap off*, turns off the water tap
+  * *drain*, shows the status of the drain pump
+  * *drain on*, turns on the drain pump (don't let it run for longer than 60 seconds or it will overheat)
+  * *drain off*, turns off the drain pump
+  * *dryer*, shows the status of the dryer
+  * *dryer on*, turns on the dryer
+  * *dryer off*, turns off the dryer
+  * *cat*, queries the cat sensor status
+  * *water*, queries the water sensor status
+  * *heat*, queries the dryer overheat detector status
+Both cat sensor, water sensor and overheat detector state changes are reported as they occur, without the need to query them.
+
+== Cartridge tag reader commands ==
+  * *tag uid*, reports the chip's Unique ID
+  * *tag dump*, dumps all cartridge chip contents, including the Unique ID
