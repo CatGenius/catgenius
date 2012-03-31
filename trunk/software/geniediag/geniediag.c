@@ -15,6 +15,7 @@
 #include "../common/serial.h"
 #include "../common/catsensor.h"
 #include "../common/cmdline.h"
+#include "../common/cmdline_box.h"
 #include "userinterface.h"
 
 /******************************************************************************/
@@ -51,6 +52,15 @@ extern bit		__timeout;
 const struct command	commands[] = {
 	{"echo", echo},
 	{"ports", dumpports},
+	{"bowl", bowl},
+	{"arm", arm},
+	{"dosage", dosage},
+	{"tap", tap},
+	{"drain", drain},
+	{"dryer", dryer},
+	{"cat", cat},
+	{"water", water},
+	{"heat", heat},
 	{"", NULL}
 };
 
