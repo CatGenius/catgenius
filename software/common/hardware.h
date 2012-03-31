@@ -4,6 +4,8 @@
  */
 #if defined HW_CATGENIE120
 #  include "../common/catgenie120.h"
+#elif defined HW_CATGENIE120PLUS
+#  include "../common/catgenie120.h"
 #elif defined HW_CARTRIDGEGENIUS_WS0
 #  include "../common/cartridgegenius.h"
 #elif defined HW_CARTRIDGEGENIUS_WS1

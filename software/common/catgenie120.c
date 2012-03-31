@@ -120,11 +120,39 @@ unsigned char catgenie_init (void)
 		NOT_USED_4_MASK  ;	/* PGM Data */
 	PORTB = 0x00;
 	/* Turn on internal weak pull-up resitors on inputs */
+#if (defined HW_CATGENIE120)
 	nRBPU = 0;
+#elif (defined HW_CATGENIE120PLUS)
+	WPUB = STARTBUTTON_MASK |
+	       SETUPBUTTON_MASK |
+	       CATSENSOR_MASK |
+	       WATERSENSOR_MASK |
+	       HEATSENSOR_MASK;
+#endif
 	/* Clear the interrupt status */
+#if (defined HW_CATGENIE120)
 	RBIF = 0;
+#elif (defined HW_CATGENIE120PLUS)
+	/* Enable both rising- and falling-edge detection */
+	IOCBP = STARTBUTTON_MASK |
+		SETUPBUTTON_MASK |
+		CATSENSOR_MASK |
+		WATERSENSOR_MASK |
+		HEATSENSOR_MASK;
+	IOCBN = STARTBUTTON_MASK |
+		SETUPBUTTON_MASK |
+		CATSENSOR_MASK |
+		WATERSENSOR_MASK |
+		HEATSENSOR_MASK;
+	IOCBF = 0;
+	IOCIF = 0;
+#endif
 	/* Enable interrupts */
+#if (defined HW_CATGENIE120)
 	RBIE = 1;
+#elif (defined HW_CATGENIE120PLUS)
+	IOCIE = 1;
+#endif
 
 	PORTB_old = STARTBUTTON_MASK |
 		    SETUPBUTTON_MASK |
