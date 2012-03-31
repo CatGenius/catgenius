@@ -8,7 +8,8 @@
 #ifndef CMDLINE_H			/* Include file already compiled? */
 #define CMDLINE_H
 
-#define COMMAND_MAX	8
+#define LINEBUFFER_MAX	16	/* Maximum length of a complete command line */
+#define COMMAND_MAX	8	/* Maximum length of a command name */
 
 struct command {
 	char	cmd[COMMAND_MAX];
@@ -23,6 +24,5 @@ void		cmdline_term		(void) ;
 /* Command implementations */
 int		echo			(char	*args) ;
 int		dumpports		(char	*args) ;
-int		tag			(char	*args) ;
 
 #endif /* CMDLINE_H */

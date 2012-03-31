@@ -3,7 +3,7 @@
 
 void serial_init(void);
 void putch(unsigned char c);
-unsigned char getch(void);
+unsigned char readch(char *ch);
 void putst(register const char * str);
 unsigned char usart_timeout(void);
 void putchdec(unsigned char c);
