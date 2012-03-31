@@ -57,7 +57,7 @@ void timer_init (void)
 	/* Disable timer 1 external oscillator */
 	T1OSCEN = 0;
 	/* Disable synchronized clock */
-	T1SYNC = 0;
+	nT1SYNC = 1;
 	/* Switch on timer 1 */
 	TMR1ON = 1;
 	/* Enable timer 1 interrupt */
