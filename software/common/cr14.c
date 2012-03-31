@@ -207,6 +207,8 @@ unsigned char cr14_readframe(unsigned char *frame_ptr, unsigned char *frame_len)
 	goto stop;
 
 nack:
+	*frame_len = 0;
+
 	/* Dummy read, just to nack */
 	i2c_read(0, 0);
 
