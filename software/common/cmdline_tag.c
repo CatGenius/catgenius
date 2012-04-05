@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "hardware.h"			/* Flexible hardware configuration */
+
 #include "cmdline.h"
 #include "cr14.h"
 
@@ -111,6 +113,7 @@ static int tag_init(void)
 			printf("Unable to get ID\n");
 			return (-1);
 		}
+		__delay_us(100);
 	}
 	if (length != 1) {
 		printf("No tag detected\n");
@@ -135,6 +138,7 @@ static int tag_init(void)
 			printf("Unable to read ID response\n");
 			return (-1);
 		}
+		__delay_us(100);
 	}
 	if ((length != 1) || (frame[0] != id)) {
 		printf("Tag interference\n");
@@ -166,6 +170,7 @@ static void tag_print_uid(void)
 			printf("Unable to read UID\n");
 			return;
 		}
+		__delay_us(100);
 	}
 	if (length != 8) {
 		printf("Invalid UID\n");
@@ -189,7 +194,7 @@ static void tag_print_block(char block)
 	unsigned char	length;
 	unsigned char	retries;
 
-	/* Request the unique ID */
+	/* Request a block */
 	frame[0] = 0x08;	/* Command 0x08 */
 	frame[1] = block;
 	if (cr14_writeframe(frame, 2)) {
@@ -205,6 +210,7 @@ static void tag_print_block(char block)
 			printf("Unable to read block\n");
 			return;
 		}
+		__delay_us(100);
 	}
 	if (length != 4) {
 		/* No error if no data */
