@@ -137,6 +137,10 @@ static void proc_line (char *line)
 	char *arg;
 	int index;
 
+	/* Trim trailing spaces */
+	while (line[strlen(line)-1] == ' ')
+		line[strlen(line)-1] = 0;
+
 	/* Skip heading spaces */
 	while (*cmd == ' ')
 		cmd ++;

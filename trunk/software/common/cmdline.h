@@ -8,7 +8,7 @@
 #ifndef CMDLINE_H			/* Include file already compiled? */
 #define CMDLINE_H
 
-#define LINEBUFFER_MAX	16	/* Maximum length of a complete command line */
+#define LINEBUFFER_MAX	22	/* Maximum length of a complete command line */
 #define COMMAND_MAX	8	/* Maximum length of a command name */
 
 struct command {
