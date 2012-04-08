@@ -98,6 +98,11 @@ unsigned char catgenie_init (void)
 {
 	unsigned char	temp ;
 
+#if (defined HW_CATGENIE120PLUS)
+	/* Enable internal pull-ups globally */
+	nWPUEN = 0;
+#endif
+
 	/*
 	 * Setup port A
 	 */
@@ -107,6 +112,10 @@ unsigned char catgenie_init (void)
 	PORTA = 0x00;
 	/* Disable ADC */
 	ADCON1 = 0x07;
+#if (defined HW_CATGENIE120PLUS)
+	/* Select digital function */
+	ANSELA = 0;
+#endif
 
 	/*
 	 * Setup port B
@@ -123,27 +132,18 @@ unsigned char catgenie_init (void)
 #if (defined HW_CATGENIE120)
 	nRBPU = 0;
 #elif (defined HW_CATGENIE120PLUS)
-	WPUB = STARTBUTTON_MASK |
-	       SETUPBUTTON_MASK |
-	       CATSENSOR_MASK |
-	       WATERSENSOR_MASK |
-	       HEATSENSOR_MASK;
+	/* Select digital function */
+	ANSELB = 0;
+	/* Enable all individual pull-ups */
+	WPUB = 0xFF;
 #endif
 	/* Clear the interrupt status */
 #if (defined HW_CATGENIE120)
 	RBIF = 0;
 #elif (defined HW_CATGENIE120PLUS)
 	/* Enable both rising- and falling-edge detection */
-	IOCBP = STARTBUTTON_MASK |
-		SETUPBUTTON_MASK |
-		CATSENSOR_MASK |
-		WATERSENSOR_MASK |
-		HEATSENSOR_MASK;
-	IOCBN = STARTBUTTON_MASK |
-		SETUPBUTTON_MASK |
-		CATSENSOR_MASK |
-		WATERSENSOR_MASK |
-		HEATSENSOR_MASK;
+	IOCBP = CATSENSOR_MASK;
+	IOCBN = CATSENSOR_MASK;
 	IOCBF = 0;
 	IOCIF = 0;
 #endif
@@ -172,12 +172,21 @@ unsigned char catgenie_init (void)
 	 */
 	TRISD = 0;
 	PORTD = WATERSENSORPULLUP_MASK;	/* Activate water sensor pull-up resistor */
+#if (defined HW_CATGENIE120PLUS)
+	/* Select digital function */
+	ANSELD = 0;
+#endif
 
 	/*
 	 * Setup port E
 	 */
 	TRISE = 0x00;			/* All outputs */
 	PORTE = 0x00;
+#if (defined HW_CATGENIE120PLUS)
+	ANSELE = 0;
+	/* Disable all indifidual pull-ups */
+	WPUE = 0x00;
+#endif
 
 	/* Delay to settle ports */
 	__delay_ms(100);
