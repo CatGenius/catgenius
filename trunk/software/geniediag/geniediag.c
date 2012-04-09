@@ -15,6 +15,7 @@
 #include "../common/serial.h"
 #include "../common/i2c.h"
 #include "../common/catsensor.h"
+#include "../common/watersensor.h"
 #include "../common/cmdline.h"
 #include "../common/cmdline_tag.h"
 #include "../common/cmdline_box.h"
@@ -32,7 +33,7 @@
 #  endif
 #elif (defined HW_CATGENIE120PLUS)
 #  ifdef __DEBUG
-	__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_ON & MCLRE_ON & CP_OFF & CPD_OFF & BOREN_OFF & CLKOUTEN_OFF & IESO_OFF & FCMEN_OFF);
+	__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_OFF & MCLRE_ON & CP_OFF & CPD_OFF & BOREN_OFF & CLKOUTEN_OFF & IESO_OFF & FCMEN_OFF);
 	__CONFIG(WRT_OFF & /* VCAPEN_OFF &*/ PLLEN_OFF & STVREN_ON & BORV_HI & LVP_OFF);
 #  else
 	__CONFIG(FOSC_XT & WDTE_ON  & PWRTE_ON & MCLRE_ON & CP_ON  & CPD_ON  & BOREN_ON  & CLKOUTEN_OFF & IESO_OFF & FCMEN_OFF);
@@ -50,6 +51,10 @@ extern bit		__powerdown;
 extern bit		__timeout;
 #endif /* __RESETBITS_ADDR */
 
+static int start (char *args);
+static int setup (char *args);
+static int lock (char *args);
+
 /* command line commands */
 const struct command	commands[] = {
 	{"echo", echo},
@@ -63,6 +68,9 @@ const struct command	commands[] = {
 	{"cat", cat},
 	{"water", water},
 	{"heat", heat},
+	{"start", start},
+	{"setup", setup},
+	{"lock", lock},
 	{"tag", tag},
 	{"", NULL}
 };
@@ -126,6 +134,9 @@ void main (void)
 	/* Initialize the cat sensor */
 	catsensor_init();
 
+	/* Initialize the cat sensor */
+	watersensor_init();
+
 	/* Initialize the user interface */
 	userinterface_init();
 
@@ -138,6 +149,7 @@ void main (void)
 	/* Execute the run loop */
 	for(;;){
 		catsensor_work();
+		watersensor_work();
 		catgenie_work();
 		userinterface_work();
 		cmdline_work();
@@ -202,4 +214,25 @@ static void interrupt isr (void)
 		/* Update the old status */
 		PORTB_old = PORTB ;
 	}
+}
+
+
+static int start (char *args)
+{
+	start_short();
+	return (0);
+}
+
+
+static int setup (char *args)
+{
+	setup_short();
+	return (0);
+}
+
+
+static int lock (char *args)
+{
+	both_long();
+	return (0);
 }

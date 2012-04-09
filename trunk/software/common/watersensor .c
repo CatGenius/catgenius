@@ -121,6 +121,13 @@ void watersensor_term (void)
 /* End: watersensor_term */
 
 
+unsigned char watersensor_det (void)
+{
+	return (water_detected);
+}
+/* End: watersensor_det */
+
+
 /******************************************************************************/
 /* Local Implementations						      */
 /******************************************************************************/

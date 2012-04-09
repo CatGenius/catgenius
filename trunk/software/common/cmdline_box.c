@@ -12,6 +12,7 @@
 
 #include "../common/hardware.h"		/* Flexible hardware configuration */
 
+#include "../common/watersensor.h"
 #include "cmdline.h"
 
 
@@ -26,7 +27,6 @@
 
 /* Event statuses */
 extern bit	cat_detected;
-extern bit	water_low;
 extern bit	overheated;
 
 /******************************************************************************/
@@ -216,7 +216,7 @@ int water (char *args)
 		/* Syntax error */
 		return (-1);
 
-	printf("Water: %s\n", water_low?"low":"high");
+	printf("Water: %s\n", watersensor_det()?"high":"low");
 
 	return (result);
 }

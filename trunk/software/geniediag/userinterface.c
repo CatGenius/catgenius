@@ -36,7 +36,6 @@ static struct timer	holdtimeout	= NEVER;
 
 /* Event statuses */
 bit			cat_detected	= 0;
-bit			water_low	= 0;
 bit			overheated	= 0;
 
 /* Keyboard status bits */
@@ -57,13 +56,6 @@ static unsigned char	water		= 0;
 /******************************************************************************/
 /* Local Prototypes							      */
 /******************************************************************************/
-
-static void	setup_short		(void);
-static void	setup_long		(void);
-static void	start_short		(void);
-static void	start_long		(void);
-static void	both_short		(void);
-static void	both_long		(void);
 
 
 /******************************************************************************/
@@ -126,29 +118,32 @@ void startbutton_event (unsigned char up)
 			set_LED_Locked(0x55, 1);
 	} else {
 		start_button = 0;
-		if (!muteupevent)
+		if (!muteupevent) {
 			if (locked)
 				set_LED_Locked(0xFF, 1);
-			else
+			else {
 				if (timeoutexpired(&holdtimeout))
 					/* Handle long press up */
 					start_long();
 				else
 					/* Handle short press up */
 					start_short();
-		else
+			}
+		} else {
 			if (!setup_button) {
 				if (timeoutexpired(&holdtimeout))
 					/* Handle long both press up */
 					both_long();
-				else
+				else {
 					/* Handle short both press up */
 					if (locked)
 						set_LED_Locked(0xFF, 1);
 					else
 						both_short();
+				}
 				muteupevent = 0;
 			}
+		}
 	}
 }
 /* startbutton_event */
@@ -173,29 +168,32 @@ void setupbutton_event (unsigned char up)
 			set_LED_Locked(0x55, 1);
 	} else {
 		setup_button = 0;
-		if (!muteupevent)
+		if (!muteupevent) {
 			if (locked)
 				set_LED_Locked(0xFF, 1);
-			else
+			else {
 				if (timeoutexpired(&holdtimeout))
 					/* Handle long press up */
 					setup_long();
 				else
 					/* Handle short press up */
 					setup_short();
-		else
+			}
+		} else {
 			if (!start_button) {
 				if (timeoutexpired(&holdtimeout))
 					/* Handle long both press up */
 					both_long();
-				else
+				else {
 					/* Handle short both press up */
 					if (locked)
 						set_LED_Locked(0xFF, 1);
 					else
 						both_short();
+				}
 				muteupevent = 0;
 			}
+		}
 	}
 }
 /* setupbutton_event */
@@ -221,7 +219,7 @@ void catsensor_event (unsigned char detected)
 /* catsensor_event */
 
 
-void watersensor_event (unsigned char undetected)
+void watersensor_event (unsigned char detected)
 /******************************************************************************/
 /* Function:	watersensor_event					      */
 /*		- Handle state changes of water sensor			      */
@@ -229,11 +227,9 @@ void watersensor_event (unsigned char undetected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	water_low = undetected;
+	DBG("Water: %s\n", detected?"high":"low");
 
-	DBG("Water: %s\n", water_low?"low":"high");
-
-	if (!water_low)
+	if (detected)
 		set_LED_Error(0xFF, 1);
 	else
 		set_LED_Error(0x00, 1);
@@ -260,102 +256,147 @@ void heatsensor_event (unsigned char detected)
 /* Local Implementations						      */
 /******************************************************************************/
 
-static void setup_short (void)
+void setup_short (void)
 {
 	if (++actuator > ACT_WATER)
 		actuator = ACT_BOWL;
 
+	printf ("Mode: ");
 	switch (actuator) {
-		case ACT_BOWL:
-			set_LED(1, 1);
-			set_LED(2, 0);
-			set_LED(3, 0);
-			set_LED(4, 0);
-			break;
-		case ACT_ARM:
-			set_LED(1, 0);
-			set_LED(2, 1);
-			set_LED(3, 0);
-			set_LED(4, 0);
-			break;
-		case ACT_DOSAGE:
-			set_LED(1, 1);
-			set_LED(2, 1);
-			set_LED(3, 0);
-			set_LED(4, 0);
-			break;
-		case ACT_PUMP:
-			set_LED(1, 0);
-			set_LED(2, 0);
-			set_LED(3, 1);
-			set_LED(4, 0);
-			break;
-		case ACT_DRYER:
-			set_LED(1, 1);
-			set_LED(2, 0);
-			set_LED(3, 1);
-			set_LED(4, 0);
-			break;
-		case ACT_WATER:
-			set_LED(1, 0);
-			set_LED(2, 1);
-			set_LED(3, 1);
-			set_LED(4, 0);
-			break;
+	case ACT_BOWL:
+		printf ("bowl");
+		set_LED(1, 1);
+		set_LED(2, 0);
+		set_LED(3, 0);
+		set_LED(4, 0);
+		break;
+	case ACT_ARM:
+		printf ("arm");
+		set_LED(1, 0);
+		set_LED(2, 1);
+		set_LED(3, 0);
+		set_LED(4, 0);
+		break;
+	case ACT_DOSAGE:
+		printf ("dosage");
+		set_LED(1, 1);
+		set_LED(2, 1);
+		set_LED(3, 0);
+		set_LED(4, 0);
+		break;
+	case ACT_PUMP:
+		printf ("drain");
+		set_LED(1, 0);
+		set_LED(2, 0);
+		set_LED(3, 1);
+		set_LED(4, 0);
+		break;
+	case ACT_DRYER:
+		printf ("dryer");
+		set_LED(1, 1);
+		set_LED(2, 0);
+		set_LED(3, 1);
+		set_LED(4, 0);
+		break;
+	case ACT_WATER:
+		printf ("tap");
+		set_LED(1, 0);
+		set_LED(2, 1);
+		set_LED(3, 1);
+		set_LED(4, 0);
+		break;
 	}
+	printf ("\n");
 }
 
-static void setup_long (void)
+void setup_long (void)
 {
 }
 
-static void start_short (void)
+void start_short (void)
 {
 	switch (actuator) {
 		case ACT_BOWL:
 			if (++bowl > BOWL_CCW)
 				bowl = BOWL_STOP;
 			set_Bowl(bowl);
+			printf("Bowl: ");
+			switch (get_Bowl()) {
+			case BOWL_STOP:
+				printf("stop");
+				break;
+			case BOWL_CW:
+				printf("cw");
+				break;
+			case BOWL_CCW:
+				printf("ccw");
+				break;
+			default:
+				printf("<unknown>");
+				break;
+			}
+			printf("\n");
 			break;
 		case ACT_ARM:
 			if (++arm > ARM_UP)
 				arm = ARM_STOP;
 			set_Arm(arm);
+			printf("Arm: ");
+			switch (get_Arm()) {
+			case ARM_STOP:
+				printf("stop");
+				break;
+			case ARM_UP:
+				printf("up");
+				break;
+			case ARM_DOWN:
+				printf("down");
+				break;
+			default:
+				printf("<unknown>");
+				break;
+			}
+			printf("\n");
 			break;
 		case ACT_DOSAGE:
 			if (++dosage > 1)
 				dosage = 0;
 			set_Dosage(dosage);
+			printf("Dosage: %s\n", get_Dosage()?"on":"off");
 			break;
 		case ACT_PUMP:
 			if (++pump > 1)
 				pump = 0;
 			set_Pump(pump);
+			printf("Drain: %s\n", get_Pump()?"on":"off");
 			break;
 		case ACT_DRYER:
 			if (++dryer > 1)
 				dryer = 0;
 			set_Dryer(dryer);
+			printf("Dryer: %s\n", get_Dryer()?"on":"off");
 			break;
 		case ACT_WATER:
 			if (++water > 1)
 				water = 0;
 			set_Water(water);
+			printf("Tap: %s\n", get_Water()?"on":"off");
 			break;
 	}
 }
 
-static void start_long (void)
+void start_long (void)
 {
 }
 
-static void both_short (void)
+void both_short (void)
 {
 }
 
-static void both_long (void)
+void both_long (void)
 {
 	locked = !locked;
+	printf("Lock: %s\n", locked?"on":"off");
 	if (locked)
 		set_LED_Locked(0xFF, 1);
 	else
