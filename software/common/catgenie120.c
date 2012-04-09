@@ -184,7 +184,7 @@ unsigned char catgenie_init (void)
 	PORTE = 0x00;
 #if (defined HW_CATGENIE120PLUS)
 	ANSELE = 0;
-	/* Disable all indifidual pull-ups */
+	/* Disable all individual pull-ups */
 	WPUE = 0x00;
 #endif
 
