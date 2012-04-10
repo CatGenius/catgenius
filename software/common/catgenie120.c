@@ -98,7 +98,7 @@ unsigned char catgenie_init (void)
 {
 	unsigned char	temp ;
 
-#if (defined HW_CATGENIE120PLUS)
+#if (defined _16F1939)
 	/* Enable internal pull-ups globally */
 	nWPUEN = 0;
 #endif
@@ -112,7 +112,7 @@ unsigned char catgenie_init (void)
 	PORTA = 0x00;
 	/* Disable ADC */
 	ADCON1 = 0x07;
-#if (defined HW_CATGENIE120PLUS)
+#if (defined _16F1939)
 	/* Select digital function */
 	ANSELA = 0;
 #endif
@@ -129,18 +129,18 @@ unsigned char catgenie_init (void)
 		NOT_USED_4_MASK  ;	/* PGM Data */
 	PORTB = 0x00;
 	/* Turn on internal weak pull-up resitors on inputs */
-#if (defined HW_CATGENIE120)
+#if (defined _16F877A)
 	nRBPU = 0;
-#elif (defined HW_CATGENIE120PLUS)
+#elif (defined _16F1939)
 	/* Select digital function */
 	ANSELB = 0;
 	/* Enable all individual pull-ups */
 	WPUB = 0xFF;
 #endif
 	/* Clear the interrupt status */
-#if (defined HW_CATGENIE120)
+#if (defined _16F877A)
 	RBIF = 0;
-#elif (defined HW_CATGENIE120PLUS)
+#elif (defined _16F1939)
 	/* Enable both rising- and falling-edge detection */
 	IOCBP = CATSENSOR_MASK;
 	IOCBN = CATSENSOR_MASK;
@@ -148,9 +148,9 @@ unsigned char catgenie_init (void)
 	IOCIF = 0;
 #endif
 	/* Enable interrupts */
-#if (defined HW_CATGENIE120)
+#if (defined _16F877A)
 	RBIE = 1;
-#elif (defined HW_CATGENIE120PLUS)
+#elif (defined _16F1939)
 	IOCIE = 1;
 #endif
 
@@ -172,7 +172,7 @@ unsigned char catgenie_init (void)
 	 */
 	TRISD = 0;
 	PORTD = WATERSENSORPULLUP_MASK;	/* Activate water sensor pull-up resistor */
-#if (defined HW_CATGENIE120PLUS)
+#if (defined _16F1939)
 	/* Select digital function */
 	ANSELD = 0;
 #endif
@@ -182,7 +182,7 @@ unsigned char catgenie_init (void)
 	 */
 	TRISE = 0x00;			/* All outputs */
 	PORTE = 0x00;
-#if (defined HW_CATGENIE120PLUS)
+#if (defined _16F1939)
 	ANSELE = 0;
 	/* Disable all individual pull-ups */
 	WPUE = 0x00;

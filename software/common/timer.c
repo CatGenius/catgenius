@@ -50,9 +50,9 @@ void timer_init (void)
 	 * Initialize timer 1
 	 */
 	/* Select Fosc/4 as source */
-#if (defined HW_CATGENIE120)
+#if (defined _16F877A)
 	TMR1CS = 0;
-#elif (defined HW_CATGENIE120PLUS)
+#elif (defined _16F1939)
 	/* TODO: Why doesn't TMR1CS work? */
 	TMR1CS0 = 0;
 	TMR1CS1 = 0;

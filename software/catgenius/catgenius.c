@@ -15,8 +15,6 @@
 #include "../common/rtc.h"
 #include "../common/serial.h"
 #include "../common/i2c.h"
-#include "../common/cr14.h"
-#include "../common/srix4k.h"
 #include "../common/catsensor.h"
 #include "../common/watersensor.h"
 #include "userinterface.h"
@@ -26,10 +24,20 @@
 /* Macros								      */
 /******************************************************************************/
 
-#ifdef __DEBUG
-__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_ON & BOREN_OFF & LVP_OFF & CPD_OFF & WRT_OFF & DEBUG_OFF & CP_OFF);
-#else
-__CONFIG(FOSC_XT & WDTE_ON  & PWRTE_ON & BOREN_ON  & LVP_OFF & CPD_ON  & WRT_OFF & DEBUG_OFF & CP_ON);
+#if (defined _16F877A)
+#  ifdef __DEBUG
+	__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_ON & BOREN_OFF & LVP_OFF & CPD_OFF & WRT_OFF & DEBUG_ON  & CP_OFF);
+#  else
+	__CONFIG(FOSC_XT & WDTE_ON  & PWRTE_ON & BOREN_ON  & LVP_OFF & CPD_ON  & WRT_OFF & DEBUG_OFF & CP_ON);
+#  endif
+#elif (defined _16F1939)
+#  ifdef __DEBUG
+	__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_OFF & MCLRE_ON & CP_OFF & CPD_OFF & BOREN_OFF & CLKOUTEN_OFF & IESO_OFF & FCMEN_OFF);
+	__CONFIG(WRT_OFF & VCAPEN_OFF & PLLEN_OFF & STVREN_ON & BORV_HI & LVP_OFF);
+#  else
+	__CONFIG(FOSC_XT & WDTE_ON  & PWRTE_ON  & MCLRE_ON & CP_ON  & CPD_ON  & BOREN_ON  & CLKOUTEN_OFF & IESO_OFF & FCMEN_OFF);
+	__CONFIG(WRT_OFF & VCAPEN_OFF & PLLEN_OFF & STVREN_ON & BORV_HI & LVP_OFF);
+#  endif
 #endif
 
 
@@ -102,9 +110,6 @@ void main (void)
 	/* Initialize the I2C bus */
 	i2c_init();
 
-	/* Initialize the RFID tag */
-//	srix4k_init();
-
 	/* Initialize the cat sensor */
 	catsensor_init();
 
@@ -128,7 +133,6 @@ void main (void)
 		catgenie_work();
 		userinterface_work();
 		litterlanguage_work();
-		srix4k_work();
 
 		while (RCIF) {
 			char rxd ;
@@ -210,11 +214,20 @@ static void interrupt isr (void)
 		catsensor_isr_timer();
 	}
 	/* Port B interrupt */
+#if (defined _16F877A)
 	if (RBIF) {
-		/* Reset interrupt */
-		RBIF = 0;
+#elif (defined _16F1939)
+	if (IOCIF) {
+#endif
 		/* Detected changes */
 		temp = PORTB ^ PORTB_old;
+		/* Reset interrupt */
+#if (defined _16F877A)
+		RBIF = 0;
+#elif (defined _16F1939)
+		IOCBF = 0;
+		IOCIF = 0;
+#endif
 		/* Handle interrupt */
 		if (temp & CATSENSOR_MASK)
 			catsensor_isr_input();

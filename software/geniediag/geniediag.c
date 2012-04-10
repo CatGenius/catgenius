@@ -25,13 +25,13 @@
 /* Macros								      */
 /******************************************************************************/
 
-#if (defined HW_CATGENIE120)
+#if (defined _16F877A)
 #  ifdef __DEBUG
 	__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_ON & BOREN_OFF & LVP_OFF & CPD_OFF & WRT_OFF & DEBUG_ON & CP_OFF);
 #  else
 	__CONFIG(FOSC_XT & WDTE_ON  & PWRTE_ON & BOREN_ON  & LVP_OFF & CPD_ON  & WRT_OFF & DEBUG_OFF & CP_ON);
 #  endif
-#elif (defined HW_CATGENIE120PLUS)
+#elif (defined _16F1939)
 #  ifdef __DEBUG
 	__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_OFF & MCLRE_ON & CP_OFF & CPD_OFF & BOREN_OFF & CLKOUTEN_OFF & IESO_OFF & FCMEN_OFF);
 	__CONFIG(WRT_OFF & /* VCAPEN_OFF &*/ PLLEN_OFF & STVREN_ON & BORV_HI & LVP_OFF);
@@ -194,17 +194,17 @@ static void interrupt isr (void)
 		catsensor_isr_timer();
 	}
 	/* Port B interrupt */
-#if (defined HW_CATGENIE120)
+#if (defined _16F877A)
 	if (RBIF) {
-#elif (defined HW_CATGENIE120PLUS)
+#elif (defined _16F1939)
 	if (IOCIF) {
 #endif
 		/* Detected changes */
 		temp = PORTB ^ PORTB_old;
 		/* Reset interrupt */
-#if (defined HW_CATGENIE120)
+#if (defined _16F877A)
 		RBIF = 0;
-#elif (defined HW_CATGENIE120PLUS)
+#elif (defined _16F1939)
 		IOCBF = 0;
 		IOCIF = 0;
 #endif

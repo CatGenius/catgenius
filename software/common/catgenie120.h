@@ -8,6 +8,10 @@
 #ifndef CATGENIE120_H			/* Include file already compiled? */
 #define CATGENIE120_H
 
+#if !(defined _16F877A) && !(defined _16F1939)
+#error Unsupported processor selected!
+#endif
+
 /* Version number */
 #define VERSION			(2)		/* NVM layout version */
 
