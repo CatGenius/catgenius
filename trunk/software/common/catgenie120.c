@@ -202,9 +202,9 @@ unsigned char catgenie_init (void)
 	/* Fill out the return flags */
 	temp = 0;
 	if (!(STARTBUTTON_PORT & STARTBUTTON_MASK))
-		temp |= START_BUTTON_HELD;
+		temp |= START_BUTTON;
 	if (!(SETUPBUTTON_PORT & SETUPBUTTON_MASK))
-		temp |= SETUP_BUTTON_HELD;
+		temp |= SETUP_BUTTON;
 
 	return temp;
 }
@@ -326,7 +326,7 @@ void set_LED_Error (unsigned char pattern, unsigned char repeat)
 		return;
 
 	/* Expire the bit timer */
-//	timeoutnow(&pacers[PACER_LED_ERROR].timer); TODO: Possible stack overflow
+	timeoutnow(&pacers[PACER_LED_ERROR].timer);
 	/* Reset the mask to the first bit */
 	pacers[PACER_LED_ERROR].mask = 0x01;
 	/* Copy the blink pattern */
@@ -344,7 +344,7 @@ void set_LED_Locked (unsigned char pattern, unsigned char repeat)
 		return;
 
 	/* Expire the bit timer */
-//	timeoutnow(&pacers[PACER_LED_LOCKED].timer); TODO: Possible stack overflow
+	timeoutnow(&pacers[PACER_LED_LOCKED].timer);
 	/* Reset the mask to the first bit */
 	pacers[PACER_LED_LOCKED].mask = 0x01;
 	/* Copy the blink pattern */
@@ -362,7 +362,7 @@ void set_LED_Cartridge (unsigned char pattern, unsigned char repeat)
 		return;
 
 	/* Expire the bit timer */
-//	timeoutnow(&pacers[PACER_LED_CARTRIDGE].timer); TODO: Possible stack overflow
+	timeoutnow(&pacers[PACER_LED_CARTRIDGE].timer);
 	/* Reset the mask to the first bit */
 	pacers[PACER_LED_CARTRIDGE].mask = 0x01;
 	/* Copy the blink pattern */
@@ -380,7 +380,7 @@ void set_LED_Cat (unsigned char pattern, unsigned char repeat)
 		return;
 
 	/* Expire the bit timer */
-//	timeoutnow(&pacers[PACER_LED_CAT].timer); TODO: Possible stack overflow
+	timeoutnow(&pacers[PACER_LED_CAT].timer);
 	/* Reset the mask to the first bit */
 	pacers[PACER_LED_CAT].mask = 0x01;
 	/* Copy the blink pattern */
@@ -398,7 +398,7 @@ void set_Beeper (unsigned char pattern, unsigned char repeat)
 		return;
 
 	/* Expire the bit timer */
-//	timeoutnow(&pacers[PACER_BEEPER].timer); TODO: Possible stack overflow
+	timeoutnow(&pacers[PACER_BEEPER].timer);
 	/* Reset the mask to the first bit */
 	pacers[PACER_BEEPER].mask = 0x01;
 	/* Copy the beep pattern */

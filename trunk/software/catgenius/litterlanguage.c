@@ -103,15 +103,15 @@ void litterlanguage_init (unsigned char flags)
 			}
 			DBG("\n");
 			break;
-		case START_BUTTON_HELD:
+		case START_BUTTON:
 			/* User wants to force a wet cleanup cycle */
 			DBG("Wet cleanup forced\n");
 			litterlanguage_cleanup(1);
 			break;
-		case SETUP_BUTTON_HELD:
+		case SETUP_BUTTON:
 			/* User wants to use GenieDiag */
 			break;
-		case START_BUTTON_HELD | SETUP_BUTTON_HELD:
+		case START_BUTTON | SETUP_BUTTON:
 		default:
 			/* User wants to reset box state */
 			eeprom_write(NVM_BOXSTATE, BOX_TIDY);
