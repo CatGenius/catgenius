@@ -39,10 +39,11 @@ bit			cat_detected	= 0;
 bit			overheated	= 0;
 
 /* Keyboard status bits */
-static bit		muteupevent	= 0;
+static unsigned char	buttonmask_cur	= 0;
+static unsigned char	buttonmask_cum	= 0;
+static unsigned char	buttonmask_evt	= 0;
 static bit		locked		= 0;
-static bit		start_button	= 0;
-static bit		setup_button	= 0;
+static bit		longhandled	= 0;
 
 static unsigned char	actuator	= 0;
 static unsigned char	bowl		= 0;
@@ -56,6 +57,10 @@ static unsigned char	water		= 0;
 /******************************************************************************/
 /* Local Prototypes							      */
 /******************************************************************************/
+
+static void	update_display		(void);
+static void	process_button		(unsigned char	button_mask,
+					 unsigned char	down);
 
 
 /******************************************************************************/
@@ -83,6 +88,65 @@ void userinterface_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	unsigned char		update		= 0;
+
+	/* Handle pressed buttons */
+	switch (buttonmask_evt & BUTTONS) {
+	case 0:
+		/* No button pressed */
+		break;
+
+	case START_BUTTON:
+		start_short();
+		update = 1;
+		break;
+
+	case SETUP_BUTTON:
+		setup_short();
+		update = 1;
+		break;
+
+	case (START_BUTTON | SETUP_BUTTON):
+		both_short();
+		update = 1;
+		break;
+
+	default:
+		break;
+	}
+	buttonmask_evt = 0;
+
+	/* Handle held buttons */
+	if (timeoutexpired(&holdtimeout)) {
+		switch (buttonmask_cum & BUTTONS) {
+		case START_BUTTON:
+			set_Beeper(0x05, 0);
+			start_long();
+			update = 1;
+			break;
+
+		case SETUP_BUTTON:
+			set_Beeper(0x05, 0);
+			setup_long();
+			update = 1;
+			break;
+
+		case (START_BUTTON | SETUP_BUTTON):
+			set_Beeper(0x05, 0);
+			both_long();
+			update = 1;
+			break;
+
+		default:
+			break;
+		}
+		longhandled = 1;
+		timeoutnever(&holdtimeout);
+	}
+
+	if (update)
+		update_display();
+
 }
 /* userinterface_work */
 
@@ -107,44 +171,7 @@ void startbutton_event (unsigned char up)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if (!up) {
-		start_button = 1;
-		settimeout(&holdtimeout, HOLDTIME);
-		if (setup_button)
-			muteupevent = 1;
-		if (!locked)
-			set_Beeper(0x01, 0);
-		else
-			set_LED_Locked(0x55, 1);
-	} else {
-		start_button = 0;
-		if (!muteupevent) {
-			if (locked)
-				set_LED_Locked(0xFF, 1);
-			else {
-				if (timeoutexpired(&holdtimeout))
-					/* Handle long press up */
-					start_long();
-				else
-					/* Handle short press up */
-					start_short();
-			}
-		} else {
-			if (!setup_button) {
-				if (timeoutexpired(&holdtimeout))
-					/* Handle long both press up */
-					both_long();
-				else {
-					/* Handle short both press up */
-					if (locked)
-						set_LED_Locked(0xFF, 1);
-					else
-						both_short();
-				}
-				muteupevent = 0;
-			}
-		}
-	}
+	process_button (START_BUTTON, !up);
 }
 /* startbutton_event */
 
@@ -157,44 +184,7 @@ void setupbutton_event (unsigned char up)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if (!up) {
-		setup_button = 1;
-		settimeout(&holdtimeout, HOLDTIME);
-		if (start_button)
-			muteupevent = 1;
-		if (!locked)
-			set_Beeper(0x01, 0);
-		else
-			set_LED_Locked(0x55, 1);
-	} else {
-		setup_button = 0;
-		if (!muteupevent) {
-			if (locked)
-				set_LED_Locked(0xFF, 1);
-			else {
-				if (timeoutexpired(&holdtimeout))
-					/* Handle long press up */
-					setup_long();
-				else
-					/* Handle short press up */
-					setup_short();
-			}
-		} else {
-			if (!start_button) {
-				if (timeoutexpired(&holdtimeout))
-					/* Handle long both press up */
-					both_long();
-				else {
-					/* Handle short both press up */
-					if (locked)
-						set_LED_Locked(0xFF, 1);
-					else
-						both_short();
-				}
-				muteupevent = 0;
-			}
-		}
-	}
+	process_button (SETUP_BUTTON, !up);
 }
 /* setupbutton_event */
 
@@ -256,6 +246,90 @@ void heatsensor_event (unsigned char detected)
 /* Local Implementations						      */
 /******************************************************************************/
 
+static void process_button (unsigned char button_mask, unsigned char down)
+{
+	/* Check for duplicate events */
+	if (((buttonmask_cur & button_mask)?1:0) == down)
+		return;
+
+	if (down) {
+		if (!locked)
+			set_Beeper(0x01, 0);
+		/* (Re-)Set long-press timeout */
+		settimeout(&holdtimeout, HOLDTIME);
+		longhandled = 0;
+		/* Add the button to the both curent and cumulative masks */
+		buttonmask_cur |= button_mask;
+		buttonmask_cum |= button_mask;
+	} else {
+		/* Disable long-press timeout */
+		timeoutnever(&holdtimeout);
+		/* Remove the button from the current masks */
+		buttonmask_cur &= ~button_mask;
+		if (!buttonmask_cur) {
+			if( (!locked) && (!longhandled) )
+				/* Set the cumulative mask as the button event */
+				buttonmask_evt = buttonmask_cum;
+			/* Reset the cumulative mask */
+			buttonmask_cum = 0;
+		}
+	}
+	if (locked)
+		update_display();
+}
+
+static void update_display (void)
+{
+	/* Mode indication */
+	switch (actuator) {
+	case ACT_BOWL:
+		set_LED(1, 1);
+		set_LED(2, 0);
+		set_LED(3, 0);
+		set_LED(4, 0);
+		break;
+	case ACT_ARM:
+		set_LED(1, 0);
+		set_LED(2, 1);
+		set_LED(3, 0);
+		set_LED(4, 0);
+		break;
+	case ACT_DOSAGE:
+		set_LED(1, 1);
+		set_LED(2, 1);
+		set_LED(3, 0);
+		set_LED(4, 0);
+		break;
+	case ACT_PUMP:
+		set_LED(1, 0);
+		set_LED(2, 0);
+		set_LED(3, 1);
+		set_LED(4, 0);
+		break;
+	case ACT_DRYER:
+		set_LED(1, 1);
+		set_LED(2, 0);
+		set_LED(3, 1);
+		set_LED(4, 0);
+		break;
+	case ACT_WATER:
+		set_LED(1, 0);
+		set_LED(2, 1);
+		set_LED(3, 1);
+		set_LED(4, 0);
+		break;
+	}
+
+	/* Keyboard lock indicator */
+	if (locked) {
+		if (buttonmask_cur)
+			set_LED_Locked(0xAA, 1);
+		else
+			set_LED_Locked(0xFF, 1);
+	} else
+		set_LED_Locked(0x00, 0);
+}
+
 void setup_short (void)
 {
 	if (++actuator > ACT_WATER)
@@ -265,45 +339,21 @@ void setup_short (void)
 	switch (actuator) {
 	case ACT_BOWL:
 		printf ("bowl");
-		set_LED(1, 1);
-		set_LED(2, 0);
-		set_LED(3, 0);
-		set_LED(4, 0);
 		break;
 	case ACT_ARM:
 		printf ("arm");
-		set_LED(1, 0);
-		set_LED(2, 1);
-		set_LED(3, 0);
-		set_LED(4, 0);
 		break;
 	case ACT_DOSAGE:
 		printf ("dosage");
-		set_LED(1, 1);
-		set_LED(2, 1);
-		set_LED(3, 0);
-		set_LED(4, 0);
 		break;
 	case ACT_PUMP:
 		printf ("drain");
-		set_LED(1, 0);
-		set_LED(2, 0);
-		set_LED(3, 1);
-		set_LED(4, 0);
 		break;
 	case ACT_DRYER:
 		printf ("dryer");
-		set_LED(1, 1);
-		set_LED(2, 0);
-		set_LED(3, 1);
-		set_LED(4, 0);
 		break;
 	case ACT_WATER:
 		printf ("tap");
-		set_LED(1, 0);
-		set_LED(2, 1);
-		set_LED(3, 1);
-		set_LED(4, 0);
 		break;
 	}
 	printf ("\n");
@@ -397,8 +447,4 @@ void both_long (void)
 {
 	locked = !locked;
 	printf("Lock: %s\n", locked?"on":"off");
-	if (locked)
-		set_LED_Locked(0xFF, 1);
-	else
-		set_LED_Locked(0x00, 0);
 }

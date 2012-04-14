@@ -77,10 +77,11 @@ static struct timer	autotimer	= NEVER;
 static struct timer	cattimer	= EXPIRED;
 
 /* Keyboard status bits */
-static bit		muteupevent	= 0;
+static unsigned char	buttonmask_cur	= 0;
+static unsigned char	buttonmask_cum	= 0;
+static unsigned char	buttonmask_evt	= 0;
 static bit		locked		= 0;
-static bit		start_button	= 0;
-static bit		setup_button	= 0;
+static bit		longhandled	= 0;
 
 static bit		cat_present	= 0;
 static bit		cat_detected	= 0;
@@ -100,6 +101,9 @@ static unsigned char	error_nr	= 0;
 
 static void	set_mode		(unsigned char mode);
 static void	update_display		(void);
+static void	process_button		(unsigned char	button_mask,
+					 unsigned char	down);
+static void	setup_short		(void);
 static void	setup_long		(void);
 static void	start_short		(void);
 static void	start_long		(void);
@@ -119,8 +123,8 @@ void userinterface_init (unsigned char flags)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if ((flags & START_BUTTON_HELD) &&
-	    (flags & SETUP_BUTTON_HELD)) {
+	if ((flags & START_BUTTON) &&
+	    (flags & SETUP_BUTTON)) {
 		/* User wants to reset non-volatile settings */
 		eeprom_write(NVM_MODE, AUTO_MANUAL);
 		eeprom_write(NVM_KEYUNDLOCK, 0xFF);
@@ -130,6 +134,8 @@ void userinterface_init (unsigned char flags)
 	locked = !eeprom_read(NVM_KEYUNDLOCK);
 	/* Restore current mode from eeprom */
 	set_mode(eeprom_read(NVM_MODE));
+	/* Update the display */
+	update_display();
 }
 /* userinterface_init */
 
@@ -142,13 +148,15 @@ void userinterface_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	unsigned char		update		= 0;
+
 	if( (disp_mode == DISP_CARTRIDGELEVEL) &&
 	    (timeoutexpired(&cartridgetimeout)) ) {
 		if (error_nr)
 			disp_mode = DISP_ERROR;
 		else
 			disp_mode = DISP_AUTOMODE;
-		update_display();
+		update = 1;
 	}
 
 	switch(state) {
@@ -165,8 +173,7 @@ void userinterface_work (void)
 			if (cat_detected) {
 				DBG("waiting...\n");
 				state = STATE_CAT;
-				/* Update the display */
-				update_display();
+				update = 1;
 			} else
 				DBG("skipping\n");
 		}
@@ -180,7 +187,7 @@ void userinterface_work (void)
 			state = STATE_RUNNING;
 
 			/* Update the display (to stop Cat LED from blinking) */
-			update_display();
+			update = 1;
 		}
 		break;
 	case STATE_RUNNING:
@@ -193,10 +200,68 @@ void userinterface_work (void)
 			else
 				interval ++;
 			state = STATE_IDLE;
-			update_display();
+			update = 1;
 		}
 		break;
 	}
+
+	/* Handle pressed buttons */
+	switch (buttonmask_evt & BUTTONS) {
+	case 0:
+		/* No button pressed */
+		break;
+
+	case START_BUTTON:
+		start_short();
+		update = 1;
+		break;
+
+	case SETUP_BUTTON:
+		setup_short();
+		update = 1;
+		break;
+
+	case (START_BUTTON | SETUP_BUTTON):
+		both_short();
+		update = 1;
+		break;
+
+	default:
+		break;
+	}
+	buttonmask_evt = 0;
+
+	/* Handle held buttons */
+	if (timeoutexpired(&holdtimeout)) {
+		switch (buttonmask_cum & BUTTONS) {
+		case START_BUTTON:
+			set_Beeper(0x05, 0);
+			start_long();
+			update = 1;
+			break;
+
+		case SETUP_BUTTON:
+			set_Beeper(0x05, 0);
+			setup_long();
+			update = 1;
+			break;
+
+		case (START_BUTTON | SETUP_BUTTON):
+			set_Beeper(0x05, 0);
+			both_long();
+			update = 1;
+			break;
+
+		default:
+			break;
+		}
+		longhandled = 1;
+		timeoutnever(&holdtimeout);
+	}
+
+	if (update)
+		update_display();
+
 }
 /* userinterface_work */
 
@@ -221,43 +286,7 @@ void startbutton_event (unsigned char up)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if (start_button == !up)
-		return;
-	start_button = !up;
-
-	if (start_button) {
-		settimeout(&holdtimeout, HOLDTIME);
-		if (setup_button)
-			muteupevent = 1;
-		if (!locked)
-			set_Beeper(0x01, 0);
-		else
-			set_LED_Locked(0x55, 1);
-	} else {
-		if (!muteupevent)
-			if (locked)
-				set_LED_Locked(0xFF, 1);
-			else
-				if (timeoutexpired(&holdtimeout))
-					/* Handle long press up */
-					start_long();
-				else
-					/* Handle short press up */
-					start_short();
-		else
-			if (!setup_button) {
-				if (timeoutexpired(&holdtimeout))
-					/* Handle long both press up */
-					both_long();
-				else
-					/* Handle short both press up */
-					if (locked)
-						set_LED_Locked(0xFF, 1);
-					else
-						both_short();
-				muteupevent = 0;
-			}
-	}
+	process_button (START_BUTTON, !up);
 }
 /* startbutton_event */
 
@@ -270,71 +299,7 @@ void setupbutton_event (unsigned char up)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if (setup_button == !up)
-		return;
-	setup_button = !up;
-
-	if (setup_button) {
-		settimeout(&holdtimeout, HOLDTIME);
-		if (start_button)
-			muteupevent = 1;
-		if (!locked)
-			set_Beeper(0x01, 0);
-		else
-			set_LED_Locked(0x55, 1);
-	} else {
-		if (!muteupevent)
-			if (locked)
-				set_LED_Locked(0xFF, 1);
-			else
-				if (timeoutexpired(&holdtimeout))
-					/* Handle long press up */
-					setup_long();
-				else
-					/* Handle short press up */
-					switch (disp_mode) {
-					default:
-						disp_mode = DISP_AUTOMODE;
-					case DISP_AUTOMODE:
-						set_mode((auto_mode==AUTO_DETECTED)?AUTO_MANUAL:auto_mode+1);
-						break;
-
-					case DISP_CARTRIDGELEVEL:
-						if (cart_level < 10)
-							cart_level = 10;
-						else if (cart_level < 25)
-							cart_level = 25;
-						else if (cart_level < 50)
-							cart_level = 50;
-						else if (cart_level < 75)
-							cart_level = 75;
-						else if (cart_level < 100)
-							cart_level = 100;
-						else
-							cart_level = 0;
-						/* Set new timeout to return to auto- or errormode */
-						settimeout(&cartridgetimeout, LEVEL_TIMEOUT);
-						/* Update the display */
-						update_display();
-						break;
-
-					case DISP_ERROR:
-						break;
-					}
-		else
-			if (!start_button) {
-				if (timeoutexpired(&holdtimeout))
-					/* Handle long both press up */
-					both_long();
-				else
-					/* Handle short both press up */
-					if (locked)
-						set_LED_Locked(0xFF, 1);
-					else
-						both_short();
-				muteupevent = 0;
-			}
-	}
+	process_button (SETUP_BUTTON, !up);
 }
 /* setupbutton_event */
 
@@ -360,7 +325,7 @@ void catsensor_event (unsigned char detected)
 	/* Update cat timeout once detection is eminent */
 	if (cat_detected)
 		if (detected)
-			timeoutnever(&cattimer);				\
+			timeoutnever(&cattimer);
 		else
 			settimeout(&cattimer, CAT_TIMEOUT);
 
@@ -400,6 +365,38 @@ void catsensor_event (unsigned char detected)
 /* Local Implementations						      */
 /******************************************************************************/
 
+static void process_button (unsigned char button_mask, unsigned char down)
+{
+	/* Check for duplicate events */
+	if (((buttonmask_cur & button_mask)?1:0) == down)
+		return;
+
+	if (down) {
+		if (!locked)
+			set_Beeper(0x01, 0);
+		/* (Re-)Set long-press timeout */
+		settimeout(&holdtimeout, HOLDTIME);
+		longhandled = 0;
+		/* Add the button to the both curent and cumulative masks */
+		buttonmask_cur |= button_mask;
+		buttonmask_cum |= button_mask;
+	} else {
+		/* Disable long-press timeout */
+		timeoutnever(&holdtimeout);
+		/* Remove the button from the current masks */
+		buttonmask_cur &= ~button_mask;
+		if (!buttonmask_cur) {
+			if( (!locked) && (!longhandled) )
+				/* Set the cumulative mask as the button event */
+				buttonmask_evt = buttonmask_cum;
+			/* Reset the cumulative mask */
+			buttonmask_cum = 0;
+		}
+	}
+	if (locked)
+		update_display();
+}
+
 static void set_mode (unsigned char mode)
 {
 	if (mode > AUTO_DETECTED)
@@ -424,9 +421,6 @@ static void set_mode (unsigned char mode)
 	update_autotimer(auto_mode);
 	timeoutnow(&cattimer);
 	cat_detected = 0;
-
-	/* Update the display */
-	update_display();
 
 	/* Store the new mode in EEPROM */
 	eeprom_write(NVM_MODE, auto_mode);
@@ -499,10 +493,46 @@ static void update_display (void)
 		set_LED(4, error_nr == 4);
 		break;
 	}
-	if (locked)
-		set_LED_Locked(0xFF, 1);
-	else
+
+	/* Keyboard lock indicator */
+	if (locked) {
+		if (buttonmask_cur)
+			set_LED_Locked(0xAA, 1);
+		else
+			set_LED_Locked(0xFF, 1);
+	} else
 		set_LED_Locked(0x00, 0);
+}
+
+static void setup_short (void)
+{
+	switch (disp_mode) {
+	default:
+		disp_mode = DISP_AUTOMODE;
+	case DISP_AUTOMODE:
+		set_mode((auto_mode==AUTO_DETECTED)?AUTO_MANUAL:auto_mode+1);
+		break;
+
+	case DISP_CARTRIDGELEVEL:
+		if (cart_level < 10)
+			cart_level = 10;
+		else if (cart_level < 25)
+			cart_level = 25;
+		else if (cart_level < 50)
+			cart_level = 50;
+		else if (cart_level < 75)
+			cart_level = 75;
+		else if (cart_level < 100)
+			cart_level = 100;
+		else
+			cart_level = 0;
+		/* Set new timeout to return to auto- or errormode */
+		settimeout(&cartridgetimeout, LEVEL_TIMEOUT);
+		break;
+
+	case DISP_ERROR:
+		break;
+	}
 }
 
 static void setup_long (void)
@@ -518,8 +548,6 @@ static void start_short (void)
 		litterlanguage_start(full_wash);
 		/* Update the state machine */
 		state = STATE_RUNNING;
-		/* Update the display */
-		update_display();
 	} else
 		/* Toggle pause current program */
 		litterlanguage_pause(!litterlanguage_paused());
@@ -534,8 +562,6 @@ static void start_long (void)
 		litterlanguage_start(full_wash);
 		/* Update the state machine */
 		state = STATE_RUNNING;
-		/* Update the display */
-		update_display();
 	} else
 		/* Stop the program, state machine will do the rest */
 		litterlanguage_stop();
@@ -547,8 +573,6 @@ static void both_short (void)
 	disp_mode = DISP_CARTRIDGELEVEL;
 	/* Set timeout to return to auto- or errormode */
 	settimeout(&cartridgetimeout, LEVEL_TIMEOUT);
-	/* Update the display */
-	update_display();
 }
 
 
@@ -556,6 +580,4 @@ static void both_long (void)
 {
 	locked = !locked;
 	eeprom_write(NVM_KEYUNDLOCK, !locked);
-	/* Update the display */
-	update_display();
 }

@@ -40,15 +40,15 @@
 #define NVM_BOXSTATE		(3)
 
 /* Init return flags */
-#define START_BUTTON_HELD	(0x01 << 0)
-#define SETUP_BUTTON_HELD	(0x01 << 1)
+#define START_BUTTON		(0x01 << 0)
+#define SETUP_BUTTON		(0x01 << 1)
 #define RESERVED_1		(0x01 << 2)
 #define RESERVED_2		(0x01 << 3)
 #define RESERVED_3		(0x01 << 4)
 #define RESERVED_4		(0x01 << 5)
 #define RESERVED_5		(0x01 << 6)
 #define POWER_FAILURE		(0x01 << 7)
-#define BUTTONS			(START_BUTTON_HELD | SETUP_BUTTON_HELD)
+#define BUTTONS			(START_BUTTON | SETUP_BUTTON)
 
 
 /* Bowl modi */
