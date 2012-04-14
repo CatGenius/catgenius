@@ -437,6 +437,24 @@ void start_short (void)
 
 void start_long (void)
 {
+	printf("Bowl: stop\n");
+	bowl = BOWL_STOP;
+	set_Bowl(bowl);
+	printf("Arm: stop\n");
+	arm = ARM_STOP;
+	set_Arm(arm);
+	dosage = 0;
+	set_Dosage(dosage);
+	printf("Dosage: off\n");
+	pump = 0;
+	set_Pump(pump);
+	printf("Drain: off\n");
+	dryer = 0;
+	set_Dryer(dryer);
+	printf("Dryer: off\n");
+	water = 0;
+	set_Water(water);
+	printf("Tap: off\n");
 }
 
 void both_short (void)
