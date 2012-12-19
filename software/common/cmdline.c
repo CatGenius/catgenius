@@ -26,7 +26,7 @@
 
 extern const struct command	commands[];
 static char			linebuffer[LINEBUFFER_MAX];
-static char			localecho = 1;
+static unsigned char		localecho = 1;
 
 
 /******************************************************************************/
@@ -35,7 +35,7 @@ static char			localecho = 1;
 
 static void proc_char (char rxd);
 static void proc_line (char *line);
-static int cmd2index(char *cmd);
+static int cmd2index (char *cmd);
 
 
 /******************************************************************************/
@@ -44,7 +44,7 @@ static int cmd2index(char *cmd);
 
 void cmdline_init (void)
 /******************************************************************************/
-/* Function:	Module initialisation routine				      */
+/* Function:	Module initialization routine				      */
 /*		- Initializes the command line interface		      */
 /* History :	13 Feb 2011 by R. Delien:				      */
 /*		- Ported from other project.				      */
@@ -58,7 +58,7 @@ void cmdline_init (void)
 
 void cmdline_work (void)
 /******************************************************************************/
-/* Function:	Module initialisation routine				      */
+/* Function:	Module working routine					      */
 /*		- Worker function for the command line interface	      */
 /* History :	13 Feb 2011 by R. Delien:				      */
 /*		- Ported from other project.				      */
@@ -74,7 +74,7 @@ void cmdline_work (void)
 
 void cmdline_term (void)
 /******************************************************************************/
-/* Function:	Module initialisation routine				      */
+/* Function:	Module termination routine				      */
 /*		- Terminates the command line interface			      */
 /* History :	13 Feb 2011 by R. Delien:				      */
 /*		- Ported from other project.				      */
@@ -90,7 +90,7 @@ void cmdline_term (void)
 
 static void proc_char (char rxd)
 {
-	static char curcolumn = 0;
+	static unsigned char curcolumn = 0;
 
 	if ((rxd >= ' ') && (rxd <= '~')) {
 		if (curcolumn < (LINEBUFFER_MAX-1)) {
@@ -133,39 +133,56 @@ static void proc_char (char rxd)
 
 static void proc_line (char *line)
 {
-	char *cmd = line;
-	char *arg;
-	int index;
+	unsigned int	len = strlen(line);
+	int		argc = 0;
+	char*		argv[ARGS_MAX];
+	int		index;
 
-	/* Trim trailing spaces */
-	while (line[strlen(line)-1] == ' ')
-		line[strlen(line)-1] = 0;
-
-	/* Skip heading spaces */
-	while (*cmd == ' ')
-		cmd ++;
-
-	/* Find the separating space */
-	arg = cmd;
-	while (*arg != ' ' && *arg != 0)
-		arg++;
-
-	/* Replace space(s) with 0-termination for command */
-	while (*arg == ' ') {
-		*arg = 0;
-		arg++;
+	/* Trim trailing white spaces */
+	while (len && (line[len-1] == ' ' || line[len-1] == '\t')) {
+		line[len-1] = 0;
+		len--;
 	}
 
-	index = cmd2index(cmd);
+	/* Build argument list */
+	while (*line) {
+		/* Skip leading white spaces and replace them with 0-terminations */
+		while ((*line == ' ') || (*line == '\t')) {
+			*line = 0;
+			line++;
+		}
+
+		/* Store the beginning of this argument */
+		if (*line) {
+			argv[argc] = line;
+			argc++;
+		}
+
+		/* Find the separating white space */
+		while (*line && *line != ' ' && *line != '\t')
+			line++;
+	}
+
+	index = cmd2index(argv[0]);
 	if (index >= 0) {
-		if (commands[index].function(arg))
+		switch (commands[index].function(argc, argv)) {
+		case ERR_OK:
+			break;
+		case ERR_SYNTAX:
 			printf("Syntax error\n");
+			break;
+		case ERR_IO:
+			printf("I/O error\n");
+			break;
+		default:
+			printf("Unknown error\n");
+		}
 	} else
-		printf("Unknown command '%s'\n", cmd);
+		printf("Unknown command '%s'\n", argv[0]);
 }
 
 
-static int cmd2index(char *cmd)
+static int cmd2index (char *cmd)
 {
 	int index = 0;
 
@@ -179,30 +196,49 @@ static int cmd2index(char *cmd)
 }
 
 
-int echo(char *args)
+int echo (int argc, char* argv[])
 {
-	if (strlen(args)) {
-		if (!strncmp (args, "on", LINEBUFFER_MAX))
+	if (argc > 2)
+		return ERR_SYNTAX;
+
+	if (argc == 2) {
+		if (!strncmp (argv[1], "on", LINEBUFFER_MAX))
 			localecho = 1;
-		else if (!strncmp (args, "off", LINEBUFFER_MAX))
+		else if (!strncmp (argv[1], "off", LINEBUFFER_MAX))
 			localecho = 0;
 		else
-			/* Syntax error */
-			return (-1);
+			return ERR_SYNTAX;
 	}
 	printf("Echo: %s\n", localecho?"on":"off");
 
-	return (0);
+	return ERR_OK;
 }
 
 
-int dumpports(char *args)
+int help (int argc, char* argv[])
+{
+	int index = 0;
+
+	if (argc > 1)
+		return ERR_SYNTAX;
+
+	printf("Known commands:\n");
+	while (commands[index].function) {
+		printf("%s\n", (char*)commands[index].cmd);
+		index++;
+	}
+
+	return ERR_OK;
+}
+
+
+int dumpports(int argc, char* argv[])
 {
 	printf("TRISB = 0x%02X, PORTB = 0x%02X\n", TRISB, PORTB);
 	printf("TRISC = 0x%02X, PORTC = 0x%02X\n", TRISC, PORTC);
 	printf("TRISD = 0x%02X, PORTD = 0x%02X\n", TRISD, PORTD);
 	printf("TRISE = 0x%02X, PORTE = 0x%02X\n", TRISE, PORTE);
 
-	return (0);
+	return ERR_OK;
 }
 

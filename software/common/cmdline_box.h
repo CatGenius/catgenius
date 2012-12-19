@@ -9,14 +9,14 @@
 #define CMDLINE_BOX_H
 
 /* Command implementations */
-int		bowl			(char	*args) ;
-int		arm			(char	*args) ;
-int		dosage			(char	*args) ;
-int		tap			(char	*args) ;
-int		drain			(char	*args) ;
-int		dryer			(char	*args) ;
-int		cat			(char	*args) ;
-int		water			(char	*args) ;
-int		heat			(char	*args) ;
+int		bowl			(int argc,	char* argv[]) ;
+int		arm			(int argc,	char* argv[]) ;
+int		dosage			(int argc,	char* argv[]) ;
+int		tap			(int argc,	char* argv[]) ;
+int		drain			(int argc,	char* argv[]) ;
+int		dryer			(int argc,	char* argv[]) ;
+int		cat			(int argc,	char* argv[]) ;
+int		water			(int argc,	char* argv[]) ;
+int		heat			(int argc,	char* argv[]) ;
 
 #endif /* CMDLINE_BOX_H */

@@ -29,6 +29,11 @@
 extern bit	cat_detected;
 extern bit	overheated;
 
+/* Frequently used strings declared once here, to save some memory */
+char str_unkown[]	= "<unknown>";
+char str_on[]		= "on";
+char str_off[]		= "off";
+
 /******************************************************************************/
 /* Local Prototypes							      */
 /******************************************************************************/
@@ -38,20 +43,20 @@ extern bit	overheated;
 /* Global Implementations						      */
 /******************************************************************************/
 
-int bowl(char *args)
+int bowl(int argc, char* argv[])
 {
-	int	result = 0;
+	if (argc > 2)
+		return ERR_SYNTAX;
 
-	if (strlen(args)) {
-		if (!strncmp (args, "stop", LINEBUFFER_MAX)) {
+	if (argc > 1) {
+		if (!strncmp (argv[1], "stop", LINEBUFFER_MAX)) {
 			set_Bowl(BOWL_STOP);
-		} else if (!strncmp (args, "cw", LINEBUFFER_MAX)) {
+		} else if (!strncmp (argv[1], "cw", LINEBUFFER_MAX)) {
 			set_Bowl(BOWL_CW);
-		} else if (!strncmp (args, "ccw", LINEBUFFER_MAX)) {
+		} else if (!strncmp (argv[1], "ccw", LINEBUFFER_MAX)) {
 			set_Bowl(BOWL_CCW);
 		} else
-			/* Syntax error */
-			return (-1);
+			return ERR_SYNTAX;
 	}
 
 	printf("Bowl: ");
@@ -66,30 +71,30 @@ int bowl(char *args)
 		printf("ccw");
 		break;
 	default:
-		printf("<unknown>");
+		printf(str_unkown);
 		break;
 			
 	}
 	printf("\n");
 
-	return (result);
+	return ERR_OK;
 }
 
 
-int arm (char *args)
+int arm (int argc, char* argv[])
 {
-	int	result = 0;
+	if (argc > 2)
+		return ERR_SYNTAX;
 
-	if (strlen(args)) {
-		if (!strncmp (args, "stop", LINEBUFFER_MAX)) {
+	if (argc > 1) {
+		if (!strncmp (argv[1], "stop", LINEBUFFER_MAX)) {
 			set_Arm(ARM_STOP);
-		} else if (!strncmp (args, "up", LINEBUFFER_MAX)) {
+		} else if (!strncmp (argv[1], "up", LINEBUFFER_MAX)) {
 			set_Arm(ARM_UP);
-		} else if (!strncmp (args, "down", LINEBUFFER_MAX)) {
+		} else if (!strncmp (argv[1], "down", LINEBUFFER_MAX)) {
 			set_Arm(ARM_DOWN);
 		} else
-			/* Syntax error */
-			return (-1);
+			return ERR_SYNTAX;
 	}
 
 	printf("Arm: ");
@@ -104,135 +109,126 @@ int arm (char *args)
 		printf("down");
 		break;
 	default:
-		printf("<unknown>");
+		printf(str_unkown);
 		break;
 			
 	}
 	printf("\n");
 
-	return (result);
+	return ERR_OK;
 }
 
 
-int dosage (char *args)
+int dosage (int argc, char* argv[])
 {
-	int	result = 0;
+	if (argc > 2)
+		return ERR_SYNTAX;
 
-	if (strlen(args)) {
-		if (!strncmp (args, "off", LINEBUFFER_MAX)) {
+	if (argc > 1) {
+		if (!strncmp (argv[1], str_off, LINEBUFFER_MAX)) {
 			set_Dosage(0);
-		} else if (!strncmp (args, "on", LINEBUFFER_MAX)) {
+		} else if (!strncmp (argv[1], str_on, LINEBUFFER_MAX)) {
 			set_Dosage(1);
 		} else
-			/* Syntax error */
-			return (-1);
+			return ERR_SYNTAX;
 	}
 
-	printf("Dosage: %s\n", get_Dosage()?"on":"off");
+	printf("Dosage: %s\n", get_Dosage()?str_on:str_off);
 
-	return (result);
+	return ERR_OK;
 }
 
 
-int tap (char *args)
+int tap (int argc, char* argv[])
 {
-	int	result = 0;
+	if (argc > 2)
+		return ERR_SYNTAX;
 
-	if (strlen(args)) {
-		if (!strncmp (args, "off", LINEBUFFER_MAX)) {
+	if (argc > 1) {
+		if (!strncmp (argv[1], str_off, LINEBUFFER_MAX)) {
 			set_Water(0);
-		} else if (!strncmp (args, "on", LINEBUFFER_MAX)) {
+		} else if (!strncmp (argv[1], str_on, LINEBUFFER_MAX)) {
 			set_Water(1);
 		} else
-			/* Syntax error */
-			return (-1);
+			return ERR_SYNTAX;
 	}
 
-	printf("Tap: %s\n", get_Water()?"on":"off");
+	printf("Tap: %s\n", get_Water()?str_on:str_off);
 
-	return (result);
+	return ERR_OK;
 }
 
 
-int drain (char *args)
+int drain (int argc, char* argv[])
 {
-	int	result = 0;
+	if (argc > 2)
+		return ERR_SYNTAX;
 
-	if (strlen(args)) {
-		if (!strncmp (args, "off", LINEBUFFER_MAX)) {
+	if (argc > 1) {
+		if (!strncmp (argv[1], str_off, LINEBUFFER_MAX)) {
 			set_Pump(0);
-		} else if (!strncmp (args, "on", LINEBUFFER_MAX)) {
+		} else if (!strncmp (argv[1], str_on, LINEBUFFER_MAX)) {
 			set_Pump(1);
 		} else
-			/* Syntax error */
-			return (-1);
+			return ERR_SYNTAX;
 	}
 
-	printf("Drain: %s\n", get_Pump()?"on":"off");
+	printf("Drain: %s\n", get_Pump()?str_on:str_off);
 
-	return (result);
+	return ERR_OK;
 }
 
 
-int dryer (char *args)
+int dryer (int argc, char* argv[])
 {
-	int	result = 0;
+	if (argc > 2)
+		return ERR_SYNTAX;
 
-	if (strlen(args)) {
-		if (!strncmp (args, "off", LINEBUFFER_MAX)) {
+	if (argc > 1) {
+		if (!strncmp (argv[1], str_off, LINEBUFFER_MAX)) {
 			set_Dryer(0);
-		} else if (!strncmp (args, "on", LINEBUFFER_MAX)) {
+		} else if (!strncmp (argv[1], str_on, LINEBUFFER_MAX)) {
 			set_Dryer(1);
 		} else
-			/* Syntax error */
-			return (-1);
+			return ERR_SYNTAX;
 	}
 
-	printf("Dryer: %s\n", get_Dryer()?"on":"off");
+	printf("Dryer: %s\n", get_Dryer()?str_on:str_off);
 
-	return (result);
+	return ERR_OK;
 }
 
 
-int cat (char *args)
+int cat (int argc, char* argv[])
 {
-	int	result = 0;
-
-	if (strlen(args))
-		/* Syntax error */
-		return (-1);
+	if (argc > 1)
+		return ERR_SYNTAX;
 
 	DBG("Cat: %s\n", cat_detected?"in":"out");
 
-	return (result);
+	return ERR_OK;
 }
 
 
-int water (char *args)
+int water (int argc, char* argv[])
 {
-	int	result = 0;
-
-	if (strlen(args))
-		/* Syntax error */
-		return (-1);
+	if (argc > 1)
+		return ERR_SYNTAX;
 
 	printf("Water: %s\n", watersensor_det()?"high":"low");
 
-	return (result);
+	return ERR_OK;
 }
 
 
-int heat (char *args)
+int heat (int argc, char* argv[])
 {
-	int	result = 0;
-
-	if (strlen(args))
-		/* Syntax error */
-		return (-1);
+	if (argc > 1)
+		return ERR_SYNTAX;
 
 	printf("Overheat: %s\n", overheated?"yes":"no");
 
-	return (result);
+	return ERR_OK;
 }
 
 
