@@ -4,7 +4,7 @@ Version=1.0
 [File000]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\userinterface.p1
 Folder=Intermediary
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -17,7 +17,7 @@ DebugOptions=
 [File001]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\romwashprogram.p1
 Folder=Intermediary
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -30,7 +30,7 @@ DebugOptions=
 [File002]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\litterlanguage.p1
 Folder=Intermediary
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -43,7 +43,7 @@ DebugOptions=
 [File003]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\catgenie120.p1
 Folder=Intermediary
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -56,7 +56,7 @@ DebugOptions=
 [File004]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\catsensor.p1
 Folder=Intermediary
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -69,7 +69,7 @@ DebugOptions=
 [File005]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\timer.p1
 Folder=Intermediary
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -82,7 +82,7 @@ DebugOptions=
 [File006]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\serial.p1
 Folder=Intermediary
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -95,7 +95,7 @@ DebugOptions=
 [File007]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\i2c.p1
 Folder=Intermediary
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -108,7 +108,7 @@ DebugOptions=
 [File008]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\catgenius.p1
 Folder=Intermediary
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -121,7 +121,7 @@ DebugOptions=
 [File009]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\rtc.p1
 Folder=Intermediary
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -134,7 +134,7 @@ DebugOptions=
 [File010]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\watersensor .p1
 Folder=Intermediary
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -147,7 +147,7 @@ DebugOptions=
 [File011]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\catgenius.cof
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -160,7 +160,7 @@ DebugOptions=
 [File012]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\catgenius.hex
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -173,7 +173,7 @@ DebugOptions=
 [File013]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\catgenius.sym
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -186,7 +186,7 @@ DebugOptions=
 [File014]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\catgenius.map
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -199,7 +199,7 @@ DebugOptions=
 [File015]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\catgenius.hxl
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -212,7 +212,7 @@ DebugOptions=
 [File016]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\startup.lst
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -225,7 +225,7 @@ DebugOptions=
 [File017]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\startup.rlf
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -238,7 +238,7 @@ DebugOptions=
 [File018]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\doprnt.p1
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -251,7 +251,7 @@ DebugOptions=
 [File019]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\doprnt.pre
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -264,7 +264,7 @@ DebugOptions=
 [File020]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\catgenius.obj
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -277,7 +277,7 @@ DebugOptions=
 [File021]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\catgenius.lst
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -290,7 +290,7 @@ DebugOptions=
 [File022]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\catgenius.rlf
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe
@@ -303,7 +303,7 @@ DebugOptions=
 [File023]
 Location=Z:\Sources\catgenius_google\trunk\software\catgenius\catgenius.sdb
 Folder=Output
-DeviceName=PIC16F1939
+DeviceName=PIC16F877A
 LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
 LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
 LanguageToolLocation=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\bin\picc.exe

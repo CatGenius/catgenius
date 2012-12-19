@@ -174,6 +174,9 @@ static void proc_line (char *line)
 		case ERR_IO:
 			printf("I/O error\n");
 			break;
+		case ERR_PARAM:
+			printf("Parameter error\n");
+			break;
 		default:
 			printf("Unknown error\n");
 		}
@@ -230,15 +233,3 @@ int help (int argc, char* argv[])
 
 	return ERR_OK;
 }
-
-
-int dumpports(int argc, char* argv[])
-{
-	printf("TRISB = 0x%02X, PORTB = 0x%02X\n", TRISB, PORTB);
-	printf("TRISC = 0x%02X, PORTC = 0x%02X\n", TRISC, PORTC);
-	printf("TRISD = 0x%02X, PORTD = 0x%02X\n", TRISD, PORTD);
-	printf("TRISE = 0x%02X, PORTE = 0x%02X\n", TRISE, PORTE);
-
-	return ERR_OK;
-}
-
