@@ -51,9 +51,9 @@ extern bit		__powerdown;
 extern bit		__timeout;
 #endif /* __RESETBITS_ADDR */
 
-static int start (char *args);
-static int setup (char *args);
-static int lock (char *args);
+static int start (int argc, char* argv[]);
+static int setup (int argc, char* argv[]);
+static int lock (int argc, char* argv[]);
 
 /* command line commands */
 const struct command	commands[] = {
@@ -217,22 +217,31 @@ static void interrupt isr (void)
 }
 
 
-static int start (char *args)
+static int start (int argc, char* argv[])
 {
+	if (argc > 1)
+		return ERR_SYNTAX;
+
 	start_short();
-	return (0);
+	return ERR_OK;
 }
 
 
-static int setup (char *args)
+static int setup (int argc, char* argv[])
 {
+	if (argc > 1)
+		return ERR_SYNTAX;
+
 	setup_short();
-	return (0);
+	return ERR_OK;
 }
 
 
-static int lock (char *args)
+static int lock (int argc, char* argv[])
 {
+	if (argc > 1)
+		return ERR_SYNTAX;
+
 	both_long();
-	return (0);
+	return ERR_OK;
 }

@@ -133,46 +133,6 @@ void main (void)
 		catgenie_work();
 		userinterface_work();
 		litterlanguage_work();
-
-		while (RCIF) {
-			char rxd ;
-			if (OERR)
-			{
-				TXEN = 0;
-				TXEN = 1;
-				CREN = 0;
-				CREN = 1;
-			}
-			if (FERR)
-			{
-				rxd = RCREG;
-				TXEN = 0;
-				TXEN = 1;
-			} else {
-				rxd = RCREG;
-				switch (rxd) {
-				case 'm':
-					incminutes();
-					printtime();
-					DBG("\n");
-					break;
-				case 'h':
-					inchours();
-					printtime();
-					DBG("\n");
-					break;
-				case 'w':
-					incweekday();
-					printtime();
-					DBG("\n");
-					break;
-				case '\n':
-					printtime();
-					DBG("\n");
-					break;
-				}
-			}
-		}
 #ifndef __DEBUG
 		CLRWDT();
 #endif

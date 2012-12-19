@@ -9,6 +9,6 @@
 #define CMDLINE_TAG_H
 
 /* Command implementations */
-int		tag			(char	*args) ;
+int		tag			(int argc,	char* argv[]) ;
 
 #endif /* CMDLINE_TAG_H */

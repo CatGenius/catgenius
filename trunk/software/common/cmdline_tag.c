@@ -9,6 +9,7 @@
 #include <htc.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "hardware.h"			/* Flexible hardware configuration */
 
@@ -47,35 +48,25 @@ static void tag_dump(void);
 /* Global Implementations						      */
 /******************************************************************************/
 
-int tag(char *args)
+int tag(int argc, char* argv[])
 {
-	int	result = 0;
-	char	*cmd = args;
-	char	*arg = args;
+	int	result = ERR_OK;
 
-	/* Find the separating space */
-	while (*arg != ' ' && *arg != 0)
-		arg++;
+	if (argc < 2)
+		return ERR_SYNTAX;
 
-	/* Replace space(s) with 0-termination for command */
-	while (*arg == ' ') {
-		*arg = 0;
-		arg++;
-	}
-
-	if (strlen(args)) {
-		if (!strncmp (cmd, "uid", LINEBUFFER_MAX))
-			tag_id();
-		else if (!strncmp (cmd, "dump", LINEBUFFER_MAX))
-			tag_dump();
-		else
-			/* Syntax error */
-			result = -1;
+	if (!strncmp (argv[1], "uid", LINEBUFFER_MAX)) {
+		if (argc != 2)
+			return ERR_SYNTAX;
+		tag_id();
+	} else if (!strncmp (argv[1], "dump", LINEBUFFER_MAX)) {
+		if (argc != 2)
+			return ERR_SYNTAX;
+		tag_dump();
 	} else
-		/* Syntax error */
-		result = -1;
+		return ERR_SYNTAX;
 
-	return (result);
+	return result;
 }
 
 

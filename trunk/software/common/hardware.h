@@ -10,11 +10,13 @@
 #  include "../common/cartridgegenius.h"
 #elif defined HW_CARTRIDGEGENIUS_WS1
 #  include "../common/cartridgegenius.h"
+#elif defined HW_CARTRIDGEGENIUS_WS2
+#  include "../common/cartridgegenius.h"
 #else
    /*
     * If you get this error, you need to add either one of the above
     * (HW_CATGENIE120, HW_CATGENIE120PLUS,
-    *  HW_CARTRIDGEGENIUS_WS0 or HW_CARTRIDGEGENIUS_WS1)
+    *  HW_CARTRIDGEGENIUS_WS0 or HW_CARTRIDGEGENIUS_WS1 or HW_CARTRIDGEGENIUS_WS2
     * to your project settings:
     * Project -> Build Options... -> Project
     * Tab 'Compiler', Define marcros, Add
