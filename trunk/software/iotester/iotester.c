@@ -1,6 +1,6 @@
 /******************************************************************************/
-/* File    :	geniediag.c						      */
-/* Function:	CatGenius Diagnostics Application			      */
+/* File    :	iotester.c						      */
+/* Function:	CatGenius IO testing Application			      */
 /* Author  :	Robert Delien						      */
 /*		Copyright (C) 2010, Clockwork Engineering		      */
 /* History :	16 Feb 2010 by R. Delien:				      */
@@ -11,15 +11,9 @@
 
 #include "../common/hardware.h"		/* Flexible hardware configuration */
 
-#include "../common/timer.h"
 #include "../common/serial.h"
-#include "../common/i2c.h"
-#include "../common/catsensor.h"
-#include "../common/watersensor.h"
 #include "../common/cmdline.h"
-#include "../common/cmdline_tag.h"
-#include "../common/cmdline_box.h"
-#include "userinterface.h"
+#include "../common/cmdline_gpio.h"
 
 /******************************************************************************/
 /* Macros								      */
@@ -51,30 +45,14 @@ extern bit		__powerdown;
 extern bit		__timeout;
 #endif /* __RESETBITS_ADDR */
 
-static int start (int argc, char* argv[]);
-static int setup (int argc, char* argv[]);
-static int lock (int argc, char* argv[]);
-
 /* command line commands */
 const struct command	commands[] = {
+	{"?", help},
+	{"help", help},
 	{"echo", echo},
-	{"bowl", bowl},
-	{"arm", arm},
-	{"dosage", dosage},
-	{"tap", tap},
-	{"drain", drain},
-	{"dryer", dryer},
-	{"cat", cat},
-	{"water", water},
-	{"heat", heat},
-	{"start", start},
-	{"setup", setup},
-	{"lock", lock},
-	{"tag", tag},
+	{"gpio", gpio},
 	{"", NULL}
 };
-
-static unsigned char	PORTB_old;
 
 
 /******************************************************************************/
@@ -97,7 +75,7 @@ void main (void)
 	/* Initialize the serial port */
 	serial_init();
 
-	printf("\n*** GenieDiag ***\n");
+	printf("\n*** I/O Tester ***\n");
 	if (!nPOR) {
 		DBG("Power-on reset\n");
 		flags |= POWER_FAILURE;
@@ -124,33 +102,11 @@ void main (void)
 	if (flags & SETUP_BUTTON)
 		DBG("Setup button held\n");
 
-	/* Initialize software timers */
-	timer_init();
-
-	/* Initialize the I2C bus */
-	i2c_init();
-
-	/* Initialize the cat sensor */
-	catsensor_init();
-
-	/* Initialize the cat sensor */
-	watersensor_init();
-
-	/* Initialize the user interface */
-	userinterface_init();
-
 	/* Initialize the command line interface */
 	cmdline_init();
 
-	/* Initialize interrupts */
-	interrupt_init();
-
 	/* Execute the run loop */
 	for(;;){
-		catsensor_work();
-		watersensor_work();
-		catgenie_work();
-		userinterface_work();
 		cmdline_work();
 #ifndef __DEBUG
 		CLRWDT();
@@ -159,88 +115,16 @@ void main (void)
 }
 
 
-/******************************************************************************/
-/* Local Implementations						      */
-/******************************************************************************/
-
-static void interrupt_init (void)
+void startbutton_event (unsigned char up)
 {
-	PORTB_old = PORTB;
-
-	/* Enable peripheral interrupts */
-	PEIE = 1;
-
-	/* Enable interrupts */
-	GIE = 1;
-}
-
-static void interrupt isr (void)
-{
-	unsigned char temp;
-
-	/* Timer 1 interrupt */
-	if (TMR1IF) {
-		/* Reset interrupt */
-		TMR1IF = 0;
-		/* Handle interrupt */
-		timer_isr();
-	}
-	/* Timer 2 interrupt */
-	if (TMR2IF) {
-		/* Reset interrupt */
-		TMR2IF = 0;
-		/* Handle interrupt */
-		catsensor_isr_timer();
-	}
-	/* Port B interrupt */
-#if (defined _16F877A)
-	if (RBIF) {
-#elif (defined _16F1939)
-	if (IOCIF) {
-#endif
-		/* Detected changes */
-		temp = PORTB ^ PORTB_old;
-		/* Reset interrupt */
-#if (defined _16F877A)
-		RBIF = 0;
-#elif (defined _16F1939)
-		IOCBF = 0;
-		IOCIF = 0;
-#endif
-		/* Handle interrupt */
-		if (temp & CATSENSOR_MASK)
-			catsensor_isr_input();
-		/* Update the old status */
-		PORTB_old = PORTB ;
-	}
 }
 
 
-static int start (int argc, char* argv[])
+void setupbutton_event (unsigned char up)
 {
-	if (argc > 1)
-		return ERR_SYNTAX;
-
-	start_short();
-	return ERR_OK;
 }
 
 
-static int setup (int argc, char* argv[])
+void heatsensor_event (unsigned char up)
 {
-	if (argc > 1)
-		return ERR_SYNTAX;
-
-	setup_short();
-	return ERR_OK;
-}
-
-
-static int lock (int argc, char* argv[])
-{
-	if (argc > 1)
-		return ERR_SYNTAX;
-
-	both_long();
-	return ERR_OK;
 }

@@ -15,7 +15,7 @@
 #define ERR_OK		(0)
 #define ERR_SYNTAX	(-1)
 #define ERR_IO		(-2)
-
+#define ERR_PARAM	(-3)
 
 struct command {
 	char	cmd[COMMAND_MAX];
@@ -30,6 +30,5 @@ void		cmdline_term		(void) ;
 /* Command implementations */
 int		echo			(int argc,	char* argv[]) ;
 int		help			(int argc,	char* argv[]) ;
-int		dumpports		(int argc,	char* argv[]) ;
 
 #endif /* CMDLINE_H */
