@@ -41,8 +41,10 @@ struct gpioport {
 
 #ifdef HAS_LATCH_REGS
 #define PORT_REGISTERS(prt)		&PORT##prt, &LAT##prt, &TRIS##prt
+#define OUT				latch
 #else
 #define PORT_REGISTERS(prt)		&PORT##prt, &TRIS##prt
+#define OUT				port
 #endif /* HAS_LATCH_REGS */
 
 struct gpioport	gpioports[] = {
@@ -66,6 +68,16 @@ void hexstr (uint8_t value, char *str);
 /* Global Implementations						      */
 /******************************************************************************/
 
+/*
+ * Usages:
+ * 1. Dump gpio related register contents:
+ * gpio
+ * 2. Manipulation of a GPIO pin:
+ * gpio <in|set|clr> <pin>
+ * ('set' and 'clr' make a pin an output, 'in' makes a pin an input)
+ * 3. Logging pin states differentially
+ * gpio log
+ */
 int gpio(int argc, char* argv[])
 {
 	unsigned char	port = 0;
@@ -75,46 +87,39 @@ int gpio(int argc, char* argv[])
 		return ERR_SYNTAX;
 
 	if (argc == 3) {
-		/* First argument: GPIO pin */
-		if (strlen(argv[1]) != 2)
+		/* Fetch GPIO pin */
+		if (strlen(argv[2]) != 2)
 			return ERR_SYNTAX;
 		while (gpioports[port].name) {
-			if ((gpioports[port].name == argv[1][0]) ||
-			    (gpioports[port].name-'A'+'a' == argv[1][0]))
+			if ((gpioports[port].name == argv[2][0]) ||
+			    (gpioports[port].name-'A'+'a' == argv[2][0]))
 				break;
 			port++;
 		}
 		if (!gpioports[port].name)
 			return ERR_PARAM;
 
-		if (argv[1][1] < '0' && argv[1][1] > '7')
+		if (argv[2][1] < '0' && argv[2][1] > '7')
 			return ERR_PARAM;
-		pin = argv[1][1] - '0';
+		pin = argv[2][1] - '0';
 		if (!((1 << pin) & gpioports[port].pinmask))
 			return ERR_PARAM;
 
-		/* Second argument: Operation */
-		if (!strncmp (argv[2], "input", LINEBUFFER_MAX)) {
+		/* Fetch Operation */
+		if (!strncmp (argv[1], "in", LINEBUFFER_MAX)) {
 			*gpioports[port].tris |= 1 << pin;
 			printf("Port %c, pin %d = %s\n", port + 'A', pin, (*gpioports[port].port & 1 << pin)?"1":"0");
-		} else if (!strncmp (argv[2], "set", LINEBUFFER_MAX)) {
-#ifdef HAS_LATCH_REGS
-			*gpioports[port].latch |= 1 << pin;
-#else
-			*gpioports[port].port  |= 1 << pin;
-#endif /* HAS_LATCH_REGS */
+		} else if (!strncmp (argv[1], "set", LINEBUFFER_MAX)) {
+			*gpioports[port].OUT  |= 1 << pin;
 			*gpioports[port].tris  &= ~(1 << pin);
 			printf("Port %c, pin %d set\n", port + 'A', pin);
-		} else if (!strncmp (argv[2], "clr", LINEBUFFER_MAX)) {
-#ifdef HAS_LATCH_REGS
-			*gpioports[port].latch &= ~(1 << pin);
-#else
-			*gpioports[port].port  &= ~(1 << pin);
-#endif /* HAS_LATCH_REGS */
+		} else if (!strncmp (argv[1], "clr", LINEBUFFER_MAX)) {
+			*gpioports[port].OUT  &= ~(1 << pin);
 			*gpioports[port].tris  &= ~(1 << pin);
 			printf("Port %c, pin %d cleared\n", port + 'A', pin);
 		}
 	} else {
+		/* Second argument can only be 'log' */
 		if ((argc == 2) && strncmp(argv[1], "log", LINEBUFFER_MAX))
 			return ERR_SYNTAX;
 
