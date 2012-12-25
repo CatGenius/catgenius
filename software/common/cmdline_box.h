@@ -1,6 +1,6 @@
 /******************************************************************************/
-/* File    :	cmdline_tag.h						      */
-/* Function:	Include file of 'cmdline_tag.c'.			      */
+/* File    :	cmdline_box.h						      */
+/* Function:	Include file of 'cmdline_box.c'.			      */
 /* Author  :	Robert Delien						      */
 /*		Copyright (C) 2012, Clockwork Engineering		      */
 /******************************************************************************/

@@ -58,6 +58,7 @@ static int lock (int argc, char* argv[]);
 /* command line commands */
 const struct command	commands[] = {
 	{"echo", echo},
+	{"help", help},
 	{"bowl", bowl},
 	{"arm", arm},
 	{"dosage", dosage},
@@ -133,7 +134,7 @@ void main (void)
 	/* Initialize the cat sensor */
 	catsensor_init();
 
-	/* Initialize the cat sensor */
+	/* Initialize the water sensor */
 	watersensor_init();
 
 	/* Initialize the user interface */

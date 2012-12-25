@@ -17,6 +17,9 @@
 #include "../common/i2c.h"
 #include "../common/catsensor.h"
 #include "../common/watersensor.h"
+#ifdef _16F1939
+#  include "../common/cmdline.h"
+#endif /* _16F1939 */
 #include "userinterface.h"
 #include "litterlanguage.h"
 
@@ -49,6 +52,15 @@
 extern bit		__powerdown;
 extern bit		__timeout;
 #endif /* __RESETBITS_ADDR */
+
+#ifdef _16F1939
+/* command line commands */
+const struct command	commands[] = {
+	{"echo", echo},
+	{"help", help},
+	{"", NULL}
+};
+#endif /* _16F1939 */
 
 static unsigned char	PORTB_old;
 
@@ -119,6 +131,11 @@ void main (void)
 	/* Initialize the user interface */
 	userinterface_init(flags);
 
+#if (defined _16F1939)
+	/* Initialize the command line interface */
+	cmdline_init();
+#endif
+
 	/* Initialize the washing program */
 	litterlanguage_init(flags);
 
@@ -132,6 +149,9 @@ void main (void)
 		watersensor_work();
 		catgenie_work();
 		userinterface_work();
+#if (defined _16F1939)
+		cmdline_work();
+#endif
 		litterlanguage_work();
 #ifndef __DEBUG
 		CLRWDT();
