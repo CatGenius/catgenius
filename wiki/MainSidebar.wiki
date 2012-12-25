@@ -4,6 +4,7 @@
   * [Manuals]
     * [CatGeniusUsersManual CatGenius User's Manual]
     * [GenieDiagManual GenieDiag Manual]
+    * [IOTesterManual I/O-Tester Manual]
   * [Howtos How to's]
     * [HowToOpenPU How to open the processing unit]
     * [HowToProgram How to program the firmware]
