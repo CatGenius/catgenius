@@ -1,0 +1,72 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+I/O-Tester is a small program that allows you to manipulate the PIC processor's General Purpose I/O (gpio) pins from the command line on the serial port.
+
+
+= Details =
+
+After you have programmed I/O-Tester into your box, connect it's serial port to a computer and use Putty - or another good terminal emulator - to get access to the integrated command line interpreter. Communication parameters are 115200 bits/s, 8 data bits, no parity and 1 stop bit. Local-echo should be off, as the integrated command line interpreter echoes anything you type per default. You may need to configure it to add a carriage return to every line feed it receives, depending on your terminal emulator.
+
+After you power up the box, the I/O-Tester application will present itself on your terminal:
+{{{
+*** I/O Tester ***
+Brown-out reset
+#
+}}}
+First it's name, then the reset diagnostics and finally the prompt. At the prompt you can type commands, up to 20 characters. After the 20th characters, nothing you type is echoed anymore and a bell is sound at any further key, so you know you're at the end of the line. No command is that long anyway. On a good terminal emulator backspace is supported too.
+
+To get a list of known commands, type the command 'help', or just a '?', naturally followed by the Enter-key:
+{{{
+# help
+Known commands:
+?
+help
+echo
+gpio
+}}}
+Beyond this, no further help is built-in, due to memory restrictions. The command of interest to you is 'gpio'. Per default it dumps all register values related to GPIO pins:
+{{{
+# gpio
+PORTA = 0x03, LATA = 0x00, TRISA = 0x13
+PORTB = 0x33, LATB = 0x00, TRISB = 0xFB
+PORTC = 0xD8, LATC = 0x00, TRISC = 0x98
+PORTD = 0x01, LATD = 0x01, TRISD = 0x00
+PORTE = 0x00, LATE = 0x00, TRISE = 0x08
+}}}
+Your version will not show any latch registers as above if your processor doesn't have any.
+
+The GPIO command also has a number of sub commands. It allow you to modify the state and direction of a pin. To change pin b5 to an input and read its state, use:
+{{{
+# gpio in c5
+Port C, pin 5 = 0
+}}}
+To change pin b5 to an output and set its state, use:
+{{{
+# gpio set c5
+Port C, pin 5 set
+}}}
+To change pin b5 to an output and set its state, use:
+{{{
+# gpio clr c5
+Port C, pin 5 cleared
+}}}
+Naturally, instead of c5 any other valid pin can be used. As you see, all these 3 commands report what they have done, so it's always clear if the command went wrong or the result is not what was expected.It will
+
+To poll all port and report different states automatically, use:
+{{{
+# gpio log
+PORTA = 0x03, LATA = 0x00, TRISA = 0x13
+PORTB = 0x33, LATB = 0x00, TRISB = 0xFB
+PORTC = 0xD8, LATC = 0x00, TRISC = 0x98
+PORTD = 0x01, LATD = 0x01, TRISD = 0x00
+PORTE = 0x00, LATE = 0x00, TRISE = 0x08
+Press any key to exit logging
+PORTB = 0x13
+PORTB = 0x33
+PORTB = 0x32
+PORTB = 0x33
+}}}
+It will first dump the state of all registers, follow
+ed by an invitation to press a key to stop logging. After that, it will differences in input pins incrementally. In the example above it first reports a change of PORTB to 0x13 from the initial value of 0x33 in the dump above. This is the result of me pushing a button. The line below reporting PORTB to go back to 0x33 indicates I released the button. Please keep in mind that pins configured as output WILL show here too when shorted down. This is a know PIC shortcoming and the reason why more modern PICs have this LATCH register.
