@@ -31,7 +31,7 @@
 0,0047840,Setup write to 0x50. +ACK	/* Address RFID reader */
 0,0049020,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0049740,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
-0,0050460,Wrote 0x0E to 0x50. +ACK	/* Write command: Select chip ID */
+0,0050460,Wrote 0x0e to 0x50. +ACK	/* Write command: Select chip ID */
 0,0051180,Wrote 0x45 to 0x50. +ACK	/* Write parameter: 0x45 */
 0,0051838,Stop
 
@@ -48,7 +48,7 @@
 0,0099652,Setup write to 0x50. +ACK	/* Address RFID reader */
 0,0100373,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0101093,Wrote 0x01 to 0x50. +ACK	/* Write frame length: 1 byte */
-0,0101813,Wrote 0x0B to 0x50. +ACK	/* Write command: Get UID */
+0,0101813,Wrote 0x0b to 0x50. +ACK	/* Write command: Get UID */
 0,0102470,Stop
 
 0,0143425,Start
@@ -60,11 +60,11 @@
 0,0147675,Read 0x67 from 0x50. +ACK	/* Read response: UID[0] = 0x67 */
 0,0149415,Read 0x69 from 0x50. +ACK	/* Read response: UID[1] = 0x69 */
 0,0150695,Read 0x56 from 0x50. +ACK	/* Read response: UID[2] = 0x56 */
-0,0151975,Read 0x3F from 0x50. +ACK	/* Read response: UID[3] = 0x3F */
-0,0153255,Read 0xE4 from 0x50. +ACK	/* Read response: UID[4] = 0xE4 */
-0,0154535,Read 0x0D from 0x50. +ACK	/* Read response: UID[5] = 0x0D */
+0,0151975,Read 0x3f from 0x50. +ACK	/* Read response: UID[3] = 0x3f */
+0,0153255,Read 0xe4 from 0x50. +ACK	/* Read response: UID[4] = 0xe4 */
+0,0154535,Read 0x0d from 0x50. +ACK	/* Read response: UID[5] = 0x0d */
 0,0155815,Read 0x02 from 0x50. +ACK	/* Read response: UID[6] = 0x02 */
-0,0157095,Read 0xD0 from 0x50. +No ACK	/* Read response: UID[7] = 0xD0 */
+0,0157095,Read 0xd0 from 0x50. +No ACK	/* Read response: UID[7] = 0xd0 */
 0,0158305,Stop
 
 0,0280938,Start
@@ -72,7 +72,7 @@
 0,0282078,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0282798,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,0283518,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,0284238,Wrote 0x0D to 0x50. +ACK	/* Write parameter: block 0x0D */
+0,0284238,Wrote 0x0d to 0x50. +ACK	/* Write parameter: block 0x0d */
 0,0284895,Stop
 
 0,0315728,Start
@@ -82,9 +82,9 @@
 0,0317935,Setup read from 0x50. +ACK
 0,0319105,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
 0,0320425,Read 0x30 from 0x50. +ACK	/* Read response: Block[0x0D][0] = 0x30 */
-0,0321705,Read 0x2A from 0x50. +ACK	/* Read response: Block[0x0D][1] = 0x2A */
-0,0322988,Read 0xD8 from 0x50. +ACK	/* Read response: Block[0x0D][2] = 0xD8 */
-0,0324268,Read 0xCB from 0x50. +No ACK	/* Read response: Block[0x0D][3] = 0xCB */
+0,0321705,Read 0x2a from 0x50. +ACK	/* Read response: Block[0x0D][1] = 0x2a */
+0,0322988,Read 0xd8 from 0x50. +ACK	/* Read response: Block[0x0D][2] = 0xd8 */
+0,0324268,Read 0xcb from 0x50. +No ACK	/* Read response: Block[0x0D][3] = 0xcb */
 0,0325475,Stop
 
 0,0326320,Start
@@ -92,7 +92,7 @@
 0,0327458,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0328178,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,0329358,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,0330078,Wrote 0x05 to 0x50. +ACK	/* Write parameter: block 0x05 */
+0,0330078,Wrote 0x05 to 0x50. +ACK	/* Write parameter: block 0x05 (counter[0]) */
 0,0330735,Stop
 
 0,0361578,Start
@@ -112,7 +112,7 @@
 0,0372808,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0373528,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,0374250,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,0374970,Wrote 0x06 to 0x50. +ACK	/* Write parameter: block 0x06 */
+0,0374970,Wrote 0x06 to 0x50. +ACK	/* Write parameter: block 0x06 (counter[1]) */
 0,0375628,Stop
 
 0,0406470,Start
@@ -143,7 +143,7 @@
 0,0455228,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
 0,0456550,Read 0x01 from 0x50. +ACK	/* Read response: Block[0x08][0] = 0x01 */
 0,0457830,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x08][1] = 0x00 */
-0,0459560,Read 0x3C from 0x50. +ACK	/* Read response: Block[0x08][2] = 0x3C */
+0,0459560,Read 0x3c from 0x50. +ACK	/* Read response: Block[0x08][2] = 0x3c */
 0,0460840,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x08][3] = 0x00 */
 0,0462048,Stop
 
@@ -163,7 +163,7 @@
 0,0500930,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
 0,0502250,Read 0x01 from 0x50. +ACK	/* Read response: Block[0x09][0] = 0x01 */
 0,0503530,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x09][1] = 0x00 */
-0,0504810,Read 0x3C from 0x50. +ACK	/* Read response: Block[0x09][2] = 0x3C */
+0,0504810,Read 0x3c from 0x50. +ACK	/* Read response: Block[0x09][2] = 0x3c */
 0,0506090,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x09][3] = 0x00 */
 0,0507300,Stop
 
@@ -172,7 +172,7 @@
 0,0509363,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0510083,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,0510803,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,0511523,Wrote 0x0A to 0x50. +ACK	/* Write parameter: block 0x0A */
+0,0511523,Wrote 0x0a to 0x50. +ACK	/* Write parameter: block 0x0a */
 0,0512180,Stop
 
 0,0543023,Start
@@ -181,10 +181,10 @@
 0,0544858,Start
 0,0545230,Setup read from 0x50. +ACK
 0,0545950,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
-0,0547270,Read 0x01 from 0x50. +ACK	/* Read response: Block[0x0A][0] = 0x01 */
-0,0549003,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x0A][1] = 0x00 */
-0,0550283,Read 0x3C from 0x50. +ACK	/* Read response: Block[0x0A][2] = 0x3C */
-0,0551563,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x0A][3] = 0x00 */
+0,0547270,Read 0x01 from 0x50. +ACK	/* Read response: Block[0x0a][0] = 0x01 */
+0,0549003,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x0a][1] = 0x00 */
+0,0550283,Read 0x3c from 0x50. +ACK	/* Read response: Block[0x0a][2] = 0x3c */
+0,0551563,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x0a][3] = 0x00 */
 0,0552770,Stop
 
 0,0554275,Start
@@ -192,7 +192,7 @@
 0,0555413,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0556133,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,0556853,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,0557573,Wrote 0x0B to 0x50. +ACK	/* Write parameter: block 0x0B */
+0,0557573,Wrote 0x0b to 0x50. +ACK	/* Write parameter: block 0x0b */
 0,0558230,Stop
 
 0,0589533,Start
@@ -201,10 +201,10 @@
 0,0591370,Start
 0,0591743,Setup read from 0x50. +ACK
 0,0592463,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
-0,0593783,Read 0x08 from 0x50. +ACK	/* Read response: Block[0x0B][0] = 0x08 */
-0,0595063,Read 0x21 from 0x50. +ACK	/* Read response: Block[0x0B][1] = 0x21 */
-0,0596343,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x0B][2] = 0x00 */
-0,0597623,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x0B][3] = 0x00 */
+0,0593783,Read 0x08 from 0x50. +ACK	/* Read response: Block[0x0b][0] = 0x08 */
+0,0595063,Read 0x21 from 0x50. +ACK	/* Read response: Block[0x0b][1] = 0x21 */
+0,0596343,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x0b][2] = 0x00 */
+0,0597623,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x0b][3] = 0x00 */
 0,0599290,Stop
 
 0,0599995,Start
@@ -212,7 +212,7 @@
 0,0601135,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0601855,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,0602575,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,0603295,Wrote 0x0C to 0x50. +ACK	/* Write parameter: block 0x0C */
+0,0603295,Wrote 0x0c to 0x50. +ACK	/* Write parameter: block 0x0c */
 0,0603953,Stop
 
 0,0634795,Start
@@ -221,10 +221,10 @@
 0,0636630,Start
 0,0637003,Setup read from 0x50. +ACK
 0,0637723,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
-0,0639503,Read 0x08 from 0x50. +ACK	/* Read response: Block[0x0C][0] = 0x08 */
-0,0640783,Read 0x21 from 0x50. +ACK	/* Read response: Block[0x0C][1] = 0x21 */
-0,0642065,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x0C][2] = 0x00 */
-0,0643345,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x0C][3] = 0x00 */
+0,0639503,Read 0x08 from 0x50. +ACK	/* Read response: Block[0x0c][0] = 0x08 */
+0,0640783,Read 0x21 from 0x50. +ACK	/* Read response: Block[0x0c][1] = 0x21 */
+0,0642065,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x0c][2] = 0x00 */
+0,0643345,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x0c][3] = 0x00 */
 0,0644553,Stop
 
 0,0645258,Start
@@ -232,7 +232,7 @@
 0,0646395,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,0647115,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,0647835,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,0649015,Wrote 0x0F to 0x50. +ACK	/* Write parameter: block 0x0F */
+0,0649015,Wrote 0x0f to 0x50. +ACK	/* Write parameter: block 0x0f */
 0,0649673,Stop
 
 0,0680505,Start
@@ -241,16 +241,16 @@
 0,0682340,Start
 0,0682715,Setup read from 0x50. +ACK
 0,0683435,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
-0,0684755,Read 0x08 from 0x50. +ACK	/* Read response: Block[0x0F][0] = 0x08 */
-0,0686035,Read 0x21 from 0x50. +ACK	/* Read response: Block[0x0F][1] = 0x21 */
-0,0687315,Read 0xE0 from 0x50. +ACK	/* Read response: Block[0x0F][2] = 0xE0 */
-0,0689055,Read 0xDE from 0x50. +No ACK	/* Read response: Block[0x0F][3] = 0xDE */
+0,0684755,Read 0x08 from 0x50. +ACK	/* Read response: Block[0x0f][0] = 0x08 */
+0,0686035,Read 0x21 from 0x50. +ACK	/* Read response: Block[0x0f][1] = 0x21 */
+0,0687315,Read 0xe0 from 0x50. +ACK	/* Read response: Block[0x0f][2] = 0xe0 */
+0,0689055,Read 0xde from 0x50. +No ACK	/* Read response: Block[0x0f][3] = 0xde */
 0,0690263,Stop
 
 0,0691658,Start
 0,0692075,Setup write to 0x50. +ACK	/* Address RFID reader */
 0,0692798,Wrote 0x00 to 0x50. +ACK	/* Parameter register */
-0,0693518,Wrote 0x00 to 0x50. +ACK	/* Turn on carrier */
+0,0693518,Wrote 0x00 to 0x50. +ACK	/* Turn off carrier */
 0,0694175,Stop
 
 0,2923700,Start
@@ -321,7 +321,7 @@
 0,3023543,Setup write to 0x50. +ACK	/* Address RFID reader */
 0,3024263,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3024983,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
-0,3025703,Wrote 0x0E to 0x50. +ACK	/* Write command: Select chip ID */
+0,3025703,Wrote 0x0e to 0x50. +ACK	/* Write command: Select chip ID */
 0,3026423,Wrote 0x39 to 0x50. +ACK	/* Write parameter: 0x39 */
 0,3027083,Stop
 
@@ -338,7 +338,7 @@
 0,3074905,Setup write to 0x50. +ACK	/* Address RFID reader */
 0,3075625,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3076345,Wrote 0x01 to 0x50. +ACK	/* Write frame length: 1 byte */
-0,3077065,Wrote 0x0B to 0x50. +ACK	/* Write command: Get UID */
+0,3077065,Wrote 0x0b to 0x50. +ACK	/* Write command: Get UID */
 0,3077723,Stop
 
 0,3118678,Start
@@ -350,11 +350,11 @@
 0,3123378,Read 0x67 from 0x50. +ACK	/* Read response: UID[0] = 0x67 */
 0,3124658,Read 0x69 from 0x50. +ACK	/* Read response: UID[1] = 0x69 */
 0,3125938,Read 0x56 from 0x50. +ACK	/* Read response: UID[2] = 0x56 */
-0,3127218,Read 0x3F from 0x50. +ACK	/* Read response: UID[3] = 0x3F */
-0,3128498,Read 0xE4 from 0x50. +ACK	/* Read response: UID[4] = 0xE4 */
-0,3130240,Read 0x0D from 0x50. +ACK	/* Read response: UID[5] = 0x0D */
+0,3127218,Read 0x3f from 0x50. +ACK	/* Read response: UID[3] = 0x3f */
+0,3128498,Read 0xe4 from 0x50. +ACK	/* Read response: UID[4] = 0xe4 */
+0,3130240,Read 0x0d from 0x50. +ACK	/* Read response: UID[5] = 0x0d */
 0,3131520,Read 0x02 from 0x50. +ACK	/* Read response: UID[6] = 0x02 */
-0,3132800,Read 0xD0 from 0x50. +No ACK	/* Read response: UID[7] = 0xD0 */
+0,3132800,Read 0xd0 from 0x50. +No ACK	/* Read response: UID[7] = 0xd0 */
 0,3134008,Stop
 
 0,3256253,Start
@@ -362,7 +362,7 @@
 0,3257390,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3258110,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,3258830,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,3260010,Wrote 0x0D to 0x50. +ACK	/* Write parameter: block 0x0D */
+0,3260010,Wrote 0x0d to 0x50. +ACK	/* Write parameter: block 0x0d */
 0,3260668,Stop
 
 0,3291500,Start
@@ -371,10 +371,10 @@
 0,3293335,Start
 0,3293708,Setup read from 0x50. +ACK
 0,3294430,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
-0,3295750,Read 0x30 from 0x50. +ACK	/* Read response: Block[0x0D][0] = 0x30 */
-0,3297030,Read 0x2A from 0x50. +ACK	/* Read response: Block[0x0D][1] = 0x2A */
-0,3298310,Read 0xD8 from 0x50. +ACK	/* Read response: Block[0x0D][2] = 0xD8 */
-0,3300050,Read 0xCB from 0x50. +No ACK	/* Read response: Block[0x0D][3] = 0xCB */
+0,3295750,Read 0x30 from 0x50. +ACK	/* Read response: Block[0x0d][0] = 0x30 */
+0,3297030,Read 0x2a from 0x50. +ACK	/* Read response: Block[0x0d][1] = 0x2a */
+0,3298310,Read 0xd8 from 0x50. +ACK	/* Read response: Block[0x0d][2] = 0xd8 */
+0,3300050,Read 0xcb from 0x50. +No ACK	/* Read response: Block[0x0d][3] = 0xcb */
 0,3301258,Stop
 
 0,3302103,Start
@@ -382,7 +382,7 @@
 0,3303240,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3303960,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,3304683,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,3305403,Wrote 0x05 to 0x50. +ACK	/* Write parameter: block 0x05 */
+0,3305403,Wrote 0x05 to 0x50. +ACK	/* Write parameter: block 0x05 (counter[0]) */
 0,3306060,Stop
 
 0,3336903,Start
@@ -402,7 +402,7 @@
 0,3348243,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3348963,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,3350063,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,3350783,Wrote 0x06 to 0x50. +ACK	/* Write parameter: block 0x06 */
+0,3350783,Wrote 0x06 to 0x50. +ACK	/* Write parameter: block 0x06 (counter[1]) */
 0,3351440,Stop
 
 0,3382273,Start
@@ -431,10 +431,10 @@
 0,3429680,Start
 0,3430053,Setup read from 0x50. +ACK
 0,3430773,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
-0,3432093,Read 0x01 from 0x50. +ACK
-0,3433373,Read 0x00 from 0x50. +ACK
-0,3434653,Read 0x3C from 0x50. +ACK
-0,3435933,Read 0x00 from 0x50. +No ACK
+0,3432093,Read 0x01 from 0x50. +ACK	/* Read response: Block[0x08][0] = 0x01 */
+0,3433373,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x08][1] = 0x00 */
+0,3434653,Read 0x3c from 0x50. +ACK	/* Read response: Block[0x08][2] = 0x3c */
+0,3435933,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x08][3] = 0x00 */
 0,3437140,Stop
 
 0,3437845,Start
@@ -451,10 +451,10 @@
 0,3474850,Start
 0,3475223,Setup read from 0x50. +ACK
 0,3475943,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
-0,3477263,Read 0x01 from 0x50. +ACK
-0,3478543,Read 0x00 from 0x50. +ACK
-0,3480285,Read 0x3C from 0x50. +ACK
-0,3481565,Read 0x00 from 0x50. +No ACK
+0,3477263,Read 0x01 from 0x50. +ACK	/* Read response: Block[0x09][0] = 0x01 */
+0,3478543,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x09][1] = 0x00 */
+0,3480285,Read 0x3c from 0x50. +ACK	/* Read response: Block[0x09][2] = 0x3c */
+0,3481565,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x09][3] = 0x00 */
 0,3482773,Stop
 
 0,3483478,Start
@@ -462,7 +462,7 @@
 0,3484615,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3485335,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,3486055,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,3486775,Wrote 0x0A to 0x50. +ACK	/* Write parameter: block 0x0A */
+0,3486775,Wrote 0x0a to 0x50. +ACK	/* Write parameter: block 0x0a */
 0,3487433,Stop
 
 0,3518275,Start
@@ -471,10 +471,10 @@
 0,3520570,Start
 0,3520945,Setup read from 0x50. +ACK
 0,3521665,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
-0,3522985,Read 0x01 from 0x50. +ACK
-0,3524265,Read 0x00 from 0x50. +ACK
-0,3525545,Read 0x3C from 0x50. +ACK
-0,3526825,Read 0x00 from 0x50. +No ACK
+0,3522985,Read 0x01 from 0x50. +ACK	/* Read response: Block[0x0a][0] = 0x01 */
+0,3524265,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x0a][1] = 0x00 */
+0,3525545,Read 0x3c from 0x50. +ACK	/* Read response: Block[0x0a][2] = 0x3c */
+0,3526825,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x0a][3] = 0x00 */
 0,3528033,Stop
 
 0,3529998,Start
@@ -482,7 +482,7 @@
 0,3531138,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3531858,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,3532578,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,3533298,Wrote 0x0B to 0x50. +ACK	/* Write parameter: block 0x0B */
+0,3533298,Wrote 0x0b to 0x50. +ACK	/* Write parameter: block 0x0b */
 0,3533955,Stop
 
 0,3564788,Start
@@ -491,10 +491,10 @@
 0,3566623,Start
 0,3566995,Setup read from 0x50. +ACK
 0,3567715,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
-0,3569035,Read 0x08 from 0x50. +ACK
-0,3570605,Read 0x21 from 0x50. +ACK
-0,3571888,Read 0x00 from 0x50. +ACK
-0,3573168,Read 0x00 from 0x50. +No ACK
+0,3569035,Read 0x08 from 0x50. +ACK	/* Read response: Block[0x0b][0] = 0x08 */
+0,3570605,Read 0x21 from 0x50. +ACK	/* Read response: Block[0x0b][1] = 0x21 */
+0,3571888,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x0b][2] = 0x00 */
+0,3573168,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x0b][3] = 0x00 */
 0,3574375,Stop
 
 0,3575080,Start
@@ -502,7 +502,7 @@
 0,3576218,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3576938,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,3577658,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,3578378,Wrote 0x0C to 0x50. +ACK	/* Write parameter: block 0x0C */
+0,3578378,Wrote 0x0c to 0x50. +ACK	/* Write parameter: block 0x0c */
 0,3579035,Stop
 
 0,3610328,Start
@@ -511,10 +511,10 @@
 0,3612163,Start
 0,3612535,Setup read from 0x50. +ACK
 0,3613258,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
-0,3614578,Read 0x08 from 0x50. +ACK
-0,3615858,Read 0x21 from 0x50. +ACK
-0,3617138,Read 0x00 from 0x50. +ACK
-0,3618418,Read 0x00 from 0x50. +No ACK
+0,3614578,Read 0x08 from 0x50. +ACK	/* Read response: Block[0x0c][0] = 0x08 */
+0,3615858,Read 0x21 from 0x50. +ACK	/* Read response: Block[0x0c][1] = 0x21 */
+0,3617138,Read 0x00 from 0x50. +ACK	/* Read response: Block[0x0c][2] = 0x00 */
+0,3618418,Read 0x00 from 0x50. +No ACK	/* Read response: Block[0x0c][3] = 0x00 */
 0,3620085,Stop
 
 0,3620790,Start
@@ -522,7 +522,7 @@
 0,3621928,Wrote 0x01 to 0x50. +ACK	/* IO Frame register */
 0,3622648,Wrote 0x02 to 0x50. +ACK	/* Write frame length: 2 bytes */
 0,3623370,Wrote 0x08 to 0x50. +ACK	/* Write command: Read block */
-0,3624090,Wrote 0x0F to 0x50. +ACK	/* Write parameter: block 0x0F */
+0,3624090,Wrote 0x0f to 0x50. +ACK	/* Write parameter: block 0x0f */
 0,3624748,Stop
 
 0,3655580,Start
@@ -531,10 +531,10 @@
 0,3657415,Start
 0,3657788,Setup read from 0x50. +ACK
 0,3658508,Read 0x04 from 0x50. +ACK	/* Read frame length: 4 bytes */
-0,3660288,Read 0x08 from 0x50. +ACK
-0,3661568,Read 0x21 from 0x50. +ACK
-0,3662848,Read 0xE0 from 0x50. +ACK
-0,3664128,Read 0xDE from 0x50. +No ACK
+0,3660288,Read 0x08 from 0x50. +ACK	/* Read response: Block[0x0f][0] = 0x08 */
+0,3661568,Read 0x21 from 0x50. +ACK	/* Read response: Block[0x0f][1] = 0x21 */
+0,3662848,Read 0xe0 from 0x50. +ACK	/* Read response: Block[0x0f][2] = 0xe0 */
+0,3664128,Read 0xde from 0x50. +No ACK	/* Read response: Block[0x0f][3] = 0xde */
 0,3665338,Stop
 
 0,3666733,Start
@@ -709,7 +709,7 @@
 4,3815755,Start
 4,3816130,Setup read from 0x50. +ACK
 4,3816850,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
-4,3818090,Read 0x3C from 0x50. +No ACK	/* Read response: Unique chip ID (0x3C) */
+4,3818090,Read 0x3c from 0x50. +No ACK	/* Read response: Unique chip ID (0x3c) */
 4,3819858,Stop
 
 4,3820433,Start
@@ -954,7 +954,7 @@
 11,3832705,Start
 11,3833078,Setup read from 0x50. +ACK
 11,3833798,Read 0x01 from 0x50. +ACK	/* Read frame length: 1 byte */
-11,3835038,Read 0x4D from 0x50. +No ACK	/* Read response: Unique chip ID (0x4D) */
+11,3835038,Read 0x4d from 0x50. +No ACK	/* Read response: Unique chip ID (0x4d) */
 11,3836805,Stop
 
 11,3837380,Start
