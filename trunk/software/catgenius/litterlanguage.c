@@ -15,6 +15,7 @@
 #include "litterlanguage.h"
 #include "romwashprogram.h"
 #include "../common/timer.h"
+#include "../common/watersensor.h"
 #include "../common/rtc.h"
 
 

@@ -113,29 +113,29 @@ unsigned char catgenie_init (void)
 	/* Disable ADC */
 	ADCON1 = 0x07;
 #if (defined _16F1939)
-	/* Select digital function */
-	ANSELA = 0;
+	/* Select analog function for water senor input */
+	ANSELA = WATERSENSORANALOG_MASK;/* Analog water sensor input */
 #endif
 
 	/*
 	 * Setup port B
 	 */
 	TRISB = STARTBUTTON_MASK |	/* Button Start/Pause */
-		WATERSENSOR_MASK |	/* Water Sensor */
+		WATERVALVE_MASK  |	/* Water Sensor */
 		HEATSENSOR_MASK  |	/* Over heat detector (U4) */
 		CATSENSOR_MASK   |	/* Cat Sensor */
 		SETUPBUTTON_MASK |	/* Button Auto setup */
 		NOT_USED_3_MASK  |	/* PGM Clock */
 		NOT_USED_4_MASK  ;	/* PGM Data */
 	PORTB = 0x00;
-	/* Turn on internal weak pull-up resitors on inputs */
 #if (defined _16F877A)
+	/* Enable pull-up resitors on all pins */
 	nRBPU = 0;
 #elif (defined _16F1939)
 	/* Select digital function */
 	ANSELB = 0;
-	/* Enable all individual pull-ups */
-	WPUB = 0xFF;
+	/* Enable pull-up resitors on all pins individually, except for WATERVALVE */
+	WPUB = ~WATERVALVE_MASK;
 #endif
 	/* Clear the interrupt status */
 #if (defined _16F877A)
@@ -171,7 +171,7 @@ unsigned char catgenie_init (void)
 	 * Setup port D
 	 */
 	TRISD = 0;
-	PORTD = WATERSENSORPULLUP_MASK;	/* Activate water sensor pull-up resistor */
+	PORTD = 0;
 #if (defined _16F1939)
 	/* Select digital function */
 	ANSELD = 0;
@@ -467,23 +467,6 @@ unsigned char get_Arm (void)
 		return (ARM_DOWN);
 	}
 	return (ARM_STOP);
-}
-
-
-void set_Water (unsigned char on)
-{
-	if (on)
-		/* Unmute Water Sensor by switching on the LED */
-		WATERSENSOR_LED_PORT |= WATERSENSOR_LED_MASK;
-	else
-		/* Mute Water Sensor by switching off the LED */
-		WATERSENSOR_LED_PORT &= ~WATERSENSOR_LED_MASK;
-}
-
-
-unsigned char get_Water (void)
-{
-	return (WATERSENSOR_LED_PORT & WATERSENSOR_LED_MASK);
 }
 
 
