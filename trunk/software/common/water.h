@@ -1,12 +1,12 @@
 /******************************************************************************/
-/* File    :	watersensor.h						      */
-/* Function:	Include file of 'watersensor.c'.			      */
+/* File    :	water.h							      */
+/* Function:	Include file of 'water.c'.				      */
 /* Author  :	Robert Delien						      */
 /*		Copyright (C) 2010, Clockwork Engineering		      */
 /******************************************************************************/
 
-#ifndef WATERSENSOR_H				/* Include file already compiled? */
-#define WATERSENSOR_H
+#ifndef WATER_H					/* Include file already compiled? */
+#define WATER_H
 
 /* Generic */
 void		watersensor_init	(void) ;
@@ -21,4 +21,4 @@ unsigned char	get_Water		(void) ;
 void		set_Water		(unsigned char on) ;
 void		watersensor_ledalwayson	(unsigned char on) ;
 
-#endif /* WATERSENSOR_H */
+#endif /* WATER_H */

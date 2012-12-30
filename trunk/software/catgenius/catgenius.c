@@ -16,7 +16,7 @@
 #include "../common/serial.h"
 #include "../common/i2c.h"
 #include "../common/catsensor.h"
-#include "../common/watersensor.h"
+#include "../common/water.h"
 #include "../common/cmdline.h"
 #include "userinterface.h"
 #include "litterlanguage.h"
