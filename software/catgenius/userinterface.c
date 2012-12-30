@@ -45,28 +45,6 @@
 #define AUTO_DETECTED		9	/* Scoop only every use*/
 
 
-#define update_autotimer(mode)						\
-do {									\
-	switch (mode) {							\
-	case AUTO_TIMED1:						\
-		settimeout(&autotimer, 24 * 60 * 60 * SECOND);		\
-		break;							\
-	case AUTO_TIMED2:						\
-		settimeout(&autotimer, 12 * 60 * 60 * SECOND);		\
-		break;							\
-	case AUTO_TIMED3:						\
-		settimeout(&autotimer,  8 * 60 * 60 * SECOND);		\
-		break;							\
-	case AUTO_TIMED4:						\
-		settimeout(&autotimer,  6 * 60 * 60 * SECOND);		\
-		break;							\
-	default:							\
-		timeoutnever(&autotimer);				\
-		break;							\
-	}								\
-} while(0)
-
-
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
@@ -109,6 +87,7 @@ static void	start_short		(void);
 static void	start_long		(void);
 static void	both_short		(void);
 static void	both_long		(void);
+static void	update_autotimer	(unsigned char mode);
 
 
 /******************************************************************************/
@@ -580,4 +559,26 @@ static void both_long (void)
 {
 	locked = !locked;
 	eeprom_write(NVM_KEYUNDLOCK, !locked);
+}
+
+
+static void update_autotimer (unsigned char mode)
+{
+	switch (mode) {
+	case AUTO_TIMED1:
+		settimeout(&autotimer, 24 * 60 * 60 * SECOND);
+		break;
+	case AUTO_TIMED2:
+		settimeout(&autotimer, 12 * 60 * 60 * SECOND);
+		break;
+	case AUTO_TIMED3:
+		settimeout(&autotimer,  8 * 60 * 60 * SECOND);
+		break;
+	case AUTO_TIMED4:
+		settimeout(&autotimer,  6 * 60 * 60 * SECOND);
+		break;
+	default:
+		timeoutnever(&autotimer);
+		break;
+	}
 }
