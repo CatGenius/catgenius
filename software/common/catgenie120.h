@@ -125,8 +125,8 @@
 /* Actuators */
 #define WATERSENSORANALOG_PORT	PORTA	/* Analog water sensor input */
 #define WATERSENSORANALOG_MASK	BIT(1)
-#define	WATERSENSORPULLUP_PORT	PORTD	/* Pull-up for water sensor input */
-#define	WATERSENSORPULLUP_MASK	BIT(0)
+#define	WATERVALVEPULLUP_PORT	PORTD	/* Pull-up for water valve driver */
+#define	WATERVALVEPULLUP_MASK	BIT(0)
 #define PUMP_PORT		PORTD	/* Pump on/off (RL3) */
 #define PUMP_MASK		BIT(1)
 #define DRYER_PORT		PORTD	/* Blow dryer on/off (RL2) */
@@ -147,8 +147,8 @@
 #define CATSENSOR_MASK		BIT(4)
 #define WATERSENSOR_LED_PORT	PORTB	/* LED Water sensor */
 #define WATERSENSOR_LED_MASK	BIT(2)
-#define WATERSENSOR_PORT	PORTB	/* Water sensor, directly controls Water valve (RL1) */
-#define WATERSENSOR_MASK	BIT(3)
+#define WATERVALVE_PORT		PORTB	/* Water sensor, directly controls Water valve (RL1) */
+#define WATERVALVE_MASK		BIT(3)
 #define HEATSENSOR_PORT		PORTB	/* Over heat detector (U4) */
 #define HEATSENSOR_MASK		BIT(1)
 
@@ -176,8 +176,6 @@ void		set_Bowl		(unsigned char mode);
 unsigned char	get_Bowl		(void);
 void		set_Arm			(unsigned char mode);
 unsigned char	get_Arm			(void);
-void		set_Water		(unsigned char on);
-unsigned char	get_Water		(void);
 void		set_Dosage		(unsigned char on);
 unsigned char	get_Dosage		(void);
 void		set_Pump		(unsigned char on);
