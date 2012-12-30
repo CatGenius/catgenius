@@ -12,7 +12,7 @@ Just program the GenieDiag application into your catbox, overwriting the CatGeni
   # LED1 & LED2: Test the dosage pump, start button will alternate between on and off.
   # LED3: Test the hopper pump, start button will alternate between on and off.
   # LED1 & LED3: Test the dryer, start button will alternate between on and off.
-  # LED2 & LED3: Test the water valve, start button will alternate between on and off.
+  # LED2 & LED3: Test the water valve, start button will alternate between on and off. *In this state, the water sensor IR LED will be on permanently to verify its intensity using a digital camera*.
 Please note that selecting another test will not stop the currently test. So you can test the arm while the bowl is rotating.<br>
 When testing the water valve, the water will go in protection when the maximum level is reached, but the test will not be turned off. If you don't turn it off by pressing the start button again, and the water gets below the maximum, the protection will go off and the water will start running again.<br>
 <br>
