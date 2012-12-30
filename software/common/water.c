@@ -1,16 +1,16 @@
 /******************************************************************************/
-/* File    :	watersensor.c						      */
-/* Function:	Water sensor functional implementation			      */
+/* File    :	water.c							      */
+/* Function:	Water valve and sensor functional implementation	      */
 /* Author  :	Robert Delien						      */
 /*		Copyright (C) 2010, Clockwork Engineering		      */
-/* History :	2 Oct 2010 by R. Delien:				      */
-/*		- Extracted from catgenie120.c.				      */
+/* History :	30 Dec 2012 by R. Delien:				      */
+/*		- Renamed from watersensor.c.				      */
 /******************************************************************************/
 #include <htc.h>
 
 #include "hardware.h"			/* Flexible hardware configuration */
 
-#include "watersensor.h"
+#include "water.h"
 #include "timer.h"
 
 extern void watersensor_event (unsigned char detected);

@@ -112,7 +112,7 @@ file_006=..\common\cr14.c
 file_007=..\common\i2c.c
 file_008=..\common\serial.c
 file_009=..\common\timer.c
-file_010=..\common\watersensor .c
+file_010=..\common\water.c
 file_011=userinterface.c
 file_012=..\common\catgenie120.h
 file_013=..\common\catsensor.h
@@ -124,7 +124,7 @@ file_018=..\common\hardware.h
 file_019=..\common\i2c.h
 file_020=..\common\serial.h
 file_021=..\common\timer.h
-file_022=..\common\watersensor.h
+file_022=..\common\water.h
 file_023=userinterface.h
 file_024=C:\Program Files (x86)\HI-TECH Software\PICC\9.83\include\pic16f1939.h
 [SUITE_INFO]

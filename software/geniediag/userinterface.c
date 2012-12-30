@@ -12,7 +12,7 @@
 #include "../common/hardware.h"		/* Flexible hardware configuration */
 
 #include "../common/timer.h"
-#include "../common/watersensor.h"
+#include "../common/water.h"
 #include "userinterface.h"
 
 
