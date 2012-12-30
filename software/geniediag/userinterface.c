@@ -336,6 +336,8 @@ void setup_short (void)
 	if (++actuator > ACT_WATER)
 		actuator = ACT_BOWL;
 
+	watersensor_ledalwayson(actuator == ACT_WATER);
+
 	printf ("Mode: ");
 	switch (actuator) {
 	case ACT_BOWL:
