@@ -35,13 +35,13 @@ extern void watersensor_event (unsigned char detected);
 /* Global Data								      */
 /******************************************************************************/
 
-static struct timer	water_sensortimer = EXPIRED;
-static unsigned char	water_state       = 0;
-static unsigned char	water_hysteresis  = 0;
-static unsigned int	water_sigquality  = 0;
-static bit		water_filling     = 0;
-static bit		water_detected    = 0;
-static bit		water_ledalwayson = 0;
+static struct timer	sensortimer       = EXPIRED;
+static unsigned char	state             = 0;
+static unsigned char	hysteresis        = 0;
+static unsigned int	reflectionquality = 0;
+static bit		filling           = 0;
+static bit		detected          = 0;
+static bit		ledalwayson       = 0;
 
 
 /******************************************************************************/
@@ -53,7 +53,7 @@ static bit		water_ledalwayson = 0;
 /* Global Implementations						      */
 /******************************************************************************/
 
-void watersensor_init (void)
+void water_init (void)
 /******************************************************************************/
 /* Function:	Module initialisation routine				      */
 /*		- Initializes the module				      */
@@ -86,78 +86,79 @@ void watersensor_init (void)
 	ADCON1bits.ADPREF = 0;
 #endif /* WATERSENSOR_ANALOG */
 }
-/* End: watersensor_init */
+/* End: water_init */
 
 
-void watersensor_work (void)
+void water_work (void)
 /******************************************************************************/
-/* Function:	watersensor_work					      */
-/*		- Worker function for the CatGenie 120 hardware		      */
+/* Function:	Module worker routine					      */
+/*		- Worker function for the CatGenie 120 water sensor and valve */
 /* History :	12 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	switch (water_state) {
+	switch (state) {
 	default:
-		water_state = LED_ON;
+		state = LED_ON;
 	case LED_ON:
-		if (!timeoutexpired(&water_sensortimer))
+		if (!timeoutexpired(&sensortimer))
 			break;
 		/* Switch on the IR LED */
 		WATERSENSOR_LED_PORT |= WATERSENSOR_LED_MASK;
 		/* Wait for DETECTTIME to give the IR sensor some time */
-		settimeout(&water_sensortimer, DETECTTIME);
+		settimeout(&sensortimer, DETECTTIME);
 #ifdef WATERSENSOR_ANALOG
-		water_state = START_CONVERSION;
+		state = START_CONVERSION;
 #else
-		water_state = PROCESS_RESULT;
+		state = PROCESS_RESULT;
 #endif /* WATERSENSOR_ANALOG */
 		break;
 	case START_CONVERSION:
-		if (!timeoutexpired(&water_sensortimer))
+		if (!timeoutexpired(&sensortimer))
 			break;
 		/* Start A/D conversion */
 		ADCON0bits.GO = 1;
-		water_state = PROCESS_RESULT;
+		state = PROCESS_RESULT;
 		break;
 	case PROCESS_RESULT:
 #ifdef WATERSENSOR_ANALOG
 		if (ADCON0bits.nDONE)
 			break;
 		/* Read out the IR sensor analoguely (lower value == more light reflected == no water detected) */
-		water_sigquality = (ADRESH << 8) | ADRESL;
+		reflectionquality = ADRES;
 #else
-		if (!timeoutexpired(&water_sensortimer))
+		if (!timeoutexpired(&sensortimer))
 			break;
 		/* Read out the IR sensor digitally (lower value == more light reflected == no water detected) */
-		water_sigquality = (WATERSENSORANALOG_PORT & WATERSENSORANALOG_MASK)?DECT_THRESHOLD:0;
+		reflectionquality = (WATERSENSORANALOG_PORT & WATERSENSORANALOG_MASK)?DECT_THRESHOLD:0;
 #endif /* WATERSENSOR_ANALOG */
 		/* Switch off the IR LED if we're not filling */
-		if (!water_filling && !water_ledalwayson)
+		if (!filling && !ledalwayson)
 			WATERSENSOR_LED_PORT &= ~WATERSENSOR_LED_MASK;
 		/* Evaluate the result, considering a hysteresis */
-		if (water_sigquality <= (DECT_THRESHOLD - DECT_MARGIN)) {
-			if ((water_hysteresis > 0) &&
-			    (!--water_hysteresis && water_detected)) {
-				water_detected = 0;
-				watersensor_event(water_detected);
+		if (reflectionquality <= (DECT_THRESHOLD - DECT_MARGIN)) {
+			if ((hysteresis > 0) &&
+			    (!--hysteresis && detected)) {
+				detected = 0;
+				watersensor_event(detected);
 			}
 		} else {
-			if ((water_hysteresis < HYSTERESIS_MAX) &&
-			    (++water_hysteresis >= HYSTERESIS_MAX) && !water_detected) {
-				water_detected = 1;
-				watersensor_event(water_detected);
+			if ((hysteresis < HYSTERESIS_MAX) &&
+			    (++hysteresis >= HYSTERESIS_MAX) && !detected) {
+				detected = 1;
+				watersensor_event(detected);
 			}
 		}
 
-		settimeout(&water_sensortimer, WATERSENSORPOLLING);
-		water_state = LED_ON;
+		settimeout(&sensortimer, WATERSENSORPOLLING);
+		state = LED_ON;
 		break;
 	}
 }
+/* End: water_work */
 
 
-void watersensor_term (void)
+void water_term (void)
 /******************************************************************************/
 /* Function:	Module termination routine				      */
 /*		- Terminates the module					      */
@@ -166,42 +167,42 @@ void watersensor_term (void)
 /******************************************************************************/
 {
 }
-/* End: watersensor_term */
+/* End: water_term */
 
 
-unsigned char watersensor_det (void)
+unsigned char water_detected (void)
 {
-	return (water_detected);
+	return (detected);
 }
-/* End: watersensor_det */
+/* End: water_detected */
 
 
-void watersensor_ledalwayson (unsigned char on)
+void water_ledalwayson (unsigned char on)
 {
-	water_ledalwayson = on;
+	ledalwayson = on;
 }
-/* End: watersensor_det */
+/* End: water_ledalwayson */
 
 
-unsigned int watersensor_sigquality (void)
+unsigned int water_reflectionquality (void)
 {
-	return (water_sigquality);
+	return (reflectionquality);
 }
-/* End: watersensor_sigquality */
+/* End: water_reflectionquality */
 
 
-unsigned char get_Water (void)
+unsigned char water_filling (void)
 {
-	return (water_filling);
+	return (filling);
 }
-/* End: get_Water */
+/* End: water_filling */
 
 
-void set_Water (unsigned char on)
+void water_fill (unsigned char fill)
 {
-	water_filling = on;
+	filling = fill;
 
-	if (water_filling) {
+	if (filling) {
 		/* Pull-up WATERVALVE */
 		WATERVALVEPULLUP_PORT |= WATERVALVEPULLUP_MASK;
 	} else {
@@ -209,7 +210,7 @@ void set_Water (unsigned char on)
 		WATERVALVEPULLUP_PORT &= ~WATERVALVEPULLUP_MASK;
 	}
 }
-/* End: set_Water */
+/* End: water_fill */
 
 
 /******************************************************************************/

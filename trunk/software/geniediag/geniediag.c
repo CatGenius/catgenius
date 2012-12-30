@@ -134,8 +134,8 @@ void main (void)
 	/* Initialize the cat sensor */
 	catsensor_init();
 
-	/* Initialize the water sensor */
-	watersensor_init();
+	/* Initialize the water sensor and valve */
+	water_init();
 
 	/* Initialize the user interface */
 	userinterface_init();
@@ -149,7 +149,7 @@ void main (void)
 	/* Execute the run loop */
 	for(;;){
 		catsensor_work();
-		watersensor_work();
+		water_work();
 		catgenie_work();
 		userinterface_work();
 		cmdline_work();

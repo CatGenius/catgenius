@@ -9,16 +9,16 @@
 #define WATER_H
 
 /* Generic */
-void		watersensor_init	(void) ;
-void		watersensor_work	(void) ;
-void		watersensor_term	(void) ;
+void		water_init		(void) ;
+void		water_work		(void) ;
+void		water_term		(void) ;
 
 /* Getters */
-unsigned int	watersensor_sigquality	(void) ;
-unsigned char	watersensor_det		(void) ;
-unsigned char	get_Water		(void) ;
+unsigned int	water_reflectionquality	(void) ;
+unsigned char	water_detected		(void) ;
+unsigned char	water_filling		(void) ;
 /* Setters */
-void		set_Water		(unsigned char on) ;
-void		watersensor_ledalwayson	(unsigned char on) ;
+void		water_fill		(unsigned char fill) ;
+void		water_ledalwayson	(unsigned char on) ;
 
 #endif /* WATER_H */
