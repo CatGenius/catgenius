@@ -9,8 +9,14 @@
 #define CATGENIE120_H
 
 #if !(defined _16F877A) && !(defined _16F1939)
-#error Unsupported processor selected!
+#  error Unsupported processor selected!
 #endif
+
+#ifdef _16F1939
+/* Analog water sensor readout is NOT supported on a 16F877A */
+/* On a 16F1939 it is optional */
+#  define WATERSENSOR_ANALOG
+#endif /* _16F1939 */
 
 /* Version number */
 #define VERSION			(2)		/* NVM layout version */

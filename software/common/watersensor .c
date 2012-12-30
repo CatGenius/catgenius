@@ -22,9 +22,9 @@ extern void watersensor_event (unsigned char detected);
 
 #define DETECTTIME		(SECOND/1000)	/*  10ms*/
 #define WATERSENSORPOLLING	(SECOND/4)	/* 250ms*/
+#define HYSTERESIS_MAX		8		/* Number of pollings to debounce the sensor output */
 #define DECT_MARGIN		100		/* Margin to notify software of high water before the LM393 closes the water valve */
 #define DECT_THRESHOLD		505		/* At an ADC value of 505 or below, the LM393 opens the water valve */
-#define HYSTERESIS_MAX		8		/* Number of pollings to debounce the sensor output */
 
 #define LED_ON			0
 #define START_CONVERSION	1
@@ -60,6 +60,7 @@ void watersensor_init (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+#ifdef WATERSENSOR_ANALOG
 	unsigned char	mask    = WATERSENSORANALOG_MASK;
 	unsigned char	channel = 0;
 
@@ -77,19 +78,12 @@ void watersensor_init (void)
 	/* Set output format to right-justified data */
 	ADCON1bits.ADFM = 1;
 	/* Set conversion clock to internal RC oscillator */
-#if (defined _16F877A)
-	ADCON0bits.ADCS  = 3;
-	ADCON1bits.ADCS2 = 1;
-#elif (defined _16F1939)
 	ADCON1bits.ADCS = 7;
-#endif
+
 	/* Set negative reference to Vss, positive reference to Vdd */
-#if (defined _16F877A)
-	ADCON1bits.PCFG = 0;
-#elif (defined _16F1939)
 	ADCON1bits.ADNREF = 0;
 	ADCON1bits.ADPREF = 0;
-#endif
+#endif /* WATERSENSOR_ANALOG */
 }
 /* End: watersensor_init */
 
@@ -112,7 +106,11 @@ void watersensor_work (void)
 		WATERSENSOR_LED_PORT |= WATERSENSOR_LED_MASK;
 		/* Wait for DETECTTIME to give the IR sensor some time */
 		settimeout(&water_sensortimer, DETECTTIME);
+#ifdef WATERSENSOR_ANALOG
 		water_state = START_CONVERSION;
+#else
+		water_state = PROCESS_RESULT;
+#endif /* WATERSENSOR_ANALOG */
 		break;
 	case START_CONVERSION:
 		if (!timeoutexpired(&water_sensortimer))
@@ -122,15 +120,22 @@ void watersensor_work (void)
 		water_state = PROCESS_RESULT;
 		break;
 	case PROCESS_RESULT:
+#ifdef WATERSENSOR_ANALOG
 		if (ADCON0bits.nDONE)
 			break;
-		/* Read out the IR sensor (lower value == more light reflected == no water detected) */
+		/* Read out the IR sensor analoguely (lower value == more light reflected == no water detected) */
 		water_sigquality = (ADRESH << 8) | ADRESL;
+#else
+		if (!timeoutexpired(&water_sensortimer))
+			break;
+		/* Read out the IR sensor digitally (lower value == more light reflected == no water detected) */
+		water_sigquality = (WATERSENSORANALOG_PORT & WATERSENSORANALOG_MASK)?DECT_THRESHOLD:0;
+#endif /* WATERSENSOR_ANALOG */
 		/* Switch off the IR LED if we're not filling */
 		if (!water_filling)
 			WATERSENSOR_LED_PORT &= ~WATERSENSOR_LED_MASK;
 		/* Evaluate the result, considering a hysteresis */
-		if (water_sigquality < (DECT_THRESHOLD - DECT_MARGIN)) {
+		if (water_sigquality <= (DECT_THRESHOLD - DECT_MARGIN)) {
 			if ((water_hysteresis > 0) &&
 			    (!--water_hysteresis && water_detected)) {
 				water_detected = 0;

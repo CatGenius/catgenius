@@ -101,7 +101,7 @@ unsigned char catgenie_init (void)
 #if (defined _16F1939)
 	/* Enable internal pull-ups globally */
 	nWPUEN = 0;
-#endif
+#endif /* _16F1939 */
 
 	/*
 	 * Setup port A
@@ -110,12 +110,18 @@ unsigned char catgenie_init (void)
 		NOT_USED_2_MASK      |	/* Not used (R1, Absent) */
 		WATERSENSORANALOG_MASK;	/* Analog water sensor input */
 	PORTA = 0x00;
+#if (defined _16F877A)
 	/* Disable ADC */
 	ADCON1 = 0x07;
-#if (defined _16F1939)
-	/* Select analog function for water senor input */
+#elif (defined _16F1939)
+#ifdef WATERSENSOR_ANALOG
+	/* Select digital function for all inputs, except for water sensor input */
 	ANSELA = WATERSENSORANALOG_MASK;/* Analog water sensor input */
-#endif
+#else
+	/* Select digital function for all inputs */
+	ANSELA = 0;
+#endif /* WATERSENSOR_ANALOG */
+#endif /* _16F877A/_16F1939 */
 
 	/*
 	 * Setup port B
@@ -132,11 +138,11 @@ unsigned char catgenie_init (void)
 	/* Enable pull-up resitors on all pins */
 	nRBPU = 0;
 #elif (defined _16F1939)
-	/* Select digital function */
+	/* Select digital function for all inputs */
 	ANSELB = 0;
 	/* Enable pull-up resitors on all pins individually, except for WATERVALVE */
 	WPUB = ~WATERVALVE_MASK;
-#endif
+#endif /* _16F877A/_16F1939 */
 	/* Clear the interrupt status */
 #if (defined _16F877A)
 	RBIF = 0;
@@ -146,13 +152,13 @@ unsigned char catgenie_init (void)
 	IOCBN = CATSENSOR_MASK;
 	IOCBF = 0;
 	IOCIF = 0;
-#endif
+#endif /* _16F877A/_16F1939 */
 	/* Enable interrupts */
 #if (defined _16F877A)
 	RBIE = 1;
 #elif (defined _16F1939)
 	IOCIE = 1;
-#endif
+#endif /* _16F877A/_16F1939 */
 
 	PORTB_old = STARTBUTTON_MASK |
 		    SETUPBUTTON_MASK |
@@ -173,9 +179,9 @@ unsigned char catgenie_init (void)
 	TRISD = 0;
 	PORTD = 0;
 #if (defined _16F1939)
-	/* Select digital function */
+	/* Select digital function for all inputs */
 	ANSELD = 0;
-#endif
+#endif /* _16F1939 */
 
 	/*
 	 * Setup port E
@@ -183,10 +189,11 @@ unsigned char catgenie_init (void)
 	TRISE = 0x00;			/* All outputs */
 	PORTE = 0x00;
 #if (defined _16F1939)
+	/* Select digital function for all inputs */
 	ANSELE = 0;
 	/* Disable all individual pull-ups */
 	WPUE = 0x00;
-#endif
+#endif /* _16F1939 */
 
 	/* Delay to settle ports */
 	__delay_ms(100);
