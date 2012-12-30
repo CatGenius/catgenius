@@ -146,14 +146,14 @@ int tap (int argc, char* argv[])
 
 	if (argc > 1) {
 		if (!strncmp (argv[1], str_off, LINEBUFFER_MAX)) {
-			set_Water(0);
+			water_fill(0);
 		} else if (!strncmp (argv[1], str_on, LINEBUFFER_MAX)) {
-			set_Water(1);
+			water_fill(1);
 		} else
 			return ERR_SYNTAX;
 	}
 
-	printf("Tap: %s\n", get_Water()?str_on:str_off);
+	printf("Tap: %s\n", water_filling()?str_on:str_off);
 
 	return ERR_OK;
 }
@@ -215,7 +215,7 @@ int water (int argc, char* argv[])
 	if (argc > 1)
 		return ERR_SYNTAX;
 
-	printf("Water: %s\n", watersensor_det()?"high":"low");
+	printf("Water: %s\n", water_detected()?"high":"low");
 
 	return ERR_OK;
 }

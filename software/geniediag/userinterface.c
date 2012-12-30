@@ -336,7 +336,7 @@ void setup_short (void)
 	if (++actuator > ACT_WATER)
 		actuator = ACT_BOWL;
 
-	watersensor_ledalwayson(actuator == ACT_WATER);
+	water_ledalwayson(actuator == ACT_WATER);
 
 	printf ("Mode: ");
 	switch (actuator) {
@@ -432,8 +432,8 @@ void start_short (void)
 		case ACT_WATER:
 			if (++water > 1)
 				water = 0;
-			set_Water(water);
-			printf("Tap: %s\n", get_Water()?"on":"off");
+			water_fill(water);
+			printf("Tap: %s\n", water_filling()?"on":"off");
 			break;
 	}
 }
@@ -456,7 +456,7 @@ void start_long (void)
 	set_Dryer(dryer);
 	printf("Dryer: off\n");
 	water = 0;
-	set_Water(water);
+	water_fill(water);
 	printf("Tap: off\n");
 }
 

@@ -40,7 +40,6 @@
 
 static unsigned char		prg_source		= 0;
 static bit			wet_program		= 0;
-static bit			water_detected		= 0;
 static bit			overheat_detected	= 0;
 static bit			paused			= 0;
 static bit			error_fill		= 0;
@@ -133,8 +132,8 @@ void litterlanguage_work (void)
 	if( (ins_state != STATE_IDLE) &&
 	    !paused ){
 		/* Check for filling timeout */
-		if( !water_detected &&
-		    get_Water() &&
+		if( !water_detected() &&
+		    water_filling() &&
 		    timeoutexpired(&timer_fill) ){
 			printtime();
 			DBG("Fill timeout\n");
@@ -146,7 +145,7 @@ void litterlanguage_work (void)
 		}
 
 		/* Check for draining timeout */
-		if( water_detected &&
+		if( water_detected() &&
 		    get_Pump() &&
 		    timeoutexpired(&timer_drain) ){
 			printtime();
@@ -349,7 +348,7 @@ void litterlanguage_stop (void)
 		/* Stop all actuators */
 		set_Bowl(BOWL_STOP);
 		set_Arm(ARM_STOP);
-		set_Water(0);
+		water_fill(0);
 		set_Dosage(0);
 		set_Pump(0);
 		set_Dryer(0);
@@ -373,15 +372,13 @@ void watersensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	water_detected = detected;
-
 	printtime();
-	DBG("Water %s\n", water_detected?"high":"low");
+	DBG("Water %s\n", detected?"high":"low");
 	if (ins_state != STATE_IDLE) {
 		/* Disable timeout on event */
-		if (water_detected) {
+		if (detected) {
 			/* Turn off the water and disable the timeout */
-			set_Water(0);
+			water_fill(0);
 			timeoutnever(&timer_fill);
 			printtime();
 			DBG("Filled\n");
@@ -390,7 +387,7 @@ void watersensor_event (unsigned char detected)
 			DBG("Drained\n");
 		}
 	} else
-		if (water_detected) {
+		if (detected) {
 			printtime();
 			DBG("Box flooded!\n");
 		}
@@ -470,17 +467,17 @@ static void exe_instruction (void)
 			      	if (eeprom_read(NVM_BOXSTATE) < BOX_WET)
 					eeprom_write(NVM_BOXSTATE, BOX_WET);
 				/* Don't fill if water is detected already */
-				if (!water_detected) {
+				if (!water_detected()) {
 					printtime();
 					DBG("Filling\n");
-					set_Water(1);
+					water_fill(1);
 					settimeout(&timer_fill, MAX_FILLTIME);
 //					gettimestamp(&timer_fill);
 				} //else
 //					DBG(" (skipped)");
 			} else {
 				/* Disable timeout on filling */
-				set_Water(0);
+				water_fill(0);
 				timeoutnever(&timer_fill);
 			}
 		ins_pointer++;
@@ -600,12 +597,12 @@ static void wait_instruction (void)
 		break;
 	case INS_WAITWATER:
 		if (cur_instruction.operant) {
-			if (water_detected) {
+			if (water_detected()) {
 				ins_pointer++;
 				ins_state = STATE_FETCH_INS;
 			}
 		} else {
-			if (!water_detected) {
+			if (!water_detected()) {
 				/* Disable the timeout */
 				timeoutnever(&timer_drain);
 				ins_pointer++;
