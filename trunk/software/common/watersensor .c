@@ -41,6 +41,7 @@ static unsigned char	water_hysteresis  = 0;
 static unsigned int	water_sigquality  = 0;
 static bit		water_filling     = 0;
 static bit		water_detected    = 0;
+static bit		water_ledalwayson = 0;
 
 
 /******************************************************************************/
@@ -132,7 +133,7 @@ void watersensor_work (void)
 		water_sigquality = (WATERSENSORANALOG_PORT & WATERSENSORANALOG_MASK)?DECT_THRESHOLD:0;
 #endif /* WATERSENSOR_ANALOG */
 		/* Switch off the IR LED if we're not filling */
-		if (!water_filling)
+		if (!water_filling && !water_ledalwayson)
 			WATERSENSOR_LED_PORT &= ~WATERSENSOR_LED_MASK;
 		/* Evaluate the result, considering a hysteresis */
 		if (water_sigquality <= (DECT_THRESHOLD - DECT_MARGIN)) {
@@ -171,6 +172,13 @@ void watersensor_term (void)
 unsigned char watersensor_det (void)
 {
 	return (water_detected);
+}
+/* End: watersensor_det */
+
+
+void watersensor_ledalwayson (unsigned char on)
+{
+	water_ledalwayson = on;
 }
 /* End: watersensor_det */
 

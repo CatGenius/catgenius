@@ -17,7 +17,8 @@ void		watersensor_term	(void) ;
 unsigned int	watersensor_sigquality	(void) ;
 unsigned char	watersensor_det		(void) ;
 unsigned char	get_Water		(void) ;
-/* Setter */
+/* Setters */
 void		set_Water		(unsigned char on) ;
+void		watersensor_ledalwayson	(unsigned char on) ;
 
 #endif /* WATERSENSOR_H */
