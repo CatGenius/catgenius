@@ -2,7 +2,13 @@
 
 Beta releases are not full featured, but they will clean your box and will generally not make a mess.<br>
 
-*2010-10-02 Beta release B03 (SVN r132, no tag)*<br>
+*2013-01-01 Beta release B04 (SVN r238, tag [http://code.google.com/p/catgenius/source/browse/#svn%2Ftags%2Fb04 b04])*<br>
+[http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B04_16f1939.hex catgenius_B04_16f1939.hex]<br>
+[http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B04_16f877a.hex catgenius_B04_16f877a.hex]<br>
+Summary:
+<br>
+<br>
+*2010-10-02 Beta release B03b (SVN r132, no tag)*<br>
 [http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B03b.hex catgenius_B03b.hex]<br>
 Summary:
  * Water sensor algorithm improved to reduce ticking and isolated to a separate file.
