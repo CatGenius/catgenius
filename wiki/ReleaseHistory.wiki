@@ -6,7 +6,25 @@ Beta releases are not full featured, but they will clean your box and will gener
 [http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B04_16f1939.hex catgenius_B04_16f1939.hex]<br>
 [http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B04_16f877a.hex catgenius_B04_16f877a.hex]<br>
 Summary:
-<br>
+ * Outputs controlled through latch registers to prevent PIC read-modify-write corruption (16F1939 only).
+ * Command-line command gpio logging output per pin and with pin name.
+ * command-line command gpio argument order swapped.
+ * Serial port refactored.
+ * Tick-less water sensor algo.
+ * Command line interface no longer disabled for 16f877a.
+ * Analog water sensor readout (16F1939 only).
+ * Command-line command 'help' added.
+ * Command line interface adapted to argc/argv parsing.
+ * Unified button handling, featuring auto-triggered long-presses, double-beep indication and blinking cat-lock LED.
+ * CatGenie model 120plus support added.
+ * Ambiguous else statements fixed.
+ * Timer1 synchronous configuration bug fixed.
+ * Updated for compatibility with PICC 9.88.
+ * Improved error handling.
+ * Pause function added (context restoring for un-pause still has bugs).
+ * Christian's fix for LitterLanguage function call pointer casting.
+ * Fixed ACKSTAT bug in i2c_write.
+ * Fixed box state deterioration from 'wet' to 'messy' by starting of a clean-up cycle.
 <br>
 *2010-10-02 Beta release B03b (SVN r132, no tag)*<br>
 [http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B03b.hex catgenius_B03b.hex]<br>
