@@ -1,0 +1,43 @@
+Connectoren Remi:
+J1, Display unit, 11 pins single row header:
+http://search.digikey.com/scripts/DkSearch/dksus.dll?Detail&name=WM8081-ND
+
+J2 & J20, Mains voltage, 1 pins AMP connector:
+?...AMP connectoren zijn er in meerdere breedtes...4.8mm, 5.2mm, 6.4mm...etc. Graag even opmeten.
+
+J3, RF-ID reader, 4 pins:
+http://search.digikey.com/scripts/DkSearch/dksus.dll?Detail&name=455-1706-ND
+
+J4, Heater, 3 pins:
+http://search.digikey.com/scripts/DkSearch/dksus.dll?Detail&name=A14315-ND
+
+J5, Bowl motor, 4 pins:
+http://search.digikey.com/scripts/DkSearch/dksus.dll?Detail&name=WM18888-ND
+
+J6, Scooper motor, 4 pins:
+http://search.digikey.com/scripts/DkSearch/dksus.dll?Detail&name=WM18887-ND
+
+J7, Cat sensor, 5 pins:
+http://search.digikey.com/scripts/DkSearch/dksus.dll?Detail&name=455-2270-ND
+
+J10:
+http://search.digikey.com/scripts/DkSearch/dksus.dll?Detail&name=455-1705-ND
+
+
+JP1, Water valve, 2 pins:
+http://search.digikey.com/scripts/DkSearch/dksus.dll?Detail&name=455-2247-ND
+
+JP2: ?...wordt nog naar gezocht (meerdere types doe er op lijken, meer info
+nodig)
+JP3: ?...wordt nog naar gezocht (meerdere types doe er op lijken, meer info
+nodig)
+
+J1 & J2:
+http://search.digikey.com/scripts/DkSearch/dksus.dll?Detail&name=SAM1142-28-ND
+
+SRAM:
+IDT71V124 (128k)
+IDT71V424 (512k)
+
+Battery:
+Panasonic VL1220

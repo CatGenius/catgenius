@@ -1,0 +1,15 @@
+Known bugs
+==========
+No error handling implemented
+Timed washing doesn't work (probably overflow in timer)
+Cartridge level not decreasing by washing cycle not implemented
+Pause function not implemented
+Water sensor relay ticking
+Pacer timers not expired upon change of pattern
+
+Improvements
+============
+LitterLanguage instructions may use 16-bit argument if pointers still fit and 100ms timer resolution is used.
+
+Solved bugs
+===========

@@ -1,0 +1,11 @@
+CatGenie stock diagnose
+Power up with both buttons pressed and held through 2 walkind LED Cycles.
+Press Auto/Setup to select modes:
+1. Test arm (start button: up, stop, down, stop, ... (Cartridge LED indicates up, Child lock LED indicates down))
+2. Bowl (start button: cw, stop, ccw, stop, ... (Cartridge LED indicates cw, Child lock LED indicates ccw))
+3. Water (start button: on, off, ... (water sensor closes valve upon detection, Cartridge LED indicates on/off))
+4. Dosage (start button: on, off, ... (Cartridge LED indicates on/off))
+1+4. Drain (start button: on, off, ... (Cartridge LED indicates on/off))
+2+4. Dryer Drain (start button: on, off, ... (Cartridge LED indicates on/off))
+3+4. Mini wash?
+1+3+4. Reset
