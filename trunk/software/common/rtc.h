@@ -18,7 +18,6 @@ struct time {
 /* Generic */
 void		rtc_init		(unsigned char		  const flags) ;
 void		rtc_work		(void) ;
-void		rtc_term		(void) ;
 
 void		printtime		(void) ;
 void		incminutes		(void) ;

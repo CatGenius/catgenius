@@ -104,7 +104,7 @@ void water_work (void)
 		if (!timeoutexpired(&sensortimer))
 			break;
 		/* Switch on the IR LED */
-		WATERSENSOR_LED_PORT |= WATERSENSOR_LED_MASK;
+		WATERSENSOR_LED(LAT) |= WATERSENSOR_LED_MASK;
 		/* Wait for DETECTTIME to give the IR sensor some time */
 		settimeout(&sensortimer, DETECTTIME);
 #ifdef WATERSENSOR_ANALOG
@@ -130,11 +130,11 @@ void water_work (void)
 		if (!timeoutexpired(&sensortimer))
 			break;
 		/* Read out the IR sensor digitally (lower value == more light reflected == no water detected) */
-		reflectionquality = (WATERSENSORANALOG_PORT & WATERSENSORANALOG_MASK)?DECT_THRESHOLD:0;
+		reflectionquality = (WATERSENSORANALOG(PORT) & WATERSENSORANALOG_MASK)?DECT_THRESHOLD:0;
 #endif /* WATERSENSOR_ANALOG */
 		/* Switch off the IR LED if we're not filling */
 		if (!filling && !ledalwayson)
-			WATERSENSOR_LED_PORT &= ~WATERSENSOR_LED_MASK;
+			WATERSENSOR_LED(LAT) &= ~WATERSENSOR_LED_MASK;
 		/* Evaluate the result, considering a hysteresis */
 		if (reflectionquality <= (DECT_THRESHOLD - DECT_MARGIN)) {
 			if ((hysteresis > 0) &&
@@ -156,18 +156,6 @@ void water_work (void)
 	}
 }
 /* End: water_work */
-
-
-void water_term (void)
-/******************************************************************************/
-/* Function:	Module termination routine				      */
-/*		- Terminates the module					      */
-/* History :	16 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-}
-/* End: water_term */
 
 
 unsigned char water_detected (void)
@@ -204,10 +192,10 @@ void water_fill (unsigned char fill)
 
 	if (filling) {
 		/* Pull-up WATERVALVE */
-		WATERVALVEPULLUP_PORT |= WATERVALVEPULLUP_MASK;
+		WATERVALVEPULLUP(LAT) |= WATERVALVEPULLUP_MASK;
 	} else {
 		/* Pull-down WATERVALVE */
-		WATERVALVEPULLUP_PORT &= ~WATERVALVEPULLUP_MASK;
+		WATERVALVEPULLUP(LAT) &= ~WATERVALVEPULLUP_MASK;
 	}
 }
 /* End: water_fill */

@@ -23,7 +23,6 @@ struct timer {
 
 /* Generic */
 void		timer_init		(void) ;
-void		timer_term		(void) ;
 
 /* Event notification */
 void		timer_isr		(void) ;

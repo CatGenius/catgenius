@@ -12,7 +12,6 @@
 /* Generic */
 void		userinterface_init	(void) ;
 void		userinterface_work	(void) ;
-void		userinterface_term	(void) ;
 
 /* External controls */
 void		setup_short		(void) ;

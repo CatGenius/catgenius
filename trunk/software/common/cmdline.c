@@ -72,18 +72,6 @@ void cmdline_work (void)
 /* End: cmdline_work */
 
 
-void cmdline_term (void)
-/******************************************************************************/
-/* Function:	Module termination routine				      */
-/*		- Terminates the command line interface			      */
-/* History :	13 Feb 2011 by R. Delien:				      */
-/*		- Ported from other project.				      */
-/******************************************************************************/
-{
-}
-/* End: cmdline_term */
-
-
 /******************************************************************************/
 /* Local Implementations						      */
 /******************************************************************************/

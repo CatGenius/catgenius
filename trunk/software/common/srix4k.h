@@ -11,6 +11,5 @@
 /* Generic */
 void		srix4k_init		(void) ;
 void		srix4k_work		(void) ;
-void		srix4k_term		(void) ;
 
 #endif /* SRIX4K_H */

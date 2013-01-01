@@ -140,22 +140,26 @@ int gpio(int argc, char* argv[])
 			port++;
 		}
 		if (argc == 2) {
-			printf("Press any key to exit logging\n");
-			for (;;) {
-				char	rxd;
+			char	rxd;
 
-				for (port = 0; gpioports[port].port; port++)
+			printf("Press any key to exit logging\n");
+			do {
+				for (port = 0; gpioports[port].name; port++)
 					if (gpioports[port].cache != *gpioports[port].port) {
 						char	hex[3];
 
+						for (pin = 0; pin < 8; pin++) {
+							uint8_t	pinmask = 1 << pin;
+
+							if (gpioports[port].pinmask & pinmask) {
+								if ((gpioports[port].cache & pinmask) !=
+								    (*gpioports[port].port & pinmask))
+									printf("Pin %c%d = %s\n", gpioports[port].name, pin, (*gpioports[port].port & pinmask)?"1":"0");
+							}
+						}
 						gpioports[port].cache = *gpioports[port].port;
-						/* Convert to hex ourselves" printf %x is broken! */
-						hexstr(gpioports[port].cache, hex);
-						printf("PORT%c = 0x%s\n", gpioports[port].name, hex);
 					}
-				if (readch(&rxd))
-					break;
-			}
+			} while (!readch(&rxd));
 		}
 	}
 
