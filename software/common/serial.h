@@ -1,16 +1,15 @@
-//*****************
-//function prototypes
+/******************************************************************************/
+/* File    :	serial.h						      */
+/* Function:	Include file of 'serial.c'.				      */
+/* Author  :	Robert Delien						      */
+/*		Copyright (C) 2010, Clockwork Engineering		      */
+/******************************************************************************/
+
+#ifndef SERIAL_H			/* Include file already compiled? */
+#define SERIAL_H
 
 void serial_init(void);
 void putch(unsigned char c);
 unsigned char readch(char *ch);
-void putst(register const char * str);
-unsigned char usart_timeout(void);
-void putchdec(unsigned char c);
-void putchhex(unsigned char c);
-void putinthex(unsigned int c);
 
-#define putlf putst("\n") //put line feed
-
-
-
+#endif /* SERIAL_H */

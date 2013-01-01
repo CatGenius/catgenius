@@ -25,7 +25,6 @@ struct command {
 /* Generic */
 void		cmdline_init		(void) ;
 void		cmdline_work		(void) ;
-void		cmdline_term		(void) ;
 
 /* Command implementations */
 int		echo			(int argc,	char* argv[]) ;

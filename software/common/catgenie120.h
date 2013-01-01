@@ -32,8 +32,7 @@
 #define MAINS_FREQ		50		/* 50 Hz mains frequency */
 
 /* Serial port */
-#define BITRATE			19200
-#define	BITRATE_ERROR		4
+#define BITRATE			19200UL
 
 /* Times */
 #define MAX_FILLTIME		(( 2*60+15)*SECOND)
@@ -83,85 +82,94 @@
 #define ARM_STROKE_MSEC		13500
 
 /* Free pins */
-#define	NOT_USED_1_PORT		PORTA	/* Not used (R39, Absent) */
+#define	NOT_USED_1(reg)		reg##A	/* Not used (R39, Absent) */
 #define	NOT_USED_1_MASK		BIT(0)
-#define	NOT_USED_2_PORT		PORTA	/* Not used (R1, Absent) */
+#define	NOT_USED_2(reg)		reg##A	/* Not used (R1, Absent) */
 #define	NOT_USED_2_MASK		BIT(4)
-#define	NOT_USED_3_PORT		PORTB	/* Not used, PGM Clock */
+#define	NOT_USED_3(reg)		reg##B	/* Not used, PGM Clock */
 #define	NOT_USED_3_MASK		BIT(6)
-#define	NOT_USED_4_PORT		PORTB	/* Not used, PGM Data */
+#define	NOT_USED_4(reg)		reg##B	/* Not used, PGM Data */
 #define	NOT_USED_4_MASK		BIT(7)
 
 /* Special purpose pins */
-#define	I2C_SCL_PORT		PORTC	/* I2C SCL */
+#define	I2C_SCL(reg)		reg##C	/* I2C SCL */
 #define	I2C_SCL_MASK		BIT(3)
-#define	I2C_SDA_PORT		PORTC	/* I2C SDA */
+#define	I2C_SDA(reg)		reg##C	/* I2C SDA */
 #define	I2C_SDA_MASK		BIT(4)
-#define	UART_TXD_PORT		PORTC	/* UART TxD */
+#define	UART_TXD(reg)		reg##C	/* UART TxD */
 #define	UART_TXD_MASK		BIT(6)
-#define	UART_RXD_PORT		PORTC	/* UART RxD */
+#define	UART_RXD(reg)		reg##C	/* UART RxD */
 #define	UART_RXD_MASK		BIT(7)
 
 /* Buttons */
-#define STARTBUTTON_PORT	PORTB	/* Button Start/Pause */
+#define STARTBUTTON(reg)	reg##B	/* Button Start/Pause */
 #define STARTBUTTON_MASK	BIT(0)
-#define SETUPBUTTON_PORT	PORTB	/* Button Auto setup */
+#define SETUPBUTTON(reg)	reg##B	/* Button Auto setup */
 #define SETUPBUTTON_MASK	BIT(5)
 
 /* Indicators */
-#define LED_1_PORT		PORTC	/* LED 1 */
+#define LED_1(reg)		reg##C	/* LED 1 */
 #define LED_1_MASK		BIT(5)
-#define LED_2_PORT		PORTA	/* LED 2 */
+#define LED_2(reg)		reg##A	/* LED 2 */
 #define LED_2_MASK		BIT(2)
-#define LED_3_PORT		PORTA	/* LED 3 */
+#define LED_3(reg)		reg##A	/* LED 3 */
 #define LED_3_MASK		BIT(3)
-#define LED_4_PORT		PORTA	/* LED 4 */
+#define LED_4(reg)		reg##A	/* LED 4 */
 #define LED_4_MASK		BIT(5)
-#define LED_ERROR_PORT		PORTC	/* LED Error */
+#define LED_ERROR(reg)		reg##C	/* LED Error */
 #define LED_ERROR_MASK		BIT(0)
-#define BEEPER_PORT		PORTC	/* Beeper */
+#define BEEPER(reg)		reg##C	/* Beeper */
 #define BEEPER_MASK		BIT(1)
-#define LED_CARTRIDGE_PORT	PORTE	/* LED Cartridge */
+#define LED_CARTRIDGE(reg)	reg##E	/* LED Cartridge */
 #define LED_CARTRIDGE_MASK	BIT(0)
-#define LED_CAT_PORT		PORTE	/* LED Cat */
+#define LED_CAT(reg)		reg##E	/* LED Cat */
 #define LED_CAT_MASK		BIT(1)
-#define LED_LOCKED_PORT		PORTE	/* LED Child Lock */
+#define LED_LOCKED(reg)		reg##E	/* LED Child Lock */
 #define LED_LOCKED_MASK		BIT(2)
 
 /* Actuators */
-#define WATERSENSORANALOG_PORT	PORTA	/* Analog water sensor input */
+#define WATERSENSORANALOG(reg)	reg##A	/* Analog water sensor input */
 #define WATERSENSORANALOG_MASK	BIT(1)
-#define	WATERVALVEPULLUP_PORT	PORTD	/* Pull-up for water valve driver */
+#define	WATERVALVEPULLUP(reg)	reg##D	/* Pull-up for water valve driver */
 #define	WATERVALVEPULLUP_MASK	BIT(0)
-#define PUMP_PORT		PORTD	/* Pump on/off (RL3) */
+#define PUMP(reg)		reg##D	/* Pump on/off (RL3) */
 #define PUMP_MASK		BIT(1)
-#define DRYER_PORT		PORTD	/* Blow dryer on/off (RL2) */
+#define DRYER(reg)		reg##D	/* Blow dryer on/off (RL2) */
 #define DRYER_MASK		BIT(2)
-#define DOSAGE_PORT		PORTD	/* Dosage pump on/off (RL4) */
+#define DOSAGE(reg)		reg##D	/* Dosage pump on/off (RL4) */
 #define DOSAGE_MASK		BIT(3)
-#define BOWL_PORT		PORTD
+#define BOWL(reg)		reg##D
 #define BOWL_CWCCW_MASK		BIT(4)	/* Bowl cw/ccw (RL7) */
 #define BOWL_ONOFF_MASK		BIT(5)	/* Bowl on/off (RL5) */
-#define ARM_PORT		PORTD
+#define ARM(reg)		reg##D
 #define ARM_UPDOWN_MASK		BIT(6)	/* Arm up/down (RL8) */
 #define ARM_ONOFF_MASK		BIT(7)	/* Arm on/off (RL6) */
 
 /* Sensors */
-#define CATSENSOR_LED_PORT	PORTC	/* Cat Sensor LED */
+#define CATSENSOR_LED(reg)	reg##C	/* Cat Sensor LED */
 #define CATSENSOR_LED_MASK	BIT(2)
-#define CATSENSOR_PORT		PORTB	/* Cat Sensor */
+#define CATSENSOR(reg)		reg##B	/* Cat Sensor */
 #define CATSENSOR_MASK		BIT(4)
-#define WATERSENSOR_LED_PORT	PORTB	/* LED Water sensor */
+#define WATERSENSOR_LED(reg)	reg##B	/* LED Water sensor */
 #define WATERSENSOR_LED_MASK	BIT(2)
-#define WATERVALVE_PORT		PORTB	/* Water sensor, directly controls Water valve (RL1) */
+#define WATERVALVE(reg)		reg##B	/* Water sensor, directly controls Water valve (RL1) */
 #define WATERVALVE_MASK		BIT(3)
-#define HEATSENSOR_PORT		PORTB	/* Over heat detector (U4) */
+#define HEATSENSOR(reg)		reg##B	/* Over heat detector (U4) */
 #define HEATSENSOR_MASK		BIT(1)
+
+#if (defined _16F877A)
+/* Substitute non-available output latch registers with port registers */
+#define LATA			PORTA
+#define LATB			PORTB
+#define LATC			PORTC
+#define LATD			PORTD
+#define LATE			PORTE
+#endif /* _16F877A */
+
 
 /* Generic */
 unsigned char	catgenie_init		(void) ;
 void		catgenie_work		(void) ;
-void		catgenie_term		(void) ;
 
 /* Indicators */
 void		set_LED			(unsigned char led,

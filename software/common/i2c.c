@@ -71,17 +71,6 @@ void i2c_work (void)
 } /* i2c_work */
 
 
-void i2c_term (void)
-/******************************************************************************/
-/* Function:	Module termination routine				      */
-/*		- Terminates the module					      */
-/* History :	5 Mar 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-}
-/* End: i2c_term */
-
 void i2c_start(void)
 {
 	i2c_waitready();

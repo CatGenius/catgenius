@@ -245,18 +245,6 @@ void userinterface_work (void)
 /* userinterface_work */
 
 
-void userinterface_term (void)
-/******************************************************************************/
-/* Function:	userinterface_term					      */
-/*		- Terminate the CatGenius user interface		      */
-/* History :	16 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-}
-/* userinterface_term */
-
-
 void startbutton_event (unsigned char up)
 /******************************************************************************/
 /* Function:	startbutton_event					      */

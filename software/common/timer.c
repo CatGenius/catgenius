@@ -72,22 +72,6 @@ void timer_init (void)
 /* End: timer_init */
 
 
-void timer_term (void)
-/******************************************************************************/
-/* Function:	Module initialisation routine				      */
-/*		- Terminates the module					      */
-/* History :	10 Feb 2010 by R. Delien:				      */
-/*		- Ported from other project.				      */
-/******************************************************************************/
-{
-	/* Disable timer interrupt */
-	TMR1IE = 0;
-	/* Stop timer1 */
-	TMR1ON = 0;
-}
-/* End: timer_term */
-
-
 void settimeout (struct timer	* const timer_p,
 		 unsigned long	  const timout)
 /******************************************************************************/

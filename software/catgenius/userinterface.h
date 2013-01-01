@@ -12,6 +12,5 @@
 /* Generic */
 void		userinterface_init	(unsigned char	flags) ;
 void		userinterface_work	(void) ;
-void		userinterface_term	(void) ;
 
 #endif /* USERINTERFACE_H */

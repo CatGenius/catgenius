@@ -14,7 +14,6 @@
 /* Generic */
 void		i2c_init		(void) ;
 void		i2c_work		(void) ;
-void		i2c_term		(void) ;
 
 void		i2c_start		(void) ;
 void		i2c_restart		(void) ;

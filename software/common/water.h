@@ -11,7 +11,6 @@
 /* Generic */
 void		water_init		(void) ;
 void		water_work		(void) ;
-void		water_term		(void) ;
 
 /* Getters */
 unsigned int	water_reflectionquality	(void) ;

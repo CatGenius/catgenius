@@ -30,7 +30,7 @@ extern void catsensor_event (unsigned char detected);
 
 static bit		pinging		= 0;		/* Indicates an on-going ping */
 static bit		echoed		= 0;		/* Stores an echo received */
-static bit		detected	= 0;		/* Current detection state */
+static bit		detected_cur	= 0;		/* Current detection state */
 static bit		detected_old	= 0;		/* Previous detection state (to detect differences) */
 static bit		detected_dbc	= 0;		/* Debounced detection state */
 static struct timer	debouncer	= NEVER;	/* Timer to debounce detection state */
@@ -110,36 +110,21 @@ void catsensor_work (void)
 		TMR2IE = 1;
 	}
 	/* Debounce the decouples 'detect' signal */
-	if (detected != detected_old) {
+	if (detected_cur != detected_old) {
 		settimeout(&debouncer, DEBOUNCE_TIME);
-		detected_old = detected;
+		detected_old = detected_cur;
 	}
 
 	/* Notify is changed */
 	if (timeoutexpired(&debouncer)) {
 		timeoutnever(&debouncer);
-		if (detected != detected_dbc) {
-			detected_dbc = detected;
+		if (detected_cur != detected_dbc) {
+			detected_dbc = detected_cur;
 			catsensor_event(detected_dbc);
 		}
 	}
 } /* catsensor_work */
 
-
-void catsensor_term (void)
-/******************************************************************************/
-/* Function:	Module termination routine				      */
-/*		- Terminates the module					      */
-/* History :	16 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-	/* Disable timer 2 interrupt */
-	TMR2IE = 0;
-	/* Stop timer 2 */
-	TMR2ON = 0;
-}
-/* End: catsensor_term */
 
 void catsensor_isr_timer (void)
 /******************************************************************************/
@@ -164,9 +149,9 @@ TMR2IE = 0;
 TMR2IF = 0;
 TMR2ON = 0;
 CCP1CON = 0;
-CATSENSOR_LED_PORT &= ~CATSENSOR_LED_MASK;
+CATSENSOR_LED(LAT) &= ~CATSENSOR_LED_MASK;
 		/* The echo is the detection */
-		detected = echoed;
+		detected_cur = echoed;
 	}
 }
 /* End: catsensor_isr_timer */
@@ -181,7 +166,7 @@ void catsensor_isr_input (void)
 /******************************************************************************/
 {
 	if ( (pinging) &&
-	     !(CATSENSOR_PORT & CATSENSOR_MASK) ) {
+	     !(CATSENSOR(PORT) & CATSENSOR_MASK) ) {
 		echoed = 1;
 	}
 }

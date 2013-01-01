@@ -85,18 +85,6 @@ void rtc_work (void)
 /* rtc_work */
 
 
-void rtc_term (void)
-/******************************************************************************/
-/* Function:	rtc_term						      */
-/*		- Terminate the real time clock				      */
-/* History :	3 Sep 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-}
-/* rtc_term */
-
-
 void printtime (void)
 {
 	printf( "%d %d:%.2d.%.2d ",

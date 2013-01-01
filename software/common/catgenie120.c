@@ -56,9 +56,9 @@ struct debouncer {
 	void		(*handler)(unsigned char);
 };
 static struct debouncer	debouncers[DEBOUNCER_MAX] = {
-	{NEVER, BUTTON_DEBOUNCE,      0, &STARTBUTTON_PORT,   STARTBUTTON_MASK, startbutton_event},
-	{NEVER, BUTTON_DEBOUNCE,      0, &SETUPBUTTON_PORT,   SETUPBUTTON_MASK, setupbutton_event},
-	{NEVER, HEATSENSOR_DEBOUNCE,  0, &HEATSENSOR_PORT,    HEATSENSOR_MASK,  heatsensor_event}
+	{NEVER, BUTTON_DEBOUNCE,      0, &STARTBUTTON(PORT), STARTBUTTON_MASK, startbutton_event},
+	{NEVER, BUTTON_DEBOUNCE,      0, &SETUPBUTTON(PORT), SETUPBUTTON_MASK, setupbutton_event},
+	{NEVER, HEATSENSOR_DEBOUNCE,  0, &HEATSENSOR(PORT),  HEATSENSOR_MASK,  heatsensor_event}
 };
 
 struct pacer {
@@ -71,17 +71,19 @@ struct pacer {
 	unsigned char	port_mask;
 };
 static struct pacer	pacers[PACER_MAX] = {
-	{EXPIRED, 0x01, 0x00, 0, &BEEPER_PORT,        BEEPER_MASK},
-	{EXPIRED, 0x01, 0x00, 0, &LED_ERROR_PORT,     LED_ERROR_MASK},
-	{EXPIRED, 0x01, 0x00, 0, &LED_LOCKED_PORT,    LED_LOCKED_MASK},
-	{EXPIRED, 0x01, 0x00, 0, &LED_CARTRIDGE_PORT, LED_CARTRIDGE_MASK},
-	{EXPIRED, 0x01, 0x00, 0, &LED_CAT_PORT,       LED_CAT_MASK}
+	{EXPIRED, 0x01, 0x00, 0, &BEEPER(LAT),        BEEPER_MASK},
+	{EXPIRED, 0x01, 0x00, 0, &LED_ERROR(LAT),     LED_ERROR_MASK},
+	{EXPIRED, 0x01, 0x00, 0, &LED_LOCKED(LAT),    LED_LOCKED_MASK},
+	{EXPIRED, 0x01, 0x00, 0, &LED_CARTRIDGE(LAT), LED_CARTRIDGE_MASK},
+	{EXPIRED, 0x01, 0x00, 0, &LED_CAT(LAT),       LED_CAT_MASK}
 };
 
 
 /******************************************************************************/
 /* Local Prototypes							      */
 /******************************************************************************/
+
+static void set_pacer (unsigned char pacer, unsigned char pattern, unsigned char repeat);
 
 
 /******************************************************************************/
@@ -208,9 +210,9 @@ unsigned char catgenie_init (void)
 
 	/* Fill out the return flags */
 	temp = 0;
-	if (!(STARTBUTTON_PORT & STARTBUTTON_MASK))
+	if (!(STARTBUTTON(PORT) & STARTBUTTON_MASK))
 		temp |= START_BUTTON;
-	if (!(SETUPBUTTON_PORT & SETUPBUTTON_MASK))
+	if (!(SETUPBUTTON(PORT) & SETUPBUTTON_MASK))
 		temp |= SETUP_BUTTON;
 
 	return temp;
@@ -282,136 +284,64 @@ void catgenie_work (void)
 /* End: catgenie_work */
 
 
-void catgenie_term (void)
-/******************************************************************************/
-/* Function:	catgenie_term						      */
-/*		- Terminate the CatGenie 120 hardware			      */
-/* History :	10 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-}
-/* End: term_catgenie */
-
-
 void set_LED (unsigned char led, unsigned char on)
 {
-	volatile unsigned char	*port;
+	volatile unsigned char	*latch;
 	unsigned char		mask;
 	switch(led) {
 	case 1:
-		port = &LED_1_PORT;
+		latch = &LED_1(LAT);
 		mask = LED_1_MASK;
 		break;
 	case 2:
-		port = &LED_2_PORT;
+		latch = &LED_2(LAT);
 		mask = LED_2_MASK;
 		break;
 	case 3:
-		port = &LED_3_PORT;
+		latch = &LED_3(LAT);
 		mask = LED_3_MASK;
 		break;
 	case 4:
-		port = &LED_4_PORT;
+		latch = &LED_4(LAT);
 		mask = LED_4_MASK;
 		break;
 	default:
 		return;
 	}
 	if (on)
-		*port |= mask;
+		*latch |= mask;
 	else
-		*port &= ~mask;
+		*latch &= ~mask;
 }
 
 
 void set_LED_Error (unsigned char pattern, unsigned char repeat)
 {
-	if( repeat &&
-	    (pacers[PACER_LED_ERROR].pattern == pattern) &&
-	    (pacers[PACER_LED_ERROR].repeat == repeat) )
-		return;
-
-	/* Expire the bit timer */
-	timeoutnow(&pacers[PACER_LED_ERROR].timer);
-	/* Reset the mask to the first bit */
-	pacers[PACER_LED_ERROR].mask = 0x01;
-	/* Copy the blink pattern */
-	pacers[PACER_LED_ERROR].pattern = pattern;
-	/* Copy the repeat flag */
-	pacers[PACER_LED_ERROR].repeat = repeat;
+	set_pacer(PACER_LED_ERROR, pattern, repeat);
 }
 
 
 void set_LED_Locked (unsigned char pattern, unsigned char repeat)
 {
-	if( repeat &&
-	    (pacers[PACER_LED_LOCKED].pattern == pattern) &&
-	    (pacers[PACER_LED_LOCKED].repeat == repeat) )
-		return;
-
-	/* Expire the bit timer */
-	timeoutnow(&pacers[PACER_LED_LOCKED].timer);
-	/* Reset the mask to the first bit */
-	pacers[PACER_LED_LOCKED].mask = 0x01;
-	/* Copy the blink pattern */
-	pacers[PACER_LED_LOCKED].pattern = pattern;
-	/* Copy the repeat flag */
-	pacers[PACER_LED_LOCKED].repeat = repeat;
+	set_pacer(PACER_LED_LOCKED, pattern, repeat);
 }
 
 
 void set_LED_Cartridge (unsigned char pattern, unsigned char repeat)
 {
-	if( repeat &&
-	    (pacers[PACER_LED_CARTRIDGE].pattern == pattern) &&
-	    (pacers[PACER_LED_CARTRIDGE].repeat == repeat) )
-		return;
-
-	/* Expire the bit timer */
-	timeoutnow(&pacers[PACER_LED_CARTRIDGE].timer);
-	/* Reset the mask to the first bit */
-	pacers[PACER_LED_CARTRIDGE].mask = 0x01;
-	/* Copy the blink pattern */
-	pacers[PACER_LED_CARTRIDGE].pattern = pattern;
-	/* Copy the repeat flag */
-	pacers[PACER_LED_CARTRIDGE].repeat = repeat;
+	set_pacer(PACER_LED_CARTRIDGE, pattern, repeat);
 }
 
 
 void set_LED_Cat (unsigned char pattern, unsigned char repeat)
 {
-	if( repeat &&
-	    (pacers[PACER_LED_CAT].pattern == pattern) &&
-	    (pacers[PACER_LED_CAT].repeat == repeat) )
-		return;
-
-	/* Expire the bit timer */
-	timeoutnow(&pacers[PACER_LED_CAT].timer);
-	/* Reset the mask to the first bit */
-	pacers[PACER_LED_CAT].mask = 0x01;
-	/* Copy the blink pattern */
-	pacers[PACER_LED_CAT].pattern = pattern;
-	/* Copy the repeat flag */
-	pacers[PACER_LED_CAT].repeat = repeat;
+	set_pacer(PACER_LED_CAT, pattern, repeat);
 }
 
 
 void set_Beeper (unsigned char pattern, unsigned char repeat)
 {
-	if( repeat &&
-	    (pacers[PACER_BEEPER].pattern == pattern) &&
-	    (pacers[PACER_BEEPER].repeat == repeat) )
-		return;
-
-	/* Expire the bit timer */
-	timeoutnow(&pacers[PACER_BEEPER].timer);
-	/* Reset the mask to the first bit */
-	pacers[PACER_BEEPER].mask = 0x01;
-	/* Copy the beep pattern */
-	pacers[PACER_BEEPER].pattern = pattern;
-	/* Copy the repeat flag */
-	pacers[PACER_BEEPER].repeat = repeat;
+	set_pacer(PACER_BEEPER, pattern, repeat);
 }
 
 
@@ -420,15 +350,15 @@ void set_Bowl (unsigned char mode)
 	switch (mode) {
 	default:
 	case BOWL_STOP:
-		BOWL_PORT &= ~(BOWL_CWCCW_MASK | BOWL_ONOFF_MASK);
+		BOWL(LAT) &= ~(BOWL_CWCCW_MASK | BOWL_ONOFF_MASK);
 		break;
 	case BOWL_CW:
-		BOWL_PORT |= BOWL_CWCCW_MASK;
-		BOWL_PORT |= BOWL_ONOFF_MASK;
+		BOWL(LAT) |= BOWL_CWCCW_MASK;
+		BOWL(LAT) |= BOWL_ONOFF_MASK;
 		break;
 	case BOWL_CCW:
-		BOWL_PORT &= ~BOWL_CWCCW_MASK;
-		BOWL_PORT |=  BOWL_ONOFF_MASK;
+		BOWL(LAT) &= ~BOWL_CWCCW_MASK;
+		BOWL(LAT) |=  BOWL_ONOFF_MASK;
 		break;
 	}
 }
@@ -436,7 +366,7 @@ void set_Bowl (unsigned char mode)
 
 unsigned char get_Bowl (void)
 {
-	switch (BOWL_PORT & (BOWL_CWCCW_MASK | BOWL_ONOFF_MASK)) {
+	switch (BOWL(LAT) & (BOWL_CWCCW_MASK | BOWL_ONOFF_MASK)) {
 	case BOWL_ONOFF_MASK:
 		return (BOWL_CCW);
 	case BOWL_ONOFF_MASK | BOWL_CWCCW_MASK:
@@ -451,15 +381,15 @@ void set_Arm (unsigned char mode)
 	switch (mode) {
 	default:
 	case ARM_STOP:
-		ARM_PORT &= ~(ARM_UPDOWN_MASK | ARM_ONOFF_MASK);
+		ARM(LAT) &= ~(ARM_UPDOWN_MASK | ARM_ONOFF_MASK);
 		break;
 	case ARM_UP:
-		ARM_PORT &= ~ARM_UPDOWN_MASK;
-		ARM_PORT |=  ARM_ONOFF_MASK;
+		ARM(LAT) &= ~ARM_UPDOWN_MASK;
+		ARM(LAT) |=  ARM_ONOFF_MASK;
 		break;
 	case ARM_DOWN:
-		ARM_PORT |= ARM_UPDOWN_MASK;
-		ARM_PORT |= ARM_ONOFF_MASK;
+		ARM(LAT) |= ARM_UPDOWN_MASK;
+		ARM(LAT) |= ARM_ONOFF_MASK;
 		break;
 	}
 }
@@ -467,7 +397,7 @@ void set_Arm (unsigned char mode)
 
 unsigned char get_Arm (void)
 {
-	switch (ARM_PORT & (ARM_UPDOWN_MASK | ARM_ONOFF_MASK)) {
+	switch (ARM(LAT) & (ARM_UPDOWN_MASK | ARM_ONOFF_MASK)) {
 	case ARM_ONOFF_MASK:
 		return (ARM_UP);
 	case ARM_ONOFF_MASK | ARM_UPDOWN_MASK:
@@ -480,45 +410,45 @@ unsigned char get_Arm (void)
 void set_Dosage (unsigned char on)
 {
 	if (on)
-		DOSAGE_PORT |= DOSAGE_MASK;
+		DOSAGE(LAT) |= DOSAGE_MASK;
 	else
-		DOSAGE_PORT &= ~DOSAGE_MASK;
+		DOSAGE(LAT) &= ~DOSAGE_MASK;
 }
 
 
 unsigned char get_Dosage (void)
 {
-	return (DOSAGE_PORT & DOSAGE_MASK);
+	return (DOSAGE(LAT) & DOSAGE_MASK);
 }
 
 
 void set_Pump (unsigned char on)
 {
 	if (on)
-		PUMP_PORT |= PUMP_MASK;
+		PUMP(LAT) |= PUMP_MASK;
 	else
-		PUMP_PORT &= ~PUMP_MASK;
+		PUMP(LAT) &= ~PUMP_MASK;
 }
 
 
 unsigned char get_Pump (void)
 {
-	return (PUMP_PORT & PUMP_MASK);
+	return (PUMP(LAT) & PUMP_MASK);
 }
 
 
 void set_Dryer	(unsigned char on)
 {
 	if (on)
-		DRYER_PORT |= DRYER_MASK;
+		DRYER(LAT) |= DRYER_MASK;
 	else
-		DRYER_PORT &= ~DRYER_MASK;
+		DRYER(LAT) &= ~DRYER_MASK;
 }
 
 
 unsigned char get_Dryer (void)
 {
-	return (DRYER_PORT & DRYER_MASK);
+	return (DRYER(LAT) & DRYER_MASK);
 }
 
 
@@ -526,3 +456,19 @@ unsigned char get_Dryer (void)
 /* Local Implementations						      */
 /******************************************************************************/
 
+static void set_pacer (unsigned char pacer, unsigned char pattern, unsigned char repeat)
+{
+	if( repeat &&
+	    (pacers[pacer].pattern == pattern) &&
+	    (pacers[pacer].repeat == repeat) )
+		return;
+
+	/* Expire the bit timer */
+	timeoutnow(&pacers[pacer].timer);
+	/* Reset the mask to the first bit */
+	pacers[pacer].mask = 0x01;
+	/* Copy the pacer pattern */
+	pacers[pacer].pattern = pattern;
+	/* Copy the repeat flag */
+	pacers[pacer].repeat = repeat;
+}

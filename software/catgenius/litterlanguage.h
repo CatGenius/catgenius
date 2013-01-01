@@ -45,7 +45,6 @@ struct instruction {
 /* Generic */
 void		litterlanguage_init	(unsigned char	flags) ;
 void		litterlanguage_work	(void) ;
-void		litterlanguage_term	(void) ;
 
 /* Control */
 void		litterlanguage_start	(unsigned char	wet) ;

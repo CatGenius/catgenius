@@ -229,18 +229,6 @@ void litterlanguage_work (void)
 /* litterlanguage_work */
 
 
-void litterlanguage_term (void)
-/******************************************************************************/
-/* Function:	litterlanguage_term					      */
-/*		- Terminate the CatGenius LitterLanguage interpreter	      */
-/* History :	21 Feb 2010 by R. Delien:				      */
-/*		- Initial revision.					      */
-/******************************************************************************/
-{
-}
-/* litterlanguage_term */
-
-
 void litterlanguage_start (unsigned char wet)
 {
 	extern const struct instruction	washprogram[];
