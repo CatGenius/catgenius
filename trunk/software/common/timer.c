@@ -7,7 +7,6 @@
 /*		- Ported from other project.				      */
 /******************************************************************************/
 #include <htc.h>
-#include <stdio.h>
 
 #include "timer.h"
 
@@ -239,7 +238,7 @@ void gettimestamp (struct timer * const ticks)
 unsigned long timestampdiff (struct timer	const	* const early_p,
 			     struct timer	const	* const late_p)
 /******************************************************************************/
-/* Function:	timeoutleft						      */
+/* Function:	timestampdiff						      */
 /*		- Returns the number of ticks between early_p and late_p      */
 /* History :	22 Feb 2011 by R. Delien:				      */
 /*		- First implementation.					      */
