@@ -35,8 +35,8 @@
 #define BITRATE			19200UL
 
 /* Times */
-#define MAX_FILLTIME		(( 2*60+15)*SECOND)
-#define MAX_DRAINTIME		((10*60+ 0)*SECOND)
+#define MAX_FILLTIME		((2*60+15)*SECOND)
+#define MAX_DRAINTIME		((0*60+10)*SECOND)
 
 /* EEPROM layout */
 #define NVM_VERSION		(0)
