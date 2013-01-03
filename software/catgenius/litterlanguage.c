@@ -274,6 +274,7 @@ void litterlanguage_pause (unsigned char pause)
 		unsigned long	autodose;
 	} context;
 
+	printtime();
 	if (pause) {
 		struct timer	timer_now;
 
@@ -291,27 +292,28 @@ void litterlanguage_pause (unsigned char pause)
 		context.dryer = get_Dryer();
 		set_Dryer(0);
 		/* Save timer context */
-		gettimestamp (&timer_now);
+		gettimestamp(&timer_now);
 		/* We take a little shortcut here, not first checking timeoutexpired() and timeoutneverexpires()
 		 * Expired timer will result in negative difference, returning 0: settimeout(0) during restoring will repoduced a practically expired timer
 		 * Neverexpiring timer will result in huge difference, returning 0xFFFFFFFF: We will catch this during restoring */
-		context.wait = timestampdiff(&timer_now, &timer_waitins);
+		context.wait = timestampdiff(&timer_waitins, &timer_now);
 		timeoutnever(&timer_waitins);
-		context.fill = timestampdiff(&timer_now, &timer_fill);
+		context.fill = timestampdiff(&timer_fill, &timer_now);
 		timeoutnever(&timer_fill);
-		context.drain = timestampdiff(&timer_now, &timer_drain);
+		context.drain = timestampdiff(&timer_drain, &timer_now);
 		timeoutnever(&timer_drain);
-		context.autodose = timestampdiff(&timer_now, &timer_autodose);
+		context.autodose = timestampdiff(&timer_autodose, &timer_now);
 		timeoutnever(&timer_autodose);
+		DBG("Paused program\n");
 	} else {
+		DBG("Resuming program\n");
 		/* Restore timer context */
 		if (context.wait != 0xFFFFFFFF)
 			settimeout(&timer_waitins, context.wait);
 		if (error_fill) {
 			error_fill = 0;
 			settimeout(&timer_fill, MAX_FILLTIME);
-		}
-		else if (context.fill != 0xFFFFFFFF)
+		} else if (context.fill != 0xFFFFFFFF)
 			settimeout(&timer_fill, context.fill);
 		if (error_drain) {
 			error_drain = 0;
@@ -447,6 +449,7 @@ static void exe_instruction (void)
 	static struct instruction	const * ret_address;
 	unsigned int			temp;
 
+//	printtime();
 //	DBG("IP 0x%04X: ", ins_pointer);
 	switch (cur_instruction.opcode) {
 	case INS_BOWL:
@@ -474,8 +477,8 @@ static void exe_instruction (void)
 					water_fill(1);
 					settimeout(&timer_fill, MAX_FILLTIME);
 //					gettimestamp(&timer_fill);
-				} //else
-//					DBG(" (skipped)");
+				}
+//					else DBG(" (skipped)");
 			} else {
 				/* Disable timeout on filling */
 				water_fill(0);
