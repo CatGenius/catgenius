@@ -328,6 +328,34 @@ void catsensor_event (unsigned char detected)
 /* catsensor_event */
 
 
+void litterlanguage_event (unsigned char event, unsigned char active)
+{
+	switch (event) {
+	case EVENT_LEVEL_CHANGED:
+		break;
+	case EVENT_ERR_FILLING:
+		if (active)
+			set_Beeper(0x01, 1);
+		break;
+	case EVENT_ERR_DRAINING:
+		if (active)
+			set_Beeper(0x05, 1);
+		break;
+	case EVENT_ERR_OVERHEAT:
+		if (active)
+			set_Beeper(0x15, 1);
+		break;
+	case EVENT_ERR_EXECUTION:
+		break;
+	case EVENT_ERR_FLOOD:
+		break;
+	default:
+		break;
+	}
+}
+/* litterlanguage_event */
+
+
 /******************************************************************************/
 /* Local Implementations						      */
 /******************************************************************************/

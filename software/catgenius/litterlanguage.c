@@ -18,6 +18,8 @@
 #include "../common/water.h"
 #include "../common/rtc.h"
 
+extern void litterlanguage_event (unsigned char event, unsigned char active);
+
 
 /******************************************************************************/
 /* Macros								      */
@@ -40,12 +42,12 @@
 
 static unsigned char		prg_source		= 0;
 static bit			wet_program		= 0;
-static bit			overheat_detected	= 0;
 static bit			paused			= 0;
 static bit			error_fill		= 0;
 static bit			error_drain		= 0;
-static bit			error_flood		= 0;
-static bit			error_dryer		= 0;
+static bit			error_overheat		= 0;
+static bit			error_flood		= 0;	/* Not fully implemented yet */
+static bit			error_execution		= 0;
 
 /* Program execution variables */
 static unsigned char		ins_state		= STATE_IDLE;
@@ -62,11 +64,11 @@ static struct timer		timer_autodose		= NEVER;
 /* Local Prototypes							      */
 /******************************************************************************/
 
-static void		litterlanguage_cleanup (unsigned char wet);
-static void		req_instruction (struct instruction	const *instruction);
-static unsigned char	get_instruction (struct instruction	*instruction);
-static void		exe_instruction (void);
-static void		wait_instruction (void);
+static void		litterlanguage_cleanup	(unsigned char		wet);
+static void		req_instruction		(struct instruction	const *instruction);
+static unsigned char	get_instruction		(struct instruction	*instruction);
+static void		exe_instruction		(void);
+static void		wait_instruction	(void);
 
 
 /******************************************************************************/
@@ -128,22 +130,22 @@ void litterlanguage_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	if( (ins_state != STATE_IDLE) &&
-	    !paused ){
+	/* Don't work if paused */
+	if (paused)
+		return;
+
+	/* Check if a program is executed */
+	if (ins_state != STATE_IDLE) {
 		/* Check for filling timeout */
 		if( !water_detected() &&
 		    water_filling() &&
 		    timeoutexpired(&timer_fill) ){
 			printtime();
 			DBG("Fill timeout\n");
-			timeoutnever(&timer_fill);
 			/* Fill error */
 			error_fill = 1;
-			/* Pauze */
-//			litterlanguage_pause(1);
-			litterlanguage_stop();
-			set_LED_Error(0x01, 1);
-			set_Beeper(0x01, 1);
+			litterlanguage_pause(1);
+			litterlanguage_event(EVENT_ERR_FILLING, error_fill);
 		}
 
 		/* Check for draining timeout */
@@ -152,41 +154,26 @@ void litterlanguage_work (void)
 		    timeoutexpired(&timer_drain) ){
 			printtime();
 			DBG("Drain timeout\n");
-			timeoutnever(&timer_drain);
 			/* Drain error */
 			error_drain = 1;
-			/* Pauze */
-//			litterlanguage_pause(1);
-			litterlanguage_stop();
-			set_LED_Error(0x05, 1);
-			set_Beeper(0x05, 1);
+			litterlanguage_pause(1);
+			litterlanguage_event(EVENT_ERR_DRAINING, error_drain);
 		}
-		/* Check for overheating error */
-		if( overheat_detected &&
-		    get_Dryer() ){
-			printtime();
-			DBG("Overheating\n");
-			/* Overheat error */
-			error_dryer = 1;
-			/* Pauze */
-//			litterlanguage_pause(1);
-			litterlanguage_stop();
-			set_LED_Error(0x15, 1);
-			set_Beeper(0x015, 1);
+		/* Check auto-dose timeout */
+		if (timeoutexpired(&timer_autodose)) {
+			timeoutnever(&timer_autodose);
+			set_Dosage(0);
 		}
 	}
 
-	/* Check auto instruction timeouts */
-	if (timeoutexpired(&timer_autodose)) {
-		timeoutnever(&timer_autodose);
-		set_Dosage(0);
-	}
-
+	/* Von Neumann-like execution state machine */
 	switch (ins_state) {
 	case STATE_IDLE:	/* Idle */
 		break;
 
 	case STATE_FETCH_START:	/* Fetch the start instruction */
+		error_execution = 0;
+		litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
 		req_instruction(ins_pointer);
 		ins_state = STATE_GET_START;
 		/* no break; */
@@ -274,6 +261,9 @@ void litterlanguage_pause (unsigned char pause)
 		unsigned long	autodose;
 	} context;
 
+	if (pause == paused)
+		return;
+
 	printtime();
 	if (pause) {
 		struct timer	timer_now;
@@ -306,17 +296,22 @@ void litterlanguage_pause (unsigned char pause)
 		timeoutnever(&timer_autodose);
 		DBG("Paused program\n");
 	} else {
+		/* Don't resume if still overheated */
+		if (error_overheat)
+			return;
 		DBG("Resuming program\n");
 		/* Restore timer context */
 		if (context.wait != 0xFFFFFFFF)
 			settimeout(&timer_waitins, context.wait);
 		if (error_fill) {
 			error_fill = 0;
+			litterlanguage_event(EVENT_ERR_FILLING, error_fill);
 			settimeout(&timer_fill, MAX_FILLTIME);
 		} else if (context.fill != 0xFFFFFFFF)
 			settimeout(&timer_fill, context.fill);
 		if (error_drain) {
 			error_drain = 0;
+			litterlanguage_event(EVENT_ERR_DRAINING, error_drain);
 			settimeout(&timer_drain, MAX_DRAINTIME);
 		} else if (context.drain != 0xFFFFFFFF)
 			settimeout(&timer_drain, context.drain);
@@ -329,7 +324,6 @@ void litterlanguage_pause (unsigned char pause)
 		set_Dosage(context.dosage);
 		set_Pump(context.pump);
 		set_Dryer(context.dryer);
-		error_dryer = 0;
 	}
 	paused = pause;
 }
@@ -343,25 +337,36 @@ unsigned char litterlanguage_paused (void)
 
 void litterlanguage_stop (void)
 {
-	if (ins_state != STATE_IDLE) {
-		printtime();
-		DBG("Stopping program\n");
-		/* Stop all actuators */
-		set_Bowl(BOWL_STOP);
-		set_Arm(ARM_STOP);
-		water_fill(0);
-		set_Dosage(0);
-		set_Pump(0);
-		set_Dryer(0);
-		/* Disable all timeouts */
-		timeoutnever(&timer_fill);
-		timeoutnever(&timer_drain);
-		timeoutnever(&timer_autodose);
-		/* Stop the state machine */
-		ins_state = STATE_IDLE;
-		/* Reset pause state */
-		paused = 0;
+	if (ins_state == STATE_IDLE)
+		return;
+
+	printtime();
+	DBG("Stopping program\n");
+	/* Stop all actuators */
+	set_Bowl(BOWL_STOP);
+	set_Arm(ARM_STOP);
+	water_fill(0);
+	set_Dosage(0);
+	set_Pump(0);
+	set_Dryer(0);
+	/* Disable all timeouts */
+	timeoutnever(&timer_fill);
+	timeoutnever(&timer_drain);
+	timeoutnever(&timer_autodose);
+	/* Stop the state machine */
+	ins_state = STATE_IDLE;
+	/* Reset pause state */
+	paused = 0;
+	/* Reset errors */
+	if (error_fill) {
+		error_fill = 0;
+		litterlanguage_event(EVENT_ERR_FILLING, error_fill);
 	}
+	if (error_drain) {
+		error_drain = 0;
+		litterlanguage_event(EVENT_ERR_DRAINING, error_drain);
+	}
+	error_flood = 0;
 }
 
 
@@ -387,11 +392,15 @@ void watersensor_event (unsigned char detected)
 			printtime();
 			DBG("Drained\n");
 		}
-	} else
-		if (detected) {
+	} else {
+		error_flood = detected;
+		if (error_flood) {
 			printtime();
 			DBG("Box flooded!\n");
 		}
+		litterlanguage_event(EVENT_ERR_FLOOD, error_flood);
+	}
+
 }
 /* watersensor_event */
 
@@ -404,7 +413,10 @@ void heatsensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	overheat_detected = detected;
+	error_overheat = detected;
+	if (error_overheat)
+		litterlanguage_pause(1);
+	litterlanguage_event(EVENT_ERR_OVERHEAT, error_overheat);
 }
 /* heatsensor_event */
 
@@ -578,12 +590,16 @@ static void exe_instruction (void)
 		break;
 	case INS_START:
 //		DBG("INS_START, unexpected");
+		error_execution = 1;
 		litterlanguage_stop();
+		litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
 		break;
 	default:
 		/* Program error */
 //		DBG("INS_unknown: 0x%X", cur_instruction.operant);
+		error_execution = 1;
 		litterlanguage_stop();
+		litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
 		break;
 	}
 //	DBG("\n");
