@@ -25,9 +25,9 @@
 #define LEVEL_TIMEOUT		(5 * SECOND)	/* Show the level for 5 seconds */
 #define CAT_TIMEOUT		(4 * 60 * SECOND)
 
-#define DISP_AUTOMODE		0
-#define DISP_CARTRIDGELEVEL	1
-#define DISP_ERROR		2
+#define PANEL_AUTOMODE		0	/* Display/button mode in normal operation */
+#define PANEL_CARTRIDGELEVEL	1	/* Display/button mode showing/altering cartridge level */
+#define PANEL_ERROR		2	/* Display/button mode showing error(s) */
 
 #define STATE_IDLE		0
 #define STATE_CAT		1
@@ -67,7 +67,7 @@ static bit		full_wash	= 0;
 
 static unsigned char	state		= STATE_IDLE;
 static unsigned char	interval	= 0;
-static unsigned char	disp_mode	= DISP_AUTOMODE;
+static unsigned char	panel_mode	= PANEL_AUTOMODE;
 static unsigned char	auto_mode	= AUTO_MANUAL;
 static unsigned char	cart_level	= 100;
 static unsigned char	error_nr	= 0;
@@ -129,12 +129,12 @@ void userinterface_work (void)
 {
 	unsigned char		update		= 0;
 
-	if( (disp_mode == DISP_CARTRIDGELEVEL) &&
+	if( (panel_mode == PANEL_CARTRIDGELEVEL) &&
 	    (timeoutexpired(&cartridgetimeout)) ) {
 		if (error_nr)
-			disp_mode = DISP_ERROR;
+			panel_mode = PANEL_ERROR;
 		else
-			disp_mode = DISP_AUTOMODE;
+			panel_mode = PANEL_AUTOMODE;
 		update = 1;
 	}
 
@@ -423,10 +423,10 @@ static void set_mode (unsigned char mode)
 
 static void update_display (void)
 {
-	switch (disp_mode) {
+	switch (panel_mode) {
 	default:
-		disp_mode = DISP_AUTOMODE;
-	case DISP_AUTOMODE:
+		panel_mode = PANEL_AUTOMODE;
+	case PANEL_AUTOMODE:
 		set_LED_Error(0x00, 0);
 		if (cart_level >= 10)
 			set_LED_Cartridge(0x00, 0);
@@ -467,7 +467,7 @@ static void update_display (void)
 			break;
 		}
 		break;
-	case DISP_CARTRIDGELEVEL:
+	case PANEL_CARTRIDGELEVEL:
 		set_LED_Error(0x00, 0);
 		set_LED_Cartridge(0xFF, 1);
 		set_LED(1, cart_level >= 10);
@@ -479,7 +479,7 @@ static void update_display (void)
 		else
 			set_LED_Cat(0x00, 0);
 		break;
-	case DISP_ERROR:
+	case PANEL_ERROR:
 		set_LED_Error(0x55, 1);
 		set_LED_Cartridge(0x00, 0);
 		set_LED(1, error_nr == 1);
@@ -501,14 +501,14 @@ static void update_display (void)
 
 static void setup_short (void)
 {
-	switch (disp_mode) {
+	switch (panel_mode) {
 	default:
-		disp_mode = DISP_AUTOMODE;
-	case DISP_AUTOMODE:
+		panel_mode = PANEL_AUTOMODE;
+	case PANEL_AUTOMODE:
 		set_mode((auto_mode==AUTO_DETECTED)?AUTO_MANUAL:auto_mode+1);
 		break;
 
-	case DISP_CARTRIDGELEVEL:
+	case PANEL_CARTRIDGELEVEL:
 		if (cart_level < 10)
 			cart_level = 10;
 		else if (cart_level < 25)
@@ -525,7 +525,7 @@ static void setup_short (void)
 		settimeout(&cartridgetimeout, LEVEL_TIMEOUT);
 		break;
 
-	case DISP_ERROR:
+	case PANEL_ERROR:
 		break;
 	}
 }
@@ -564,8 +564,8 @@ static void start_long (void)
 
 static void both_short (void)
 {
-	/* Swich display to cartridge level mode */
-	disp_mode = DISP_CARTRIDGELEVEL;
+	/* Swich panel to cartridge level mode */
+	panel_mode = PANEL_CARTRIDGELEVEL;
 	/* Set timeout to return to auto- or errormode */
 	settimeout(&cartridgetimeout, LEVEL_TIMEOUT);
 }
