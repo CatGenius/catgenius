@@ -23,9 +23,50 @@ extern void watersensor_event (unsigned char detected);
 #define DETECTTIME		(SECOND/1000)	/*  10ms*/
 #define WATERSENSORPOLLING	(SECOND/4)	/* 250ms*/
 #define HYSTERESIS_MAX		8		/* Number of pollings to debounce the sensor output */
-#define DECT_MARGIN		100		/* Margin to notify software of high water before the LM393 closes the water valve */
-#define DECT_THRESHOLD		505		/* At an ADC value of 505 or below, the LM393 opens the water valve */
 
+/*
+ * The table below shows the correlation between light guide cleanliness and
+ * state, and the analog reflection quality value read by the ADC. A light guide
+ * is considered to be dirty when the original firmware starts warning.
+ * Cleanliness:	| State:	| Reflection:
+ * -------------+---------------+--------------------
+ * Clean	| Dry		| ~22
+ * Clean	| Submerged	| 1023
+ * Clean	| Wet		| ~22
+ * Dirty	| Dry		| ~414
+ * Dirty	| Submerged	| ~1011
+ * Dirty	| Wet		| No reliable measurement yet
+ 
+ */
+#define GUIDEDIRTY_THRESHOLD	414		/* At an ADC value of 414 or above, the original firmware warns to clean the light guide */
+
+/*
+ * The LM393 inverting schmitt-trigger circuit shuts the water valve autonomously
+ * when the light guide is submerged. This circuit is a safe guard against
+ * overflows that will work regardless of the state of software.
+ * Using a multi-turn poteniometer, we have determined that an open water valve
+ * will be closed by the LM393 at a value of 519-520. Due to a little hysteresis,
+ * it will open again when the value lowers down to 504-503. The average of these
+ * two switch points is therefore: (519+504)/2=1023/2=511,5. With a 10-bits A/D-
+ * converter yielding a span of 0..1023, this value is spot-on in the middle.
+ */
+#define DETECTION_THRESHOLD	520		/* At an ADC value of 520 or above, the LM393 closes the water valve */
+#define UNDETECTION_THRESHOLD	503		/* At an ADC value of 503 or below, the LM393 opens the water valve */
+
+/*
+ * After the LM393 has closed the water valve, naturally the water level
+ * will no longer rise, hence the analog reflection quality value will no
+ * longer rise. In theory, a wave of water could briefly trigger the LM393
+ * to close the valve, without notifying software with a washing program
+ * waiting for high water level. To avoid this race condition, software
+ * should be notified at a the highest value at which the water valve is
+ * still open (UNDETECTION_THRESHOLD).  Just to be sure, an extra safety
+ * margin is subtracted. The hysteresis span seems appropriate.
+ */
+#define DETECTION_MARGIN	((DETECTION_THRESHOLD)-(UNDETECTION_THRESHOLD))
+ 
+ 
+ 
 #define LED_ON			0
 #define START_CONVERSION	1
 #define PROCESS_RESULT		2
@@ -130,13 +171,13 @@ void water_work (void)
 		if (!timeoutexpired(&sensortimer))
 			break;
 		/* Read out the IR sensor digitally (lower value == more light reflected == no water detected) */
-		reflectionquality = (WATERSENSORANALOG(PORT) & WATERSENSORANALOG_MASK)?DECT_THRESHOLD:0;
+		reflectionquality = (WATERSENSORANALOG(PORT) & WATERSENSORANALOG_MASK)?DETECTION_THRESHOLD:0;
 #endif /* WATERSENSOR_ANALOG */
 		/* Switch off the IR LED if we're not filling */
 		if (!filling && !ledalwayson)
 			WATERSENSOR_LED(LAT) &= ~WATERSENSOR_LED_MASK;
 		/* Evaluate the result, considering a hysteresis */
-		if (reflectionquality <= (DECT_THRESHOLD - DECT_MARGIN)) {
+		if (reflectionquality <= (UNDETECTION_THRESHOLD - DETECTION_MARGIN)) {
 			if ((hysteresis > 0) &&
 			    (!--hysteresis && detected)) {
 				detected = 0;
@@ -177,6 +218,13 @@ unsigned int water_reflectionquality (void)
 	return (reflectionquality);
 }
 /* End: water_reflectionquality */
+
+
+unsigned char water_lightguidedirty (void)
+{
+	return (reflectionquality >= GUIDEDIRTY_THRESHOLD)?1:0;
+}
+/* End: water_lightguidedirty */
 
 
 unsigned char water_filling (void)
