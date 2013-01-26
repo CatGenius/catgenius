@@ -14,6 +14,7 @@ void		water_work		(void) ;
 
 /* Getters */
 unsigned int	water_reflectionquality	(void) ;
+unsigned char	water_lightguidedirty	(void) ;
 unsigned char	water_detected		(void) ;
 unsigned char	water_filling		(void) ;
 /* Setters */
