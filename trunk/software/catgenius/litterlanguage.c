@@ -18,7 +18,7 @@
 #include "../common/water.h"
 #include "../common/rtc.h"
 
-extern void litterlanguage_event (unsigned char event, unsigned char active);
+extern void litterlanguage_event (unsigned char event, unsigned char argument);
 
 
 /******************************************************************************/
@@ -144,7 +144,6 @@ void litterlanguage_work (void)
 			DBG("Fill timeout\n");
 			/* Fill error */
 			error_fill = 1;
-			litterlanguage_pause(1);
 			litterlanguage_event(EVENT_ERR_FILLING, error_fill);
 		}
 
@@ -156,7 +155,6 @@ void litterlanguage_work (void)
 			DBG("Drain timeout\n");
 			/* Drain error */
 			error_drain = 1;
-			litterlanguage_pause(1);
 			litterlanguage_event(EVENT_ERR_DRAINING, error_drain);
 		}
 		/* Check auto-dose timeout */
@@ -414,8 +412,6 @@ void heatsensor_event (unsigned char detected)
 /******************************************************************************/
 {
 	error_overheat = detected;
-	if (error_overheat)
-		litterlanguage_pause(1);
 	litterlanguage_event(EVENT_ERR_OVERHEAT, error_overheat);
 }
 /* heatsensor_event */
@@ -591,14 +587,12 @@ static void exe_instruction (void)
 	case INS_START:
 //		DBG("INS_START, unexpected");
 		error_execution = 1;
-		litterlanguage_stop();
 		litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
 		break;
 	default:
 		/* Program error */
 //		DBG("INS_unknown: 0x%X", cur_instruction.operant);
 		error_execution = 1;
-		litterlanguage_stop();
 		litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
 		break;
 	}
