@@ -328,21 +328,35 @@ void catsensor_event (unsigned char detected)
 /* catsensor_event */
 
 
-void litterlanguage_event (unsigned char event, unsigned char active)
+void litterlanguage_event (unsigned char event, unsigned char argument)
 {
+	/* Stop the washing program upon fatal errors */
+	if ((event == EVENT_ERR_EXECUTION) &&
+	    (argument)) {
+		litterlanguage_stop();
+	}
+	/* Pause the washing program upon non-fatal errors */
+	if (((event == EVENT_ERR_FILLING) ||
+	     (event == EVENT_ERR_DRAINING) ||
+	     (event == EVENT_ERR_OVERHEAT)) &&
+	    (argument)) {
+		litterlanguage_pause(1);
+	}
+
+
 	switch (event) {
 	case EVENT_LEVEL_CHANGED:
 		break;
 	case EVENT_ERR_FILLING:
-		if (active)
+		if (argument)
 			set_Beeper(0x01, 1);
 		break;
 	case EVENT_ERR_DRAINING:
-		if (active)
+		if (argument)
 			set_Beeper(0x05, 1);
 		break;
 	case EVENT_ERR_OVERHEAT:
-		if (active)
+		if (argument)
 			set_Beeper(0x15, 1);
 		break;
 	case EVENT_ERR_EXECUTION:
