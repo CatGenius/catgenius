@@ -67,7 +67,8 @@
 #define ARM_UP			2
 
 /* Mechanics */
-#define DOSAGE_SECONDS_PER_ML	10		/* For 1 ml of cleaning liquid, 10 seconds of pumping */
+#define DOSAGE_SECONDS_PER_ML	10	/* For 1 ml of cleaning liquid, 10 seconds of pumping */
+#define CARTRIDGECAPACITY_ML	450	/* A full cartridge contains 450 ml of detergent */
 
 #define BOWL_MOTOR_RPM		52
 #define BOWL_MOTOR_TEETH	12

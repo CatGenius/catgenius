@@ -33,14 +33,20 @@
 /* Local Prototypes							      */
 /******************************************************************************/
 
+/* Helpers */
+static int hex2val(char *str, uint32_t *val);
+
 /* Primitive operations */
 static int tag_init(void);
 static void tag_print_uid(void);
 static void tag_print_block(char block);
+static void tag_write_block(char block, unsigned char *data);
 static void tag_term(void);
 
 /* Sub commands */
 static void tag_id(void);
+static int tag_block_read(int argc, char* argv[]);
+static int tag_block_write(int argc, char* argv[]);
 static void tag_dump(void);
 
 
@@ -59,6 +65,14 @@ int tag(int argc, char* argv[])
 		if (argc != 2)
 			return ERR_SYNTAX;
 		tag_id();
+	} else if (!strncmp (argv[1], "read", LINEBUFFER_MAX)) {
+		if (argc != 3)
+			return ERR_SYNTAX;
+		result = tag_block_read(argc, argv);
+	} else if (!strncmp (argv[1], "write", LINEBUFFER_MAX)) {
+		if (argc != 3)
+			return ERR_SYNTAX;
+		result = tag_block_write(argc, argv);
 	} else if (!strncmp (argv[1], "dump", LINEBUFFER_MAX)) {
 		if (argc != 2)
 			return ERR_SYNTAX;
@@ -221,6 +235,27 @@ static void tag_print_block(char block)
 }
 
 
+static void tag_write_block(char block, unsigned char *data)
+{
+	unsigned char	frame[6];
+
+	/* Request the unique ID */
+	frame[0] = 0x09;	/* Command 0x09 */
+	frame[1] = block;
+	frame[2] = data[0];
+	frame[3] = data[1];
+	frame[4] = data[2];
+	frame[5] = data[3];
+	if (cr14_writeframe(frame, sizeof(frame))) {
+		printf("Unable to write block\n");
+		return;
+	}
+	__delay_us(10000);
+
+	return;
+}
+
+
 static void tag_term(void)
 {
 	(void)cr14_writeparamreg(0x00);
@@ -240,6 +275,90 @@ static void tag_id(void)
 
 	if (result <= 0)
 		tag_term();
+}
+
+
+static int hex2val(char *str, uint32_t *val)
+{
+	unsigned char	index;
+	unsigned int	*value = (unsigned int*)val;
+
+	*val = 0;
+	for (index = 0; index < strlen(str); index ++) {
+		value[1] <<= 4;
+		value[1] |= value[0] >> 12;
+		value[0] <<= 4;
+		if ( (str[index] >= '0') && (str[index] <= '9') )
+			value[0] |= str[index] - '0';
+		else if ( (str[index] >= 'A') && (str[index] <= 'F') )
+			value[0] |= 10 + str[index] - 'A';
+		else if ( (str[index] >= 'a') && (str[index] <= 'f') )
+			value[0] |= 10 + str[index] - 'a';
+		else
+			return (-1);
+	}
+
+	return (0);
+}
+
+
+static int tag_block_read(int argc, char* argv[])
+{
+	int		result;
+	uint32_t	block;
+
+	if (hex2val(argv[2], &block))
+		return ERR_SYNTAX;
+
+	if (block > 0xFF)
+		return ERR_SYNTAX;
+
+	result = tag_init();
+	if (result > 0)
+		return ERR_IO;
+
+	if (!result)
+		tag_print_block(block);
+
+	if (result <= 0)
+		tag_term();
+
+	return ERR_OK;
+}
+
+
+static int tag_block_write(int argc, char* argv[])
+{
+	int		result;
+	uint32_t	temp;
+	unsigned char	block;
+
+	/* Retrieve the block number */
+	if (hex2val(argv[2], &temp))
+		return ERR_SYNTAX;
+
+	if (temp > 0xFF)
+		return ERR_SYNTAX;
+	block = temp;
+
+	/* Retrieve the data */
+	if (hex2val(argv[3], &temp))
+		return ERR_SYNTAX;
+
+	result = tag_init();
+	if (result > 0)
+		return ERR_IO;
+
+	if (!result)
+		tag_write_block(block, (unsigned char *)&temp);
+
+	if (!result)
+		tag_print_block(block);
+
+	if (result <= 0)
+		tag_term();
+
+	return ERR_OK;
 }
 
 
