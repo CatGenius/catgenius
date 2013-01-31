@@ -9,7 +9,7 @@
     * [HowToOpenPU How to open the processing unit]
     * [HowToProgram How to program the firmware]
     * [HowToAddSerialPort How to add a serial port]
-      * [SerialBluetooth Using Bluetooth]
+    * [SerialBluetooth How to add Bluetooth]
     * [HowToGardena How to install Gardena quick connect]
     * [PICkit3MPLabs How to customize the code]
   * [KnowledgeBase Knowledge Base]
