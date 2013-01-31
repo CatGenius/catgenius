@@ -79,6 +79,7 @@ http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDoc
 == Programming with the PICkit 3 ==
 
   * Obtain a PICkit 3.  There are several PICkit 3 kits available, including some with test boards, but the minimum you need is this:  http://www.microchipdirect.com/productsearch.aspx?Keywords=PG164130
+  * Install the MPLab software
   * Download the appropriate hex file for your microcontroller
   * Connect the USB cable from the PICkit 3 to a Windows PC you will be using for programming
   * Connect your PICkit 3 to the CG programming header using the cable described above
@@ -86,12 +87,13 @@ http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDoc
   * Start a command prompt and run the following command:
     {{{"C:\Program Files\Microchip\MPLAB IDE\Programmer Utilities\PICkit3\pk3cmd.exe" -p16fXXXX -mP -fC:\Temp\catgenius_YYY_16fXXXX.hex}}}
     * XXXX is the name of the microcontroller on your CG board; IE: 1939
-      *NOTE: Make sure you pick the right microcontroller!*
+      <b>NOTE: Make sure you pick the right microcontroller!</b>
     * YYY is the CatGenius release; IE: B04
     * Change "C:\Temp" to the full path where you downloaded the CatGenius hex file
     * If you're running 64-bit windows, the path will change slightly to: "C:\Program Files (x86)\Microchip\MPLAB IDE\Programmer Utilities\PICkit3\pk3cmd.exe"
   * The output should be something like this:
-    <pre>Connecting...
+    {{{
+    Connecting...
     PICkit 3 detected
     Connecting to PICkit 3...
     Firmware Suite Version...... 01.28.18
@@ -101,7 +103,8 @@ http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDoc
     Device ID Revision = 00000002
 
     Programming Device ...
-    Programming/Verify complete</pre>
+    Programming/Verify complete
+    }}}
   * If programming failed, check your cables
 
 == Older PICkit 2 Instructions ==
