@@ -4,6 +4,9 @@
 
 My cats _love_ chewing on USB cables, serial cables, power cables... basically any kind of cable.  If your cats are anything like mine, you'll want a wireless serial connection to your CatGenius.  This page tells you how to do so for about USD $50.
 
+Here is the end goal:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_mounted.png
+
 
 = Why Bluetooth? =
 
@@ -47,9 +50,6 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_2.
 
 This is how it should be connected to the CatGenie serial header.  Note that the red wire connects to the 5V pin and green goes to GND:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_connected.png
-
-And here it is wired up, mounted inside the CG box, and doing its thing:<br>
-http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_mounted.png
 
 Alternatively (if you're really cheap), you can just use a single 6-pin cable.  The finished cable should look like below.  Note that in this verison of the cable, the black wire should connect to the GND pin on both the Bluetooth module and the CG board and the green wire should connect to VCC/5V:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_1.png
