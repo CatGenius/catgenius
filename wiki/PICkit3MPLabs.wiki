@@ -1,0 +1,46 @@
+#summary How to flash the CatGenius firmware using a PICkit 3 and the MPLab IDE
+
+= Introduction =
+
+*NOTE: The information provided here is a work in progress*
+
+To program the CatGenius firmware, you'll need the following:
+  * PICkit 3
+  * MPLab IDE
+  * CatGenius source
+<br>
+
+= PICkit 3 =
+
+There are several kits available, including some with test boards, but the minimum you need is this:<br>
+http://www.microchipdirect.com/productsearch.aspx?Keywords=PG164130
+
+= MPLab IDE Install =
+
+The installer CD that came with my PICkit 3 was corrupted, and is usually out of date anyway.  There is a "tools" directory under each release of CatGenius that has the version of the MPLab IDE used to build the software.  Installing and using that version is recommended.<br>
+
+However, if you wish download and install the latest version, click the link below.  Note that this page contains some information about a new IDE called "MPLAB X".  We haven't had a chance to try it out yet, so use at your own risk.  If you do happen to get it working, we'd love to hear about it.<br>
+http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDocName=en019469&part=SW007002
+
+= Opening the IDE =
+
+After everything is downloaded/installed, browse to the folder where the CatGenius software is located, and click on the appropriate project file based on the PIC processor in your unit (catgenius_16f877a.mcp or catgenius_16f1939.mcp).
+
+If you're running 32-bit Windows, you'll need to locate the missing picXXX.h include file for your microcontroller.  Right-click on the missing file and browse here to locate it:<br>
+{{{C:\Program Files\HI-TECH Software\PICC\9.83\include to locate it}}}
+
+Connect your PICkit 3 to the CatGenie board, connect your PICkit 3 to the computer with the provided USB cable, then select the PICkit 3 as your programmer:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_programmer_select_pickit3.png
+
+You'll get a warning about device detection.  Some devices have lower voltage tolerances, so if you don't have the right device detected, you can fry your microcontroller.  Double-check that you opened the correct project for your microcontroller, then click OK:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_voltage_caution.png
+
+MPLab will connect to the PICkit 3 and verify connectivity of the CatGenie microcontroller:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_pickit3_target_connected.png
+
+You are now ready to flash the new firmware!  In my experience, the PICkit 3 has never flashed properly unless the CatGenie is plugged in.  If haven't plugged your CatGenie in, do so now.<br>
+
+Game time.  Select Programmer / Program.  MPLab will write the firmware and verify it in one pass:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_programmer_pickit3_program.png
+
+If you got errors, double-check your cable and connections to make sure everything is wired correctly and tightly connected.
