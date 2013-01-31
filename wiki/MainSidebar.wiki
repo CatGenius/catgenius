@@ -10,6 +10,7 @@
     * [HowToProgram How to program the firmware]
       * [PICkit3MPLabs Using PICkit 3 and the MPLabs IDE]
     * [HowToAddSerialPort How to add a serial port]
+      * [SerialBluetooth Using Bluetooth]
     * [HowToGardena How to install Gardena quick connect]
   * [KnowledgeBase Knowledge Base]
     * [WaterSensor How the water sensor works]
