@@ -42,12 +42,12 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_front.png
 
 = CatGenie Board Serial Header =
 
-The CG board comes without a serial header, so unless you've already done so, you'll need to solder one in now.  It's a pretty tight fit in there.  If you're not very good at soldering like me, and in order to avoid having to pull the whole board out, pull 4 pins out of a header and solder each individually while holding with a pair of pliers like so:<br>
+The CG board comes without a serial header, so unless you've already done so, you'll need to solder one in now.  It's a pretty tight fit in there.  If you're not very good at soldering like me (KuriKat), and in order to avoid having to pull the whole board out, pull 4 pins out of a header and solder each individually while holding with a pair of pliers like so:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_header_soldering.png
 
 = Cable =
 
-You can make your own cable using left-over PC ribbon cable or equivalent, mod a pre-made one.  I (KuriKat) am quite sloppy with a soldering iron, so I went the pre-made route.  I purchased one 6-pin (Bluetooth module) and one 4-pin (CG board) cable in order to accommodate both ends:<br>
+You can make your own cable using left-over PC ribbon cable or equivalent, or mod a pre-made one.  I (KuriKat) am quite sloppy with a soldering iron, so I went the pre-made route.  I purchased one 6-pin (Bluetooth module) and one 4-pin (CG board) cable in order to accommodate both ends:<br>
 https://www.sparkfun.com/products/10366
 https://www.sparkfun.com/products/10364
 
