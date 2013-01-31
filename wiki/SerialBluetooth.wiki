@@ -1,0 +1,58 @@
+#summary Adding Serial Bluetooth
+
+= Introduction =
+
+My cats _love_ chewing on USB cables, serial cables, power cables... basically any kind of cable.  If your cats are anything like mine, you'll want a wireless serial connection to your CatGenius.  This page tells you how to do so for about USD $50.
+
+
+= Why Bluetooth? =
+
+No wires, as stated above.  Also, the goal here is to provide something that's inexpensive and easy to set up.  "Plug-and-play", if you will.
+
+An obvious alternative is WiFi, but at the time this page was written I couldn't find an affordable module that wouldn't require significant modifications and involve PCB/soldering work.
+
+Plus, you can connect to Bluetooth with almost anything.  A laptop is convenient, but a smart phone is even more convenient.  Android has a number of Bluetooth serial apps that work well.  I'm sure there is something available for iPhone, too.
+
+
+= Materials =
+
+  * Bluetooth module.  I highly recommend the Roving Networks Bluetooth Mate Silver as it has built-in tolerance for a range of voltages, and does not require a TTL level-shifter.  It's almost impossible to go wrong with this module, and you can re-use it with an Arduino or other board later if you'd like.  It is available for about USD $40 from SparkFun: https://www.sparkfun.com/products/10393
+  * Break-away male header: https://www.sparkfun.com/products/116
+  * Cable to connect bluetooth module (more later)
+  * Serial header on CatGenie board
+  * Soldering iron
+  * Solder
+  * Tape or something to mount the board inside the CG box
+
+= Bluetooth module =
+
+The module comes without a header.  Solder one on like so:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_front.png
+
+= CatGenie Board Serial Header =
+
+The CG board comes without a serial header, so unless you've already done so, you'll need to solder one in now.  If you're very good at soldering, it's easier to pull 4 pins out of a header and solder each individually while holding with a pair of pliers like so:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_header_soldering.png
+
+= Cable =
+
+You can make your own cable or mod a pre-made one.  I'm quite sloppy with a soldering iron, so I went the pre-made route.  I purchased one 6-pin (Bluetooth module) and one 4-pin (CG board) cable in order to accommodate both ends:<br>
+https://www.sparkfun.com/products/10366
+https://www.sparkfun.com/products/10364
+
+I used the 4-pin cable as-is on one side, and removed the pins from the other side.  I then removed a header from the 6-pin cable completely, and inserted the removed pins from the 4-pin cable into it.  There more information about how to do this on firmware programming page.
+
+The finished cable should look like below.  The 6-pin side is lined up the way it should be connected to the Bluetooth module:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_2.png
+
+This is how it should be connected to the CatGenie serial header.  Note that the red wire connects to the 5V pin and green goes to GND:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_connected.png
+
+And here it is wired up, mounted inside the CG box, and doing its thing:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_mounted.png
+
+Alternatively (if you're really cheap), you can just use a single 6-pin cable.  The finished cable should look like below.  Note that in this verison of the cable, the black wire should connect to the GND pin on both the Bluetooth module and the CG board and the green wire should connect to VCC/5V:
+http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_1.png
+
+= Connecting to Your CatGenius over Bluetooth =
+TBD...
