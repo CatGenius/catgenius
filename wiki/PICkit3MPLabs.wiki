@@ -8,7 +8,9 @@ This page outlines how to make modifications to the CatGenius and associated sou
 
 = Preparation =
 
-Install the MPLab software as outlined on the Programming page, and download the version of the code you wish to modify.
+Perform these steps from the [HowToProgram Programming] page:
+* Install the MPLab software
+* Create the programming cable
 
 = Opening the Project in the MPLab IDE =
 
@@ -29,7 +31,7 @@ Now compile the code:<br>
 
 In my experience, the PICkit 3 has never flashed properly unless the CatGenie is plugged in.  If haven't plugged your CatGenie in, do so now.
 
-Connect your PICkit 3 to the CatGenie board, connect your PICkit 3 to the computer with the provided USB cable, then select the PICkit 3 as your programmer:<br>
+Connect your PICkit 3 to the CatGenie board using the programming cable, connect your PICkit 3 to the computer with the provided USB cable, then select the PICkit 3 as your programmer:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_programmer_select_pickit3.png
 
 You'll get a warning about device detection.  Some devices have lower voltage tolerances, so if you don't have the right device detected, you can fry your microcontroller.  Double-check that you opened the correct project for your microcontroller, then click OK:<br>
