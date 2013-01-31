@@ -30,6 +30,9 @@ If you're running 32-bit Windows, you'll need to locate the missing picXXX.h inc
 http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_missing_file_1.png
 http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_missing_file_2.png
 
+Now compile the code:<br>
+{{{Project / Build}}}
+
 Connect your PICkit 3 to the CatGenie board, connect your PICkit 3 to the computer with the provided USB cable, then select the PICkit 3 as your programmer:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_programmer_select_pickit3.png
 
