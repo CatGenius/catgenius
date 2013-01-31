@@ -78,8 +78,9 @@ http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDoc
 
 == Programming with the PICkit 3 ==
 
-  * Obtain a PICkit 3.  There are several PICkit 3 kits available, including some with test boards, but the minimum you need is this:  http://www.microchipdirect.com/productsearch.aspx?Keywords=PG164130
-    If you're already ordering some parts from SparkFun and want everything in one bundle, it's available on that site for USD $5 more than from MPLabs: https://www.sparkfun.com/products/9973
+  * Obtain a PICkit 3.
+    * There are several PICkit 3 kits available, including some with test boards, but the minimum you need is this:  http://www.microchipdirect.com/productsearch.aspx?Keywords=PG164130
+    * If you're already ordering some parts from SparkFun and want everything in one bundle, the programmer is available on that site for USD $5 more than from MPLabs: https://www.sparkfun.com/products/9973
   * Install the MPLab software
   * Download the appropriate hex file for your microcontroller
   * Connect the USB cable from the PICkit 3 to a Windows PC you will be using for programming
