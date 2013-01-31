@@ -9,8 +9,8 @@ This page outlines how to make modifications to the CatGenius and associated sou
 = Preparation =
 
 Perform these steps from the [HowToProgram Programming] page:
-* Install the MPLab software
-* Create the programming cable
+  * Install the MPLab software
+  * Create the programming cable
 
 = Opening the Project in the MPLab IDE =
 
