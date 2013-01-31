@@ -70,8 +70,8 @@ I recommend you to make this cable no longer that 20cm, 40cm at maximum, to prev
 = Programming =
 
 == PICkit 3/MPLab IDE ==
-Information how to program using the PICkit 3 and the MPLab IDE:<br>
-[tbd]
+The newest instructions are available here:
+[PICkit3MPLabs Programming with PICkit 3 and the MPLab IDE]
 
 == Older PICkit 2 Command-Line Instructions ==
 If you have a PICkit 2, use the following instructions:
