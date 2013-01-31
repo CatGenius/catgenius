@@ -54,8 +54,11 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/header_double_male.png
 Make two male-to-male headers, one 5-pin for connecting to the CatGenie board, and one 6-pin for connecting to the PICkit 3.  You can also remove the spare black wire by just pulling it off.  After this has been done, your cable should look like this.  Note that the red wire connects under the white triangle on the PICkit 3:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_prog_with_pickit3.png
 
-Finally, attach the 5-pin end of the cable to the CatGenie board like below.  When properly oriented, the yellow wire should go to GND and the orange wire to VCC:<br>
+Attach the 5-pin end of the cable to the CatGenie board like below.  When properly oriented, the yellow wire should go to GND and the orange wire to VCC:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_prog_connected.png
+
+(Optional) In order to avoid having to open the shell everytime you wish to program your CG, feed the other end of the cable through the hole in the dispenser bay (Just like the I2C cable for the CartridgeGenius), like so:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/pickit3_connected.png
 
 == Making Your Own Cable ==
 This requires a bit of soldering, some break-off headers like shown above, and some ribbon-cable wire (Any old floppy/IDE drive cable should do).
