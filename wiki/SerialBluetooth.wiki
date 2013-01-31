@@ -67,8 +67,7 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_1.
 The standard CatGenius code sets up the serial port for 19200 bps, and GenieDiag sets it up for 38400.  The Bluetooth module expects 115200, so we'll need to change that:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_cg_code_mod.png
 
-There is information about how to modify CatGenius code in general here:<br>
-[PICkit3MPLabs Hacking the Hack: How to customize the code]
+There is information about how to modify CatGenius code in general [PICkit3MPLabs here].
 
 After the small code modification, build the code and re-flash the CG.
 
