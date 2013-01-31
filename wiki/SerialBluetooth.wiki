@@ -19,14 +19,20 @@ Plus, you can connect to Bluetooth with almost anything.  A laptop is convenient
 
 = Preparation =
 
+Materials:
+  * Bluetooth module.  I highly recommend the Roving Networks Bluetooth Mate Silver as it has built-in tolerance for a range of voltages, and does not require a TTL level-shifter.  It's almost impossible to go wrong with this module, and you can re-use it with an Arduino or other board later if you'd like.  It is available for about USD $40 from SparkFun: https://www.sparkfun.com/products/10393
+  * At least one break-away male header: https://www.sparkfun.com/products/116
+  * Jumper wire (more details later)
+  * Soldering iron
+  * Solder
+  * (Optional) Desoldering wick
+
+Procedure:
   * Review the page about adding a [HowToAddSerialPort Serial Port].  Do not follow the instructions, just take note of the information documented there
-  * Obtain a Bluetooth module.  I highly recommend the Roving Networks Bluetooth Mate Silver as it has built-in tolerance for a range of voltages, and does not require a TTL level-shifter.  It's almost impossible to go wrong with this module, and you can re-use it with an Arduino or other board later if you'd like.  It is available for about USD $40 from SparkFun: https://www.sparkfun.com/products/10393
-  * Obtain at least one break-away male header: https://www.sparkfun.com/products/116
-  * Create the cable to connect Bluetooth module (more later)
-  * Install the serial header on CatGenie board.  For that you will need:
-    * A soldering iron
-    * Solder
-  * Connect the Bluetooth module to the CG board using the cable you made
+  * Install a header on the Bluetooth module
+  * Install a serial header on CatGenie board
+  * Create the cable to connect them
+  * Connect the Bluetooth module to the CG board using the cable
   * Mount the Bluetooth module to the inside of the CG shell using tape or some other mounting mechanism
 
 = Bluetooth module =
@@ -41,7 +47,7 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_header_solde
 
 = Cable =
 
-You can make your own cable or mod a pre-made one.  I'm quite sloppy with a soldering iron, so I went the pre-made route.  I purchased one 6-pin (Bluetooth module) and one 4-pin (CG board) cable in order to accommodate both ends:<br>
+You can make your own cable using left-over PC ribbon cable or equivalent, mod a pre-made one.  I (KuriKat) am quite sloppy with a soldering iron, so I went the pre-made route.  I purchased one 6-pin (Bluetooth module) and one 4-pin (CG board) cable in order to accommodate both ends:<br>
 https://www.sparkfun.com/products/10366
 https://www.sparkfun.com/products/10364
 
@@ -61,7 +67,10 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_1.
 The standard CatGenius code sets up the serial port for 19200 bps, and GenieDiag sets it up for 38400.  The Bluetooth module expects 115200, so we'll need to change that:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_cg_code_mod.png
 
-After the modification, build the code and re-flash the CG.
+There is information about how to modify CatGenius code in general here:<br>
+[PICkit3MPLabs Hacking the Hack: How to customize the code]
+
+After the small code modification, build the code and re-flash the CG.
 
 = Connecting to Your CatGenius over Bluetooth =
 
