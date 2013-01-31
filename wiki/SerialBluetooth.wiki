@@ -40,7 +40,7 @@ You can make your own cable or mod a pre-made one.  I'm quite sloppy with a sold
 https://www.sparkfun.com/products/10366
 https://www.sparkfun.com/products/10364
 
-I used the 4-pin cable as-is on one side, and removed the pins from the other side.  I then removed a header from the 6-pin cable completely, and inserted the removed pins from the 4-pin cable into it.  There more information about how to do this on firmware programming page.
+I used the 4-pin cable as-is on one side, and removed the pins from the other side.  I then removed a header from the 6-pin cable completely, and inserted the removed pins from the 4-pin cable into it.  There more information about how to do this on the [HowToProgram firmware programming page].
 
 The finished cable should look like below.  The 6-pin side is lined up the way it should be connected to the Bluetooth module:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_2.png
