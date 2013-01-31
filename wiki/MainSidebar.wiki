@@ -8,6 +8,7 @@
   * [Howtos How to's]
     * [HowToOpenPU How to open the processing unit]
     * [HowToProgram How to program the firmware]
+      * [PICkit3MPLabs Using PICkit 3 and the MPLabs IDE]
     * [HowToAddSerialPort How to add a serial port]
     * [HowToGardena How to install Gardena quick connect]
   * [KnowledgeBase Knowledge Base]
