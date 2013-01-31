@@ -34,7 +34,33 @@ To connect the PICkit programmer to the controller board, a specially made cable
 ||5 = ICSPCLK/PGC||3 = CLK||
 ||6 = Auxiliary||Not Connected||
 
-When properly made, the cable should looks like this on the front:<br>
+There are two options for making this cable: Modifying a pre-made cable, or soldering your own.  In either case, you will need some break-off headers like the ones available here:<br>
+https://www.sparkfun.com/products/116
+
+== Using A Pre-Made Cable ==
+For those of us clumsy around a soldering iron, using a pre-made cable may be a less messy solution.  Unless you're lucky enough to have one lying around, one can be obtained for less than USD $2 here:<br>
+https://www.sparkfun.com/products/10366
+
+To modify the cable, you will need a jeweler's screwdriver or equivalent.  Use the flat-end of the screwdriver to lift the plastic that is catcting the connector you wish to remove, then pull the wire back:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_female_header_adjust_1.png
+http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_female_header_adjust_2.png
+
+Only the wires on one end of the cable need to be adjusted.  Your goal is for the cable to look like this:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_prog.png
+
+Now we need to adjust the cable so that it has male headers on both ends instead of female.  Purchase some breakable headers like above, then adjust the plastic spacer with a pair of flat pliers so it is in the middle like this:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/header_double_male.png
+
+Make two male-to-male headers, one 5-pin for connecting to the CatGenie board, and one 6-pin for connecting to the PICkit 3.  You can also remove the spare black wire by just pulling it off.  After this has been done, your cable should look like this.  Note that the red wire connects under the white triangle on the PICkit 3:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_prog_with_pickit3.png
+
+Finally, attach the 5-pin end of the cable to the CatGenie board like below.  When properly oriented, the yellow wire should go to GND and the orange wire to VCC:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_prog_connected.png
+
+== Making Your Own Cable ==
+This requires a bit of soldering, some break-off headers like shown above, and some ribbon-cable wire (Any old floppy/IDE drive cable should do).
+
+When properly made, the cable should look like this on the front:<br>
 http://catgenius.googlecode.com/svn/wiki/images/Programming_cable_front.jpg<br>
 And like this on the rear:<br>
 http://catgenius.googlecode.com/svn/wiki/images/Programming_cable_rear.jpg<br>
@@ -42,7 +68,14 @@ The 6-pin side is connected to the PICkit programmer, with pin one (the red lead
 I recommend you to make this cable no longer that 20cm, 40cm at maximum, to prevent signal integrity problems.
 
 = Programming =
-To program the micro controller, start the PICkit application (*not* MPLab):<br>
+
+== PICkit 3/MPLab IDE ==
+Information how to program using the PICkit 3 and the MPLab IDE:<br>
+[tbd]
+
+== Older PICkit 2 Command-Line Instructions ==
+If you have a PICkit 2, use the following instructions:
+Start the PICkit application (*not* MPLab):<br>
 {{{Start menu -> Microchip -> PICkit 2 v2.11}}}<br>
 In this program, first select the Midrange device family in the Device Family menu.<br>
 Next, erase the chip by pressing the Erase button. This will also clear any HEX file you may already have loaded.<br>
