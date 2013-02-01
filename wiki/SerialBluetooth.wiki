@@ -1,8 +1,8 @@
-#summary Adding Serial Bluetooth (by Kurikat)
+#summary Adding Serial Bluetooth
 
 = Introduction =
 
-My cats _love_ chewing on USB cables, serial cables, power cables... basically any kind of cable.  If your cats are anything like mine, you'll want a wireless serial connection to your CatGenius.  This page tells you how to do so for about USD $50.
+My cats _love_ chewing on USB cables, serial cables, power cables... basically any kind of cable.  If your cats are anything like mine, you'll want a wireless serial connection to your CatGenius.  This page tells you how to do so for under USD $50.
 
 Here is the end goal:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_mounted_labeled.png
@@ -12,20 +12,21 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_mounted_labeled.
 
 No wires, as stated above.  Also, the goal here is to provide something that's inexpensive and easy to set up.  "Plug-and-play", if you will.
 
-An obvious alternative is WiFi, but at the time this page was written I couldn't find an affordable module that wouldn't require significant modifications and involve PCB/soldering work.
+An obvious alternative is WiFi, but at the time this page was written an affordable module that wouldn't require significant modifications and involved PCB/soldering work could not be found.
 
-Plus, you can connect to Bluetooth with almost anything.  A laptop is convenient, but a smart phone is even more convenient.  Android has a number of Bluetooth serial apps that work well.  I'm sure there is something available for iPhone, too.
+Another alternative is WiFi-based Serial and/or USB devices, but these are more expensive than the Bluetooth module usually and typically require special connectors, level shifters, etc.
 
+Plus, you can connect to Bluetooth with almost anything.  A laptop is convenient, but a smart phone is even more convenient.  Android has a number of Bluetooth serial apps that work well.  iOS does as well.
 
 = Preparation =
 
 Materials:
-  * Bluetooth module.  I highly recommend the Roving Networks Bluetooth Mate Silver as it has built-in tolerance for a range of voltages, and does not require a TTL level-shifter.  It's almost impossible to go wrong with this module, and you can re-use it with an Arduino or other board later if you'd like.  It is available for about USD $40 from SparkFun: https://www.sparkfun.com/products/10393
+  * [#Bluetooth+module Bluetooth module]
   * At least one break-away male header: https://www.sparkfun.com/products/116
-  * Jumper wire (more details later)
+  * [#Cable Connector cable]
   * Soldering iron
   * Solder
-  * (Optional) Desoldering wick
+  * Desoldering wick (Optional)
 
 Procedure:
   * Review the page about adding a [HowToAddSerialPort Serial Port].  Do not follow the instructions, just take note of the information documented there
@@ -37,17 +38,24 @@ Procedure:
 
 = Bluetooth module =
 
+We'll be using the Roving Networks Bluetooth Mate Silver (https://www.sparkfun.com/products/10393) for several reasons:
+    * It is affordable (USD $40)
+    * No other parts required other than a connector cable
+    * No need for external power: It will run off the +5V CG serial connection just fine thanks to a built-in power regulator and a good range of voltage tolerance
+    * It supports a wide range of TTL signalling levels, avoiding the need for a level-shifter 
+    * It can be re-used with almost any device if you'd like to reappropriate it later (Arduino, etc.)
+
 The module comes without a header.  Solder one on like so:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_front.png
 
 = CatGenie Board Serial Header =
 
-The CG board comes without a serial header, so unless you've already done so, you'll need to solder one in now.  It's a pretty tight fit in there.  If you're not very good at soldering like me (KuriKat), and in order to avoid having to pull the whole board out, pull 4 pins out of a header and solder each individually while holding with a pair of pliers like so:<br>
+The CG board comes without a serial header, so unless you've already done so, you'll need to solder one in now.  It's a pretty tight fit in there.  If you're not very good at soldering like me, and in order to avoid having to pull the whole board out, pull 4 pins out of a header and solder each individually while holding with a pair of pliers like so:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_header_soldering.png
 
 = Cable =
 
-You can make your own cable using left-over PC ribbon cable or equivalent, or mod a pre-made one.  I (KuriKat) am quite sloppy with a soldering iron, so I went the pre-made route.  I purchased one 6-pin (Bluetooth module) and one 4-pin (CG board) cable in order to accommodate both ends:<br>
+You can make your own cable using left-over PC ribbon cable or equivalent, or mod a pre-made one.  I am quite sloppy with a soldering iron, so I went the pre-made route.  I purchased one 6-pin (Bluetooth module) and one 4-pin (CG board) cable in order to accommodate both ends:<br>
 https://www.sparkfun.com/products/10366
 https://www.sparkfun.com/products/10364
 
