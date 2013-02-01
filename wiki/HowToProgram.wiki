@@ -74,10 +74,10 @@ I recommend you to make this cable no longer that 20cm, 40cm at maximum, to prev
 
 == Installing MPLab ==
 
-The installer CD that came with my PICkit was corrupted, and is usually out of date anyway.  There is a "tools" directory under each release of CatGenius that has the version of MPLab used to build the software.  Installing and using that version is recommended.<br>
-
-However, if you wish download and install the latest version, click the link below.  Note that this page contains some information about a new IDE called "MPLAB X".  We haven't had a chance to try it out yet, so use at your own risk.  If you do happen to get it working, we'd love to hear about it.<br>
+The installer CD that came with my PICkit was corrupted, and is usually out of date anyway.  It is recommended to download and install the latest version.  Click the link below.  Note that this page contains some information about a new IDE called "MPLAB X".  We haven't had a chance to try it out yet, so use at your own risk.  If you do happen to get it working, we'd love to hear about it.<br>
 http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDocName=en019469&part=SW007002
+
+Alternatively, there is a "tools" directory under each release of CatGenius that has the version of MPLab used to build the software.  However, Microchip has fixed some issues related to the PICkit 3 in the later versions, so your mileage may vary here.<br>
 
 == Programming with the PICkit 3 ==
 
