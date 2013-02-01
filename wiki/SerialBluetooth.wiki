@@ -5,7 +5,7 @@
 My cats _love_ chewing on USB cables, serial cables, power cables... basically any kind of cable.  If your cats are anything like mine, you'll want a wireless serial connection to your CatGenius.  This page tells you how to do so for about USD $50.
 
 Here is the end goal:<br>
-http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_mounted.png
+http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_mounted_labeled.png
 
 
 = Why Bluetooth? =
