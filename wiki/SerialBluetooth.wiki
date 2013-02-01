@@ -21,7 +21,7 @@ Plus, you can connect to Bluetooth with almost anything.  A laptop is convenient
 = Preparation =
 
 Materials:
-  * [#Bluetooth+module Bluetooth module]
+  * [#Bluetooth_module Bluetooth module]
   * At least one break-away male header: https://www.sparkfun.com/products/116
   * [#Cable Connector cable]
   * Soldering iron
