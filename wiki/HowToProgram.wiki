@@ -90,27 +90,33 @@ http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDoc
   * Connect your PICkit 3 to the CG programming header using the cable described above
   * Power on your CG - Programming usually fails if you don't have it plugged in
   * Start a command prompt and run the following command:
-    {{{"C:\Program Files\Microchip\MPLAB IDE\Programmer Utilities\PICkit3\pk3cmd.exe" -p16fXXXX -mP -fC:\Temp\catgenius_YYY_16fXXXX.hex}}}
+    {{{"C:\Program Files\Microchip\MPLAB IDE\Programmer Utilities\PICkit3\pk3cmd.exe" -p16fXXXX -m -fC:\Temp\catgenius_YYY_16fXXXX.hex}}}
     * XXXX is the name of the microcontroller on your CG board; IE: 1939
       <b>NOTE: Make sure you pick the right microcontroller!</b>
     * YYY is the CatGenius release; IE: B04
     * Change "C:\Temp" to the full path where you downloaded the CatGenius hex file
     * If you're running 64-bit windows, the path will change slightly to: "C:\Program Files (x86)\Microchip\MPLAB IDE\Programmer Utilities\PICkit3\pk3cmd.exe"
-  * The output should be something like this:
+  * The final command and output should be something like this:
     {{{
-    Connecting...
-    PICkit 3 detected
-    Connecting to PICkit 3...
-    Firmware Suite Version...... 01.28.18
-    Firmware type......................Enhanced Midrange
-    PICkit 3 Connected.
-    Target Detected
-    Device ID Revision = 00000002
+C:\Temp>"C:\Program Files\Microchip\MPLAB IDE\Programmer Utilities\PICkit3\pk3cmd.exe" -p16f1939 -m -fcatgenius_B04_16f1939.hex
 
-    Programming Device ...
-    Programming/Verify complete
-    }}}
+Connecting...
+PICkit 3 detected
+Connecting to PICkit 3...
+Running self test...
+Self test completed
+Firmware Suite Version...... 01.28.18
+Firmware type......................Enhanced Midrange
+PICkit 3 Connected.
+Target Detected
+Device ID Revision = 00000002
+
+Programming Device ...
+Programming/Verify complete
+C:\Temp>
+  }}}
   * If programming failed, check your cables
+  * After programming verified successfully, disconnect either the USB connection to your PICkit 3 (easiest), the programming cable, or both.  If running while connected, the CG microcontroller may freeze
 
 == Older PICkit 2 Instructions ==
 If you have a PICkit 2, use the following instructions:
