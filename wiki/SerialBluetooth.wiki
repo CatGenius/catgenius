@@ -40,7 +40,7 @@ Procedure:
 
 We'll be using the Roving Networks Bluetooth Mate Silver (https://www.sparkfun.com/products/10393) for several reasons:
     * It is affordable (USD $40)
-    * No other parts required other than a connector cable
+    * No other parts required other than a connector cable and headers
     * No need for external power: It will run off the +5V CG serial connection just fine thanks to a built-in power regulator and a good range of voltage tolerance
     * It supports a wide range of TTL signalling levels, avoiding the need for a level-shifter 
     * It can be re-used with almost any device if you'd like to reappropriate it later (Arduino, etc.)
