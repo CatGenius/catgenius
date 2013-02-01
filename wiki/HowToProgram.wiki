@@ -38,7 +38,7 @@ There are two options for making this cable: Modifying a pre-made cable, or sold
 https://www.sparkfun.com/products/116
 
 == Using A Pre-Made Cable ==
-For those of us clumsy around a soldering iron, using a pre-made cable may be a less messy solution.  Unless you're lucky enough to have one lying around, one can be obtained for less than USD $2 here:<br>
+For those of us clumsy around a soldering iron, using a pre-made cable may be a less messy solution.  In any case, using a pre-made cable is arguably more reliable.  Unless you're lucky enough to have one lying around, one can be obtained for less than USD $2 here:<br>
 https://www.sparkfun.com/products/10366
 
 To modify the cable, you will need a jeweler's screwdriver or equivalent.  Use the flat-end of the screwdriver to lift the plastic that is catcting the connector you wish to remove, then pull the wire back:<br>
