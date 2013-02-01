@@ -73,4 +73,15 @@ After the small code modification, build the code and re-flash the CG.
 
 = Connecting to Your CatGenius over Bluetooth =
 
-... TBD ...
+== Preparing ==
+
+  * Smart phones and tablets: There are many Bluetooth apps out there for just about every device.  Search the app store to download something appropriate.
+    * Android: "Bluetooth SPP" is a free app without ads that appears to work well
+  * Desktops/laptops: if your computer does not include native Bluetooth support, buy one of the many USB dongles available and install it.
+    * Windows: There is some basic information here: http://www.ehow.com/how_7242162_add-bluetooth-serial-ports.html
+
+== Connecting ==
+
+Scan for Bluetooth devices.  The Bluetooth Mate shows up as RN42-XXXX where XXXX is a unique identifier.  Connect to it in SPP/Serial mode, then use any terminal app that supports serial connections to connect to it.
+
+More details will be added later.
