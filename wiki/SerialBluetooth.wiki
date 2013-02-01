@@ -58,8 +58,8 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_header_solde
 We'll need a connector/jumper cable to connect the Bluetooth module to the serial header on the CG board.
 
 You can make your own cable using left-over PC ribbon cable or equivalent, or mod a pre-made one.  For those of us sloppy with a soldering iron, the pre-made route is suggested.  Purchase one 6-pin (Bluetooth module) and one 4-pin (CG board) cable in order to accommodate both ends:<br>
-4-pin: https://www.sparkfun.com/products/10366<br>
-6-bin: https://www.sparkfun.com/products/10364<br>
+6-pin: https://www.sparkfun.com/products/10366<br>
+4-pin: https://www.sparkfun.com/products/10364<br>
 
 For convenience, use the 4-pin cable as-is on one side, and remove the pins from the other side.  Removed the header from the 6-pin cable completely, and insert the removed pins from the 4-pin cable into it.  There more information about how to remove pins on the [HowToProgram#Using_A_Pre-Made_Cable firmware programming page].
 
