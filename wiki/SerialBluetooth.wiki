@@ -63,9 +63,9 @@ You can make your own cable using left-over PC ribbon cable or equivalent, or mo
 6-pin: https://www.sparkfun.com/products/10366<br>
 4-pin: https://www.sparkfun.com/products/10364<br>
 
-For convenience, use the 4-pin cable as-is on one side, and remove the pins from the other side.  Removed the header from the 6-pin cable completely, and insert the removed pins from the 4-pin cable into it.  There more information about how to remove pins on the [HowToProgram#Using_A_Pre-Made_Cable firmware programming page].
+For convenience, use the 4-pin cable as-is on one side, and remove the pins from the other side.  Remove the header from the 6-pin cable completely, and insert the removed pins from the 4-pin cable into it in the order shown below.  There is more information about how to remove pins on the [HowToProgram#Using_A_Pre-Made_Cable firmware programming page].
 
-The finished cable should look like below.  The 6-pin side is lined up the way it should be connected to the Bluetooth module:<br>
+Here is the finished cable after modding.  The 6-pin side is lined up the way it should be connected to the Bluetooth module:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_2.png
 
 This is how it should be connected to the CatGenie serial header.  Note that the red wire connects to the 5V pin and green goes to GND:<br>
