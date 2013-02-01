@@ -59,7 +59,7 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_header_solde
 
 We'll need a connector/jumper cable to connect the Bluetooth module to the serial header on the CG board.
 
-You can make your own cable using left-over PC ribbon cable or equivalent, or mod a pre-made one.  For those of us sloppy with a soldering iron, the pre-made route is suggested.  Purchase one 6-pin (Bluetooth module) and one 4-pin (CG board) cable in order to accommodate both ends:<br>
+You can make your own cable using left-over PC ribbon cable or equivalent, or mod a pre-made one.  For those of us sloppy with a soldering iron, the pre-made route is suggested.  Purchase one 6-pin (Bluetooth module) and one 4-pin (CG board) cable in order to accommodate both ends - less than USD $1 each:<br>
 6-pin: https://www.sparkfun.com/products/10366<br>
 4-pin: https://www.sparkfun.com/products/10364<br>
 
@@ -71,7 +71,7 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_2.
 This is how it should be connected to the CatGenie serial header.  Note that the red wire connects to the 5V pin and green goes to GND:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_connected.png
 
-To avoid the extra cost of two cables, you could just use a single 6-pin cable.  If you choose to do so, the finished cable should look like below.  Note that in this verison of the cable, the black wire should connect to the GND pin on both the Bluetooth module and the CG board and the green wire should connect to VCC/5V:<br>
+To save a whole USD $1 (you really are cheap!), you could just use a single 6-pin cable.  If you choose to do so, the finished cable should look like below.  Note that in this verison of the cable, the black wire should connect to the GND pin on both the Bluetooth module and the CG board and the green wire should connect to VCC/5V:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_1.png
 
 = Modifying CatGenius Code =
