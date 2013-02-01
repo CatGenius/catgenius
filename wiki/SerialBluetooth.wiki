@@ -21,9 +21,9 @@ Plus, you can connect to Bluetooth with almost anything.  A laptop is convenient
 = Preparation =
 
 Materials:
-  * [#Bluetooth_module Bluetooth module]
+  * [#Bluetooth_Module Bluetooth module]
   * At least one break-away male header: https://www.sparkfun.com/products/116
-  * [#Cable Connector cable]
+  * [#Connector_Cable Connector cable]
   * Soldering iron
   * Solder
   * Desoldering wick (Optional)
@@ -53,13 +53,15 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_front.png
 The CG board comes without a serial header, so unless you've already done so, you'll need to solder one in now.  It's a pretty tight fit in there.  If you're not very good at soldering like me, and in order to avoid having to pull the whole board out, pull 4 pins out of a header and solder each individually while holding with a pair of pliers like so:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_header_soldering.png
 
-= Cable =
+= Connector Cable =
 
-You can make your own cable using left-over PC ribbon cable or equivalent, or mod a pre-made one.  I am quite sloppy with a soldering iron, so I went the pre-made route.  I purchased one 6-pin (Bluetooth module) and one 4-pin (CG board) cable in order to accommodate both ends:<br>
-https://www.sparkfun.com/products/10366
-https://www.sparkfun.com/products/10364
+We'll need a connector/jumper cable to connect the Bluetooth module to the serial header on the CG board.
 
-I used the 4-pin cable as-is on one side, and removed the pins from the other side.  I then removed a header from the 6-pin cable completely, and inserted the removed pins from the 4-pin cable into it.  There more information about how to do this on the [HowToProgram firmware programming page].
+You can make your own cable using left-over PC ribbon cable or equivalent, or mod a pre-made one.  For those of us sloppy with a soldering iron, the pre-made route is suggested.  Purchase one 6-pin (Bluetooth module) and one 4-pin (CG board) cable in order to accommodate both ends:<br>
+4-pin: https://www.sparkfun.com/products/10366<br>
+6-bin: https://www.sparkfun.com/products/10364<br>
+
+For convenience, use the 4-pin cable as-is on one side, and remove the pins from the other side.  Removed the header from the 6-pin cable completely, and insert the removed pins from the 4-pin cable into it.  There more information about how to remove pins on the [HowToProgram#Using_A_Pre-Made_Cable firmware programming page].
 
 The finished cable should look like below.  The 6-pin side is lined up the way it should be connected to the Bluetooth module:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_2.png
@@ -67,7 +69,7 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_2.
 This is how it should be connected to the CatGenie serial header.  Note that the red wire connects to the 5V pin and green goes to GND:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_connected.png
 
-Alternatively (if you're really cheap), you can just use a single 6-pin cable.  The finished cable should look like below.  Note that in this verison of the cable, the black wire should connect to the GND pin on both the Bluetooth module and the CG board and the green wire should connect to VCC/5V:<br>
+To avoid the extra cost of two cables, you could just use a single 6-pin cable.  If you choose to do so, the finished cable should look like below.  Note that in this verison of the cable, the black wire should connect to the GND pin on both the Bluetooth module and the CG board and the green wire should connect to VCC/5V:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_1.png
 
 = Modifying CatGenius Code =
@@ -75,9 +77,9 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_1.
 The standard CatGenius code sets up the serial port for 19200 bps, and GenieDiag sets it up for 38400.  The Bluetooth module expects 115200, so we'll need to change that:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_cg_code_mod.png
 
-There is information about how to modify CatGenius code in general [PICkit3MPLabs here].
-
 After the small code modification, build the code and re-flash the CG.
+
+There is information about how to use the MPLab IDE to make the modifications [PICkit3MPLabs here].
 
 = Connecting to Your CatGenius over Bluetooth =
 
