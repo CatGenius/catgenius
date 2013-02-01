@@ -52,7 +52,7 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_front.png
 
 The CG board comes without a serial header, so unless you've already done so, you'll need to solder one in now.  It's a pretty tight fit in there.
 
-A trick to easily solder the needed header in place is to pull 4 pins out of a header and solder each individually while holding with a pair of pliers like so:<br>
+The trick is to solder the needed header in place without having to remove the main board and without accidentally touching anything with the soldering iron.  One way to do this is to pull 4 pins out of a header and solder one at a time while holding with a pair of pliers like in the image below.  The board already has solder in place where the pins go, so if your careful you won't need to apply any extra:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_header_soldering.png
 
 = Connector Cable =
