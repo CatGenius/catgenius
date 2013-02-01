@@ -29,7 +29,7 @@ Now compile the code:<br>
 
 = Flashing the firmware =
 
-In my experience, the PICkit 3 has never flashed properly unless the CatGenie is plugged in.  If haven't plugged your CatGenie in, do so now.
+In my experience, the PICkit 3 has never flashed properly unless the CatGenie is plugged in.  If you haven't plugged your CatGenie in, do so now.
 
 Connect your PICkit 3 to the CatGenie board using the programming cable, connect your PICkit 3 to the computer with the provided USB cable, then select the PICkit 3 as your programmer:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_programmer_select_pickit3.png
