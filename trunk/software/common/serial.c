@@ -6,21 +6,21 @@
 #define INTDIV(t,n)		((2*(t)+(n))/(2*(n)))		/* Macro for integer division with proper round-off (BEWARE OF OVERFLOW!) */
 
 
-void serial_init(void)
+void serial_init(unsigned long bitrate)
 {
 #if (defined _16F877A) || (defined _16F887)
-	SPBRG = INTDIV(INTDIV(_XTAL_FREQ, BITRATE), 16UL)-1;
+	SPBRG = INTDIV(INTDIV(_XTAL_FREQ, bitrate), 16UL)-1;
 #elif (defined _16F1939)
 	BRG16 = 1;	/* Use 16-bit bit rate generation */
 	if (BRG16) {
 		/* 16-bit bit rate generation */
-		unsigned long	divider = INTDIV(INTDIV(_XTAL_FREQ, 4UL), BITRATE)-1;
+		unsigned long	divider = INTDIV(INTDIV(_XTAL_FREQ, 4UL), bitrate)-1;
 
 		SPBRG  =  divider & 0x00FF;
 		SPBRGH = (divider & 0xFF00) >> 8;
 	} else
 		/* 8-bit bit rate generation */
-		SPBRG = INTDIV(INTDIV(_XTAL_FREQ, BITRATE), 16UL)-1;
+		SPBRG = INTDIV(INTDIV(_XTAL_FREQ, bitrate), 16UL)-1;
 #endif /* _16F877A/_16F887/_16F1939 */
 
 	CSRC = 1;	/* Clock source from BRG */
@@ -34,7 +34,14 @@ void serial_init(void)
 	CREN = 0;	/* Reset receiver */
 	CREN = 1;	/* Enable reception */
 	TXEN = 0;	/* Reset transmitter */
-	TXEN = 1;	/* Enable the transmitter */
+	TXEN = 1;	/* Enable transmission */
+}
+
+
+void serial_term(void)
+{
+	CREN = 0;	/* Disable reception */
+	TXEN = 0;	/* Disable transmission */
 }
 
 
@@ -61,7 +68,6 @@ void putch(char ch)
 	}
 	TXREG = ch;
 	CLRWDT();
-	__delay_us(100000000UL/(10UL * BITRATE) + 1UL);
 }
 
 
