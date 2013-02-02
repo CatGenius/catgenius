@@ -17,7 +17,11 @@
 #include "../common/i2c.h"
 #include "../common/catsensor.h"
 #include "../common/water.h"
+
+#ifdef HAS_COMMANDLINE
 #include "../common/cmdline.h"
+#endif /* HAS_COMMANDLINE */
+
 #ifdef HAS_BLUETOOTH
 #include "../common/bluetooth.h"
 #endif /* HAS_BLUETOOTH */
@@ -55,12 +59,14 @@ extern bit		__powerdown;
 extern bit		__timeout;
 #endif /* __RESETBITS_ADDR */
 
+#ifdef HAS_COMMANDLINE
 /* command line commands */
 const struct command	commands[] = {
 	{"echo", echo},
 	{"help", help},
 	{"", NULL}
 };
+#endif /* HAS_COMMANDLINE */
 
 static unsigned char	PORTB_old;
 
@@ -134,8 +140,10 @@ void main (void)
 	/* Initialize the user interface */
 	userinterface_init(flags);
 
+#ifdef HAS_COMMANDLINE
 	/* Initialize the command line interface */
 	cmdline_init();
+#endif /* HAS_COMMANDLINE */
 
 	/* Initialize the washing program */
 	litterlanguage_init(flags);
@@ -150,7 +158,9 @@ void main (void)
 		water_work();
 		catgenie_work();
 		userinterface_work();
+#ifdef HAS_COMMANDLINE
 		cmdline_work();
+#endif /* HAS_COMMANDLINE */
 		litterlanguage_work();
 #ifndef __DEBUG
 		CLRWDT();
