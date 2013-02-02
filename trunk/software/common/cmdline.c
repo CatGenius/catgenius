@@ -22,6 +22,10 @@
 
 #define PROMPT		"# "
 
+#define ENQ		0x05
+#define ACK		0x06
+
+
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
@@ -69,7 +73,13 @@ void cmdline_work (void)
 	char rxd ;
 
 	while (readch(&rxd))
-		proc_char(rxd);
+		switch(rxd) {
+		case ENQ:
+			putch(ACK);
+			break;
+		default:
+			proc_char(rxd);
+		}
 }
 /* End: cmdline_work */
 
