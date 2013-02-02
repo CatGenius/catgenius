@@ -14,5 +14,6 @@ void		serial_rx_isr	(void);
 void		serial_tx_isr	(void);
 void		putch		(unsigned char	c);
 unsigned char	readch		(char		*ch);
+unsigned char serial_wait_s(const char *s, unsigned long timeout);
 
 #endif /* SERIAL_H */
