@@ -223,4 +223,9 @@ static void interrupt isr (void)
 		/* Update the old status */
 		PORTB_old = PORTB ;
 	}
+	/* (E)USART interrupts */
+	if (RCIF)
+		serial_rx_isr();
+	if (TXIF)
+		serial_tx_isr();
 }
