@@ -27,6 +27,10 @@
 #include "../common/catsensor.h"
 #include "../common/water.h"
 #include "../common/cmdline.h"
+#ifdef HAS_BLUETOOTH
+#include "../common/bluetooth.h"
+#endif /* HAS_BLUETOOTH */
+
 #include "userinterface.h"
 #include "litterlanguage.h"
 
@@ -69,8 +73,14 @@ void main (void)
 	/* Initialize the hardware */
 	flags = catgenie_init();
 
+#ifdef HAS_BLUETOOTH
+	serial_init(BT_BITRATE);
+	bluetooth_init();
+	serial_term();
+#endif /* HAS_BLUETOOTH */
+
 	/* Initialize the serial port */
-	serial_init();
+	serial_init(BITRATE);
 
 	printf("\n*** CatGenius ***\n");
 	if (!nPOR) {
