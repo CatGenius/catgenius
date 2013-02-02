@@ -10,10 +10,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "hardware.h"			/* Flexible hardware configuration */
+
 #include "cmdline.h"
 #include "serial.h"
 
-
+#ifdef HAS_COMMANDLINE
 /******************************************************************************/
 /* Macros								      */
 /******************************************************************************/
@@ -221,3 +223,4 @@ int help (int argc, char* argv[])
 
 	return ERR_OK;
 }
+#endif /* HAS_COMMANDLINE */
