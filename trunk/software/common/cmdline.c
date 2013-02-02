@@ -9,6 +9,7 @@
 #include <htc.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>				/* For atoi() */
 
 #include "hardware.h"			/* Flexible hardware configuration */
 
@@ -233,4 +234,78 @@ int help (int argc, char* argv[])
 
 	return ERR_OK;
 }
+
+int rxtest (int argc, char* argv[])
+{
+	int byte_count;
+	char ch;
+	char echo_on = 0;
+
+	switch (argc)
+	{
+		case 1:
+			break;
+		case 2:
+			echo_on = (strcmp(argv[1], "1") == 0);
+			break;
+		default:
+			return ERR_SYNTAX;
+	}
+
+    printf("-- BEGIN RECEPTION TEST --\n");
+	printf("Terminate your input with ^Z\n");
+
+	byte_count = 0;
+	while (1)
+	{
+		if (readch(&ch)) {
+			if (ch == 0x1A) break;
+			if ((echo_on) && (ch != 0x11) && (ch != 0x13)) putch(ch);
+			byte_count++;
+		}
+	}
+
+	printf("\nBytes received: %d\n", byte_count);
+    printf("-- END RECEPTION TEST --\n");
+
+	return ERR_OK;
+}
+
+int txtest (int argc, char* argv[])
+{
+	int byte_count, i;
+	char ch;
+
+	switch (argc)
+	{
+		case 1:
+			byte_count = 100;
+			break;
+		case 2:
+			byte_count = atoi(argv[1]);
+			break;
+		default:
+			return ERR_SYNTAX;
+	}
+
+    printf("-- BEGIN TRANSMISSION TEST --\n");
+
+	ch = '0';
+	for (i=0; i<byte_count; i++)
+	{
+		if ((i % 50) == 0)
+		{
+			if (i>0) printf("\n");
+			printf("%05d ", i);
+		}
+
+		printf("%c", ch);
+		if (ch++ == '9') ch = '0';
+	}
+
+    printf("\n-- END TRANSMISSION TEST --\n");
+
+	return ERR_OK;
+}
+
 #endif /* HAS_COMMANDLINE */

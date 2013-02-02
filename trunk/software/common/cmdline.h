@@ -29,5 +29,7 @@ void		cmdline_work		(void) ;
 /* Command implementations */
 int		echo			(int argc,	char* argv[]) ;
 int		help			(int argc,	char* argv[]) ;
+int		txtest			(int argc,  char* argv[]) ;
+int		rxtest			(int argc,  char* argv[]) ;
 
 #endif /* CMDLINE_H */

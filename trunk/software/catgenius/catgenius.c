@@ -64,6 +64,8 @@ extern bit		__timeout;
 const struct command	commands[] = {
 	{"echo", echo},
 	{"help", help},
+    {"txtest", txtest},
+    {"rxtest", rxtest},
 	{"", NULL}
 };
 #endif /* HAS_COMMANDLINE */
@@ -89,14 +91,14 @@ void main (void)
 	/* Init the hardware */
 	flags = catgenie_init();
 
+	/* Initialize the serial port */
 #ifdef HAS_BLUETOOTH
 	serial_init(BT_BITRATE);
 	bluetooth_init();
-	serial_term();
-#endif /* HAS_BLUETOOTH */
-
-	/* Initialize the serial port */
+	//serial_term();
+#else /* HAS_BLUETOOTH */
 	serial_init(BITRATE);
+#endif /* HAS_BLUETOOTH */
 
 	printf("\n*** CatGenius ***\n");
 	if (!nPOR) {
@@ -224,6 +226,7 @@ static void interrupt isr (void)
 		PORTB_old = PORTB ;
 	}
 	/* (E)USART interrupts */
+	// TBD: Don't we need to check for FERR, OERR and the like?
 	if (RCIF)
 		serial_rx_isr();
 	if (TXIF)
