@@ -18,6 +18,10 @@
 #  define WATERSENSOR_ANALOG
 #endif /* _16F1939 */
 
+/* Options */
+//#define HAS_BLUETOOTH
+#define HAS_COMMANDLINE
+
 /* Version number */
 #define VERSION			(2)		/* NVM layout version */
 

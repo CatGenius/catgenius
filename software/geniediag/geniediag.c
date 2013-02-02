@@ -25,9 +25,13 @@
 #include "../common/i2c.h"
 #include "../common/catsensor.h"
 #include "../common/water.h"
+
+#ifdef HAS_COMMANDLINE
 #include "../common/cmdline.h"
 #include "../common/cmdline_tag.h"
 #include "../common/cmdline_box.h"
+#endif /* HAS_COMMANDLINE */
+
 #ifdef HAS_BLUETOOTH
 #include "../common/bluetooth.h"
 #endif /* HAS_BLUETOOTH */
@@ -44,6 +48,7 @@ extern bit		__powerdown;
 extern bit		__timeout;
 #endif /* __PICC__ */
 
+#ifdef HAS_COMMANDLINE
 static int start (int argc, char* argv[]);
 static int setup (int argc, char* argv[]);
 static int lock (int argc, char* argv[]);
@@ -68,6 +73,7 @@ const struct command	commands[] = {
 	{"tag", tag},
 	{"", NULL}
 };
+#endif /* HAS_COMMANDLINE */
 
 static unsigned char	PORTB_old;
 
@@ -135,8 +141,10 @@ void main (void)
 	/* Initialize the user interface */
 	userinterface_init();
 
+#ifdef HAS_COMMANDLINE
 	/* Initialize the command line interface */
 	cmdline_init();
+#endif /* HAS_COMMANDLINE */
 
 	/* Initialize interrupts */
 	interrupt_init();
@@ -147,7 +155,9 @@ void main (void)
 		water_work();
 		catgenie_work();
 		userinterface_work();
+#ifdef HAS_COMMANDLINE
 		cmdline_work();
+#endif /* HAS_COMMANDLINE */
 #ifndef __DEBUG
 		CLRWDT();
 #endif
@@ -212,6 +222,7 @@ static void interrupt isr (void)
 }
 
 
+#ifdef HAS_COMMANDLINE
 static int start (int argc, char* argv[])
 {
 	if (argc > 1)
@@ -240,3 +251,4 @@ static int lock (int argc, char* argv[])
 	both_long();
 	return ERR_OK;
 }
+#endif /* HAS_COMMANDLINE */
