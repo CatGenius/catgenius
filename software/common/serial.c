@@ -2,12 +2,49 @@
 
 #include "hardware.h"			/* Flexible hardware configuration */
 
+#include "serial.h"
+
+#define RXBUFFER			/* Use buffers for received characters */
+//#define TXBUFFER			/* Buffers for transmitted character not implemented yet */
+#define XONXOFF				/* Use Xon/Xoff handshaking (for receiving only) */
+#define BUFFER_SIZE		8	/* Don't change this without adapting struct queue and roll-overs too */
+#define BUFFER_SPARE		3	/* Minumum number of free positions before issuing Xoff */
 
 #define INTDIV(t,n)		((2*(t)+(n))/(2*(n)))		/* Macro for integer division with proper round-off (BEWARE OF OVERFLOW!) */
+#define FREE(h,t,s)		(((h)>=(t))?((s)-((h)-(t))-1):((t)-(h))-1)
+
+#ifdef XONXOFF
+#define XON		0x11
+#define XOFF		0x13
+#endif /* XONXOFF */
+
+
+struct queue {
+	char		buffer[8];
+	unsigned	head	: 3;
+	unsigned	tail	: 3;
+	unsigned	full	: 1;
+};
+
+#ifdef RXBUFFER
+struct queue		rx;
+#endif /* RXBUFFER */
+#ifdef TXBUFFER
+struct queue		tx;
+#endif /* TXBUFFER */
 
 
 void serial_init(unsigned long bitrate)
 {
+#ifdef RXBUFFER
+	rx.head = 0;
+	rx.tail = 0;
+#endif /* RXBUFFER */
+#ifdef TXBUFFER
+	tx.head = 0;
+	tx.tail = 0;
+#endif /* TXBUFFER */
+
 #if (defined _16F877A) || (defined _16F887)
 	SPBRG = INTDIV(INTDIV(_XTAL_FREQ, bitrate), 16UL)-1;
 #elif (defined _16F1939)
@@ -27,27 +64,97 @@ void serial_init(unsigned long bitrate)
 	BRGH = 1;	/* High-speed bit rate generation */
 	SYNC = 0;	/* Asynchronous mode */
 	SPEN = 1;	/* Enable serial port pins */
-	TXIE = 0;	/* Disable tx interrupts */
 	RCIE = 0;	/* Disable rx interrupts */
-	TX9  = 0;	/* 8-bit transmission mode */
+	TXIE = 0;	/* Disable tx interrupts */
 	RX9  = 0;	/* 8-bit reception mode */
+	TX9  = 0;	/* 8-bit transmission mode */
 	CREN = 0;	/* Reset receiver */
 	CREN = 1;	/* Enable reception */
 	TXEN = 0;	/* Reset transmitter */
 	TXEN = 1;	/* Enable transmission */
+#ifdef RXBUFFER
+	RCIE = 1;	/* Enable rx interrupts */
+#endif /* RXBUFFER */
+#ifdef TXBUFFER
+	TXIE = 1;	/* Enable tx interrupts */
+#endif /* TXBUFFER */
+
+#ifdef XONXOFF
+	TXREG = XON;
+#endif /* XONXOFF */
 }
 
 
 void serial_term(void)
 {
+#ifdef RXBUFFER
+	RCIE = 0;	/* Disable rx interrupts */
+#endif /* RXBUFFER */
+#ifdef TXBUFFER
+	while (tx.head != tx.tail);
+	TXIE = 0;	/* Disable tx interrupts */
+#endif /* TXBUFFER */
+
+	while(!TXIF);	/* Wait for the last character to go */
+#ifdef XONXOFF
+	TXREG = XOFF;
+	while(!TXIF);
+#endif /* XONXOFF */
+
 	CREN = 0;	/* Disable reception */
 	TXEN = 0;	/* Disable transmission */
+}
+
+
+void serial_rx_isr(void)
+{
+#ifdef RXBUFFER
+	/* Handle overflow errors */
+	if (OERR) {
+		rx.buffer[rx.head] = RCREG; /* Read RX register, but do not queue */
+		TXEN = 0;
+		TXEN = 1;
+		CREN = 0;
+		CREN = 1;
+		return;
+	}
+	/* Handle framing errors */
+	if (FERR) {
+		rx.buffer[rx.head] = RCREG; /* Read RX register, but do not queue */
+		TXEN = 0;
+		TXEN = 1;
+		return;
+	}
+	/* Read RX register */
+	rx.buffer[rx.head] = RCREG;
+	/* Add read character to the queue */
+	rx.head++;
+#ifdef XONXOFF
+	if (FREE(rx.head, rx.tail, BUFFER_SIZE) <= (BUFFER_SPARE)) {
+		while(!TXIF);
+		TXREG = XOFF;
+	}
+#endif /* XONXOFF */
+	/* Check for an overflow */
+	if (rx.head == rx.tail)
+		/* Dequeue the oldest character */
+		rx.tail++;
+#endif /* RXBUFFER */
+}
+
+
+void serial_tx_isr(void)
+{
+#ifdef TXBUFFER
+#endif /* TXBUFFER */
 }
 
 
 /* Write a character to the serial port */
 void putch(char ch)
 {
+#ifdef TXBUFFER
+#else
 	if (!SPEN)
 		return;
 	while(!TXIF) {	/* Wait for TXREG to be empty */
@@ -68,29 +175,63 @@ void putch(char ch)
 	}
 	TXREG = ch;
 	CLRWDT();
+#endif /* TXBUFFER */
 }
 
 
 /* Read a character from the serial port */
 unsigned char readch(char *ch)
 {
+	unsigned char	result = 0;
+
+#ifdef RXBUFFER
+	RCIE = 0;	/* Disable rx interrupts */
+#ifdef TXBUFFER
+	TXIE = 0;	/* Disable tx interrupts */
+#endif /* TXBUFFER */
+
+	/* Check if there's anything to read */
+	if (rx.head != rx.tail) {
+		/* Copy the character */
+		*ch = rx.buffer[rx.tail];
+		/* Dequeue the character */
+		rx.tail++;
+#ifdef XONXOFF
+		/* Check if this was the last character */
+		if (rx.head == rx.tail) {
+			while(!TXIF);
+			TXREG = XON;
+		}
+#endif /* XONXOFF */
+		result = 1;
+	}
+
+	RCIE = 1;	/* Enable rx interrupts */
+#ifdef TXBUFFER
+	TXIE = 1;	/* Enable tx interrupts */
+#endif /* TXBUFFER */
+#else /* !RXBUFFER */
 	if (!RCIF)
-		return 0;
+		goto out;
 
 	if (OERR) {
 		TXEN = 0;
 		TXEN = 1;
 		CREN = 0;
 		CREN = 1;
-		return 0;
+		goto out;
 	}
 	if (FERR) {
 		*ch  = RCREG;
 		TXEN = 0;
 		TXEN = 1;
-		return 0;
+		goto out;
 	}
 
 	*ch  = RCREG;
-	return 1;
+	result = 1;
+out:
+#endif /* RXBUFFER */
+	return result;
 }
+
