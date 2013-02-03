@@ -19,7 +19,7 @@
 #endif /* _16F1939 */
 
 /* Options */
-#define HAS_BLUETOOTH
+//#define HAS_BLUETOOTH
 #define HAS_COMMANDLINE
 
 /* Version number */

@@ -9,7 +9,7 @@
 //#define TXBUFFER				/* Buffers for transmitted character not implemented yet */
 #define XONXOFF					/* Use Xon/Xoff handshaking (for receiving only) */
 #define BUFFER_SIZE			8	/* Buffer size.  Has to be a power of 2 or roll-overs need to be taken into account */
-#define BUFFER_SPARE		3	/* Minumum number of free positions before issuing Xoff */
+#define BUFFER_SPARE		2	/* Minumum number of free positions before issuing Xoff */
 
 #define INTDIV(t,n)		((2*(t)+(n))/(2*(n)))		/* Macro for integer division with proper round-off (BEWARE OF OVERFLOW!) */
 #define FREE(h,t,s)		(((h)>=(t))?((s)-((h)-(t))-1):((t)-(h))-1)
