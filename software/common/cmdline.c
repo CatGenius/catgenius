@@ -16,6 +16,8 @@
 #include "cmdline.h"
 #include "serial.h"
 
+#include "timer.h"				/* For timing definitions/functions */
+
 #ifdef HAS_COMMANDLINE
 /******************************************************************************/
 /* Macros								      */
@@ -240,6 +242,9 @@ int rxtest (int argc, char* argv[])
 	int byte_count;
 	char ch;
 	char echo_on = 0;
+	struct timer start_time;
+	struct timer stop_time;
+	double run_time;
 
 	switch (argc)
 	{
@@ -259,13 +264,22 @@ int rxtest (int argc, char* argv[])
 	while (1)
 	{
 		if (readch(&ch)) {
+			// Start timing after receiving the first char
+			if (byte_count == 0) gettimestamp(&start_time);
+
+			// Stop when we get ^Z
 			if (ch == 0x1A) break;
+
+			// Echo char if on & not XON/XOFF
 			if ((echo_on) && (ch != 0x11) && (ch != 0x13)) putch(ch);
+
 			byte_count++;
 		}
 	}
+	gettimestamp(&stop_time);
 
-	printf("\nBytes received: %d\n", byte_count);
+	run_time = ((double)timestampdiff(&stop_time, &start_time)) / ((double)SECOND);
+	printf("\nBytes receivedt: %d; Run time: %.2fs; Effective speed: %.2fbps\n", byte_count, run_time, ((double)byte_count * 8) / run_time);
     printf("-- END RECEPTION TEST --\n");
 
 	return ERR_OK;
@@ -275,6 +289,9 @@ int txtest (int argc, char* argv[])
 {
 	int byte_count, i;
 	char ch;
+	struct timer start_time;
+	struct timer stop_time;
+	double run_time;
 
 	switch (argc)
 	{
@@ -289,8 +306,9 @@ int txtest (int argc, char* argv[])
 	}
 
     printf("-- BEGIN TRANSMISSION TEST --\n");
-
 	ch = '0';
+
+	gettimestamp(&start_time);
 	for (i=0; i<byte_count; i++)
 	{
 		if ((i % 50) == 0)
@@ -302,7 +320,13 @@ int txtest (int argc, char* argv[])
 		printf("%c", ch);
 		if (ch++ == '9') ch = '0';
 	}
+	gettimestamp(&stop_time);
+	// timestampdiff() seems to be broken...
+	//run_time = timestampdiff(&start_time, &stop_time);
+	run_time = ((double)timestampdiff(&stop_time, &start_time)) / ((double)SECOND);
 
+	byte_count += (byte_count / 50) * 7; // Compensate for line header and LF
+	printf("\nBytes sent: %d; Run time: %.2fs; Effective speed: %.2fbps\n", byte_count, run_time, ((double)byte_count * 8) / run_time);
     printf("\n-- END TRANSMISSION TEST --\n");
 
 	return ERR_OK;
