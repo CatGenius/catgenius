@@ -6,14 +6,24 @@
 /* History :	31 Mar 2012 by R. Delien:				      */
 /*		- First creation					      */
 /******************************************************************************/
+
+#include "../common/app_prefs.h"
+
+#ifdef HAS_COMMANDLINE_BOX
+
 #include <htc.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../common/hardware.h"		/* Flexible hardware configuration */
 
+#include "../common/hardware.h"		/* Flexible hardware configuration */
 #include "../common/water.h"
+#include "../common/serial.h"
 #include "cmdline.h"
+
+#ifdef APP_CATGENIUS
+#include "../catgenius/userinterface.h"			/* For cat_detected */
+#endif
 
 
 /******************************************************************************/
@@ -26,8 +36,8 @@
 /******************************************************************************/
 
 /* Event statuses */
-extern bit	cat_detected;
-extern bit	overheated;
+//extern bit	cat_detected;
+//extern bit	overheated;
 
 /* Frequently used strings declared once here, to save some memory */
 char str_unkown[]	= "<unknown>";
@@ -43,7 +53,7 @@ char str_off[]		= "off";
 /* Global Implementations						      */
 /******************************************************************************/
 
-int bowl(int argc, char* argv[])
+int cmd_bowl(int argc, char* argv[])
 {
 	if (argc > 2)
 		return ERR_SYNTAX;
@@ -59,29 +69,29 @@ int bowl(int argc, char* argv[])
 			return ERR_SYNTAX;
 	}
 
-	printf("Bowl: ");
+	TX("Bowl: ");
 	switch (get_Bowl()) {
 	case BOWL_STOP:
-		printf("stop");
+		TX("stop");
 		break;
 	case BOWL_CW:
-		printf("cw");
+		TX("cw");
 		break;
 	case BOWL_CCW:
-		printf("ccw");
+		TX("ccw");
 		break;
 	default:
-		printf(str_unkown);
+		TX(str_unkown);
 		break;
 			
 	}
-	printf("\n");
+	TX("\n");
 
 	return ERR_OK;
 }
 
 
-int arm (int argc, char* argv[])
+int cmd_arm (int argc, char* argv[])
 {
 	if (argc > 2)
 		return ERR_SYNTAX;
@@ -97,29 +107,29 @@ int arm (int argc, char* argv[])
 			return ERR_SYNTAX;
 	}
 
-	printf("Arm: ");
+	TX("Arm: ");
 	switch (get_Arm()) {
 	case ARM_STOP:
-		printf("stop");
+		TX("stop");
 		break;
 	case ARM_UP:
-		printf("up");
+		TX("up");
 		break;
 	case ARM_DOWN:
-		printf("down");
+		TX("down");
 		break;
 	default:
-		printf(str_unkown);
+		TX(str_unkown);
 		break;
 			
 	}
-	printf("\n");
+	TX("\n");
 
 	return ERR_OK;
 }
 
 
-int dosage (int argc, char* argv[])
+int cmd_dosage (int argc, char* argv[])
 {
 	if (argc > 2)
 		return ERR_SYNTAX;
@@ -133,13 +143,13 @@ int dosage (int argc, char* argv[])
 			return ERR_SYNTAX;
 	}
 
-	printf("Dosage: %s\n", get_Dosage()?str_on:str_off);
+	TX2("Dosage: %s\n", get_Dosage()?str_on:str_off);
 
 	return ERR_OK;
 }
 
 
-int tap (int argc, char* argv[])
+int cmd_tap (int argc, char* argv[])
 {
 	if (argc > 2)
 		return ERR_SYNTAX;
@@ -153,13 +163,13 @@ int tap (int argc, char* argv[])
 			return ERR_SYNTAX;
 	}
 
-	printf("Tap: %s\n", water_filling()?str_on:str_off);
+	TX2("Tap: %s\n", water_filling()?str_on:str_off);
 
 	return ERR_OK;
 }
 
 
-int drain (int argc, char* argv[])
+int cmd_drain (int argc, char* argv[])
 {
 	if (argc > 2)
 		return ERR_SYNTAX;
@@ -173,13 +183,13 @@ int drain (int argc, char* argv[])
 			return ERR_SYNTAX;
 	}
 
-	printf("Drain: %s\n", get_Pump()?str_on:str_off);
+	TX2("Drain: %s\n", get_Pump()?str_on:str_off);
 
 	return ERR_OK;
 }
 
 
-int dryer (int argc, char* argv[])
+int cmd_dryer (int argc, char* argv[])
 {
 	if (argc > 2)
 		return ERR_SYNTAX;
@@ -193,45 +203,43 @@ int dryer (int argc, char* argv[])
 			return ERR_SYNTAX;
 	}
 
-	printf("Dryer: %s\n", get_Dryer()?str_on:str_off);
+	TX2("Dryer: %s\n", get_Dryer()?str_on:str_off);
 
 	return ERR_OK;
 }
 
-
-int cat (int argc, char* argv[])
+int cmd_cat (int argc, char* argv[])
 {
 	if (argc > 1)
 		return ERR_SYNTAX;
 
-	DBG("Cat: %s\n", cat_detected?"in":"out");
+	TX2("Cat: %s\n", cat_detected?"in":"out");
 
 	return ERR_OK;
 }
 
-
-int water (int argc, char* argv[])
+int cmd_water (int argc, char* argv[])
 {
 	if (argc > 1)
 		return ERR_SYNTAX;
 
-	printf("Water: %s\n", water_detected()?"high":"low");
+	TX2("Water: %s\n", water_detected()?"high":"low");
 
 	return ERR_OK;
 }
 
-
-int heat (int argc, char* argv[])
+int cmd_heat (int argc, char* argv[])
 {
 	if (argc > 1)
 		return ERR_SYNTAX;
 
-	printf("Overheat: %s\n", overheated?"yes":"no");
+	TX2("Overheat: %s\n", error_overheat?"yes":"no");
 
 	return ERR_OK;
 }
-
 
 /******************************************************************************/
 /* Local Implementations						      */
 /******************************************************************************/
+
+#endif // HAS_COMMANDLINE_BOX

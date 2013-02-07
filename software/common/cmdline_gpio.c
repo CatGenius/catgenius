@@ -6,11 +6,17 @@
 /* History :	31 Mar 2012 by R. Delien:				      */
 /*		- First creation					      */
 /******************************************************************************/
+
+#include "../common/app_prefs.h"
+
+#ifdef HAS_COMMANDLINE_GPIO
+
 #include <htc.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
 
+#include "hardware.h"
 #include "cmdline.h"
 #include "serial.h"
 
@@ -78,7 +84,7 @@ void hexstr (uint8_t value, char *str);
  * 3. Logging pin states differentially
  * gpio log
  */
-int gpio(int argc, char* argv[])
+int cmd_gpio(int argc, char* argv[])
 {
 	unsigned char	port = 0;
 	unsigned char	pin  = 0;
@@ -108,15 +114,15 @@ int gpio(int argc, char* argv[])
 		/* Fetch Operation */
 		if (!strncmp (argv[1], "in", LINEBUFFER_MAX)) {
 			*gpioports[port].tris |= 1 << pin;
-			printf("Port %c, pin %d = %s\n", port + 'A', pin, (*gpioports[port].port & 1 << pin)?"1":"0");
+			TX4("Port %c, pin %d = %s\n", port + 'A', pin, (*gpioports[port].port & 1 << pin)?"1":"0");
 		} else if (!strncmp (argv[1], "set", LINEBUFFER_MAX)) {
 			*gpioports[port].OUT  |= 1 << pin;
 			*gpioports[port].tris  &= ~(1 << pin);
-			printf("Port %c, pin %d set\n", port + 'A', pin);
+			TX3("Port %c, pin %d set\n", port + 'A', pin);
 		} else if (!strncmp (argv[1], "clr", LINEBUFFER_MAX)) {
 			*gpioports[port].OUT  &= ~(1 << pin);
 			*gpioports[port].tris  &= ~(1 << pin);
-			printf("Port %c, pin %d cleared\n", port + 'A', pin);
+			TX3("Port %c, pin %d cleared\n", port + 'A', pin);
 		}
 	} else {
 		/* Second argument can only be 'log' */
@@ -128,21 +134,21 @@ int gpio(int argc, char* argv[])
 			char	hex[3];
 
 			gpioports[port].cache = *gpioports[port].port;
-			/* Convert to hex ourselves" printf %x is broken! */
+			/* Convert to hex ourselves" TX %x is broken! */
 			hexstr(gpioports[port].cache, hex);
-			printf("PORT%c = 0x%s, ", gpioports[port].name, hex);
+			TX3("PORT%c = 0x%s, ", gpioports[port].name, hex);
 #ifdef HAS_LATCH_REGS
 			hexstr(*gpioports[port].latch, hex);
-			printf("LAT%c = 0x%s, ", gpioports[port].name, hex);
+			TX3("LAT%c = 0x%s, ", gpioports[port].name, hex);
 #endif /* HAS_LATCH_REGS */
 			hexstr(*gpioports[port].tris, hex);
-			printf("TRIS%c = 0x%s\n", gpioports[port].name, hex);
+			TX3("TRIS%c = 0x%s\n", gpioports[port].name, hex);
 			port++;
 		}
 		if (argc == 2) {
 			char	rxd;
 
-			printf("Press any key to exit logging\n");
+			TX("Press any key to exit logging\n");
 			do {
 				for (port = 0; gpioports[port].name; port++)
 					if (gpioports[port].cache != *gpioports[port].port) {
@@ -154,7 +160,7 @@ int gpio(int argc, char* argv[])
 							if (gpioports[port].pinmask & pinmask) {
 								if ((gpioports[port].cache & pinmask) !=
 								    (*gpioports[port].port & pinmask))
-									printf("Pin %c%d = %s\n", gpioports[port].name, pin, (*gpioports[port].port & pinmask)?"1":"0");
+									TX4("Pin %c%d = %s\n", gpioports[port].name, pin, (*gpioports[port].port & pinmask)?"1":"0");
 							}
 						}
 						gpioports[port].cache = *gpioports[port].port;
@@ -180,3 +186,5 @@ void hexstr (uint8_t value, char *str)
 	str[1] = (nibble < 10)?nibble+'0':nibble-10+'A';
 	str[2] = 0;
 }
+
+#endif // HAS_COMMANDLINE_GPIO

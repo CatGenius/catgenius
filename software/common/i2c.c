@@ -6,6 +6,11 @@
 /* History :	5 Mar 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
+
+#include "../common/app_prefs.h"
+
+#ifdef HAS_I2C
+
 #include <htc.h>
 
 #include "hardware.h"			/* Flexible hardware configuration */
@@ -131,3 +136,5 @@ static unsigned char i2c_waitready(void)
 		timeout--;
 	return ((SSPCON2 & 0x1F) | R_nW);
 }
+
+#endif

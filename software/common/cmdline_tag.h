@@ -5,10 +5,12 @@
 /*		Copyright (C) 2012, Clockwork Engineering		      */
 /******************************************************************************/
 
-#ifndef CMDLINE_TAG_H			/* Include file already compiled? */
+#include "../common/app_prefs.h"
+
+#if !(defined CMDLINE_TAG_H) && (defined HAS_COMMANDLINE_TAG)
 #define CMDLINE_TAG_H
 
 /* Command implementations */
-int		tag			(int argc,	char* argv[]) ;
+int		cmd_tag			(int argc,	char* argv[]) ;
 
-#endif /* CMDLINE_TAG_H */
+#endif // !CMDLINE_TAG_H

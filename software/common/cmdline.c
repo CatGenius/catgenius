@@ -6,19 +6,27 @@
 /* History :	13 Feb 2011 by R. Delien:				      */
 /*		- Ported from other project.				      */
 /******************************************************************************/
+
+#include "../common/app_prefs.h"
+
+#ifdef HAS_COMMANDLINE
+
 #include <htc.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>				/* For atoi() */
 
-#include "hardware.h"			/* Flexible hardware configuration */
-
+#define CMDLINE_C
 #include "cmdline.h"
 #include "serial.h"
 
+#include "../common/hardware.h"	/* For _XTAL_FREQ */
 #include "timer.h"				/* For timing definitions/functions */
 
-#ifdef HAS_COMMANDLINE
+#ifdef APP_CATGENIUS
+#include "../catgenius/userinterface.h"		/* For set_mode() */
+#endif
+
 /******************************************************************************/
 /* Macros								      */
 /******************************************************************************/
@@ -28,15 +36,18 @@
 #define ENQ		0x05
 #define ACK		0x06
 
-
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
 
-extern const struct command	commands[];
-static char			linebuffer[LINEBUFFER_MAX];
-static unsigned char		localecho = 1;
+extern const struct 	command	commands[];
 
+/******************************************************************************/
+/* Local Data                                                                 */
+/******************************************************************************/
+
+static char				linebuffer[LINEBUFFER_MAX];
+static unsigned char	localecho = 1;
 
 /******************************************************************************/
 /* Local Prototypes							      */
@@ -60,7 +71,7 @@ void cmdline_init (void)
 /******************************************************************************/
 {
 	if (localecho)
-		printf(PROMPT);
+		TX(PROMPT);
 }
 /* End: cmdline_init */
 
@@ -120,15 +131,19 @@ static void proc_char (char rxd)
 		curcolumn = 0;
 
 		if (localecho)
-			printf(PROMPT);
-	} else if (rxd == 0x7f) {
+			TX(PROMPT);
+	} else if ((rxd == 0x7f) || (rxd == 0x08)) {
 		/* Delete last character from the line */
 		if (curcolumn) {
 			/* Remove last character from the buffer */
 			curcolumn--;
 
 			if (localecho)
-				putch(rxd);
+			{
+				putch(0x08);
+				putch(' ');
+				putch(0x08);
+			}
 		}
 	}
 }
@@ -172,19 +187,19 @@ static void proc_line (char *line)
 		case ERR_OK:
 			break;
 		case ERR_SYNTAX:
-			printf("Syntax error\n");
+			TX("Syntax error\n");
 			break;
 		case ERR_IO:
-			printf("I/O error\n");
+			TX("I/O error\n");
 			break;
 		case ERR_PARAM:
-			printf("Parameter error\n");
+			TX("Parameter error\n");
 			break;
 		default:
-			printf("Unknown error\n");
+			TX("Unknown error\n");
 		}
 	} else
-		printf("Unknown command '%s'\n", argv[0]);
+		TX2("Unknown command '%s'\n", argv[0]);
 }
 
 
@@ -202,7 +217,7 @@ static int cmd2index (char *cmd)
 }
 
 
-int echo (int argc, char* argv[])
+int cmd_echo (int argc, char* argv[])
 {
 	if (argc > 2)
 		return ERR_SYNTAX;
@@ -215,29 +230,103 @@ int echo (int argc, char* argv[])
 		else
 			return ERR_SYNTAX;
 	}
-	printf("Echo: %s\n", localecho?"on":"off");
+	TX2("Echo: %s\n", localecho?"on":"off");
 
 	return ERR_OK;
 }
 
 
-int help (int argc, char* argv[])
+int cmd_help (int argc, char* argv[])
 {
 	int index = 0;
 
 	if (argc > 1)
 		return ERR_SYNTAX;
 
-	printf("Known commands:\n");
+	TX("Known commands:\n");
 	while (commands[index].function) {
-		printf("%s\n", (char*)commands[index].cmd);
+		TX2("%s\n", (char*)commands[index].cmd);
 		index++;
 	}
 
 	return ERR_OK;
 }
 
-int rxtest (int argc, char* argv[])
+#ifdef HAS_COMMANDLINE_EXTRA
+
+int cmd_mode (int argc, char* argv[])
+{
+	if (argc > 2) return ERR_SYNTAX;
+	if (argc == 2) userinterface_set_mode((unsigned char)atoi(argv[1]));
+
+	TX2("Mode: %d\n", auto_mode);
+
+	return ERR_OK;
+}
+
+int cmd_start(int argc, char* argv[])
+{
+	unsigned char long_press = 0;
+
+	if (argc > 2) return ERR_SYNTAX;
+	if (argc == 2) long_press = stricmp(argv[1], "long") ? 0 : 1;
+
+	if (long_press)
+		start_long();
+	else
+		start_short();
+
+	return ERR_OK;
+}
+
+int cmd_setup(int argc, char* argv[])
+{
+	unsigned char long_press = 0;
+
+	if (argc > 2) return ERR_SYNTAX;
+	if (argc == 2) long_press = stricmp(argv[1], "long") ? 0 : 1;
+
+	if (long_press)
+		setup_long();
+	else
+		setup_short();
+
+	return ERR_OK;
+}
+
+int cmd_lock (int argc, char* argv[])
+{
+	unsigned char new_value;
+
+	if (argc > 2) return ERR_SYNTAX;
+	if (argc == 2) {
+		new_value = stricmp(argv[1], "on") ? 0 : 1;
+		if (locked != new_value) both_long();
+		update_display();
+	}
+
+	TX2("Lock: %s\n", locked?"on":"off");
+
+	return ERR_OK;
+}
+
+int cmd_cart (int argc, char* argv[])
+{
+	unsigned char new_value;
+
+	if (argc != 1) return ERR_SYNTAX;
+
+	both_short();
+
+	TX("Cart: Showing level\n");
+
+	return ERR_OK;
+}
+
+#endif // HAS_COMMANDLINE_EXTRA
+
+#ifdef HAS_COMMANDLINE_COMTESTS
+int cmd_rxtest (int argc, char* argv[])
 {
 	int byte_count;
 	char ch;
@@ -257,8 +346,7 @@ int rxtest (int argc, char* argv[])
 			return ERR_SYNTAX;
 	}
 
-    printf("-- BEGIN RECEPTION TEST --\n");
-	printf("Terminate your input with ^Z\n");
+	TX("WAIT ^Z\n");
 
 	byte_count = 0;
 	while (1)
@@ -271,7 +359,7 @@ int rxtest (int argc, char* argv[])
 			if (ch == 0x1A) break;
 
 			// Echo char if on & not XON/XOFF
-			if ((echo_on) && (ch != 0x11) && (ch != 0x13)) putch(ch);
+			if ((echo_on) && (ch != XON) && (ch != XOFF)) putch(ch);
 
 			byte_count++;
 		}
@@ -279,13 +367,12 @@ int rxtest (int argc, char* argv[])
 	gettimestamp(&stop_time);
 
 	run_time = ((double)timestampdiff(&stop_time, &start_time)) / ((double)SECOND);
-	printf("\nBytes receivedt: %d; Run time: %.2fs; Effective speed: %.2fbps\n", byte_count, run_time, ((double)byte_count * 8) / run_time);
-    printf("-- END RECEPTION TEST --\n");
+	TX4("\n%db %.2fs %.2fbps\n", byte_count, run_time, ((double)byte_count * 8) / run_time);
 
 	return ERR_OK;
 }
 
-int txtest (int argc, char* argv[])
+int cmd_txtest (int argc, char* argv[])
 {
 	int byte_count, i;
 	char ch;
@@ -305,7 +392,6 @@ int txtest (int argc, char* argv[])
 			return ERR_SYNTAX;
 	}
 
-    printf("-- BEGIN TRANSMISSION TEST --\n");
 	ch = '0';
 
 	gettimestamp(&start_time);
@@ -313,11 +399,11 @@ int txtest (int argc, char* argv[])
 	{
 		if ((i % 50) == 0)
 		{
-			if (i>0) printf("\n");
-			printf("%05d ", i);
+			if (i>0) TX("\n");
+			TX2("%05d ", i);
 		}
 
-		printf("%c", ch);
+		TX2("%c", ch);
 		if (ch++ == '9') ch = '0';
 	}
 	gettimestamp(&stop_time);
@@ -326,10 +412,11 @@ int txtest (int argc, char* argv[])
 	run_time = ((double)timestampdiff(&stop_time, &start_time)) / ((double)SECOND);
 
 	byte_count += (byte_count / 50) * 7; // Compensate for line header and LF
-	printf("\nBytes sent: %d; Run time: %.2fs; Effective speed: %.2fbps\n", byte_count, run_time, ((double)byte_count * 8) / run_time);
-    printf("\n-- END TRANSMISSION TEST --\n");
+	TX4("\n%db %.2fs %.2fbps\n", byte_count, run_time, ((double)byte_count * 8) / run_time);
 
 	return ERR_OK;
 }
+
+#endif // HAS_COMMANDLINE_COMTESTS
 
 #endif /* HAS_COMMANDLINE */

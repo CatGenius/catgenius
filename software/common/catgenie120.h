@@ -8,6 +8,8 @@
 #ifndef CATGENIE120_H			/* Include file already compiled? */
 #define CATGENIE120_H
 
+#include "../common/app_prefs.h"
+
 #if !(defined _16F877A) && !(defined _16F1939)
 #  error Unsupported processor selected!
 #endif
@@ -18,16 +20,19 @@
 #  define WATERSENSOR_ANALOG
 #endif /* _16F1939 */
 
-/* Options */
-//#define HAS_BLUETOOTH
-#define HAS_COMMANDLINE
-
 /* Version number */
 #define VERSION			(2)		/* NVM layout version */
 
 /* Miscelaneous */
 #define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
-#define DBG			printf
+
+#if defined(HAS_DEBUG) && defined(HAS_SERIAL)
+#define DBG(a)			printf(a)
+#define DBG2(a,b)		printf(a, b)
+#else
+#define DBG(a)
+#define DBG2(a,b)
+#endif
 
 /* Frequencies */
 #define KHZ			(1000UL)
@@ -203,3 +208,4 @@ void		set_Dryer		(unsigned char on);
 unsigned char	get_Dryer		(void);
 
 #endif /* CATGENIE120_H */
+

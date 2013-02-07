@@ -5,7 +5,10 @@
 /*		Copyright (C) 2010, Clockwork Engineering		      */
 /******************************************************************************/
 
-#ifndef I2C_H					/* Include file already compiled? */
+#include "../common/app_prefs.h"
+
+#if !(defined I2C_H) && (defined HAS_I2C)					/* Include file already compiled? */
+
 #define I2C_H
 
 #define I2C_RD		1

@@ -6,6 +6,11 @@
 /* History :	31 Mar 2012 by R. Delien:				      */
 /*		- First creation					      */
 /******************************************************************************/
+
+#include "../common/app_prefs.h"
+
+#ifdef HAS_COMMANDLINE_TAG
+
 #include <htc.h>
 #include <stdio.h>
 #include <string.h>
@@ -15,6 +20,8 @@
 
 #include "cmdline.h"
 #include "cr14.h"
+
+#include "serial.h"
 
 
 /******************************************************************************/
@@ -54,7 +61,7 @@ static void tag_dump(void);
 /* Global Implementations						      */
 /******************************************************************************/
 
-int tag(int argc, char* argv[])
+int cmd_tag(int argc, char* argv[])
 {
 	int	result = ERR_OK;
 
@@ -97,7 +104,7 @@ static int tag_init(void)
 
 	/* Turn on the carrier */
 	if (cr14_writeparamreg(0x10)) {
-		printf("NAck from reader\n");
+		TX("NAck from reader\n");
 		return (1);
 	}
 
@@ -105,7 +112,7 @@ static int tag_init(void)
 	frame[0] = 0x06;
 	frame[1] = 0x00;
 	if (cr14_writeframe(frame, 2)) {
-		printf("Unable to send init\n");
+		TX("Unable to send init\n");
 		return (-1);
 	}
 
@@ -115,13 +122,13 @@ static int tag_init(void)
 	while (cr14_readframe(frame, &length)) {
 		retries++;
 		if (retries >= MAX_RETRIES) {
-			printf("Unable to get ID\n");
+			TX("Unable to get ID\n");
 			return (-1);
 		}
 		__delay_us(100);
 	}
 	if (length != 1) {
-		printf("No tag detected\n");
+		TX("No tag detected\n");
 		return (-1);
 	}
 	id = frame[0];
@@ -130,7 +137,7 @@ static int tag_init(void)
 	frame[0] = 0x0E;
 	frame[1] = id;
 	if (cr14_writeframe(frame, 2)) {
-		printf("Unable to select ID\n");
+		TX("Unable to select ID\n");
 		return (-1);
 	}
 
@@ -140,13 +147,13 @@ static int tag_init(void)
 	while (cr14_readframe(frame, &length)) {
 		retries++;
 		if (retries >= MAX_RETRIES) {
-			printf("Unable to read ID response\n");
+			TX("Unable to read ID response\n");
 			return (-1);
 		}
 		__delay_us(100);
 	}
 	if ((length != 1) || (frame[0] != id)) {
-		printf("Tag interference\n");
+		TX("Tag interference\n");
 		return (-1);
 	}
 	
@@ -163,7 +170,7 @@ static void tag_print_uid(void)
 	/* Request the unique ID */
 	frame[0] = 0x0B;	/* Command 0x0B */
 	if (cr14_writeframe(frame, 1)) {
-		printf("Unable to request UID\n");
+		TX("Unable to request UID\n");
 		return;
 	}
 
@@ -172,22 +179,22 @@ static void tag_print_uid(void)
 	while (cr14_readframe(frame, &length)) {
 		retries++;
 		if (retries >= MAX_RETRIES) {
-			printf("Unable to read UID\n");
+			TX("Unable to read UID\n");
 			return;
 		}
 		__delay_us(100);
 	}
 	if (length != 8) {
-		printf("Invalid UID\n");
+		TX("Invalid UID\n");
 		return;
 	}
 
-	printf("UniqueID:");
+	TX("UniqueID:");
 	while (length) {
 		length--;
-		printf(" %.2X", frame[length]);
+		TX2(" %.2X", frame[length]);
 	}
-	printf("\n");
+	TX("\n");
 
 	return;
 }
@@ -203,7 +210,7 @@ static void tag_print_block(char block)
 	frame[0] = 0x08;	/* Command 0x08 */
 	frame[1] = block;
 	if (cr14_writeframe(frame, 2)) {
-		printf("Unable to request block\n");
+		TX("Unable to request block\n");
 		return;
 	}
 
@@ -212,7 +219,7 @@ static void tag_print_block(char block)
 	while (cr14_readframe(frame, &length)) {
 		retries++;
 		if (retries >= MAX_RETRIES) {
-			printf("Unable to read block\n");
+			TX("Unable to read block\n");
 			return;
 		}
 		__delay_us(100);
@@ -220,16 +227,16 @@ static void tag_print_block(char block)
 	if (length != 4) {
 		/* No error if no data */
 		if (length)
-			printf("Invalid block\n");
+			TX("Invalid block\n");
 		return;
 	}
 
-	printf("Block %.2X:", block);
+	TX2("Block %.2X:", block);
 	while (length) {
 		length--;
-		printf(" %.2X", frame[length]);
+		TX2(" %.2X", frame[length]);
 	}
-	printf("\n");
+	TX("\n");
 
 	return;
 }
@@ -247,7 +254,7 @@ static void tag_write_block(char block, unsigned char *data)
 	frame[4] = data[2];
 	frame[5] = data[3];
 	if (cr14_writeframe(frame, sizeof(frame))) {
-		printf("Unable to write block\n");
+		TX("Unable to write block\n");
 		return;
 	}
 	__delay_us(10000);
@@ -380,3 +387,5 @@ static void tag_dump(void)
 	if (result <= 0)
 		tag_term();
 }
+
+#endif // HAS_COMMANDLINE_TAG

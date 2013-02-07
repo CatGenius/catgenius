@@ -5,10 +5,12 @@
 /*		Copyright (C) 2012, Clockwork Engineering		      */
 /******************************************************************************/
 
-#ifndef CMDLINE_GPIO_H			/* Include file already compiled? */
+#include "../common/app_prefs.h"
+
+#if !(defined CMDLINE_GPIO_H) && (defined HAS_COMMANDLINE_GPIO)
 #define CMDLINE_GPIO_H
 
 /* Command implementations */
-int		gpio			(int argc,	char* argv[]) ;
+int		cmd_gpio		(int argc,	char* argv[]) ;
 
-#endif /* CMDLINE_GPIO_H */
+#endif // !CMDLINE_GPIO_H

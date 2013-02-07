@@ -149,6 +149,8 @@ TMR2IE = 0;
 TMR2IF = 0;
 TMR2ON = 0;
 CCP1CON = 0;
+
+// TBD: Fix naughty direct-latch update so eventlog_track() gets called
 CATSENSOR_LED(LAT) &= ~CATSENSOR_LED_MASK;
 		/* The echo is the detection */
 		detected_cur = echoed;

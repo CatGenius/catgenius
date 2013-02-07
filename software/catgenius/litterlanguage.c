@@ -12,11 +12,14 @@
 
 #include "../common/hardware.h"		/* Flexible hardware configuration */
 
+#define LITTERLANGUAGE_C
 #include "litterlanguage.h"
 #include "romwashprogram.h"
 #include "../common/timer.h"
 #include "../common/water.h"
 #include "../common/rtc.h"
+#include "userinterface.h"
+#include "../common/eventlog.h"
 
 extern void litterlanguage_event (unsigned char event, unsigned char argument);
 
@@ -45,7 +48,6 @@ static bit			wet_program		= 0;
 static bit			paused			= 0;
 static bit			error_fill		= 0;
 static bit			error_drain		= 0;
-static bit			error_overheat		= 0;
 static bit			error_flood		= 0;	/* Not fully implemented yet */
 static bit			error_execution		= 0;
 
@@ -83,23 +85,24 @@ void litterlanguage_init (unsigned char flags)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	static const char *_s_box_is = "Box is ";
+
 	switch(flags & BUTTONS) {
 		case 0:
-			DBG("Box is ");
 			switch (eeprom_read(NVM_BOXSTATE)){
 			case BOX_TIDY:
-				DBG("tidy\n");
+				DBG2("%s tidy\n", _s_box_is);
 				break;
 			case BOX_MESSY:
-				DBG("messy\n");
+				DBG2("%s messy\n", _s_box_is);
 				litterlanguage_cleanup(0);
 				break;
 			case BOX_WET:
-				DBG("wet\n");
+				DBG2("%s wet\n", _s_box_is);
 				litterlanguage_cleanup(1);
 				break;
 			default:
-				DBG("unknown\n");
+				DBG2("%s unknown\n", _s_box_is);
 				eeprom_write(NVM_BOXSTATE, BOX_TIDY);
 				break;
 			}
@@ -226,7 +229,7 @@ void litterlanguage_start (unsigned char wet)
 	extern const struct instruction	washprogram[];
 	if (ins_state == STATE_IDLE) {
 		printtime();
-		DBG("Starting %s program\n", wet?"wet":"dry");
+		DBG2("Starting %s program\n", wet?"wet":"dry");
 		switch (prg_source) {
 		case SRC_ROM:
 			ins_pointer = &washprogram[0];
@@ -377,7 +380,7 @@ void watersensor_event (unsigned char detected)
 /******************************************************************************/
 {
 	printtime();
-	DBG("Water %s\n", detected?"high":"low");
+	DBG2("Water %s\n", detected?"high":"low");
 	if (ins_state != STATE_IDLE) {
 		/* Disable timeout on event */
 		if (detected) {
@@ -399,6 +402,7 @@ void watersensor_event (unsigned char detected)
 		litterlanguage_event(EVENT_ERR_FLOOD, error_flood);
 	}
 
+	eventlog_track(EVENTLOG_WATER_SENSOR, detected);
 }
 /* watersensor_event */
 
@@ -413,6 +417,7 @@ void heatsensor_event (unsigned char detected)
 {
 	error_overheat = detected;
 	litterlanguage_event(EVENT_ERR_OVERHEAT, error_overheat);
+	eventlog_track(EVENTLOG_HEAT_SENSOR, detected);
 }
 /* heatsensor_event */
 
@@ -426,7 +431,7 @@ static void litterlanguage_cleanup (unsigned char wet)
 	extern const struct instruction	cleanupprogram[];
 	if (ins_state == STATE_IDLE) {
 		printtime();
-		DBG("Starting %s cleanup\n", wet?"wet":"dry");
+		DBG2("Starting %s cleanup\n", wet?"wet":"dry");
 		prg_source = SRC_ROM;
 		ins_pointer = &cleanupprogram[0];
 		wet_program = wet;

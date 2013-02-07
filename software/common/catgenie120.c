@@ -11,6 +11,7 @@
 #include "hardware.h"			/* Flexible hardware configuration */
 
 #include "timer.h"
+#include "../common/eventlog.h"
 
 extern void heatsensor_event  (unsigned char detected);
 extern void startbutton_event (unsigned char up);
@@ -22,23 +23,23 @@ extern void setupbutton_event (unsigned char up);
 /******************************************************************************/
 
 /* Timing configuration */
-#define BUTTON_DEBOUNCE		(SECOND/20)	/*   50ms */
-#define HEATSENSOR_DEBOUNCE	(SECOND/20)	/*   50ms */
-#define PACER_BITTIME		(SECOND/8)	/*  125ms */
+#define BUTTON_DEBOUNCE			(SECOND/20)	/*   50ms */
+#define HEATSENSOR_DEBOUNCE		(SECOND/20)	/*   50ms */
+#define PACER_BITTIME			(SECOND/8)	/*  125ms */
 
 /* Debouncers */
 #define DEBOUNCER_BUTTON_START	0
 #define DEBOUNCER_BUTTON_SETUP	1
 #define DEBOUNCER_SENSOR_HEAT	2
-#define DEBOUNCER_MAX		3
+#define DEBOUNCER_MAX			3
 
 /* Pacers */
-#define PACER_BEEPER		0
-#define PACER_LED_ERROR		1
-#define PACER_LED_LOCKED	2
-#define PACER_LED_CARTRIDGE	3
-#define PACER_LED_CAT		4
-#define PACER_MAX		5
+#define PACER_BEEPER			0
+#define PACER_LED_ERROR			1
+#define PACER_LED_LOCKED		2
+#define PACER_LED_CARTRIDGE		3
+#define PACER_LED_CAT			4
+#define PACER_MAX				5
 
 
 /******************************************************************************/
@@ -277,7 +278,10 @@ void catgenie_work (void)
 				pacers[temp].mask = 1;
 				/* Clear the pattern if repeat is not selected */
 				if (!pacers[temp].repeat)
+				{
 					pacers[temp].pattern = 0;
+					eventlog_track(EVENTLOG_PACER + temp, 0);
+				}
 			}
 		}
 }
@@ -312,6 +316,8 @@ void set_LED (unsigned char led, unsigned char on)
 		*latch |= mask;
 	else
 		*latch &= ~mask;
+
+	eventlog_track(EVENTLOG_LED + (led-1), on);
 }
 
 
@@ -361,6 +367,8 @@ void set_Bowl (unsigned char mode)
 		BOWL(LAT) |=  BOWL_ONOFF_MASK;
 		break;
 	}
+
+	eventlog_track(EVENTLOG_BOWL, mode);
 }
 
 
@@ -392,6 +400,8 @@ void set_Arm (unsigned char mode)
 		ARM(LAT) |= ARM_ONOFF_MASK;
 		break;
 	}
+
+	eventlog_track(EVENTLOG_ARM, mode);
 }
 
 
@@ -413,6 +423,8 @@ void set_Dosage (unsigned char on)
 		DOSAGE(LAT) |= DOSAGE_MASK;
 	else
 		DOSAGE(LAT) &= ~DOSAGE_MASK;
+
+	eventlog_track(EVENTLOG_DOSAGE, on);
 }
 
 
@@ -428,6 +440,8 @@ void set_Pump (unsigned char on)
 		PUMP(LAT) |= PUMP_MASK;
 	else
 		PUMP(LAT) &= ~PUMP_MASK;
+
+	eventlog_track(EVENTLOG_PUMP, on);
 }
 
 
@@ -443,6 +457,8 @@ void set_Dryer	(unsigned char on)
 		DRYER(LAT) |= DRYER_MASK;
 	else
 		DRYER(LAT) &= ~DRYER_MASK;
+
+	eventlog_track(EVENTLOG_DRYER, on);
 }
 
 
@@ -471,4 +487,6 @@ static void set_pacer (unsigned char pacer, unsigned char pattern, unsigned char
 	pacers[pacer].pattern = pattern;
 	/* Copy the repeat flag */
 	pacers[pacer].repeat = repeat;
+
+	eventlog_track(EVENTLOG_PACER + pacer, pattern);
 }

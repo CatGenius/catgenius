@@ -5,7 +5,9 @@
 /*		Copyright (C) 2010, Clockwork Engineering		      */
 /******************************************************************************/
 
-#ifndef CR14_H					/* Include file already compiled? */
+#include "../common/app_prefs.h"
+
+#if !(defined CR14_H) && (defined HAS_CR14)					/* Include file already compiled? */
 #define CR14_H
 
 
