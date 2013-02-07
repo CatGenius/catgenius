@@ -8,6 +8,11 @@
 /* Author  :    Christopher Mapes                                             */
 /******************************************************************************/
 
+#include "../common/app_prefs.h"
+
+#ifdef HAS_BLUETOOTH
+#define BLUETOOTH_C
+
 #include <htc.h>
 #include <stdio.h>
 #include <string.h>
@@ -15,76 +20,96 @@
 #include "hardware.h"			/* Flexible hardware configuration */
 #include "serial.h"
 #include "bluetooth.h"
+#include "types.h"
 
 // Wait timeout for response from device
-#define BT_WAIT_DELAY	500UL
+#define BT_WAIT_DELAY	1000UL	// 500UL
 
-// Macro for integer division with proper round-off (BEWARE OF OVERFLOW!)
-#define INTDIV(t,n)		((2*(t)+(n))/(2*(n)))		/* Macro for integer division with proper round-off (BEWARE OF OVERFLOW!) */
+static const _U16 bt_bitrates[] = {BITRATE, 115200UL, 9600UL};
 
-static unsigned char bt_state = 0;
+static void bluetooth_puts(const char *s)
+{
+	for (_U08 i=0; i<strlen(s); i++)
+	{
+		putch(s[i]);
+		__delay_us(1);	// ~8000bps
+	}
+}
 
 void bluetooth_init(void)
 {
-	char s_bitrate[5];
+	_U08 s_bitrate[5];
+	_U08 i;
+	_U08 ok;
 	
 	// TBD:
     // - Could write EEPROM when we've done this so we don't try again
     // - Or at least check nBOR and/or nPOR
 
-	// Sanity check - serial_init() needs to be called first (It sets SPEN)
-	if (!SPEN) goto bt_fail;
-	bt_state++;
+	// Attempt to contact the BT module at different bitrates
+	ok = false;
+	for (i=0; i<3; i++)
+	{
+		// Set the bitrate
+		serial_init(bt_bitrates[i], SERIAL_FLOW_NONE, 1);
 
-	// Convert bitrate to string format accepted by BT module
-	if (BT_BITRATE <= 9600UL)
-	{
-		sprintf(s_bitrate, "%lu", BT_BITRATE);
+		// Put BT module in command mode.  It's expecting to see 3 "$" chars in a 1 sec window with silence
+		bluetooth_puts("$$$");
+		if (serial_wait_s("CMD\r\n", 1500) > 0)
+		{
+			ok = true;
+			break;
+		}
 	}
-	else if (BT_BITRATE < 115200UL)
+	if (!ok) return;
+
+	// If a preferred bluetooth device name was provided, set it now
+#ifdef BLUETOOTH_NAME
+	bluetooth_puts("S-,"); bluetooth_puts(BLUETOOTH_NAME); bluetooth_puts("%s\r");
+	if (serial_wait_s("AOK\r\n", BT_WAIT_DELAY) == 0) return;
+
+    bluetooth_puts("R,1\r");
+	if (serial_wait_s("Reboot!\r\n", BT_WAIT_DELAY) == 0) return;
+
+	// Put BT module back in command mode.  It's expecting to see exactly 3 "$" chars in a 1 sec window with no other characters
+	__delay_ms(1000);
+	bluetooth_puts("$$$");
+	if (serial_wait_s("CMD\r\n", BT_WAIT_DELAY) == 0) return;
+#endif
+
+	if (bt_bitrates[i] != BITRATE)
 	{
-		sprintf(s_bitrate, "%02.1f", ((float)BT_BITRATE / 1000UL));
+		// Bitrate is not what we want, so change it
+
+		// Convert bitrate to string format accepted by BT module
+		// TBD: Optimize this code.  I think it takes up a lot of program memory
+		if (BITRATE <= 9600UL)
+		{
+			sprintf(s_bitrate, "%lu", BITRATE);
+		}
+		else if (BITRATE < 115200UL)
+		{
+			sprintf(s_bitrate, "%02.1f", ((float)BITRATE / 1000UL));
+		}
+		else
+		{
+			sprintf(s_bitrate, "%luK", BITRATE / 1000UL);
+		}
+
+		// Store new bitrate for next reboot
+		bluetooth_puts("SU,"); bluetooth_puts(s_bitrate); bluetooth_puts("N\r");
+		if (serial_wait_s("AOK\r\n", BT_WAIT_DELAY) == 0) return;
+
+		// Change current bitrate
+		bluetooth_puts("U,"); bluetooth_puts(s_bitrate); bluetooth_puts("N\r");
+		//if (serial_wait_s("AOK\r\n", BT_WAIT_DELAY) == 0) goto bt_fail;
 	}
 	else
 	{
-		sprintf(s_bitrate, "%luK", BT_BITRATE / 1000UL);
+		// Break out of command mode
+		bluetooth_puts("---");
+		if (serial_wait_s("END\r\n", BT_WAIT_DELAY) == 0) return;
 	}
-
-	// TBD: During init phase, we don't want any XON/XOFF control!
-
-	//DBG("=== Programming Bluetooth Module ===\n");
-
-#ifdef USE_BT_NAME
-	// Put BT module in command mode.  It's expecting to see 3 "$" chars in a 1 sec window with silence
-	__delay_ms(1000);
-	printf("$$$");
-	if (serial_wait_s("CMD\r\n", BT_WAIT_DELAY) == 0) goto bt_fail;
-	bt_state++;
-
-	printf("S-,CatGenius\r");
-	if (serial_wait_s("AOK\r\n", BT_WAIT_DELAY) == 0) goto bt_fail;
-	bt_state++;
-
-    printf("R,1\r");
-	if (serial_wait_s("Reboot!\r\n", BT_WAIT_DELAY) == 0) goto bt_fail;
-	bt_state++;
-#endif
-
-	// Program baud rate
-
-	// Put BT module in command mode.  It's expecting to see exactly 3 "$" chars in a 1 sec window with no other characters
-	__delay_ms(1000);
-	printf("$$$");
-	if (serial_wait_s("CMD\r\n", BT_WAIT_DELAY) == 0) goto bt_fail;
-	bt_state++;
-
-	printf("U,%s,N\r", s_bitrate);
-	if (serial_wait_s("AOK\r\n", BT_WAIT_DELAY) == 0) goto bt_fail;
-
-	// NOTE: XON/XOFF flow control has to be enabled on the remote end; the BT module will pass the control characters through
-
-	bt_state = 255;
-
-bt_fail:
-	return;
 }
+
+#endif // HAS_BLUETOOTH

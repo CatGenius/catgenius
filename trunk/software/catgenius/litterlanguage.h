@@ -48,7 +48,6 @@ struct instruction {
 	unsigned int	operant;
 };
 
-
 /* Generic */
 void		litterlanguage_init	(unsigned char	flags) ;
 void		litterlanguage_work	(void) ;

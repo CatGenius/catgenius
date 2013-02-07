@@ -4,9 +4,17 @@
 /* Author  :	Robert Delien						      */
 /*		Copyright (C) 2011, Clockwork Engineering		      */
 /******************************************************************************/
-#ifndef CMDLINE_H			/* Include file already compiled? */
+
+#include "../common/app_prefs.h"
+
+#if !(defined CMDLINE_H) && (defined HAS_COMMANDLINE)
 #define CMDLINE_H
 
+#ifdef CMDLINE_C
+#  include "../common/prot_src.h"
+#else
+#  include "../common/prot_inc.h"
+#endif
 
 #define LINEBUFFER_MAX	(20)	/* Maximum length of a complete command line */
 #define COMMAND_MAX	(8)	/* Maximum length of a command name */
@@ -23,13 +31,21 @@ struct command {
 };
 
 /* Generic */
-void		cmdline_init		(void) ;
-void		cmdline_work		(void) ;
+PUBLIC_FN(void cmdline_init (void));
+PUBLIC_FN(void cmdline_work (void));
 
 /* Command implementations */
-int		echo			(int argc,	char* argv[]) ;
-int		help			(int argc,	char* argv[]) ;
-int		txtest			(int argc,  char* argv[]) ;
-int		rxtest			(int argc,  char* argv[]) ;
+PUBLIC_FN(int cmd_echo   (int argc, char* argv[]));
+PUBLIC_FN(int cmd_help   (int argc,char* argv[]));
 
-#endif /* CMDLINE_H */
+#ifdef HAS_COMMANDLINE_EXTRA
+PUBLIC_FN(int cmd_txtest (int argc, char* argv[]));
+PUBLIC_FN(int cmd_rxtest (int argc, char* argv[]));
+PUBLIC_FN(int cmd_mode   (int argc, char* argv[]));
+PUBLIC_FN(int cmd_start  (int argc, char* argv[]));
+PUBLIC_FN(int cmd_setup  (int argc, char* argv[]));
+PUBLIC_FN(int cmd_lock   (int argc, char* argv[]));
+PUBLIC_FN(int cmd_cart   (int argc, char* argv[]));
+#endif
+
+#endif // !CMDLINE_H

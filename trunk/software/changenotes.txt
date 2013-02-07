@@ -1,0 +1,43 @@
+/* Revision History Log                                                      */
+B05:
+	RD	serial.c	- Implemented ISR for TX/RX
+					- Implemented XON/XOFF flow control
+					- Added HAS_COMMANDLINE and HAS_BLUETOOTH
+	CM	CatGenius	- *** NOTE: GenieDiag, other CG tools, and 877A support is BROKEN ***
+					- Created bluetooth.c/.h
+					- Added common/app_prefs.h to support application-
+					  specific preferences. For example, for CatGenius, this
+					  redirects to catgenius/catgenius_prefs.h.  Each app will
+					  need to have it's own define like APP_CATGENIUS set in
+					  the .mcp file
+					- Added prot_src.h and prot_inc.h for easier var/fn sharing				
+					- Added types.h with standard types like uint16_t and shorthand types like _U16					  
+					- Added "flow" argument for serial_init
+					- Added serial lineterm config (CR, LF, or CRLF)
+					- Prefixed all command-line service routines with "cmd_"
+					- Added the following additional command line functions:
+					  - rxtest
+					  - txtest
+					  - mode
+					  - setup (diff than diag)
+					  - start (diff than diag)
+					  - lock (from diag)
+					- Added the following to the project, and set up
+					  conditionals for each:
+					  cr14
+					  i2c
+					  cmdline_box
+					  cmdline_gpio
+					  cmdline_tag			
+					- Added new macro TX/TX2 to do nothing if HAS_SERIAL is not
+					  defined; Changed all printf references to this instead
+					- Replaced DBG macro with DBG/DBG2 to do nothing if
+					  HAS_SERIAL and HAS_DEBUG are not defined; Changed code
+					  to use DBG2
+					- Memory optimization
+					- Added command line support for DEL in addition to BKSP
+					- Command line now erases previous char from screen on DEL/BKSP
+					
+TBD:
+	- Should move all box information OUT of userinterface
+	- Integrate GenieDiag UI code into CatGenius

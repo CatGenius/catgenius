@@ -5,18 +5,20 @@
 /*		Copyright (C) 2012, Clockwork Engineering		      */
 /******************************************************************************/
 
-#ifndef CMDLINE_BOX_H			/* Include file already compiled? */
+#include "../common/app_prefs.h"
+
+#if !(defined CMDLINE_BOX_H) && (defined HAS_COMMANDLINE_BOX) /* Include file already compiled? */
 #define CMDLINE_BOX_H
 
 /* Command implementations */
-int		bowl			(int argc,	char* argv[]) ;
-int		arm			(int argc,	char* argv[]) ;
-int		dosage			(int argc,	char* argv[]) ;
-int		tap			(int argc,	char* argv[]) ;
-int		drain			(int argc,	char* argv[]) ;
-int		dryer			(int argc,	char* argv[]) ;
-int		cat			(int argc,	char* argv[]) ;
-int		water			(int argc,	char* argv[]) ;
-int		heat			(int argc,	char* argv[]) ;
+int		cmd_bowl		(int argc,	char* argv[]) ;
+int		cmd_arm			(int argc,	char* argv[]) ;
+int		cmd_dosage		(int argc,	char* argv[]) ;
+int		cmd_tap			(int argc,	char* argv[]) ;
+int		cmd_drain		(int argc,	char* argv[]) ;
+int		cmd_dryer		(int argc,	char* argv[]) ;
+int		cmd_cat			(int argc,	char* argv[]) ;
+int		cmd_water		(int argc,	char* argv[]) ;
+int		cmd_heat		(int argc,	char* argv[]) ;
 
-#endif /* CMDLINE_BOX_H */
+#endif // !CMDLINE_BOX_H

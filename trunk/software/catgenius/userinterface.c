@@ -6,6 +6,9 @@
 /* History :	16 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
+
+#define USERINTERFACE_C
+
 #include <htc.h>
 #include <stdio.h>
 
@@ -15,6 +18,8 @@
 #include "../common/timer.h"
 #include "../common/rtc.h"
 #include "litterlanguage.h"
+#include "../common/eventlog.h"
+#include "../common/serial.h"
 
 
 /******************************************************************************/
@@ -29,20 +34,10 @@
 #define PANEL_CARTRIDGELEVEL	1	/* Display/button mode showing/altering cartridge level */
 #define PANEL_ERROR		2	/* Display/button mode showing error(s) */
 
-#define STATE_IDLE		0
-#define STATE_CAT		1
+#define STATE_IDLE			0
+#define STATE_CAT			1
 #define STATE_RUNNING		2
 
-#define AUTO_MANUAL		0	/* Nothing automatic, manual only */
-#define AUTO_TIMED1		1	/* Full wash every 24 hours */
-#define AUTO_TIMED2		2	/* Full wash every 12 hours */
-#define AUTO_TIMED3		3	/* Full wash every 8 hours */
-#define AUTO_TIMED4		4	/* Full wash every 6 hours */
-#define AUTO_DETECTED1ON1	5	/* Full wash every use */
-#define AUTO_DETECTED1ON2	6	/* Full wash/Scoop only 1:2 uses */
-#define AUTO_DETECTED1ON3	7	/* Full wash/Scoop only 1:3 uses */
-#define AUTO_DETECTED1ON4	8	/* Full wash/Scoop only 1:4 uses */
-#define AUTO_DETECTED		9	/* Scoop only every use*/
 
 
 /******************************************************************************/
@@ -58,17 +53,14 @@ static struct timer	cattimer	= EXPIRED;
 static unsigned char	buttonmask_cur	= 0;
 static unsigned char	buttonmask_cum	= 0;
 static unsigned char	buttonmask_evt	= 0;
-static bit		locked		= 0;
 static bit		longhandled	= 0;
 
 static bit		cat_present	= 0;
-static bit		cat_detected	= 0;
 static bit		full_wash	= 0;
 
 static unsigned char	state		= STATE_IDLE;
 static unsigned char	interval	= 0;
 static unsigned char	panel_mode	= PANEL_AUTOMODE;
-static unsigned char	auto_mode	= AUTO_MANUAL;
 static unsigned char	cart_level	= 100;
 static unsigned char	error_nr	= 0;
 
@@ -77,17 +69,11 @@ static unsigned char	error_nr	= 0;
 /* Local Prototypes							      */
 /******************************************************************************/
 
-static void	set_mode		(unsigned char mode);
-static void	update_display		(void);
 static void	process_button		(unsigned char	button_mask,
 					 unsigned char	down);
-static void	setup_short		(void);
-static void	setup_long		(void);
-static void	start_short		(void);
-static void	start_long		(void);
-static void	both_short		(void);
-static void	both_long		(void);
 static void	update_autotimer	(unsigned char mode);
+
+static const char *_s_start = "Start: ";
 
 
 /******************************************************************************/
@@ -112,9 +98,7 @@ void userinterface_init (unsigned char flags)
 	/* Restore key lock mode from eeprom */
 	locked = !eeprom_read(NVM_KEYUNDLOCK);
 	/* Restore current mode from eeprom */
-	set_mode(eeprom_read(NVM_MODE));
-	/* Update the display */
-	update_display();
+	userinterface_set_mode(eeprom_read(NVM_MODE));
 }
 /* userinterface_init */
 
@@ -192,17 +176,17 @@ void userinterface_work (void)
 
 	case START_BUTTON:
 		start_short();
-		update = 1;
+		//update = 1;
 		break;
 
 	case SETUP_BUTTON:
 		setup_short();
-		update = 1;
+		//update = 1;
 		break;
 
 	case (START_BUTTON | SETUP_BUTTON):
 		both_short();
-		update = 1;
+		//update = 1;
 		break;
 
 	default:
@@ -214,21 +198,21 @@ void userinterface_work (void)
 	if (timeoutexpired(&holdtimeout)) {
 		switch (buttonmask_cum & BUTTONS) {
 		case START_BUTTON:
-			set_Beeper(0x05, 0);
+			//set_Beeper(0x05, 0);
 			start_long();
-			update = 1;
+			//update = 1;
 			break;
 
 		case SETUP_BUTTON:
-			set_Beeper(0x05, 0);
+			//set_Beeper(0x05, 0);
 			setup_long();
-			update = 1;
+			//update = 1;
 			break;
 
 		case (START_BUTTON | SETUP_BUTTON):
-			set_Beeper(0x05, 0);
+			//set_Beeper(0x05, 0);
 			both_long();
-			update = 1;
+			//update = 1;
 			break;
 
 		default:
@@ -283,7 +267,7 @@ void catsensor_event (unsigned char detected)
 	cat_present = detected;
 
 	printtime();
-	DBG("Cat %s\n", detected?"in":"out");
+	DBG2("Cat %s\n", detected?"in":"out");
 
 	/* Trigger detection on rising edge only */
 	if (detected)
@@ -324,6 +308,8 @@ void catsensor_event (unsigned char detected)
 		/* Update the display */
 		update_display();
 	}
+
+	eventlog_track(EVENTLOG_CAT_SENSOR, detected);
 }
 /* catsensor_event */
 
@@ -404,15 +390,28 @@ static void process_button (unsigned char button_mask, unsigned char down)
 	}
 	if (locked)
 		update_display();
+
+#ifdef HAS_EVENTLOG
+	switch (button_mask)
+	{
+		case START_BUTTON:
+			eventlog_track(EVENTLOG_START_BUTTON, down);
+			break;
+		case SETUP_BUTTON:
+			eventlog_track(EVENTLOG_SETUP_BUTTON, down);
+			break;
+	}
+#endif
 }
 
-static void set_mode (unsigned char mode)
+//static void set_mode (unsigned char mode)
+void userinterface_set_mode (unsigned char mode)
 {
 	if (mode > AUTO_DETECTED)
 		auto_mode = AUTO_MANUAL;
 	else
 		auto_mode = mode;
-	DBG("Set mode %u\n", auto_mode);
+	DBG2("Set mode %u\n", auto_mode);
 
 	if ( (auto_mode == AUTO_TIMED1) ||
 	     (auto_mode == AUTO_TIMED2) ||
@@ -433,9 +432,11 @@ static void set_mode (unsigned char mode)
 
 	/* Store the new mode in EEPROM */
 	eeprom_write(NVM_MODE, auto_mode);
+
+	update_display();
 }
 
-static void update_display (void)
+void update_display (void)
 {
 	switch (panel_mode) {
 	default:
@@ -513,13 +514,16 @@ static void update_display (void)
 		set_LED_Locked(0x00, 0);
 }
 
-static void setup_short (void)
+void setup_short (void)
 {
+	TX("Setup: short\n");
+	set_Beeper(0x05, 0);
+
 	switch (panel_mode) {
 	default:
 		panel_mode = PANEL_AUTOMODE;
 	case PANEL_AUTOMODE:
-		set_mode((auto_mode==AUTO_DETECTED)?AUTO_MANUAL:auto_mode+1);
+		userinterface_set_mode((auto_mode==AUTO_DETECTED)?AUTO_MANUAL:auto_mode+1);
 		break;
 
 	case PANEL_CARTRIDGELEVEL:
@@ -542,14 +546,22 @@ static void setup_short (void)
 	case PANEL_ERROR:
 		break;
 	}
+
+	update_display();
 }
 
-static void setup_long (void)
+void setup_long (void)
 {
+	TX("Setup: long\n");
+	set_Beeper(0x05, 0);
+
+	update_display();
 }
 
-static void start_short (void)
+void start_short (void)
 {
+	TX(_s_start); TX("short\n");
+
 	if (!litterlanguage_running()) {
 		/* Scoop-only program */
 		full_wash = 0;
@@ -560,10 +572,15 @@ static void start_short (void)
 	} else
 		/* Toggle pause current program */
 		litterlanguage_pause(!litterlanguage_paused());
+
+	update_display();
 }
 
-static void start_long (void)
+void start_long (void)
 {
+	TX(_s_start); TX("long\n");
+	set_Beeper(0x05, 0);
+
 	if (!litterlanguage_running()) {
 		/* Full washing program */
 		full_wash = 1;
@@ -574,21 +591,33 @@ static void start_long (void)
 	} else
 		/* Stop the program, state machine will do the rest */
 		litterlanguage_stop();
+
+	update_display();
 }
 
-static void both_short (void)
+void both_short (void)
 {
+	TX("Start+Setup: short\n");
+
 	/* Swich panel to cartridge level mode */
 	panel_mode = PANEL_CARTRIDGELEVEL;
 	/* Set timeout to return to auto- or errormode */
 	settimeout(&cartridgetimeout, LEVEL_TIMEOUT);
+
+	update_display();
 }
 
 
-static void both_long (void)
+void both_long (void)
 {
+	DBG("Start+Setup: long\n");
+
+	set_Beeper(0x05, 0);
+
 	locked = !locked;
 	eeprom_write(NVM_KEYUNDLOCK, !locked);
+
+	update_display();
 }
 
 

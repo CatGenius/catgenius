@@ -6,6 +6,11 @@
 /* History :	7 Mar 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
+
+#include "../common/app_prefs.h"
+
+#ifdef HAS_CR14
+
 #include <htc.h>
 
 #include "cr14.h"
@@ -222,3 +227,4 @@ stop:
 /* Local Implementations						      */
 /******************************************************************************/
 
+#endif

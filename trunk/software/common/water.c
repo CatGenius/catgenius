@@ -13,6 +13,8 @@
 #include "water.h"
 #include "timer.h"
 
+#include "eventlog.h"
+
 extern void watersensor_event (unsigned char detected);
 
 
@@ -245,6 +247,8 @@ void water_fill (unsigned char fill)
 		/* Pull-down WATERVALVE */
 		WATERVALVEPULLUP(LAT) &= ~WATERVALVEPULLUP_MASK;
 	}
+
+	eventlog_track(EVENTLOG_TAP, fill);
 }
 /* End: water_fill */
 

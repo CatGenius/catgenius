@@ -2,6 +2,7 @@
  * This file's sole intention is to easily use the same common
  * files on different hardware platforms in the same repository.
  */
+
 #if defined HW_CATGENIE120
 #  include "../common/catgenie120.h"
 #elif defined HW_CATGENIE120PLUS

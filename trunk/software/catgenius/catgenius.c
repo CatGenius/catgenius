@@ -6,6 +6,9 @@
 /* History :	16 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
+
+#include "../common/app_prefs.h"
+
 #include <htc.h>
 #include <stdio.h>
 
@@ -18,16 +21,16 @@
 #include "../common/catsensor.h"
 #include "../common/water.h"
 
-#ifdef HAS_COMMANDLINE
-#include "../common/cmdline.h"
-#endif /* HAS_COMMANDLINE */
-
-#ifdef HAS_BLUETOOTH
-#include "../common/bluetooth.h"
-#endif /* HAS_BLUETOOTH */
-
 #include "userinterface.h"
 #include "litterlanguage.h"
+
+#include "../common/cmdline.h"
+#include "../common/cmdline_box.h"
+#include "../common/cmdline_gpio.h"
+#include "../common/cmdline_tag.h"
+#include "../common/bluetooth.h"
+#include "../common/eventlog.h"
+
 
 /******************************************************************************/
 /* Macros								      */
@@ -62,10 +65,39 @@ extern bit		__timeout;
 #ifdef HAS_COMMANDLINE
 /* command line commands */
 const struct command	commands[] = {
-	{"echo", echo},
-	{"help", help},
-    {"txtest", txtest},
-    {"rxtest", rxtest},
+	{"echo",	cmd_echo},
+	{"help",	cmd_help},
+#ifdef HAS_COMMANDLINE_BOX
+	{"bowl",	cmd_bowl},
+	{"arm",		cmd_arm},
+	{"dosage",	cmd_dosage},
+	{"tap",		cmd_tap},
+	{"drain",	cmd_drain},
+	{"dryer",	cmd_dryer},
+	{"cat",		cmd_cat},
+	{"water",	cmd_water},
+	{"heat",	cmd_heat},
+#endif // HAS_COMMANDLINE_BOX
+#ifdef HAS_COMMANDLINE_TAG
+	{"tag",		cmd_tag},
+#endif // HAS_COMMANDLINE_TAG
+#ifdef HAS_COMMANDLINE_EXTRA
+	{"mode",	cmd_mode},
+	{"start",	cmd_start},
+	{"setup",	cmd_setup},
+	{"lock",	cmd_lock},
+	{"cart",	cmd_cart},
+#endif // HAS_COMMANDLINE_EXTRA
+#ifdef HAS_COMMANDLINE_COMTESTS
+    {"txtest",	cmd_txtest},
+    {"rxtest",	cmd_rxtest},
+#endif // HAS_COMMANDLINE_COMTESTS
+#ifdef HAS_COMMANDLINE_GPIO
+	{"gpio",	cmd_gpio},
+#endif // HAS_COMMANDLINE_GPIO
+#ifdef HAS_EVENTLOG
+	{"evt",		cmd_evt},
+#endif // HAS_EVENTLOG
 	{"", NULL}
 };
 #endif /* HAS_COMMANDLINE */
@@ -91,16 +123,13 @@ void main (void)
 	/* Init the hardware */
 	flags = catgenie_init();
 
+#ifdef HAS_SERIAL
 	/* Initialize the serial port */
-#ifdef HAS_BLUETOOTH
-	serial_init(BT_BITRATE);
 	bluetooth_init();
-	//serial_term();
-#else /* HAS_BLUETOOTH */
-	serial_init(BITRATE);
-#endif /* HAS_BLUETOOTH */
+	serial_init(BITRATE, SERIAL_FLOW_XONXOFF, 1);
+#endif
 
-	printf("\n*** CatGenius ***\n");
+	TX("\n*** CatGenius ***\n");
 	if (!nPOR) {
 		DBG("Power-on reset\n");
 		flags |= POWER_FAILURE;
@@ -126,6 +155,9 @@ void main (void)
 		DBG("Start button held\n");
 	if (flags & SETUP_BUTTON)
 		DBG("Setup button held\n");
+
+	/* Initialize event log */
+	eventlog_init();
 
 	/* Initialize software timers */
 	timer_init();
@@ -225,10 +257,12 @@ static void interrupt isr (void)
 		/* Update the old status */
 		PORTB_old = PORTB ;
 	}
+
+#ifdef HAS_SERIAL
 	/* (E)USART interrupts */
-	// TBD: Don't we need to check for FERR, OERR and the like?
 	if (RCIF)
 		serial_rx_isr();
 	if (TXIF)
 		serial_tx_isr();
+#endif
 }

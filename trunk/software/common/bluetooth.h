@@ -5,13 +5,24 @@
 /******************************************************************************/
 
 #ifndef BLUETOOTH_H
+#define BLUETOOTH_H
 
-// Uncomment to have the BT module name itself "CatGenius"
-//#define USE_BT_NAME
+#include "../common/app_prefs.h"
 
-// Default Bluetooth Bitrate
-#define BT_BITRATE		115200UL
+#ifdef HAS_BLUETOOTH
 
-void bluetooth_init(void);
-
+#ifdef BLUETOOTH_C
+#	include "../common/prot_src.h"
+#else
+#	include "../common/prot_inc.h"
 #endif
+
+PUBLIC_FN(void bluetooth_init(void));
+
+#else // HAS_BLUETOOTH
+
+#define bluetooth_init()
+
+#endif // HAS_BLUETOOTH
+
+#endif // !BLUETOOTH_H
