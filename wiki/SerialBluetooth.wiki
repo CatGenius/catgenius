@@ -102,8 +102,7 @@ More details will be added later.
 
 Once you have a terminal program open and connected on the Bluetooth serial port, it needs to be configured.  <b>The Bluetooth module is only in command mode for 60 seconds after power-up, so do this quickly.</b>
 
-Setup your terminal for 115200bps N81, No handshaking.  Perform the following session (What you type is in blue):
-
+Setup your terminal for 115200bps N81, No handshaking.  Perform the following session (What you type is in blue):<br>
 <font color=blue face='Courier New'>$$$</font><br>
 <font color=black face='Courier New'>CMD</font><br>
 <font color=blue face='Courier New'>S-,CatGenie</font><br>
