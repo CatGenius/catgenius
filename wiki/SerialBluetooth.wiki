@@ -119,5 +119,5 @@ Wait about 5 seconds for reboot, then:<br>
 <font color=blue face='Courier New'>U,19.2,N</font><br>
 <font color=black face='Courier New'>AOK</font><br>
 <br>
-Once you do that the baudrate is changed, so you will have to change your terminal settings to 19200bps.  Also enable XON/XOFF flow control.  But now your CatGenie should be online.  Press Enter and you should get the CatGenius prompt:
-<font color=black face='Courier New'># </font>>/br>
+Once you do that the baudrate is changed, so you will have to change your terminal settings to 19200bps.  Also enable XON/XOFF flow control.  But now your CatGenie should be online.  Press Enter and you should get the CatGenius prompt:<br>
+<font color=black face='Courier New'># </font></br>
