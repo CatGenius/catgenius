@@ -83,7 +83,7 @@ Preparation:
   * Obtain or make a programming cable as outlined above
   * Download MPLab v8.89
   * Identify which microcontroller your CatGenie has: PIC16F1939 or PIC16F877A
-  * Download the appropriate [http://code.google.com/p/catgenius/downloads/list HEX file] firmware for your CatGenie box
+  * Download the appropriate [http://code.google.com/p/catgenius/downloads/list HEX file] firmware based on your microcontroller
 
 Steps:
   * Install MPLab
