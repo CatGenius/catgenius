@@ -80,8 +80,7 @@ Preparation:
   * Obtain a [HowToProgram#The_Programmer PICkit 3]
     * There are several PICkit 3 kits available, including some with test boards, but the minimum you need is this:  http://www.microchipdirect.com/productsearch.aspx?Keywords=PG164130
     * If you're already ordering some parts from SparkFun and want everything in one bundle, the programmer is available on that site for USD $5 more than from Microchip: https://www.sparkfun.com/products/9973
-  * Obtain or make a programming cable as outlined [HowToProgram#
-The_Cable above]
+  * Obtain or make a programming cable as outlined [HowToProgram#The_Cable above]
   * Download MPLab v8.89
   * Identify which microcontroller your CatGenie has: PIC16F1939 or PIC16F877A
   * Download the appropriate [http://code.google.com/p/catgenius/downloads/list HEX file] firmware based on your microcontroller
