@@ -72,54 +72,78 @@ I recommend you to make this cable no longer that 20cm, 40cm at maximum, to prev
 
 = Programming =
 
-== Installing MPLab ==
+Please follow these instructions very *carefully* and *exactly*.  Any deviation could result in a dead CatGenie box.  If that does happen, it can usually be resolved by... following these instructions carefully and exactly ;).
 
-The installer CD that came with my PICkit was corrupted, and is usually out of date anyway.  It is recommended to download and install the latest version.  Click the link below.  Note that this page contains some information about a new IDE called "MPLAB X".  We haven't had a chance to try it out yet, so use at your own risk.  If you do happen to get it working, we'd love to hear about it.<br>
+Note that there is a stand-alone command line tool from Microchop called PK3CMD.EXE that is supposed to allow you to program with the PICkit 3, but it can and will kill your box.
+
+Preparation:
+  * Obtain a PICkit 3
+    * There are several PICkit 3 kits available, including some with test boards, but the minimum you need is this:  http://www.microchipdirect.com/productsearch.aspx?Keywords=PG164130
+    * If you're already ordering some parts from SparkFun and want everything in one bundle, the programmer is available on that site for USD $5 more than from Microchip: https://www.sparkfun.com/products/9973
+  * Obtain or make a programming cable as outlined above
+  * Download MPLab v8.89
+  * Identify which microcontroller your CatGenie has: PIC16F1939 or PIC16F877A
+  * Download the appropriate [http://code.google.com/p/catgenius/downloads/list HEX file] firmware for your CatGenie box
+
+Steps:
+  * Install MPLab
+  * Run MPLab and configure it for your microcontroller
+  * Power on your CatGenie
+  * Attach your PICkit 3 to your CatGenie
+  * Plug the PICkit 3 into your computer's USB port
+  * Flash the new firmware using MPLab
+  * Enjoy CatGenius!
+
+== Downloading MPLab ==
+
+Download MPLAB v8.89 on Windows 7 32 or 64-bit.  Other versions of MPLAB and Windows *have been known* to cause problems with flashing.  In any case, the installer CD that came with my PICkit was corrupted, and yours likely is too.
+
+Click the link below to download MPLAB.  Make sure it's v8.89.  Microchip has been known to break parts of their software in newer releases:
 http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDocName=en019469&part=SW007002
 
-Alternatively, there is a "tools" directory under each release of CatGenius that has the version of MPLab used to build the software.  However, Microchip has fixed some issues related to the PICkit 3 in the later versions, so your mileage may vary here.<br>
+Note that the download page contains some information about a new IDE called "MPLAB X".  We haven't had a chance to try it out yet, so use at your own risk.  If you do happen to get it working, we'd love to hear about it.<br>
 
-== Programming with the PICkit 3 ==
+If a version of MPLAB comes out newer than v8.89, you can still get it here (This is where Microchip archives their older versions):
+http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDocName=en023073
 
-<font color=red size=4>PLEASE NOTE THAT AN ISSUE HAS BEEN DISCOVERED WITH PICKIT 3 AND WINDOWS 64-BIT AND MPLAB v8.89</font><br>
-<font color=red>New instructions will be posted within the next 24 hours.  If you are thinking about flashing your box, please wait until the new instructions are released.</font>
+== Installing MPLAB ==
 
-  * Obtain a PICkit 3.
-    * There are several PICkit 3 kits available, including some with test boards, but the minimum you need is this:  http://www.microchipdirect.com/productsearch.aspx?Keywords=PG164130
-    * If you're already ordering some parts from SparkFun and want everything in one bundle, the programmer is available on that site for USD $5 more than from MPLabs: https://www.sparkfun.com/products/9973
-  * Install the MPLab software
-  * Download the appropriate hex file for your microcontroller
-  * Connect the USB cable from the PICkit 3 to a Windows PC you will be using for programming
-  * Connect your PICkit 3 to the CG programming header using the cable described above
-  * Power on your CG - Programming usually fails if you don't have it plugged in
-  * Start a command prompt and run the following command:
-    {{{"C:\Program Files\Microchip\MPLAB IDE\Programmer Utilities\PICkit3\pk3cmd.exe" -p16fXXXX -m -fC:\Temp\catgenius_YYY_16fXXXX.hex}}}
-    * XXXX is the name of the microcontroller on your CG board; IE: 1939
-      <b>NOTE: Make sure you pick the right microcontroller!</b>
-    * YYY is the CatGenius release; IE: B04
-    * Change "C:\Temp" to the full path where you downloaded the CatGenius hex file
-    * If you're running 64-bit windows, the path will change slightly to: "C:\Program Files (x86)\Microchip\MPLAB IDE\Programmer Utilities\PICkit3\pk3cmd.exe"
-  * The final command and output should be something like this:
-    {{{
-C:\Temp>"C:\Program Files\Microchip\MPLAB IDE\Programmer Utilities\PICkit3\pk3cmd.exe" -p16f1939 -m -fcatgenius_B04_16f1939.hex
+Once you have downloaded MPLAB, extract the ZIP file and run the setup program:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_inst_1.png
 
-Connecting...
-PICkit 3 detected
-Connecting to PICkit 3...
-Running self test...
-Self test completed
-Firmware Suite Version...... 01.28.18
-Firmware type......................Enhanced Midrange
-PICkit 3 Connected.
-Target Detected
-Device ID Revision = 00000002
+When you come to the "Setup Type" screen, select Complete (the default), and click Next:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_inst_2.png
 
-Programming Device ...
-Programming/Verify complete
-C:\Temp>
-  }}}
-  * If programming failed, check your cables
-  * After programming verified successfully, disconnect either the USB connection to your PICkit 3 (easiest), the programming cable, or both.  If running while connected, the CG microcontroller may freeze
+After the installation has completed, drivers will be loaded for the Microchip programmer suite.  A warning dialog will be displayed.  Click Install:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_inst_3.png
+
+A dialog will be presented with various documentation available.  Review it if you'd like.  When you are done, click the X at the top-right corner to close the window:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_inst_4.png
+
+== Programming with the PICkit 3 in MPLAB ==
+
+Start MPLAB IDE either via the icon on the desktop or via the Start menu.  Select Configure / Select Device, make sure ALL is selected for the Device Family (the default), enter your full microcontroller name (PIC16F1939 or PIC16F877A) in the Device Name box, then click OK:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_config_device.png
+
+Select File / Import and browse to the HEX file appropriate for your microcontroller:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_select_hex_file.png
+
+Power on your CatGenius (Attempting to program while the CG is turned off usually results in failure), connect the PICkit 3 to the CG via the programming cable, and plug the PICkit 3 into your computer via the USB cable.  Select Programmer / PICkit 3:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_programmer_select_pickit3.png
+
+You should see a message that PICkit 3 is connected and the target device was detected:<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_pickit3_target_connected.png
+
+It's business time.  Select Programmer / Program.  An Output window will appear showing you the progress.  After about 2 minutes you should see "Programming/Verify complete":<br>
+http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_programmer_pickit3_program.png
+
+*If programming failed or the PICkit 3 was not detected, re-read the directions to make sure you have not missed anything, check your cables, and try again.*
+
+If programming succeeded, you can disconnect the programming cable.  Leaving it attached while using the CatGenie can cause sporatic behaviour.
+
+Note that by default the CatGenius firmware displays no lights as it's in mode 0 (See User's Guide).  To confirm it is working, press Select to change into another mode, or press Start to start the dry wash program.
+
+Enjoy!
 
 == Older PICkit 2 Instructions ==
 If you have a PICkit 2, use the following instructions:
