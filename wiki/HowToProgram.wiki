@@ -14,7 +14,7 @@ The photo looks like it's up-side-down, and in fact it is, but in this photo it 
 The component resembling a black stamp, designated U2 on the left top of the board is the micro controller. It's a PIC16F877A, made by MicroChip. The 5-pin connector right below it, designated JC1 PROG, is the programming connector. This is the connector we will use to program new firmware into the micro controller.<br>
 The 4 pads for non-mounted connector J18 are interesting to us as well. They are connected to the micro controller's built-in serial port, which is very useful for debugging information. I will write a separate page on how to connect this serial port.<br>
 
-= The programmer =
+= The Programmer =
 
 To reprogram the micro controller, you will require a special PIC programmer. You can use a MicroChip PICkit2 (as I'm using) or PICkit3 programmer, available for about $35.<br>
 http://catgenius.googlecode.com/svn/wiki/images/pickit3.jpg<br>
@@ -77,10 +77,11 @@ Please follow these instructions very *carefully* and *exactly*.  Any deviation 
 Note that there is a stand-alone command line tool from Microchop called PK3CMD.EXE that is supposed to allow you to program with the PICkit 3, but it can and will kill your box.
 
 Preparation:
-  * Obtain a PICkit 3
+  * Obtain a [HowToProgram#The_Programmer PICkit 3]
     * There are several PICkit 3 kits available, including some with test boards, but the minimum you need is this:  http://www.microchipdirect.com/productsearch.aspx?Keywords=PG164130
     * If you're already ordering some parts from SparkFun and want everything in one bundle, the programmer is available on that site for USD $5 more than from Microchip: https://www.sparkfun.com/products/9973
-  * Obtain or make a programming cable as outlined above
+  * Obtain or make a programming cable as outlined [HowToProgram#
+The_Cable above]
   * Download MPLab v8.89
   * Identify which microcontroller your CatGenie has: PIC16F1939 or PIC16F877A
   * Download the appropriate [http://code.google.com/p/catgenius/downloads/list HEX file] firmware based on your microcontroller
@@ -141,7 +142,7 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_programmer_picki
 
 If programming succeeded, you can disconnect the programming cable.  Leaving it attached while using the CatGenie can cause sporatic behaviour.
 
-Note that by default the CatGenius firmware displays no lights as it's in mode 0 (See User's Guide).  To confirm it is working, press Select to change into another mode, or press Start to start the dry wash program.
+Note that by default the CatGenius firmware displays no lights as it is in Mode 0 (Manual Mode - See the [CatGeniusUsersManual#State_1:_Normal_operation CatGenius User's Manual] for details).  To confirm it is working, press Select to change into another mode, or press Start to start the dry wash program.
 
 Enjoy!
 
