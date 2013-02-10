@@ -113,21 +113,19 @@ http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDoc
 Determine the microcontroller in your CatGenius and download the appropriate HEX file from here:<br>
 http://code.google.com/p/catgenius/downloads/list
 
-In this modern day and age you'd think that file corruption would not be an issue, but we've see it happen.  To verify the HEX file is correct, you can compare the hash of your downloaded file with the hash displayed on the download page.
+In this modern day and age you'd think that file corruption would not be an issue, but we've see it happen.  To verify the HEX file is correct, you can compare the hash of your downloaded file with the hash displayed on the download detail page:
+http://catgenius.googlecode.com/svn/wiki/images/apresence/hex_sha1_checksum.png
 
 Several programs are available for Windows 7 that will check the hash for you.  We recommend HashTab, available for download here:<br>
 http://download.cnet.com/HashTab/3000-2248_4-84837.html
 
-They try to trick you into either downloading something else, or downloading their "downloader" (I can't stand that), so be sure to click only the "Direct Download" link on the left:<br>
+CNET tries to trick you into either downloading something else, or downloading their "downloader", so be sure to click only the "Direct Download" link on the left of the page:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/hashtab_1.png
 
-Install HashTab, then right-click on your Hex file and select the "File Hashes" tab:<br>
+Install HashTab, then right-click on your Hex file in Windows Explorer and select the "File Hashes" tab:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/hashtab_2.png
 
-You can then either visually compare the SHA1 value against the one listed on the download page (case does not matter), or copy and paste the value from the download page into Hash Tab for verification.
-
-The SHA1 value for the HEX file is on the detail page, like this one:<br>
-http://code.google.com/p/catgenius/downloads/detail?name=catgenius_B04_16f1939.hex
+You can then either visually compare the SHA1 value against the one listed on the download detail page, or copy and paste the value from the download page into Hash Tab for verification.  Case does not matter.
 
 == Installing MPLAB ==
 
