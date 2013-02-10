@@ -76,6 +76,8 @@ Please follow these instructions very *carefully* and *exactly*.  Any deviation 
 
 Note that there is a stand-alone command line tool from Microchop called PK3CMD.EXE that is supposed to allow you to program with the PICkit 3, but it can and will kill your box.
 
+DO NOT plug in your PICkit 3 before you have installed MPLAB, otherwise the wrong drivers might get loaded.
+
 Preparation:
   * Obtain a [HowToProgram#The_Programmer PICkit 3]
     * There are several PICkit 3 kits available, including some with test boards, but the minimum you need is this:  http://www.microchipdirect.com/productsearch.aspx?Keywords=PG164130
@@ -89,8 +91,8 @@ Steps:
   * Install MPLab
   * Run MPLab and configure it for your microcontroller
   * Power on your CatGenie
-  * Attach your PICkit 3 to your CatGenie
-  * Plug the PICkit 3 into your computer's USB port
+  * Connect the PICkit 3 to your CatGenie
+  * Connect the PICkit 3 to your computer
   * Flash the new firmware using MPLab
   * Enjoy CatGenius!
 
