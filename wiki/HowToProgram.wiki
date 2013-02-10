@@ -81,6 +81,9 @@ Alternatively, there is a "tools" directory under each release of CatGenius that
 
 == Programming with the PICkit 3 ==
 
+<font color=red size=4>PLEASE NOTE THAT AN ISSUE HAS BEEN DISCOVERED WITH PICKIT 3 AND WINDOWS 64-BIT AND MPLAB v8.89</font><br>
+<font color=red>New instructions will be posted within the next 24 hours.  If you are thinking about flashing your box, please wait until the new instructions are released.</font>
+
   * Obtain a PICkit 3.
     * There are several PICkit 3 kits available, including some with test boards, but the minimum you need is this:  http://www.microchipdirect.com/productsearch.aspx?Keywords=PG164130
     * If you're already ordering some parts from SparkFun and want everything in one bundle, the programmer is available on that site for USD $5 more than from MPLabs: https://www.sparkfun.com/products/9973
