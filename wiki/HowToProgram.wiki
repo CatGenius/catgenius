@@ -161,5 +161,5 @@ Optionally you may want to press the Verify button to make sure everything is wr
 
 *WE HAVE NOT TRIED THIS; USE AT YOUR OWN RISK*
 
-If you're a true hacker and don't mind getting your hands dirty, you can build your own PIC programmer for about USD $2.  The pin-out is about the same as the PICkit 3, except pins 4 and 5 are reversed, and there is no LVP pin.  If you're going to try this, then I'm assuming you can figure that out.  Here is the link:<br>
+If you're a true hacker and don't mind getting your hands dirty, you can build your own PIC programmer for just a couple of dollars.  The pin-out is about the same as the PICkit 3, except pins 4 and 5 are reversed, and there is no LVP pin.  If you're going to try this, then I'm assuming you can figure that out.  Here is the link:<br>
 http://www.instructables.com/id/Business-Card-PIC-Programmer/
