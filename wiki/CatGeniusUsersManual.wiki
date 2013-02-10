@@ -18,7 +18,7 @@ The 2 buttons on the keyboard allow a total of six operations:
 The first five are pretty straight forward, but the 6th may need a little elaboration. If you press a button, software will check if the other button happens to be pressed at that time. If that is the case, from that time on software knows that it's dealing with a press of both buttons. This will suppress the release action of the first button, because it's clear that a different function is desired, but it will also reset the press timer to differ a long from a short press. So in theory it is possible to press and hold one button for a very long time, then press the second button and release both buttons within 2 seconds: This will be considered a _short_ press of both buttons. This is not a bug, this is by design. If you operate the buttons like any normal person would do, they will behave exactly as expected.<br>
 <br>
 ==Startup modes==
-CatGenius can be started in for modes. The desired mode can be selected by pressing and holding one or more buttons while plugging the box into an AC outlet:
+CatGenius can be started in four modes. The desired mode can be selected by pressing and holding one or more buttons while plugging the box into an AC outlet:
  # No button held while plugging in: Normal operation mode.
  # Start button held while plugging in: Forced cleanup mode. The box will initiate a cleanup cycle, draining, drying and surfacing the box. When finished, normal operation mode is assumed.
  # Setup button held while plugging in: GenieDiag diagnostics mode (not implemented yet).
