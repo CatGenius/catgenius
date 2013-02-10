@@ -128,7 +128,7 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_config_device.pn
 Select File / Import and browse to the HEX file appropriate for your microcontroller:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_select_hex_file.png
 
-Power on your CatGenius (Attempting to program while the CG is turned off usually results in failure), connect the PICkit 3 to the CG via the programming cable, and plug the PICkit 3 into your computer via the USB cable.  Select Programmer / PICkit 3:<br>
+Power on your CatGenius (Attempting to program while the CG is turned off usually results in failure), connect the PICkit 3 to the CG via the programming cable, and plug the PICkit 3 into your computer via the USB cable.  Select Programmer / Select Programmer / PICkit 3:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/mplab_programmer_select_pickit3.png
 
 You should see a message that PICkit 3 is connected and the target device was detected:<br>
