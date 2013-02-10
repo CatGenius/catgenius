@@ -67,13 +67,15 @@ serial_state_t serial_state = {
 extern serial_state_t serial_state;
 #endif
 
-void			serial_init		(unsigned long	bitrate, unsigned char flow_control, unsigned char enable);
-void			serial_term		(void);
-void			serial_rx_isr	(void);
-void			serial_tx_isr	(void);
-void			putch			(unsigned char	c);
-unsigned char	readch			(char		*ch);
-unsigned char	serial_wait_s	(const char *s, unsigned long timeout);
+void		serial_init	(unsigned long	bitrate,
+				 unsigned char	flow);
+void		serial_term	(void);
+void		serial_rx_isr	(void);
+void		serial_tx_isr	(void);
+void		putch		(unsigned char	c);
+unsigned char	readch		(char		*ch);
+unsigned char	serial_wait_s	(const char	*s,
+				 unsigned long	timeout);
 
 #endif /* HAS_SERIAL */
 

@@ -36,7 +36,7 @@ struct queue		tx;
 #endif /* TXBUFFER */
 
 
-void serial_init(unsigned long bitrate, unsigned flow)
+void serial_init(unsigned long bitrate, unsigned char flow)
 {
 #ifdef RXBUFFER
 	rx.head = 0;
