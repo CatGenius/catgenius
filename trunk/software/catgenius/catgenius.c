@@ -126,7 +126,7 @@ void main (void)
 #ifdef HAS_SERIAL
 	/* Initialize the serial port */
 	bluetooth_init();
-	serial_init(BITRATE, SERIAL_FLOW_XONXOFF, 1);
+	serial_init(BITRATE, SERIAL_FLOW_XONXOFF);
 #endif
 
 	TX("\n*** CatGenius ***\n");
