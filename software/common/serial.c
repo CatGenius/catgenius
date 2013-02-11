@@ -7,7 +7,7 @@
 
 #define RXBUFFER			/* Use buffers for received characters */
 //#define TXBUFFER			/* Use buffers for transmitted character (MAKE SURE TO ENABLE INTERRUPTS BEFORE TRANSMITTING ANYTHING) */
-#define BUFFER_SIZE		8	/* Must to be a power of 2 or roll-overs need to be taken into account */
+#define BUFFER_SIZE		8	/* Buffer size.  Has to be a power of 2 and congruent with queue.head and queue.tail or roll-overs need to be taken into account */
 #define BUFFER_SPARE		2	/* Minumum number of free positions before issuing Xoff */
 
 #define INTDIV(t,n)		((2*(t)+(n))/(2*(n)))		/* Macro for integer division with proper round-off (BEWARE OF OVERFLOW!) */
@@ -33,19 +33,19 @@ struct queue		tx;
 #endif /* TXBUFFER */
 
 
-void serial_init(unsigned long bitrate)
+void serial_init(unsigned long bitrate, unsigned char flow)
 {
 #ifdef RXBUFFER
 	rx.head        = 0;
 	rx.tail        = 0;
-	rx.xon_enabled = 1;
+	rx.xon_enabled = flow;
 	rx.xon_state   = 1;
 #endif /* RXBUFFER */
 
 #ifdef TXBUFFER
 	tx.head        = 0;
 	tx.tail        = 0;
-	tx.xon_enabled = 1;
+	tx.xon_enabled = flow;
 	tx.xon_state   = 1;
 #endif /* TXBUFFER */
 
@@ -292,4 +292,3 @@ unsigned char readch(char *ch)
 	return 1;
 #endif /* RXBUFFER */
 }
-

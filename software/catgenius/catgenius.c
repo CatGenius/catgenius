@@ -81,12 +81,12 @@ void main (void)
 
 #ifdef HAS_BLUETOOTH
 	/* Initialize the serial port for bluetooth */
-	serial_init(BT_BITRATE);
+	serial_init(BT_BITRATE, 1);
 	bluetooth_init();
 	serial_term();
 #else
 	/* Initialize the serial port for stdio */
-	serial_init(BITRATE);
+	serial_init(BITRATE, 0);
 #endif /* HAS_BLUETOOTH */
 
 	printf("\n*** CatGenius ***\n");
