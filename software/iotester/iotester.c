@@ -63,7 +63,7 @@ void main (void)
 	flags = catgenie_init();
 
 	/* Initialize the serial port */
-	serial_init();
+	serial_init(BITRATE, 0);
 
 	printf("\n*** I/O Tester ***\n");
 	if (!nPOR) {

@@ -97,13 +97,14 @@ void main (void)
 	flags = catgenie_init();
 
 #ifdef HAS_BLUETOOTH
-	serial_init(BT_BITRATE);
+	/* Initialize the serial port for bluetooth */
+	serial_init(BT_BITRATE, 1);
 	bluetooth_init();
 	serial_term();
+#else
+	/* Initialize the serial port for stdio */
+	serial_init(BITRATE, 0);
 #endif /* HAS_BLUETOOTH */
-
-	/* Initialize the serial port */
-	serial_init(BITRATE);
 
 	printf("\n*** GenieDiag ***\n");
 	if (!nPOR) {
