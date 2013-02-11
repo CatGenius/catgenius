@@ -44,6 +44,7 @@ extern void litterlanguage_event (unsigned char event, unsigned char argument);
 /******************************************************************************/
 
 static unsigned char		prg_source		= 0;
+static unsigned char		arm_position		= 0;
 static bit			wet_program		= 0;
 static bit			paused			= 0;
 static bit			error_fill		= 0;
@@ -60,6 +61,7 @@ static struct timer		timer_waitins		= NEVER;
 static struct timer		timer_fill		= NEVER;
 static struct timer		timer_drain		= NEVER;
 static struct timer		timer_autodose		= NEVER;
+static struct timer		timer_autoarm		= NEVER;
 
 
 /******************************************************************************/
@@ -165,6 +167,11 @@ void litterlanguage_work (void)
 			timeoutnever(&timer_autodose);
 			set_Dosage(0);
 		}
+		/* Check arm timeout */
+		if (timeoutexpired(&timer_autoarm)) {
+			timeoutnever(&timer_autoarm);
+			set_Arm(ARM_STOP);
+		}
 	}
 
 	/* Von Neumann-like execution state machine */
@@ -260,6 +267,7 @@ void litterlanguage_pause (unsigned char pause)
 		unsigned long	fill;
 		unsigned long	drain;
 		unsigned long	autodose;
+		unsigned long	autoarm;
 	} context;
 
 	if (pause == paused)
@@ -295,6 +303,8 @@ void litterlanguage_pause (unsigned char pause)
 		timeoutnever(&timer_drain);
 		context.autodose = timestampdiff(&timer_autodose, &timer_now);
 		timeoutnever(&timer_autodose);
+		context.autoarm = timestampdiff(&timer_autoarm, &timer_now);
+		timeoutnever(&timer_autoarm);
 		DBG("Paused program\n");
 	} else {
 		/* Don't resume if still overheated */
@@ -318,6 +328,8 @@ void litterlanguage_pause (unsigned char pause)
 			settimeout(&timer_drain, context.drain);
 		if (context.autodose != 0xFFFFFFFF)
 			settimeout(&timer_autodose, context.autodose);
+		if (context.autoarm != 0xFFFFFFFF)
+			settimeout(&timer_autoarm, context.autoarm);
 		/* Restore hardware context */
 		set_Bowl(context.bowl);
 		set_Arm(context.arm);
@@ -354,6 +366,7 @@ void litterlanguage_stop (void)
 	timeoutnever(&timer_fill);
 	timeoutnever(&timer_drain);
 	timeoutnever(&timer_autodose);
+	timeoutnever(&timer_autoarm);
 	/* Stop the state machine */
 	ins_state = STATE_IDLE;
 	/* Reset pause state */
@@ -473,7 +486,40 @@ static void exe_instruction (void)
 		break;
 	case INS_ARM:
 //		DBG("INS_ARM, %s", (cur_instruction.operant == ARM_STOP)?"ARM_STOP":((cur_instruction.operant == ARM_DOWN)?"ARM_DOWN":"ARM_UP"));
-		set_Arm((unsigned char)cur_instruction.operant);
+		switch (cur_instruction.operant) {
+		case INS_ARM__STOP:
+			timeoutnever(&timer_autoarm);
+			set_Arm(ARM_STOP);
+			break;
+		case INS_ARM__DOWN:
+			settimeout(&timer_autoarm, ARM_STROKE * 10);	/* Safety timeout */
+			set_Arm(ARM_DOWN);
+			arm_position = INS_ARM__MAX;
+			break;
+		case INS_ARM__UP:
+			settimeout(&timer_autoarm, ARM_STROKE * 10);	/* Safety timeout */
+			set_Arm(ARM_UP);
+			arm_position = INS_ARM__HOME;
+			break;
+		default:
+			if (arm_position == cur_instruction.operant)
+				/* No need to move */
+				break;
+			if (arm_position > INS_ARM__MAX)
+				/* Ignore error */
+				break;
+			if (cur_instruction.operant > arm_position) {
+				/* Move arm down */
+				settimeout(&timer_autoarm, (ARM_STROKE * (cur_instruction.operant - arm_position)) / INS_ARM__MAX);
+				set_Arm(ARM_DOWN);
+			} else {
+				/* Move arm up */
+				settimeout(&timer_autoarm, (ARM_STROKE * (arm_position - cur_instruction.operant)) / INS_ARM__MAX);
+				set_Arm(ARM_UP);
+			}
+			arm_position = cur_instruction.operant;
+			break;
+		}
 		ins_pointer++;
 		ins_state = STATE_FETCH_INS;
 		break;

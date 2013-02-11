@@ -27,7 +27,7 @@
 
 #define INS_START		0x00	/* Designates the start of a program. Argument is INS_LAST or-ed with flags */
 #define INS_BOWL		0x01	/* Controls the bowl. Argument is what the bowl should do */
-#define INS_ARM			0x02	/* Controls the arm. Argument is what the arm should do */
+#define INS_ARM			0x02	/* Controls the arm. Argument is the absolution position the arm should move to, or any of the INS_ARM__* macros */
 #define INS_WATER		0x03	/* Controls the water valve. Argument is 1 for on, 0 for off */
 #define INS_PUMP		0x04	/* Controls the hopper pump. Argument is 1 for on, 0 for off */
 #define INS_DRYER		0x05	/* Controls the dryer fan. Argument is 1 for on, 0 for off */
@@ -40,6 +40,12 @@
 #define INS_CALL		0x0C	/* Call a subroutine. Argument is the address on the program medium */
 #define INS_RETURN		0x0D	/* Return from all a subroutine. Argument is ignored */
 #define INS_END			0x0E
+
+#define	INS_ARM__STOP		255	/* INS_ARM argument to make the arm stop */
+#define	INS_ARM__DOWN		254	/* INS_ARM argument to make the arm move down indefinetely */
+#define	INS_ARM__UP		253	/* INS_ARM argument to make the arm move up indefinetely */
+#define	INS_ARM__HOME		0	/* INS_ARM argument to make the arm move to it's home position (fully up) */
+#define	INS_ARM__MAX		100	/* INS_ARM argument to make the arm move to it's lowest position (fully down) */
 
 
 /* Types */
