@@ -89,7 +89,7 @@
 #define ARM_MOTOR_TEETH		16
 #define ARM_TEETH_PER_SECOND	((ARM_MOTOR_RPM) * (ARM_MOTOR_TEETH) / 60))
 #define ARM_TEETH_STOKE		18
-#define ARM_STROKE_MSEC		13500
+#define ARM_STROKE		((13500UL * SECOND)/1000)	/* A full stroke of the arm takes 13.5 seconds */
 
 /* Free pins */
 #define	NOT_USED_1(reg)		reg##A	/* Not used (R39, Absent) */

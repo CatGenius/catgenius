@@ -18,7 +18,8 @@
 /* Macros								      */
 /******************************************************************************/
 
-//#define SIMULATION
+//#define TEST_NOPROGRAM
+//#define TEST_ARM
 
 
 /******************************************************************************/
@@ -27,6 +28,9 @@
 
 static struct instruction		const * ins_address = 0;
 
+/*
+ * Sub-routines
+ */
 const struct instruction	drain[] = {
 	{INS_PUMP,	1},		/* Wash + 15 */
 	{INS_WAITTIME,	25206},
@@ -81,17 +85,17 @@ const struct instruction	drain_dry[] = {
 	{INS_WAITTIME,	45411},
 	{INS_BOWL,	BOWL_CCW},	/* Dry + 9 */
 	{INS_WAITTIME,	35404},
-	{INS_ARM,	ARM_UP},	/* Dry + 10 */
+	{INS_ARM,	INS_ARM__UP},	/* Dry + 10 */
 	{INS_WAITTIME,	9980},
-	{INS_ARM,	ARM_STOP},	/* Dry + 11 */
+	{INS_ARM,	INS_ARM__STOP},	/* Dry + 11 */
 	{INS_BOWL,	BOWL_STOP},
 	{INS_AUTODOSE,	3},		/* 0.26 ml */
 	{INS_WAITDOSAGE,0},
 	{INS_BOWL,	BOWL_CCW},	/* Dry + 12 */
 	{INS_WAITTIME,	5392},
-	{INS_ARM,	ARM_DOWN},	/* Dry + 13 */
+	{INS_ARM,	INS_ARM__DOWN},	/* Dry + 13 */
 	{INS_WAITTIME,	10303},
-	{INS_ARM,	ARM_STOP},	/* Dry + 14 */
+	{INS_ARM,	INS_ARM__STOP},	/* Dry + 14 */
 	{INS_WAITTIME,	35245},
 	{INS_BOWL,	BOWL_CW},	/* Dry + 15 */
 	{INS_WAITTIME,	45411},
@@ -101,17 +105,17 @@ const struct instruction	drain_dry[] = {
 	{INS_WAITTIME,	45411},
 	{INS_BOWL,	BOWL_CCW},	/* Dry + 18 */
 	{INS_WAITTIME,	35404},
-	{INS_ARM,	ARM_UP},	/* Dry + 19 */
+	{INS_ARM,	INS_ARM__UP},	/* Dry + 19 */
 	{INS_WAITTIME,	10380},
-	{INS_ARM,	ARM_STOP},	/* Dry + 20 */
+	{INS_ARM,	INS_ARM__STOP},	/* Dry + 20 */
 	{INS_BOWL,	BOWL_STOP},
 	{INS_AUTODOSE,	3},		/* 0.26 ml */
 	{INS_WAITDOSAGE,0},
 	{INS_BOWL,	BOWL_CCW},	/* Dry + 21 */
 	{INS_WAITTIME,	4392},
-	{INS_ARM,	ARM_DOWN},	/* Dry + 22 */
+	{INS_ARM,	INS_ARM__DOWN},	/* Dry + 22 */
 	{INS_WAITTIME,	10803},
-	{INS_ARM,	ARM_STOP},	/* Dry + 23 */
+	{INS_ARM,	INS_ARM__STOP},	/* Dry + 23 */
 	{INS_WAITTIME,	35245},
 	{INS_BOWL,	BOWL_CW},	/* Dry + 24 */
 	{INS_WAITTIME,	35309},
@@ -121,13 +125,13 @@ const struct instruction	drain_dry[] = {
 	{INS_WAITTIME,	35308},
 	{INS_BOWL,	BOWL_CCW},	/* Dry + 27 */
 	{INS_WAITTIME,	35404},
-	{INS_ARM,	ARM_UP},	/* Dry + 28 */
+	{INS_ARM,	INS_ARM__UP},	/* Dry + 28 */
 	{INS_WAITTIME,	11503},
-	{INS_ARM,	ARM_STOP},	/* Dry + 29 */
+	{INS_ARM,	INS_ARM__STOP},	/* Dry + 29 */
 	{INS_WAITTIME,	2169},
-	{INS_ARM,	ARM_DOWN},	/* Dry + 30 */
+	{INS_ARM,	INS_ARM__DOWN},	/* Dry + 30 */
 	{INS_WAITTIME,	11703},
-	{INS_ARM,	ARM_STOP},	/* Dry + 31 */
+	{INS_ARM,	INS_ARM__STOP},	/* Dry + 31 */
 	{INS_WAITTIME,	45347},
 	{INS_BOWL,	BOWL_CW},	/* Dry + 32 */
 	{INS_WAITTIME,	35309},
@@ -147,136 +151,148 @@ const struct instruction	drain_dry[] = {
 
 const struct instruction	surface[] = {
 	{INS_WAITTIME,	35404},
-	{INS_ARM,	ARM_UP},	/* Dry + 39 */
+	{INS_ARM,	INS_ARM__UP},	/* Dry + 39 */
 	{INS_WAITTIME,	300},
-	{INS_ARM,	ARM_STOP},	/* Dry + 40 */
+	{INS_ARM,	INS_ARM__STOP},	/* Dry + 40 */
 	{INS_WAITTIME,	12203},
-	{INS_ARM,	ARM_UP},	/* Dry + 41 */
+	{INS_ARM,	INS_ARM__UP},	/* Dry + 41 */
 	{INS_WAITTIME,	300},
-	{INS_ARM,	ARM_STOP},	/* Dry + 42 */
+	{INS_ARM,	INS_ARM__STOP},	/* Dry + 42 */
 	{INS_WAITTIME,	12203},
-	{INS_ARM,	ARM_UP},	/* Dry + 43 */
+	{INS_ARM,	INS_ARM__UP},	/* Dry + 43 */
 	{INS_WAITTIME,	300},
-	{INS_ARM,	ARM_STOP},	/* Dry + 44 */
+	{INS_ARM,	INS_ARM__STOP},	/* Dry + 44 */
 	{INS_WAITTIME,	10203},
-	{INS_ARM,	ARM_UP},	/* Dry + 45 */
+	{INS_ARM,	INS_ARM__UP},	/* Dry + 45 */
 	{INS_WAITTIME,	300},
-	{INS_ARM,	ARM_STOP},	/* Dry + 46 */
+	{INS_ARM,	INS_ARM__STOP},	/* Dry + 46 */
 	{INS_WAITTIME,	10202},
-	{INS_ARM,	ARM_UP},	/* Dry + 47 */
+	{INS_ARM,	INS_ARM__UP},	/* Dry + 47 */
 	{INS_WAITTIME,	9170},
-	{INS_ARM,	ARM_DOWN},	/* Dry + 48 */
+	{INS_ARM,	INS_ARM__DOWN},	/* Dry + 48 */
 	{INS_WAITTIME,	6474},
 	{INS_DRYER,	0},		/* Dry + 49 */
-	{INS_ARM,	ARM_UP},
+	{INS_ARM,	INS_ARM__UP},
 	{INS_WAITTIME,	18268},
-	{INS_ARM,	ARM_DOWN},	/* Dry + 50 */
+	{INS_ARM,	INS_ARM__DOWN},	/* Dry + 50 */
 	{INS_WAITTIME,	2832},
-	{INS_ARM,	ARM_STOP},	/* Dry + 51 */
+	{INS_ARM,	INS_ARM__STOP},	/* Dry + 51 */
 	{INS_RETURN,	0}
 };
 
+
+/*
+ * Clean-up program
+ */
 const struct instruction	cleanupprogram[] = {
 	{INS_START,	INS_END |
 			FLAGS_DRYRUN |
 			FLAGS_WETRUN },
-#ifdef SIMULATION
+#if defined TEST_NOPROGRAM
 	{INS_WAITTIME,	3000},
-#else /* SIMULATION */
+#else /* TEST_NOPROGRAM */
 	{INS_BOWL,	BOWL_CW},
-	{INS_ARM,	ARM_DOWN},
+	{INS_ARM,	INS_ARM__DOWN},
 	{INS_WAITTIME,	21769},
-	{INS_ARM,	ARM_UP},
+	{INS_ARM,	INS_ARM__UP},
 	{INS_WAITTIME,	932},
-	{INS_ARM,	ARM_STOP},
+	{INS_ARM,	INS_ARM__STOP},
 	{INS_SKIPIFDRY, 1},		/* Skip to surfacing for dry program */
 	/* Drain the bowl */
 	{INS_CALL,	(unsigned int)drain_dry},
 	/* Surface the granules */
 	{INS_CALL,	(unsigned int)surface},
 	{INS_BOWL,	BOWL_STOP},
-#endif /* SIMULATION */
+#endif /* TEST_NOPROGRAM */
 	{INS_END,	0}
 };
 
 
+/*
+ * Washing program
+ */
 const struct instruction	washprogram[] = {
 	{INS_START,	INS_END |
 			FLAGS_DRYRUN |
 			FLAGS_WETRUN },
-#ifdef SIMULATION
+#if defined TEST_NOPROGRAM
 	{INS_WAITTIME,	3000},
-#else /* SIMULATION */
+#elif defined TEST_ARM
+	{INS_ARM,	INS_ARM__MAX},
+	{INS_WAITTIME,	15000},
+	{INS_ARM,	INS_ARM__HOME},
+	{INS_WAITTIME,	15000},
+#else /* No tests; Regular washing program */
 	{INS_BOWL,	BOWL_CCW},	/* Scoop 1 */
-	{INS_ARM,	ARM_DOWN},
+	{INS_ARM,	INS_ARM__DOWN},
 	{INS_WAITTIME,	13217},
-	{INS_ARM,	ARM_STOP},	/* Scoop 1 + 1 */
+	{INS_ARM,	INS_ARM__STOP},	/* Scoop 1 + 1 */
 	{INS_WAITTIME,	18141},
 	{INS_BOWL,	BOWL_CW},	/* Scoop 1 + 2 */
 	{INS_WAITTIME,	6201},
 	{INS_BOWL,	BOWL_CCW},	/* Scoop 1 + 3 */
-	{INS_ARM,	ARM_DOWN},
+	{INS_ARM,	INS_ARM__DOWN},
 	{INS_WAITTIME,	5765},
-	{INS_ARM,	ARM_UP},	/* Scoop 1 + 4 */
+	{INS_ARM,	INS_ARM__UP},	/* Scoop 1 + 4 */
 	{INS_WAITTIME,	532},
-	{INS_ARM,	ARM_STOP},	/* Scoop 1 + 5 */
+	{INS_ARM,	INS_ARM__STOP},	/* Scoop 1 + 5 */
 	{INS_WAITTIME,	25206},
-	{INS_ARM,	ARM_UP},	/* Scoop 1 + 6 */
+	{INS_ARM,	INS_ARM__UP},	/* Scoop 1 + 6 */
 	{INS_WAITTIME,	10671},
-	{INS_ARM,	ARM_DOWN},	/* Scoop 1 + 7 */
+	{INS_ARM,	INS_ARM__DOWN},	/* Scoop 1 + 7 */
 	{INS_WAITTIME,	6602},
-	{INS_ARM,	ARM_UP},	/* Scoop 1 + 8 */
+	{INS_ARM,	INS_ARM__UP},	/* Scoop 1 + 8 */
 	{INS_WAITTIME,	17204},
-	{INS_ARM,	ARM_DOWN},	/* Scoop 2 */
+	{INS_ARM,	INS_ARM__DOWN},	/* Scoop 2 */
 	{INS_WAITTIME,	12703},
-	{INS_ARM,	ARM_STOP},	/* Scoop 2 + 1 */
+	{INS_ARM,	INS_ARM__STOP},	/* Scoop 2 + 1 */
 	{INS_WAITTIME,	4701},
-	{INS_ARM,	ARM_DOWN},	/* Scoop 2 + 2 */
+	{INS_ARM,	INS_ARM__DOWN},	/* Scoop 2 + 2 */
 	{INS_WAITTIME,	11203},
-	{INS_ARM,	ARM_UP},	/* Scoop 2 + 3 */
+	{INS_ARM,	INS_ARM__UP},	/* Scoop 2 + 3 */
 	{INS_WAITTIME,	532},
-	{INS_ARM,	ARM_STOP},	/* Scoop 2 + 4 */
+	{INS_ARM,	INS_ARM__STOP},	/* Scoop 2 + 4 */
 	{INS_WAITTIME,	25206},
-	{INS_ARM,	ARM_UP},	/* Scoop 2 + 5 */
+	{INS_ARM,	INS_ARM__UP},	/* Scoop 2 + 5 */
 	{INS_WAITTIME,	10671},
-	{INS_ARM,	ARM_DOWN},	/* Scoop 2 + 6 */
+	{INS_ARM,	INS_ARM__DOWN},	/* Scoop 2 + 6 */
 	{INS_WAITTIME,	6601},
-	{INS_ARM,	ARM_UP},	/* Scoop 2 + 7 */
+	{INS_ARM,	INS_ARM__UP},	/* Scoop 2 + 7 */
 	{INS_WAITTIME,	20141},
 	{INS_BOWL,	BOWL_CW},	/* Scoop 3 */
-	{INS_ARM,	ARM_DOWN},
+	{INS_ARM,	INS_ARM__DOWN},
 	{INS_WAITTIME,	21769},
-	{INS_ARM,	ARM_UP},	/* Scoop 3 + 1 */
+	{INS_ARM,	INS_ARM__UP},	/* Scoop 3 + 1 */
 	{INS_WAITTIME,	932},
-	{INS_ARM,	ARM_STOP},	/* Scoop 3 + 2 */
+	{INS_ARM,	INS_ARM__STOP},	/* Scoop 3 + 2 */
 
 	{INS_SKIPIFDRY, 53},		/* Skip to surfacing for dry program */
 
 	{INS_WAITTIME,	12108},
 	{INS_BOWL,	BOWL_CCW},	/* Scoop 3 + 3 */
-	{INS_ARM,	ARM_DOWN},
+	{INS_ARM,	INS_ARM__DOWN},
 	{INS_WAITTIME,	3264},
-	{INS_ARM,	ARM_UP},	/* Scoop 3 + 4 */
+	{INS_ARM,	INS_ARM__UP},	/* Scoop 3 + 4 */
 	{INS_WAITTIME,	532},
-	{INS_ARM,	ARM_STOP},	/* Scoop 3 + 5 */
+	{INS_ARM,	INS_ARM__STOP},	/* Scoop 3 + 5 */
 	{INS_WAITTIME,	24206},
-	{INS_ARM,	ARM_UP},	/* Scoop 3 + 6 */
+	{INS_ARM,	INS_ARM__UP},	/* Scoop 3 + 6 */
 	{INS_WAITTIME,	10571},
-	{INS_ARM,	ARM_DOWN},	/* Scoop 3 + 7 */
+	{INS_ARM,	INS_ARM__DOWN},	/* Scoop 3 + 7 */
 	{INS_WAITTIME,	6602},
-	{INS_ARM,	ARM_UP},	/* Scoop 3 + 8 */
+	{INS_ARM,	INS_ARM__UP},	/* Scoop 3 + 8 */
 	{INS_WAITTIME,	17141},
-	{INS_ARM,	ARM_STOP},	/* Scoop 3 + 9 */
+	{INS_ARM,	INS_ARM__STOP},	/* Scoop 3 + 9 */
 	/* Wash the bowl */
 	{INS_WAITWATER, 0},
 	{INS_WATER,	1},
 	{INS_BOWL,	BOWL_CW},
 	{INS_WAITTIME,	18768},
-	{INS_ARM,	ARM_DOWN},	/* Wash */
+	{INS_ARM,	INS_ARM__DOWN},	/* Wash */
 	{INS_WAITTIME,	25206},
-	{INS_ARM,	ARM_UP},	/* Wash + 1 */
+	{INS_ARM,	INS_ARM__UP},	/* Wash + 1 */
 	{INS_WAITTIME,	1132},
-	{INS_ARM,	ARM_STOP},	/* Wash + 2 */
+	{INS_ARM,	INS_ARM__STOP},	/* Wash + 2 */
 	{INS_WAITWATER, 1},		/* Wash + 3 */
 	{INS_WAITTIME,	63582},		/* From full program sheet */
 	/* Drain the bowl */
@@ -295,13 +311,13 @@ const struct instruction	washprogram[] = {
 	/* Wash the bowl */
 	{INS_WATER,	1},
 	{INS_WAITTIME,	25502},
-	{INS_ARM,	ARM_DOWN},	/* Wash + 23 */
+	{INS_ARM,	INS_ARM__DOWN},	/* Wash + 23 */
 	{INS_WAITTIME,	21205},
-	{INS_ARM,	ARM_UP},	/* Wash + 24 */
+	{INS_ARM,	INS_ARM__UP},	/* Wash + 24 */
 	{INS_BOWL,	BOWL_STOP},
 	{INS_AUTODOSE,	11},		/* 1.07 ml */
 	{INS_WAITTIME,	1132},
-	{INS_ARM,	ARM_STOP},	/* Wash + 25 */
+	{INS_ARM,	INS_ARM__STOP},	/* Wash + 25 */
 	{INS_WAITDOSAGE,0},
 	{INS_BOWL,	BOWL_CCW},
 	{INS_WAITTIME,	5329},
@@ -314,7 +330,7 @@ const struct instruction	washprogram[] = {
 	/* Surface the granules */
 	{INS_CALL,	(unsigned int)surface},
 	{INS_BOWL,	BOWL_STOP},
-#endif /* SIMULATION */
+#endif /* TEST_* */
 	{INS_END,	0}
 };
 
