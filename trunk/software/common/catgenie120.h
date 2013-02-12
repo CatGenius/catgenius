@@ -75,21 +75,32 @@
 #define ARM_DOWN		1
 #define ARM_UP			2
 
-/* Mechanics */
-#define DOSAGE_SECONDS_PER_ML	10	/* For 1 ml of cleaning liquid, 10 seconds of pumping */
-#define CARTRIDGECAPACITY_ML	450	/* A full cartridge contains 450 ml of detergent */
+/* 
+ * Mechanics
+ */
 
+/* Dosage pump */
+#define DOSAGE_SECONDS_PER_ML	10		/* For 1 ml of cleaning liquid, 10 seconds of pumping */
+#define CARTRIDGECAPACITY_ML	450		/* A full cartridge contains 450 ml of detergent */
+
+/* Bowl */
 #define BOWL_MOTOR_RPM		52
 #define BOWL_MOTOR_TEETH	12
 #define BOWL_TEETH_PER_SECOND	((BOWL_MOTOR_RPM) * (BOWL_MOTOR_TEETH) / 60)
 #define BOWL_TEETH_REV		174
 #define BOWL_REV_MSEC		(1000 * (BOWL_TEETH_REV) / (BOWL_TEETH_PER_SECOND))
 
+/* Scooper arm */
 #define ARM_MOTOR_RPM		5
 #define ARM_MOTOR_TEETH		16
 #define ARM_TEETH_PER_SECOND	((ARM_MOTOR_RPM) * (ARM_MOTOR_TEETH) / 60))
 #define ARM_TEETH_STOKE		18
 #define ARM_STROKE		((13500UL * SECOND)/1000)	/* A full stroke of the arm takes 13.5 seconds */
+
+
+/*
+ * I/O Pins
+ */
 
 /* Free pins */
 #define	NOT_USED_1(reg)		reg##A	/* Not used (R39, Absent) */
@@ -127,15 +138,15 @@
 #define LED_4(reg)		reg##A	/* LED 4 */
 #define LED_4_MASK		BIT(5)
 #define LED_ERROR(reg)		reg##C	/* LED Error */
-#define LED_ERROR_MASK		BIT(0)
+#define LED_ERROR_BIT		(0)
 #define BEEPER(reg)		reg##C	/* Beeper */
-#define BEEPER_MASK		BIT(1)
+#define BEEPER_BIT		(1)
 #define LED_CARTRIDGE(reg)	reg##E	/* LED Cartridge */
-#define LED_CARTRIDGE_MASK	BIT(0)
+#define LED_CARTRIDGE_BIT	(0)
 #define LED_CAT(reg)		reg##E	/* LED Cat */
-#define LED_CAT_MASK		BIT(1)
+#define LED_CAT_BIT		(1)
 #define LED_LOCKED(reg)		reg##E	/* LED Child Lock */
-#define LED_LOCKED_MASK		BIT(2)
+#define LED_LOCKED_BIT		(2)
 
 /* Actuators */
 #define WATERSENSORANALOG(reg)	reg##A	/* Analog water sensor input */
