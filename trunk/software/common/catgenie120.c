@@ -30,8 +30,7 @@ extern void setupbutton_event (unsigned char up);
 /* Debouncers */
 #define DEBOUNCER_BUTTON_START		0
 #define DEBOUNCER_BUTTON_SETUP		1
-#define DEBOUNCER_SENSOR_HEAT		2
-#define DEBOUNCER_MAX			3
+#define DEBOUNCER_MAX			2
 
 /* Pacers */
 #define PACER_BEEPER			0
@@ -47,6 +46,7 @@ extern void setupbutton_event (unsigned char up);
 /******************************************************************************/
 
 static unsigned char	PORTB_old;
+static bit		heat_old = 0;
 
 struct debouncer {
 	struct timer	timer;
@@ -58,8 +58,7 @@ struct debouncer {
 };
 static struct debouncer	debouncers[DEBOUNCER_MAX] = {
 	{NEVER, BUTTON_DEBOUNCE,      0, &STARTBUTTON(PORT), STARTBUTTON_MASK, startbutton_event},
-	{NEVER, BUTTON_DEBOUNCE,      0, &SETUPBUTTON(PORT), SETUPBUTTON_MASK, setupbutton_event},
-	{NEVER, HEATSENSOR_DEBOUNCE,  0, &HEATSENSOR(PORT),  HEATSENSOR_MASK,  heatsensor_event}
+	{NEVER, BUTTON_DEBOUNCE,      0, &SETUPBUTTON(PORT), SETUPBUTTON_MASK, setupbutton_event}
 };
 
 struct pacer {
@@ -231,6 +230,13 @@ void catgenie_work (void)
 	unsigned char	temp = 0;
 	unsigned char	status;
 
+	/* Check for overheat */
+	temp = HEATSENSOR(PORT) & HEATSENSOR_MASK;
+	if (temp != heat_old) {
+		heatsensor_event(temp);
+		heat_old = temp;
+	}
+
 	/* Poll critical Port B inputs for changes */
 	status    = PORTB;
 	temp      = status ^ PORTB_old;
@@ -241,10 +247,6 @@ void catgenie_work (void)
 	if (temp & SETUPBUTTON_MASK)
 		settimeout(&debouncers[DEBOUNCER_BUTTON_SETUP].timer,
 			   debouncers[DEBOUNCER_BUTTON_SETUP].timeout);
-	if (temp & HEATSENSOR_MASK)
-		/* TODO: We may want to respond immediatly */
-		settimeout(&debouncers[DEBOUNCER_SENSOR_HEAT].timer,
-			   debouncers[DEBOUNCER_SENSOR_HEAT].timeout);
 
 	/* Execute the debouncers */
 	for (temp = 0; temp < DEBOUNCER_MAX; temp++)
