@@ -384,10 +384,10 @@ void litterlanguage_stop (void)
 }
 
 
-void watersensor_event (unsigned char detected)
+void waterdetection_event (unsigned char detected)
 /******************************************************************************/
-/* Function:	watersensor_event					      */
-/*		- Handle state changes of water sensor			      */
+/* Function:	waterdetection_event					      */
+/*		- Handle detection state changes of water sensor	      */
 /* History :	13 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
@@ -416,6 +416,19 @@ void watersensor_event (unsigned char detected)
 	}
 
 	eventlog_track(EVENTLOG_WATER_SENSOR, detected);
+}
+/* waterdetection_event */
+
+
+void watersensor_event (unsigned int reflectionquality)
+/******************************************************************************/
+/* Function:	watersensor_event					      */
+/*		- Handle state changes of water sensor			      */
+/* History :	13 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
+{
+//	eventlog_track(EVENTLOG_WATER_SENSOR, reflectionquality >> 2);
 }
 /* watersensor_event */
 
