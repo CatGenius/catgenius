@@ -24,7 +24,6 @@ extern void setupbutton_event (unsigned char up);
 
 /* Timing configuration */
 #define BUTTON_DEBOUNCE			(SECOND/20)	/*   50ms */
-#define HEATSENSOR_DEBOUNCE		(SECOND/20)	/*   50ms */
 #define PACER_BITTIME			(SECOND/8)	/*  125ms */
 
 /* Debouncers */
@@ -50,15 +49,14 @@ static bit		heat_old = 0;
 
 struct debouncer {
 	struct timer	timer;
-	unsigned long	timeout;
-	unsigned char	state;
+	unsigned char	state		: 1;
+	unsigned	port_bit	: 3;
 	volatile char	*port;
-	unsigned char	port_mask;
 	void		(*handler)(unsigned char);
 };
 static struct debouncer	debouncers[DEBOUNCER_MAX] = {
-	{NEVER, BUTTON_DEBOUNCE,      0, &STARTBUTTON(PORT), STARTBUTTON_MASK, startbutton_event},
-	{NEVER, BUTTON_DEBOUNCE,      0, &SETUPBUTTON(PORT), SETUPBUTTON_MASK, setupbutton_event}
+	{NEVER, 0, STARTBUTTON_BIT, &STARTBUTTON(PORT), startbutton_event},
+	{NEVER, 0, SETUPBUTTON_BIT, &SETUPBUTTON(PORT), setupbutton_event}
 };
 
 struct pacer {
@@ -127,11 +125,11 @@ unsigned char catgenie_init (void)
 	/*
 	 * Setup port B
 	 */
-	TRISB = STARTBUTTON_MASK |	/* Button Start/Pause */
+	TRISB = BIT(STARTBUTTON_BIT) |	/* Button Start/Pause */
 		WATERVALVE_MASK  |	/* Water Sensor */
 		HEATSENSOR_MASK  |	/* Over heat detector (U4) */
 		CATSENSOR_MASK   |	/* Cat Sensor */
-		SETUPBUTTON_MASK |	/* Button Auto setup */
+		BIT(SETUPBUTTON_BIT) |	/* Button Auto setup */
 		NOT_USED_3_MASK  |	/* PGM Clock */
 		NOT_USED_4_MASK  ;	/* PGM Data */
 	PORTB = 0x00;
@@ -161,8 +159,8 @@ unsigned char catgenie_init (void)
 	IOCIE = 1;
 #endif /* _16F877A/_16F1939 */
 
-	PORTB_old = STARTBUTTON_MASK |
-		    SETUPBUTTON_MASK |
+	PORTB_old = BIT(STARTBUTTON_BIT) |
+		    BIT(SETUPBUTTON_BIT) |
 		    HEATSENSOR_MASK ;
 
 	/*
@@ -202,16 +200,16 @@ unsigned char catgenie_init (void)
 
 	/* Copy the initial states into the debouncer states */
 	for (temp = 0; temp < DEBOUNCER_MAX; temp++) {
-		unsigned char	tempmask = debouncers[temp].port_mask; /* for compiler limitations */
+		unsigned char	mask = 1 << debouncers[temp].port_bit; /* for compiler limitations */
 
-		debouncers[temp].state = *debouncers[temp].port & tempmask;
+		debouncers[temp].state = *debouncers[temp].port & mask;
 	}
 
 	/* Fill out the return flags */
 	temp = 0;
-	if (!(STARTBUTTON(PORT) & STARTBUTTON_MASK))
+	if (!(STARTBUTTON(PORT) & BIT(STARTBUTTON_BIT)))
 		temp |= START_BUTTON;
-	if (!(SETUPBUTTON(PORT) & SETUPBUTTON_MASK))
+	if (!(SETUPBUTTON(PORT) & BIT(SETUPBUTTON_BIT)))
 		temp |= SETUP_BUTTON;
 
 	return temp;
@@ -241,18 +239,16 @@ void catgenie_work (void)
 	status    = PORTB;
 	temp      = status ^ PORTB_old;
 	PORTB_old = status;
-	if (temp & STARTBUTTON_MASK)
-		settimeout(&debouncers[DEBOUNCER_BUTTON_START].timer,
-			   debouncers[DEBOUNCER_BUTTON_START].timeout);
-	if (temp & SETUPBUTTON_MASK)
-		settimeout(&debouncers[DEBOUNCER_BUTTON_SETUP].timer,
-			   debouncers[DEBOUNCER_BUTTON_SETUP].timeout);
+	if (temp & BIT(STARTBUTTON_BIT))
+		settimeout(&debouncers[DEBOUNCER_BUTTON_START].timer, BUTTON_DEBOUNCE);
+	if (temp & BIT(SETUPBUTTON_BIT))
+		settimeout(&debouncers[DEBOUNCER_BUTTON_SETUP].timer, BUTTON_DEBOUNCE);
 
 	/* Execute the debouncers */
 	for (temp = 0; temp < DEBOUNCER_MAX; temp++)
 		if (timeoutexpired(&debouncers[temp].timer)) {
 			unsigned char	tempstate = *debouncers[temp].port; /* for compiler limitations */
-			tempstate &= debouncers[temp].port_mask;
+			tempstate &= 1 << debouncers[temp].port_bit;
 			/* Check if the state changed */
 			if (tempstate != debouncers[temp].state) {
 				/* Call function pointer (cannot be NULL) */

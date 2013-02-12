@@ -124,9 +124,9 @@
 
 /* Buttons */
 #define STARTBUTTON(reg)	reg##B	/* Button Start/Pause */
-#define STARTBUTTON_MASK	BIT(0)
+#define STARTBUTTON_BIT		(0)
 #define SETUPBUTTON(reg)	reg##B	/* Button Auto setup */
-#define SETUPBUTTON_MASK	BIT(5)
+#define SETUPBUTTON_BIT		(5)
 
 /* Indicators */
 #define LED_1(reg)		reg##C	/* LED 1 */
