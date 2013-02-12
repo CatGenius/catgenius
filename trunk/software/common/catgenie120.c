@@ -32,13 +32,17 @@ extern void setupbutton_event (unsigned char up);
 #define DEBOUNCER_MAX			2
 
 /* Pacers */
-#define PACER_BEEPER			0
-#define PACER_LED_ERROR			1
-#define PACER_LED_LOCKED		2
-#define PACER_LED_CARTRIDGE		3
-#define PACER_LED_CAT			4
-#define PACER_MAX			5
+#define PACER_KEY_BEEP			0
+#define PACER_ERR_BEEP			1
+#define PACER_LED_ERROR			2
+#define PACER_LED_LOCKED		3
+#define PACER_LED_CARTRIDGE		4
+#define PACER_LED_CAT			5
+#define PACER_MAX			6
 
+/* Beeper sources */
+#define	KEY_BEEP_BIT			0
+#define	ERR_BEEP_BIT			1
 
 /******************************************************************************/
 /* Global Data								      */
@@ -46,6 +50,7 @@ extern void setupbutton_event (unsigned char up);
 
 static unsigned char	PORTB_old;
 static bit		heat_old = 0;
+static unsigned char	beep_bits = 0;
 
 struct debouncer {
 	struct timer	timer;
@@ -68,7 +73,8 @@ struct pacer {
 	volatile char	*port;
 };
 static struct pacer	pacers[PACER_MAX] = {
-	{EXPIRED, 0x00, 0x1, 0, BEEPER_BIT,        &BEEPER(LAT)},
+	{EXPIRED, 0x00, 0x1, 0, KEY_BEEP_BIT,      &beep_bits},
+	{EXPIRED, 0x00, 0x1, 0, ERR_BEEP_BIT,      &beep_bits},
 	{EXPIRED, 0x00, 0x1, 0, LED_ERROR_BIT,     &LED_ERROR(LAT)},
 	{EXPIRED, 0x00, 0x1, 0, LED_LOCKED_BIT,    &LED_LOCKED(LAT)},
 	{EXPIRED, 0x00, 0x1, 0, LED_CARTRIDGE_BIT, &LED_CARTRIDGE(LAT)},
@@ -280,6 +286,12 @@ void catgenie_work (void)
 				}
 			}
 		}
+
+	/* Copy beeper bits to the beeper */
+	if (beep_bits)
+		BEEPER(LAT) |= BEEPER_MASK;
+	else
+		BEEPER(LAT) &= ~BEEPER_MASK;
 }
 /* End: catgenie_work */
 
@@ -343,7 +355,18 @@ void set_LED_Cat (unsigned char pattern, unsigned char repeat)
 
 void set_Beeper (unsigned char pattern, unsigned char repeat)
 {
-	set_pacer(PACER_BEEPER, pattern, repeat);
+	set_pacer(PACER_ERR_BEEP, pattern, repeat);
+}
+
+
+void key_Beep (unsigned char beeps)
+{
+	unsigned char pattern[] = {0x00, 0x01, 0x05, 0x15, 0x55};
+
+	if (beeps > 4)
+		return;
+
+	set_pacer(PACER_KEY_BEEP, pattern[beeps], 0);
 }
 
 

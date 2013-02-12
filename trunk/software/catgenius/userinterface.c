@@ -198,19 +198,19 @@ void userinterface_work (void)
 	if (timeoutexpired(&holdtimeout)) {
 		switch (buttonmask_cum & BUTTONS) {
 		case START_BUTTON:
-			set_Beeper(0x05, 0);
+			key_Beep(2);
 			start_long();
 			//update = 1;
 			break;
 
 		case SETUP_BUTTON:
-			set_Beeper(0x05, 0);
+			key_Beep(2);
 			setup_long();
 			//update = 1;
 			break;
 
 		case (START_BUTTON | SETUP_BUTTON):
-			set_Beeper(0x05, 0);
+			key_Beep(2);
 			both_long();
 			//update = 1;
 			break;
@@ -368,7 +368,7 @@ static void process_button (unsigned char button_mask, unsigned char down)
 
 	if (down) {
 		if (!locked)
-			set_Beeper(0x01, 0);
+			key_Beep(1);
 		/* (Re-)Set long-press timeout */
 		settimeout(&holdtimeout, HOLDTIME);
 		longhandled = 0;
