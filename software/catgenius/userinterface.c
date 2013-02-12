@@ -34,8 +34,8 @@
 #define PANEL_CARTRIDGELEVEL	1	/* Display/button mode showing/altering cartridge level */
 #define PANEL_ERROR		2	/* Display/button mode showing error(s) */
 
-#define STATE_IDLE			0
-#define STATE_CAT			1
+#define STATE_IDLE		0
+#define STATE_CAT		1
 #define STATE_RUNNING		2
 
 
@@ -198,19 +198,19 @@ void userinterface_work (void)
 	if (timeoutexpired(&holdtimeout)) {
 		switch (buttonmask_cum & BUTTONS) {
 		case START_BUTTON:
-			//set_Beeper(0x05, 0);
+			set_Beeper(0x05, 0);
 			start_long();
 			//update = 1;
 			break;
 
 		case SETUP_BUTTON:
-			//set_Beeper(0x05, 0);
+			set_Beeper(0x05, 0);
 			setup_long();
 			//update = 1;
 			break;
 
 		case (START_BUTTON | SETUP_BUTTON):
-			//set_Beeper(0x05, 0);
+			set_Beeper(0x05, 0);
 			both_long();
 			//update = 1;
 			break;
@@ -517,7 +517,6 @@ void update_display (void)
 void setup_short (void)
 {
 	TX("Setup: short\n");
-	set_Beeper(0x05, 0);
 
 	switch (panel_mode) {
 	default:
@@ -553,7 +552,6 @@ void setup_short (void)
 void setup_long (void)
 {
 	TX("Setup: long\n");
-	set_Beeper(0x05, 0);
 
 	update_display();
 }
@@ -579,7 +577,6 @@ void start_short (void)
 void start_long (void)
 {
 	TX(_s_start); TX("long\n");
-	set_Beeper(0x05, 0);
 
 	if (!litterlanguage_running()) {
 		/* Full washing program */
@@ -611,8 +608,6 @@ void both_short (void)
 void both_long (void)
 {
 	DBG("Start+Setup: long\n");
-
-	set_Beeper(0x05, 0);
 
 	locked = !locked;
 	eeprom_write(NVM_KEYUNDLOCK, !locked);
