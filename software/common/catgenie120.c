@@ -28,9 +28,9 @@ extern void setupbutton_event (unsigned char up);
 #define PACER_BITTIME			(SECOND/8)	/*  125ms */
 
 /* Debouncers */
-#define DEBOUNCER_BUTTON_START	0
-#define DEBOUNCER_BUTTON_SETUP	1
-#define DEBOUNCER_SENSOR_HEAT	2
+#define DEBOUNCER_BUTTON_START		0
+#define DEBOUNCER_BUTTON_SETUP		1
+#define DEBOUNCER_SENSOR_HEAT		2
 #define DEBOUNCER_MAX			3
 
 /* Pacers */
@@ -39,7 +39,7 @@ extern void setupbutton_event (unsigned char up);
 #define PACER_LED_LOCKED		2
 #define PACER_LED_CARTRIDGE		3
 #define PACER_LED_CAT			4
-#define PACER_MAX				5
+#define PACER_MAX			5
 
 
 /******************************************************************************/
@@ -64,19 +64,18 @@ static struct debouncer	debouncers[DEBOUNCER_MAX] = {
 
 struct pacer {
 	struct timer	timer;
-/*	unsigned long	timeout;*/
-	unsigned char	mask;
 	unsigned char	pattern;
-	unsigned char	repeat;
+	unsigned	pattern_bit	: 3;
+	unsigned	repeat		: 1;
+	unsigned	port_bit	: 3;
 	volatile char	*port;
-	unsigned char	port_mask;
 };
 static struct pacer	pacers[PACER_MAX] = {
-	{EXPIRED, 0x01, 0x00, 0, &BEEPER(LAT),        BEEPER_MASK},
-	{EXPIRED, 0x01, 0x00, 0, &LED_ERROR(LAT),     LED_ERROR_MASK},
-	{EXPIRED, 0x01, 0x00, 0, &LED_LOCKED(LAT),    LED_LOCKED_MASK},
-	{EXPIRED, 0x01, 0x00, 0, &LED_CARTRIDGE(LAT), LED_CARTRIDGE_MASK},
-	{EXPIRED, 0x01, 0x00, 0, &LED_CAT(LAT),       LED_CAT_MASK}
+	{EXPIRED, 0x00, 0x1, 0, BEEPER_BIT,        &BEEPER(LAT)},
+	{EXPIRED, 0x00, 0x1, 0, LED_ERROR_BIT,     &LED_ERROR(LAT)},
+	{EXPIRED, 0x00, 0x1, 0, LED_LOCKED_BIT,    &LED_LOCKED(LAT)},
+	{EXPIRED, 0x00, 0x1, 0, LED_CARTRIDGE_BIT, &LED_CARTRIDGE(LAT)},
+	{EXPIRED, 0x00, 0x1, 0, LED_CAT_BIT,       &LED_CAT(LAT)}
 };
 
 
@@ -264,18 +263,17 @@ void catgenie_work (void)
 	/* Execute the pacers */
 	for (temp = 0; temp < PACER_MAX; temp++)
 		if (timeoutexpired(&pacers[temp].timer)) {
-			unsigned char	tempmask = pacers[temp].mask; /* for compiler limitations */
+			unsigned char	mask = 1 << pacers[temp].pattern_bit; /* for compiler limitations */
 
 			/* Set a time for the next execution time */
 			settimeout(&pacers[temp].timer, PACER_BITTIME);
 			/* Copy the current pattern bit to the output */
-			if (pacers[temp].pattern & tempmask)
-				*pacers[temp].port |= pacers[temp].port_mask;
+			if (pacers[temp].pattern & mask)
+				*pacers[temp].port |= (1 << pacers[temp].port_bit);
 			else
-				*pacers[temp].port &= ~pacers[temp].port_mask;
+				*pacers[temp].port &= ~(1 << pacers[temp].port_bit);
 			/* Update the current bit */
-			if (!(pacers[temp].mask <<= 1)) {
-				pacers[temp].mask = 1;
+			if (!++pacers[temp].pattern_bit) {
 				/* Clear the pattern if repeat is not selected */
 				if (!pacers[temp].repeat)
 				{
@@ -482,7 +480,7 @@ static void set_pacer (unsigned char pacer, unsigned char pattern, unsigned char
 	/* Expire the bit timer */
 	timeoutnow(&pacers[pacer].timer);
 	/* Reset the mask to the first bit */
-	pacers[pacer].mask = 0x01;
+	pacers[pacer].pattern_bit = 0x0;
 	/* Copy the pacer pattern */
 	pacers[pacer].pattern = pattern;
 	/* Copy the repeat flag */
