@@ -140,7 +140,7 @@
 #define LED_ERROR(reg)		reg##C	/* LED Error */
 #define LED_ERROR_BIT		(0)
 #define BEEPER(reg)		reg##C	/* Beeper */
-#define BEEPER_BIT		(1)
+#define BEEPER_MASK		BIT(1)
 #define LED_CARTRIDGE(reg)	reg##E	/* LED Cartridge */
 #define LED_CARTRIDGE_BIT	(0)
 #define LED_CAT(reg)		reg##E	/* LED Cat */
@@ -204,7 +204,8 @@ void		set_LED_Cartridge	(unsigned char pattern,
 void		set_LED_Locked		(unsigned char pattern,
 					 unsigned char repeat);
 void		set_Beeper		(unsigned char pattern,
-					 unsigned char repeat) ;
+					 unsigned char repeat);
+void		key_Beep		(unsigned char beeps);
 
 /* Actuators */
 void		set_Bowl		(unsigned char mode);
