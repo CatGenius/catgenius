@@ -15,7 +15,8 @@
 
 #include "eventlog.h"
 
-extern void watersensor_event (unsigned char detected);
+extern void waterdetection_event	(unsigned char	detected);
+extern void watersensor_event		(unsigned int	reflectionquality);
 
 
 /******************************************************************************/
@@ -25,22 +26,6 @@ extern void watersensor_event (unsigned char detected);
 #define DETECTTIME		(SECOND/1000)	/*  10ms*/
 #define WATERSENSORPOLLING	(SECOND/4)	/* 250ms*/
 #define HYSTERESIS_MAX		8		/* Number of pollings to debounce the sensor output */
-
-/*
- * The table below shows the correlation between light guide cleanliness and
- * state, and the analog reflection quality value read by the ADC. A light guide
- * is considered to be dirty when the original firmware starts warning.
- * Cleanliness:	| State:	| Reflection:
- * -------------+---------------+--------------------
- * Clean	| Dry		| ~22
- * Clean	| Submerged	| 1023
- * Clean	| Wet		| ~22
- * Dirty	| Dry		| ~414
- * Dirty	| Submerged	| ~1011
- * Dirty	| Wet		| No reliable measurement yet
- 
- */
-#define GUIDEDIRTY_THRESHOLD	414		/* At an ADC value of 414 or above, the original firmware warns to clean the light guide */
 
 /*
  * The LM393 inverting schmitt-trigger circuit shuts the water valve autonomously
@@ -81,7 +66,6 @@ extern void watersensor_event (unsigned char detected);
 static struct timer	sensortimer       = EXPIRED;
 static unsigned char	state             = 0;
 static unsigned char	hysteresis        = 0;
-static unsigned int	reflectionquality = 0;
 static bit		filling           = 0;
 static bit		detected          = 0;
 static bit		ledalwayson       = 0;
@@ -140,6 +124,9 @@ void water_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	static unsigned int	cur_reflectionquality = 0;
+	static unsigned int	old_reflectionquality = 0;
+
 	switch (state) {
 	default:
 		state = LED_ON;
@@ -168,29 +155,34 @@ void water_work (void)
 		if (ADCON0bits.nDONE)
 			break;
 		/* Read out the IR sensor analoguely (lower value == more light reflected == no water detected) */
-		reflectionquality = ADRES;
+		cur_reflectionquality = ADRES;
 #else
 		if (!timeoutexpired(&sensortimer))
 			break;
 		/* Read out the IR sensor digitally (lower value == more light reflected == no water detected) */
-		reflectionquality = (WATERSENSORANALOG(PORT) & WATERSENSORANALOG_MASK)?DETECTION_THRESHOLD:0;
+		cur_reflectionquality = (WATERSENSORANALOG(PORT) & WATERSENSORANALOG_MASK)?DETECTION_THRESHOLD:0;
 #endif /* WATERSENSOR_ANALOG */
 		/* Switch off the IR LED if we're not filling */
 		if (!filling && !ledalwayson)
 			WATERSENSOR_LED(LAT) &= ~WATERSENSOR_LED_MASK;
 		/* Evaluate the result, considering a hysteresis */
-		if (reflectionquality <= (UNDETECTION_THRESHOLD - DETECTION_MARGIN)) {
+		if (cur_reflectionquality <= (UNDETECTION_THRESHOLD - DETECTION_MARGIN)) {
 			if ((hysteresis > 0) &&
 			    (!--hysteresis && detected)) {
 				detected = 0;
-				watersensor_event(detected);
+				waterdetection_event(detected);
 			}
 		} else {
 			if ((hysteresis < HYSTERESIS_MAX) &&
 			    (++hysteresis >= HYSTERESIS_MAX) && !detected) {
 				detected = 1;
-				watersensor_event(detected);
+				waterdetection_event(detected);
 			}
+		}
+		/* Check water sensor reflection quality */
+		if (cur_reflectionquality != old_reflectionquality) {
+			watersensor_event(cur_reflectionquality);
+			old_reflectionquality = cur_reflectionquality;
 		}
 
 		settimeout(&sensortimer, WATERSENSORPOLLING);
@@ -213,20 +205,6 @@ void water_ledalwayson (unsigned char on)
 	ledalwayson = on;
 }
 /* End: water_ledalwayson */
-
-
-unsigned int water_reflectionquality (void)
-{
-	return (reflectionquality);
-}
-/* End: water_reflectionquality */
-
-
-unsigned char water_lightguidedirty (void)
-{
-	return (reflectionquality >= GUIDEDIRTY_THRESHOLD)?1:0;
-}
-/* End: water_lightguidedirty */
 
 
 unsigned char water_filling (void)
