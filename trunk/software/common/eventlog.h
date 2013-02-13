@@ -21,16 +21,16 @@
 #define EVENTLOG_PUMP			3
 #define EVENTLOG_DRYER			4
 #define EVENTLOG_TAP			5
-#define EVENTLOG_WATER_SENSOR	6
+#define EVENTLOG_WET_SENSOR		6
 #define EVENTLOG_HEAT_SENSOR	7
 #define EVENTLOG_START_BUTTON	8
 #define EVENTLOG_SETUP_BUTTON	9
 #define EVENTLOG_CAT_SENSOR		10
-#define EVENTLOG_LED			11						/* 11 .. 14 */
-#define EVENTLOG_PACER			(EVENTLOG_LED + 4)		/* 15 .. 19 */
-#define EVENTLOG_MAX			(EVENTLOG_PACER + 5)
-
-// Error LED?
+#define EVENTLOG_LED			11	/* 11 .. 14 */
+#define EVENTLOG_PACER			15	/* 15 .. 20 */
+#define EVENTLOG_WATER_SENSOR	21
+#define EVENTLOG_LL_ADDR		22
+#define EVENTLOG_MAX			23
 
 PUBLIC_FN(void eventlog_init(void));
 PUBLIC_FN(void eventlog_work(void));
