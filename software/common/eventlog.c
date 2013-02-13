@@ -15,7 +15,7 @@
 static BOOL eventlog_tracking = false;
 
 // TBD: Compress the memory for this
-static _U08 eventlog_state[EVENTLOG_MAX];
+static _U16 eventlog_state[EVENTLOG_MAX];
 
 static void eventlog_write(_U08 index, _U16 value)
 {
@@ -34,7 +34,7 @@ void eventlog_work(void)
 
 void eventlog_track(_U08 index, _U16 value)
 {
-	// If there is no change, there is nothing to do
+	// If value didn't change there's nothing to track
 	if (value == eventlog_state[index]) return;
 
 	// Log event & Update

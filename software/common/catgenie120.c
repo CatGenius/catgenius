@@ -235,11 +235,13 @@ void catgenie_work (void)
 	unsigned char	status;
 
 	/* Check for overheat */
+	/* CMM... Appears to be broken.  Moved lower
 	temp = HEATSENSOR(PORT) & HEATSENSOR_MASK;
 	if (temp != heat_old) {
 		heatsensor_event(temp);
 		heat_old = temp;
 	}
+	*/
 
 	/* Poll critical Port B inputs for changes */
 	status    = PORTB;
@@ -249,6 +251,12 @@ void catgenie_work (void)
 		settimeout(&debouncers[DEBOUNCER_BUTTON_START].timer, BUTTON_DEBOUNCE);
 	if (temp & BIT(SETUPBUTTON_BIT))
 		settimeout(&debouncers[DEBOUNCER_BUTTON_SETUP].timer, BUTTON_DEBOUNCE);
+
+	temp = temp & HEATSENSOR_MASK;
+	if (temp != heat_old) {
+		heatsensor_event(temp);
+		heat_old = temp;
+	}
 
 	/* Execute the debouncers */
 	for (temp = 0; temp < DEBOUNCER_MAX; temp++)

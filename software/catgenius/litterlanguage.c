@@ -415,7 +415,7 @@ void waterdetection_event (unsigned char detected)
 		litterlanguage_event(EVENT_ERR_FLOOD, error_flood);
 	}
 
-	eventlog_track(EVENTLOG_WATER_SENSOR, detected);
+	eventlog_track(EVENTLOG_WET_SENSOR, detected);
 }
 /* waterdetection_event */
 
@@ -428,7 +428,7 @@ void watersensor_event (unsigned int reflectionquality)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-//	eventlog_track(EVENTLOG_WATER_SENSOR, reflectionquality >> 2);
+	eventlog_track(EVENTLOG_WATER_SENSOR, reflectionquality);
 }
 /* watersensor_event */
 
@@ -441,9 +441,10 @@ void heatsensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	error_overheat = detected;
+	// CMM - Overflow bug fix? - error_overheat = detected;
+	error_overheat = detected ? 1 : 0;
 	litterlanguage_event(EVENT_ERR_OVERHEAT, error_overheat);
-	eventlog_track(EVENTLOG_HEAT_SENSOR, detected);
+	eventlog_track(EVENTLOG_HEAT_SENSOR, error_overheat);
 }
 /* heatsensor_event */
 
@@ -487,6 +488,23 @@ static void exe_instruction (void)
 {
 	static struct instruction	const * ret_address;
 	unsigned int			temp;
+
+	// TBD: CMM - This is a bit of a hack until we get a Program Counter implemented
+	_U16 pc;
+	/*
+	extern const struct instruction	washprogram[];
+	extern const struct instruction	cleanupprogram[];
+	if (&washprogram[0] < &cleanupprogram[0])
+	{
+		pc = (_U16)(ins_pointer >= &cleanupprogram[0]) ? (&cleanupprogram[0] - ins_pointer) : (&washprogram[0] - ins_pointer);
+	}
+	else
+	{
+		pc = (_U16)(ins_pointer < &washprogram[0]) ? (&cleanupprogram[0] - ins_pointer) : (&washprogram[0] - ins_pointer);
+	}
+	*/
+	pc = (_U16)ins_pointer;
+	eventlog_track(EVENTLOG_LL_ADDR, pc);
 
 //	printtime();
 //	DBG("IP 0x%04X: ", ins_pointer);
