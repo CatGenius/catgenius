@@ -381,6 +381,8 @@ void litterlanguage_stop (void)
 		litterlanguage_event(EVENT_ERR_DRAINING, error_drain);
 	}
 	error_flood = 0;
+
+	eventlog_track(EVENTLOG_LL_ADDR, 0);
 }
 
 
@@ -428,7 +430,15 @@ void watersensor_event (unsigned int reflectionquality)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	// CMM: This is a quick/temporary hack to cut down on the noise a bit
+	static _U16 old_value = 0;
+	if ((reflectionquality > old_value) ?
+		(reflectionquality - old_value <= 4) :
+		(old_value - reflectionquality >= 4))
+		return;
+
 	eventlog_track(EVENTLOG_WATER_SENSOR, reflectionquality);
+	old_value = reflectionquality;
 }
 /* watersensor_event */
 
