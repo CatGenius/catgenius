@@ -20,6 +20,7 @@
 #include "../common/rtc.h"
 #include "userinterface.h"
 #include "../common/eventlog.h"
+#include "../common/types.h"
 
 extern void litterlanguage_event (unsigned char event, unsigned char argument);
 
