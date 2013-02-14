@@ -126,6 +126,8 @@ void water_work (void)
 {
 	static unsigned int	cur_reflectionquality = 0;
 	static unsigned int	old_reflectionquality = 0;
+	// CMM: This is a quick/temporary hack to cut down on the noise a bit
+	static unsigned char event_skips = 0;
 
 	switch (state) {
 	default:
@@ -171,19 +173,50 @@ void water_work (void)
 			    (!--hysteresis && detected)) {
 				detected = 0;
 				waterdetection_event(detected);
+				// CMM: Force a water sensor event below
+				event_skips = 255;
 			}
 		} else {
 			if ((hysteresis < HYSTERESIS_MAX) &&
 			    (++hysteresis >= HYSTERESIS_MAX) && !detected) {
 				detected = 1;
 				waterdetection_event(detected);
+				// CMM: Force a water sensor event below
+				event_skips = 255;
 			}
 		}
 		/* Check water sensor reflection quality */
+
+		// CMM: This is a quick/temporary hack to cut down on the noise a bit
+		/*
 		if (cur_reflectionquality != old_reflectionquality) {
 			watersensor_event(cur_reflectionquality);
 			old_reflectionquality = cur_reflectionquality;
 		}
+		*/
+
+		// TBD: Shouldn't we be triggering a water sensor event BEFORE a water
+		//   detection event?
+
+		// Only trigger a water sensor event if:
+		//   - The current value varies from the last reported value +/- >4
+		//   - The current value varies from the last and we've skipped firing
+		//     the event for a minute or longer
+		if ((((cur_reflectionquality > old_reflectionquality) ?
+				(cur_reflectionquality - old_reflectionquality) :
+				(old_reflectionquality - cur_reflectionquality)) > 4) ||
+				(event_skips >= 240))
+		{
+			if (cur_reflectionquality != old_reflectionquality) {
+				watersensor_event(cur_reflectionquality);
+				old_reflectionquality = cur_reflectionquality;
+			}
+			event_skips = 0;
+		}
+		else
+		{
+			event_skips++;
+		}			
 
 		settimeout(&sensortimer, WATERSENSORPOLLING);
 		state = LED_ON;
