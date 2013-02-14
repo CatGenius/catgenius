@@ -6,6 +6,11 @@
 /* History :	3 Sep 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
+
+#include "../common/app_prefs.h"
+
+#ifdef HAS_RTC
+
 #include <htc.h>
 #include <stdio.h>
 
@@ -123,3 +128,4 @@ void incweekday (void)
 /* Local Implementations						      */
 /******************************************************************************/
 
+#endif // HAS_RTC

@@ -9,19 +9,19 @@
 
 // ------
 // Select the options you wish to enable here
+// Approximate program memory requirements are listed to the right
 // ------
-#define HAS_CR14
-#define HAS_I2C
-#define HAS_SERIAL
-#define HAS_DEBUG
-//#define HAS_BLUETOOTH
-#define HAS_COMMANDLINE
-#define HAS_COMMANDLINE_BOX
-#define HAS_COMMANDLINE_GPIO
-#define HAS_COMMANDLINE_EXTRA
-#define HAS_COMMANDLINE_TAG
-//#define HAS_COMMANDLINE_COMTESTS
-#define HAS_EVENTLOG
+#define HAS_SERIAL							/*   564 words */
+#define HAS_DEBUG							/*   755 words */
+//#define HAS_BLUETOOTH						/*   557 words */
+#define HAS_COMMANDLINE						/*   721 words */
+#define HAS_COMMANDLINE_BOX					/* 1,020 words */
+#define HAS_COMMANDLINE_GPIO				/* 1,112 words */
+#define HAS_COMMANDLINE_EXTRA				/*   407 words */
+#define HAS_COMMANDLINE_TAG					/* 1,766 words */
+//#define HAS_COMMANDLINE_COMTESTS			/* 3,977 words */
+#define HAS_EVENTLOG						/*   331 words */
+//#define HAS_RTC							/*   259 words */
 
 // ------
 // 16F877A has tight memory - force features disabled

@@ -38,9 +38,11 @@ PUBLIC_FN(void cmdline_work (void));
 PUBLIC_FN(int cmd_echo   (int argc, char* argv[]));
 PUBLIC_FN(int cmd_help   (int argc,char* argv[]));
 
-#ifdef HAS_COMMANDLINE_EXTRA
+#ifdef HAS_COMMANDLINE_COMTESTS
 PUBLIC_FN(int cmd_txtest (int argc, char* argv[]));
 PUBLIC_FN(int cmd_rxtest (int argc, char* argv[]));
+#endif
+#ifdef HAS_COMMANDLINE_EXTRA
 PUBLIC_FN(int cmd_mode   (int argc, char* argv[]));
 PUBLIC_FN(int cmd_start  (int argc, char* argv[]));
 PUBLIC_FN(int cmd_setup  (int argc, char* argv[]));

@@ -323,12 +323,15 @@ unsigned char serial_wait_s(const char *s, unsigned long timeout)
 	char	ch;
 	size_t	i   = 0;
 	size_t	len = strlen(s);
+	char	buf[10];
+	size_t	j = 0;
 
 	if (!len)
 		return 0;
 
 	for (;;) {
-		if (readch(&ch)) {
+		while (readch(&ch)) {
+			buf[j++] = ch;
 			if (ch == s[i])
 				if (++i == len)
 					return 255;

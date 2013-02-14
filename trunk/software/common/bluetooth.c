@@ -38,7 +38,7 @@ static void bluetooth_puts(const char *s)
 
 void bluetooth_init(void)
 {
-	_U08 s_bitrate[5];
+	const unsigned char *s_bitrate; //_U08 s_bitrate[5];
 	_U08 i;
 	_U08 ok;
 	
@@ -51,7 +51,7 @@ void bluetooth_init(void)
 	for (i=0; i<3; i++)
 	{
 		// Set the bitrate
-		serial_init(bt_bitrates[i], SERIAL_FLOW_NONE, 1);
+		serial_init(bt_bitrates[i], SERIAL_FLOW_NONE);
 
 		// Put BT module in command mode.  It's expecting to see 3 "$" chars in a 1 sec window with silence
 		bluetooth_puts("$$$");
@@ -83,6 +83,7 @@ void bluetooth_init(void)
 
 		// Convert bitrate to string format accepted by BT module
 		// TBD: Optimize this code.  I think it takes up a lot of program memory
+		/*
 		if (BITRATE <= 9600UL)
 		{
 			sprintf(s_bitrate, "%lu", BITRATE);
@@ -94,6 +95,17 @@ void bluetooth_init(void)
 		else
 		{
 			sprintf(s_bitrate, "%luK", BITRATE / 1000UL);
+		}
+		*/
+
+		switch (BITRATE)
+		{
+			case   9600 : s_bitrate = "9600"; break;
+			case  14400 : s_bitrate = "14.4"; break;
+			case  19200 : s_bitrate = "19.2"; break;
+			case  38400 : s_bitrate = "38.4"; break;
+			case  57600 : s_bitrate = "57.6"; break;
+			default		: s_bitrate = "115K"; break;			
 		}
 
 		// Store new bitrate for next reboot

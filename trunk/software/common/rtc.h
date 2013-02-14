@@ -5,6 +5,10 @@
 /*		Copyright (C) 2010, Clockwork Engineering		      */
 /******************************************************************************/
 
+#include "../common/app_prefs.h"
+
+#ifdef HAS_RTC
+
 #ifndef RTC_H				/* Include file already compiled? */
 #define RTC_H
 
@@ -25,3 +29,11 @@ void		inchours		(void) ;
 void		incweekday		(void) ;
 
 #endif /* RTC_H */
+
+#else // !HAS_RTC
+
+#define rtc_init(x)
+#define rtc_work()
+#define printtime()
+
+#endif // HAS_RTC
