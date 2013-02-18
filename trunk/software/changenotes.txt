@@ -41,3 +41,6 @@ B05:
 TBD:
 	- Should move all box information OUT of userinterface
 	- Integrate GenieDiag UI code into CatGenius
+	
+	unsigned long int
+__lldiv(unsigned long int divisor, unsigned long int dividend)

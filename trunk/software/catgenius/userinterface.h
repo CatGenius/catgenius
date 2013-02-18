@@ -25,11 +25,19 @@
 #define AUTO_DETECTED1ON4	8	/* Full wash/Scoop only 1:4 uses */
 #define AUTO_DETECTED		9	/* Scoop only every use*/
 
+#define PANEL_AUTOMODE		0	/* Display/button mode in normal operation */
+#define PANEL_CARTRIDGELEVEL	1	/* Display/button mode showing/altering cartridge level */
+#define PANEL_ERROR		2	/* Display/button mode showing error(s) */
+#ifdef HAS_DIAG
+#define PANEL_DIAG		3	/* GenieDiag Mode */
+#endif
+
 /* Global Data */
 PUBLIC_VAR(bit cat_detected, 0);
 PUBLIC_VAR(bit error_overheat, 0);
 PUBLIC_VAR(bit locked, 0);
 PUBLIC_VAR(unsigned char auto_mode, AUTO_MANUAL);
+PUBLIC_VAR(unsigned char panel_mode, PANEL_AUTOMODE);
 
 /* Generic */
 PUBLIC_FN(void userinterface_init(unsigned char flags));

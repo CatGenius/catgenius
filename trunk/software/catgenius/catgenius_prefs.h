@@ -22,6 +22,7 @@
 //#define HAS_COMMANDLINE_COMTESTS			/* 3,977 words */
 #define HAS_EVENTLOG						/*   331 words */
 //#define HAS_RTC							/*   259 words */
+#define HAS_DIAG
 
 // ------
 // 16F877A has tight memory - force features disabled
