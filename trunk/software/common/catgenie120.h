@@ -14,6 +14,10 @@
 #  error Unsupported processor selected!
 #endif
 
+#ifdef CMM_ARM_EXPERIMENT
+extern void get_ArmPosition (unsigned long *pos, unsigned char *mode);
+#endif
+
 #ifdef _16F1939
 /* Analog water sensor readout is NOT supported on a 16F877A */
 /* On a 16F1939 it is optional */
@@ -29,9 +33,11 @@
 #if defined(HAS_DEBUG) && defined(HAS_SERIAL)
 #define DBG(a)			printf(a)
 #define DBG2(a,b)		printf(a, b)
+#define DBG3(a,b,c)		printf(a, b, c)
 #else
 #define DBG(a)
 #define DBG2(a,b)
+#define DBG3(a,b,c)
 #endif
 
 /* Frequencies */
@@ -96,6 +102,9 @@
 #define ARM_TEETH_PER_SECOND	((ARM_MOTOR_RPM) * (ARM_MOTOR_TEETH) / 60))
 #define ARM_TEETH_STOKE		18
 #define ARM_STROKE		((13500UL * SECOND)/1000)	/* A full stroke of the arm takes 13.5 seconds */
+#ifdef CMM_ARM_EXPERIMENT
+#define ARM_STROKE_PCT	(ARM_STROKE/100) /* 1% of a full stroke: 0.135 seconds */
+#endif
 
 
 /*

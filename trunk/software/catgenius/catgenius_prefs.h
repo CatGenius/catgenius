@@ -66,6 +66,6 @@
 
 // Temporary hacks to get things working for testing
 //#define _CMM_TEMP_HACKS_
-
+#define CMM_ARM_EXPERIMENT
 
 #endif // CATGENIUS_PREFS_H
