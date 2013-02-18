@@ -447,6 +447,7 @@ void set_Arm (unsigned char mode)
 #ifdef CMM_ARM_EXPERIMENT
 	unsigned long cur_pos;
 	unsigned char old_mode;
+	unsigned char pct_deployed;
 
 	get_ArmPosition(&cur_pos, &old_mode);
 
@@ -456,14 +457,21 @@ void set_Arm (unsigned char mode)
 	{
 		if (cur_pos != arm_pos)
 		{
+			pct_deployed = cur_pos / ARM_STROKE_PCT;
+#ifdef ARM_POS_DEBUG
 			DBG("Arm moved ");
 			if (cur_pos > arm_pos)
 				DBG2("+%lu", cur_pos - arm_pos);
 			else
 				DBG2("-%lu", arm_pos - cur_pos);
-			DBG3(" to %lu (%lu)\n", cur_pos, (cur_pos / ARM_STROKE_PCT));
+			DBG3(" to %lu (%lu)\n", cur_pos, pct_deployed);
+#endif
 			arm_pos = cur_pos;
 		}
+	}
+	else
+	{
+		pct_deployed = cur_pos / ARM_STROKE_PCT;
 	}
 
 	if (mode != ARM_STOP) gettimestamp(&arm_start);
@@ -484,7 +492,12 @@ void set_Arm (unsigned char mode)
 		break;
 	}
 
+#ifdef CMM_ARM_EXPERIMENT
+	// % deployed in lower bits, mode in upper bits
+	eventlog_track(EVENTLOG_ARM, (((uint16_t)pct_deployed) << 8) | mode);
+#else
 	eventlog_track(EVENTLOG_ARM, mode);
+#endif
 }
 
 
