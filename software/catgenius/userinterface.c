@@ -21,6 +21,10 @@
 #include "../common/eventlog.h"
 #include "../common/serial.h"
 
+#ifdef HAS_DIAG
+#include "../common/water.h"		// For water_detected()
+#endif
+
 
 /******************************************************************************/
 /* Macros								      */
@@ -30,9 +34,14 @@
 #define LEVEL_TIMEOUT		(5 * SECOND)	/* Show the level for 5 seconds */
 #define CAT_TIMEOUT		(4 * 60 * SECOND)
 
-#define PANEL_AUTOMODE		0	/* Display/button mode in normal operation */
-#define PANEL_CARTRIDGELEVEL	1	/* Display/button mode showing/altering cartridge level */
-#define PANEL_ERROR		2	/* Display/button mode showing error(s) */
+#ifdef HAS_DIAG
+#define	ACT_BOWL		0
+#define ACT_ARM			1
+#define ACT_DOSAGE		2
+#define ACT_PUMP		3
+#define ACT_DRYER		4
+#define ACT_WATER		5
+#endif
 
 #define STATE_IDLE		0
 #define STATE_CAT		1
@@ -60,10 +69,15 @@ static bit		full_wash	= 0;
 
 static unsigned char	state		= STATE_IDLE;
 static unsigned char	interval	= 0;
-static unsigned char	panel_mode	= PANEL_AUTOMODE;
+//static unsigned char	panel_mode	= PANEL_AUTOMODE;
 static unsigned char	cart_level	= 100;
 static unsigned char	error_nr	= 0;
 
+#ifdef HAS_DIAG
+static unsigned char	diag_actuator	= 0;
+static const char *		diag_actuators[] = {"bowl", "arm", "dosage", "pump", "dryer", "water"};
+static unsigned char	diag_was_paused = 0;
+#endif
 
 /******************************************************************************/
 /* Local Prototypes							      */
@@ -269,6 +283,9 @@ void catsensor_event (unsigned char detected)
 	printtime();
 	DBG2("Cat %s\n", detected?"in":"out");
 
+#ifdef HAS_DIAG
+	update_display();
+#else
 	/* Trigger detection on rising edge only */
 	if (detected)
 		cat_detected = 1;
@@ -308,6 +325,7 @@ void catsensor_event (unsigned char detected)
 		/* Update the display */
 		update_display();
 	}
+#endif
 
 	eventlog_track(EVENTLOG_CAT_SENSOR, detected);
 }
@@ -438,6 +456,10 @@ void userinterface_set_mode (unsigned char mode)
 
 void update_display (void)
 {
+#ifdef HAS_DIAG
+	int i;
+#endif
+
 	switch (panel_mode) {
 	default:
 		panel_mode = PANEL_AUTOMODE;
@@ -502,6 +524,15 @@ void update_display (void)
 		set_LED(3, error_nr == 3);
 		set_LED(4, error_nr == 4);
 		break;
+#ifdef HAS_DIAG
+	case PANEL_DIAG:
+		set_LED_Error(water_detected() ? 0xFF : 0x00, 0);
+		set_LED_Cartridge(0x0F, 1); // Blinking cart = Diag Mode
+		for (i=0; i<4; i++)
+			set_LED(i+1, ((1+diag_actuator) & (1 << i)) > 0);
+		set_LED_Cat(cat_present ? 0xFF : 0x00, 0);
+		break;
+#endif
 	}
 
 	/* Keyboard lock indicator */
@@ -544,6 +575,17 @@ void setup_short (void)
 
 	case PANEL_ERROR:
 		break;
+
+#ifdef HAS_DIAG
+	case PANEL_DIAG:
+		if (++diag_actuator > ACT_WATER)
+			diag_actuator = ACT_BOWL;
+
+		water_ledalwayson(diag_actuator == ACT_WATER);
+	
+		TX2("Mode: %s\n", diag_actuators[diag_actuator]);
+		break;
+#endif
 	}
 
 	update_display();
@@ -553,23 +595,84 @@ void setup_long (void)
 {
 	TX("Setup: long\n");
 
+#ifdef HAS_DIAG
+	TX("DIAG mode: ");
+	if (panel_mode != PANEL_DIAG)
+	{
+		TX("ENTER\n");
+		diag_was_paused = litterlanguage_paused();
+		litterlanguage_pause(1);
+		panel_mode = PANEL_DIAG;
+		diag_actuator = ACT_BOWL;
+	}
+	else
+	{
+		// Return to normal operation
+		TX("EXIT\n");
+		// TBD: Make sure error is cleared, etc?
+		panel_mode = PANEL_AUTOMODE;
+		litterlanguage_pause(diag_was_paused);
+	}
+#endif
+
 	update_display();
 }
 
 void start_short (void)
 {
+#ifdef HAS_DIAG
+	unsigned char value;
+#endif
 	TX(_s_start); TX("short\n");
 
-	if (!litterlanguage_running()) {
-		/* Scoop-only program */
-		full_wash = 0;
-		/* Start the program */
-		litterlanguage_start(full_wash);
-		/* Update the state machine */
-		state = STATE_RUNNING;
-	} else
-		/* Toggle pause current program */
-		litterlanguage_pause(!litterlanguage_paused());
+#ifdef HAS_DIAG
+	if (panel_mode == PANEL_DIAG)
+	{
+		// TBD: Find an efficient way to log state transitions
+		switch (diag_actuator) {
+			case ACT_BOWL:
+				value = get_Bowl();
+				if (++value > BOWL_CCW)
+					value = BOWL_STOP;
+				set_Bowl(value);
+				break;
+			case ACT_ARM:
+				value = get_Arm();
+				if (++value > ARM_UP)
+					value = ARM_STOP;
+				set_Arm(value);
+				break;
+			case ACT_DOSAGE:
+				set_Dosage((get_Dosage() == 0) ? 1 : 0);
+				break;
+			case ACT_PUMP:
+				set_Pump((get_Pump() == 0) ? 1 : 0);
+				break;
+			case ACT_DRYER:
+				set_Dryer((get_Dryer() == 0) ? 1 : 0);
+				break;
+			case ACT_WATER:
+				water_fill((water_filling() == 0) ? 1 : 0);
+				break;
+		}
+	}
+	else
+	{
+#else
+		if (!litterlanguage_running()) {
+			/* Scoop-only program */
+			full_wash = 0;
+			/* Start the program */
+			litterlanguage_start(full_wash);
+			/* Update the state machine */
+			state = STATE_RUNNING;
+		} else
+			/* Toggle pause current program */
+			litterlanguage_pause(!litterlanguage_paused());
+#endif
+#ifdef HAS_DIAG
+	}
+#endif
 
 	update_display();
 }

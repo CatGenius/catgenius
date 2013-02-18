@@ -405,26 +405,38 @@ void waterdetection_event (unsigned char detected)
 {
 	printtime();
 	DBG2("Water %s\n", detected?"high":"low");
-	if (ins_state != STATE_IDLE) {
-		/* Disable timeout on event */
-		if (detected) {
-			/* Turn off the water and disable the timeout */
-			water_fill(0);
-			timeoutnever(&timer_fill);
-			printtime();
-			DBG("Filled\n");
-		} else {
-			printtime();
-			DBG("Drained\n");
-		}
-	} else {
-		error_flood = detected;
-		if (error_flood) {
-			printtime();
-			DBG("Box flooded!\n");
-		}
-		litterlanguage_event(EVENT_ERR_FLOOD, error_flood);
+
+#ifdef HAS_DIAG
+	if (panel_mode == PANEL_DIAG)
+	{
+		update_display();
 	}
+	else
+	{
+#endif
+		if (ins_state != STATE_IDLE) {
+			/* Disable timeout on event */
+			if (detected) {
+				/* Turn off the water and disable the timeout */
+				water_fill(0);
+				timeoutnever(&timer_fill);
+				printtime();
+				DBG("Filled\n");
+			} else {
+				printtime();
+				DBG("Drained\n");
+			}
+		} else {
+			error_flood = detected;
+			if (error_flood) {
+				printtime();
+				DBG("Box flooded!\n");
+			}
+			litterlanguage_event(EVENT_ERR_FLOOD, error_flood);
+		}
+#ifdef HAS_DIAG
+	}
+#endif
 
 	eventlog_track(EVENTLOG_WET_SENSOR, detected);
 }
@@ -454,7 +466,15 @@ void heatsensor_event (unsigned char detected)
 {
 	// CMM - Overflow bug fix? - error_overheat = detected;
 	error_overheat = detected ? 1 : 0;
-	litterlanguage_event(EVENT_ERR_OVERHEAT, error_overheat);
+#ifdef HAS_DIAG
+	if (panel_mode != PANEL_DIAG)
+	{
+#else
+		litterlanguage_event(EVENT_ERR_OVERHEAT, error_overheat);
+#endif
+#ifdef HAS_DIAG
+	}
+#endif
 	eventlog_track(EVENTLOG_HEAT_SENSOR, error_overheat);
 }
 /* heatsensor_event */
