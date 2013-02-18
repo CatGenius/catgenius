@@ -64,6 +64,9 @@ unsigned char	litterlanguage_running	(void) ;
 void		litterlanguage_pause	(unsigned char	pause) ;
 unsigned char	litterlanguage_paused	(void) ;
 void		litterlanguage_stop	(void) ;
+#ifdef CMM_ARM_EXPERIMENT
+extern void ins_Arm (unsigned char target);
+#endif
 
 
 #endif /* LIITERLANGUAGE_H */

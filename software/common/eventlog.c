@@ -19,7 +19,7 @@ static _U16 eventlog_state[EVENTLOG_MAX];
 
 static void eventlog_write(_U08 index, _U16 value)
 {
-	TX3("<e i=%d v=%d />\n", index, value);
+	TX3("<e i=%u v=%u />\n", index, value);
 }
 
 void eventlog_init(void)

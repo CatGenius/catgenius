@@ -45,7 +45,9 @@ extern void litterlanguage_event (unsigned char event, unsigned char argument);
 /******************************************************************************/
 
 static unsigned char		prg_source		= 0;
+#ifndef CMM_ARM_EXPERIMENT
 static unsigned char		arm_position		= 0;
+#endif
 static bit			wet_program		= 0;
 static bit			paused			= 0;
 static bit			error_fill		= 0;
@@ -168,12 +170,18 @@ void litterlanguage_work (void)
 			timeoutnever(&timer_autodose);
 			set_Dosage(0);
 		}
+#ifdef CMM_ARM_EXPERIMENT
+	}
+		// Always check arm timeout, even if a prog is not running
+#endif
 		/* Check arm timeout */
 		if (timeoutexpired(&timer_autoarm)) {
 			timeoutnever(&timer_autoarm);
 			set_Arm(ARM_STOP);
 		}
+#ifndef CMM_ARM_EXPERIMENT
 	}
+#endif
 
 	/* Von Neumann-like execution state machine */
 	switch (ins_state) {
@@ -487,6 +495,58 @@ static unsigned char get_instruction (struct instruction *instruction)
 	}
 }
 
+#ifdef CMM_ARM_EXPERIMENT
+void ins_Arm (unsigned char target)
+{
+	unsigned long			arm_pos;
+	unsigned long			arm_target;
+	unsigned char			arm_mode;
+
+	// Check for magick values
+	switch (target)
+	{
+		case INS_ARM__STOP:
+			timeoutnever(&timer_autoarm);
+			set_Arm(ARM_STOP);
+			return;
+		case INS_ARM__DOWN:
+			settimeout(&timer_autoarm, ARM_STROKE * 10);	/* Safety timeout */
+			set_Arm(ARM_DOWN);
+			return;
+		case INS_ARM__UP:
+			settimeout(&timer_autoarm, ARM_STROKE * 2);		/* Safety timeout */
+			set_Arm(ARM_UP);
+			return;
+	}
+
+	// Get current arm position and calculate target based on requested deployment percentage
+	get_ArmPosition(&arm_pos, &arm_mode);
+	arm_target = (target > 100) ? ARM_STROKE : (target * ARM_STROKE_PCT);
+
+	if (arm_target == arm_pos)
+	{
+		// If we're at the desired position and the arm isn't moving then there's nothing to do
+		if (arm_mode == ARM_STOP)
+			return;
+		timeoutnever(&timer_autoarm);
+		arm_mode = ARM_STOP;
+	}
+	else
+	{
+		arm_mode = (arm_target > arm_pos) ? ARM_DOWN : ARM_UP;
+		// NOTE: arm_pos is being used here as a temp var to store the time to move the arm
+		arm_pos = (arm_target > arm_pos) ? (arm_target - arm_pos) : (arm_pos - arm_target);
+
+		// If target is fully retracted or fully deployed, then add 10% movement time to ensure calibration
+		if ((arm_target == 0) || (arm_target == ARM_STROKE))
+			arm_pos += (ARM_STROKE_PCT * 10);
+		settimeout(&timer_autoarm, arm_pos);
+	}
+
+	set_Arm(arm_mode);
+}
+#endif
+
 static void exe_instruction (void)
 {
 	static struct instruction	const * ret_address;
@@ -519,6 +579,9 @@ static void exe_instruction (void)
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_ARM:
+#ifdef CMM_ARM_EXPERIMENT
+		ins_Arm(cur_instruction.operant);
+#else
 //		DBG("INS_ARM, %s", (cur_instruction.operant == ARM_STOP)?"ARM_STOP":((cur_instruction.operant == ARM_DOWN)?"ARM_DOWN":"ARM_UP"));
 		switch (cur_instruction.operant) {
 		case INS_ARM__STOP:
@@ -554,6 +617,7 @@ static void exe_instruction (void)
 			arm_position = cur_instruction.operant;
 			break;
 		}
+#endif
 		ins_pointer++;
 		ins_state = STATE_FETCH_INS;
 		break;

@@ -17,6 +17,14 @@ extern void heatsensor_event  (unsigned char detected);
 extern void startbutton_event (unsigned char up);
 extern void setupbutton_event (unsigned char up);
 
+#include "../common/app_prefs.h"
+#ifdef CMM_ARM_EXPERIMENT
+#include "../common/catgenie120.h"
+#include <stdio.h>
+static unsigned long arm_pos = 0;
+static struct timer arm_start = 0;
+#endif
+
 
 /******************************************************************************/
 /* Macros								      */
@@ -410,9 +418,57 @@ unsigned char get_Bowl (void)
 	return (BOWL_STOP);
 }
 
+#ifdef CMM_ARM_EXPERIMENT
+void get_ArmPosition (unsigned long *pos, unsigned char *mode)
+{
+	struct timer now;
+	unsigned long diff;
+
+	gettimestamp(&now);
+	*mode = get_Arm();
+
+	diff = timestampdiff(&now, &arm_start);
+	if (*mode == ARM_DOWN)
+	{
+		*pos = arm_pos + diff; // TBD: Overflow?
+		if (*pos > ARM_STROKE) *pos = ARM_STROKE;
+	}
+	else if (*mode == ARM_UP)
+	{
+		*pos = (diff > arm_pos) ? 0 : (arm_pos - diff);
+	}
+	else
+		*pos = arm_pos;
+}
+#endif
 
 void set_Arm (unsigned char mode)
 {
+#ifdef CMM_ARM_EXPERIMENT
+	unsigned long cur_pos;
+	unsigned char old_mode;
+
+	get_ArmPosition(&cur_pos, &old_mode);
+
+	if (mode == old_mode) return;
+
+	if (old_mode != ARM_STOP)
+	{
+		if (cur_pos != arm_pos)
+		{
+			DBG("Arm moved ");
+			if (cur_pos > arm_pos)
+				DBG2("+%lu", cur_pos - arm_pos);
+			else
+				DBG2("-%lu", arm_pos - cur_pos);
+			DBG3(" to %lu (%lu)\n", cur_pos, (cur_pos / ARM_STROKE_PCT));
+			arm_pos = cur_pos;
+		}
+	}
+
+	if (mode != ARM_STOP) gettimestamp(&arm_start);
+#endif
+
 	switch (mode) {
 	default:
 	case ARM_STOP:
