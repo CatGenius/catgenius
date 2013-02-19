@@ -469,9 +469,8 @@ void heatsensor_event (unsigned char detected)
 #ifdef HAS_DIAG
 	if (panel_mode != PANEL_DIAG)
 	{
-#else
-		litterlanguage_event(EVENT_ERR_OVERHEAT, error_overheat);
 #endif
+		litterlanguage_event(EVENT_ERR_OVERHEAT, error_overheat);
 #ifdef HAS_DIAG
 	}
 #endif
