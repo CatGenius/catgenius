@@ -284,46 +284,53 @@ void catsensor_event (unsigned char detected)
 	DBG2("Cat %s\n", detected?"in":"out");
 
 #ifdef HAS_DIAG
-	update_display();
-#else
-	/* Trigger detection on rising edge only */
-	if (detected)
-		cat_detected = 1;
-
-	/* Update cat timeout once detection is eminent */
-	if (cat_detected)
-		if (detected)
-			timeoutnever(&cattimer);
-		else
-			settimeout(&cattimer, CAT_TIMEOUT);
-
-	if ( (auto_mode == AUTO_DETECTED1ON1) ||
-	     (auto_mode == AUTO_DETECTED1ON2) ||
-	     (auto_mode == AUTO_DETECTED1ON3) ||
-	     (auto_mode == AUTO_DETECTED1ON4) ||
-	     (auto_mode == AUTO_DETECTED) ) {
-	     	if (cat_detected && state == STATE_IDLE) {
-			switch(auto_mode) {
-			case AUTO_DETECTED1ON1:
-				full_wash = 1;
-				break;
-			case AUTO_DETECTED1ON2:
-				full_wash = (interval >= 1);
-				break;
-			case AUTO_DETECTED1ON3:
-				full_wash = (interval >= 2);
-				break;
-			case AUTO_DETECTED1ON4:
-				full_wash = (interval >= 3);
-				break;
-			case AUTO_DETECTED:
-				full_wash = 0;
-				break;
-			}
-			state = STATE_CAT;
-		}
-		/* Update the display */
+	if (panel_mode == PANEL_DIAG)
+	{
 		update_display();
+	}
+	else
+	{
+#endif
+		/* Trigger detection on rising edge only */
+		if (detected)
+			cat_detected = 1;
+	
+		/* Update cat timeout once detection is eminent */
+		if (cat_detected)
+			if (detected)
+				timeoutnever(&cattimer);
+			else
+				settimeout(&cattimer, CAT_TIMEOUT);
+	
+		if ( (auto_mode == AUTO_DETECTED1ON1) ||
+		     (auto_mode == AUTO_DETECTED1ON2) ||
+		     (auto_mode == AUTO_DETECTED1ON3) ||
+		     (auto_mode == AUTO_DETECTED1ON4) ||
+		     (auto_mode == AUTO_DETECTED) ) {
+		     	if (cat_detected && state == STATE_IDLE) {
+				switch(auto_mode) {
+				case AUTO_DETECTED1ON1:
+					full_wash = 1;
+					break;
+				case AUTO_DETECTED1ON2:
+					full_wash = (interval >= 1);
+					break;
+				case AUTO_DETECTED1ON3:
+					full_wash = (interval >= 2);
+					break;
+				case AUTO_DETECTED1ON4:
+					full_wash = (interval >= 3);
+					break;
+				case AUTO_DETECTED:
+					full_wash = 0;
+					break;
+				}
+				state = STATE_CAT;
+			}
+			/* Update the display */
+			update_display();
+		}
+#ifdef HAS_DIAG
 	}
 #endif
 
@@ -658,7 +665,7 @@ void start_short (void)
 	}
 	else
 	{
-#else
+#endif
 		if (!litterlanguage_running()) {
 			/* Scoop-only program */
 			full_wash = 0;
@@ -669,7 +676,6 @@ void start_short (void)
 		} else
 			/* Toggle pause current program */
 			litterlanguage_pause(!litterlanguage_paused());
-#endif
 #ifdef HAS_DIAG
 	}
 #endif
