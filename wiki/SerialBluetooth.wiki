@@ -74,15 +74,6 @@ http://catgenius.googlecode.com/svn/wiki/images/apresence/cg_serial_connected.pn
 To save a whole USD $1 (you really are cheap!), you could just use a single 6-pin cable.  If you choose to do so, the finished cable should look like below.  Note that in this verison of the cable, the black wire should connect to the GND pin on both the Bluetooth module and the CG board and the green wire should connect to VCC/5V:<br>
 http://catgenius.googlecode.com/svn/wiki/images/apresence/cable_serial_option_1.png
 
-= Modifying CatGenius Code =
-
-The standard CatGenius code sets up the serial port for 19200 bps, and GenieDiag sets it up for 38400.  The Bluetooth module expects 115200, so we'll need to change that:<br>
-http://catgenius.googlecode.com/svn/wiki/images/apresence/rn_bt_cg_code_mod.png
-
-After the small code modification, build the code and re-flash the CG.
-
-There is information about how to use the MPLab IDE to make the modifications [PICkit3MPLabs here].
-
 = Connecting to Your CatGenius over Bluetooth =
 
 == Preparing ==
