@@ -1,4 +1,4 @@
-#Description of LitterLanguage, the 'programming language' for the washing program.
+#summary Description of LitterLanguage, the 'programming language' for the washing program.
 
 = CatGenius application program =
 
