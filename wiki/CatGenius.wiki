@@ -1,4 +1,4 @@
-#Main page
+#summary Main page
 
 = Introduction =
 
