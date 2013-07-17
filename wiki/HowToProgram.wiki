@@ -1,4 +1,4 @@
-#Description on how to reprogram the CatGenie controller
+#summary Description on how to reprogram the CatGenie controller
 
 = Opening the box =
 
