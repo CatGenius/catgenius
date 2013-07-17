@@ -1,4 +1,4 @@
-#Description on how to add a serial port to the CatGenie controller board
+#summary Description on how to add a serial port to the CatGenie controller board
 
 = Introduction =
 
