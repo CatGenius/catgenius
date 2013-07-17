@@ -17,5 +17,6 @@
     * [DimLED The dim LED problem]
     * [LitterLanguage LitterLanguage]
   * [ReleaseHistory Release History]
+  * [CartridgeGenius]
   * Wiki
     * [http://code.google.com/p/catgenius/w/list All Pages]
