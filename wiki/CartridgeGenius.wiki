@@ -21,6 +21,9 @@ It's easy; Anybody can do it. You don't need to be a genius to use CartridgeGeni
 
 = Installing CartridgeGenius =
 
+An you don't need to be a genius to install CartridgeGenius either. Anybody who knows at which end to hold a screwdriver and is not afraid to use it can install CartridgeGenius on their box. Just watch this instruction video:
+<wiki:video url="http://www.youtube.com/watch?v=N8NyGfgZmQI"/>
+
 = Before you order =
 
 = Ordering information =
