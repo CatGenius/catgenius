@@ -2,12 +2,25 @@
 
 = Introduction =
 
-Add your content here.
+Want to break free your box? But flashing alternative firmware is a bit too much of a good thing? Then CartridgeGenius may be just what you are looking for: CartridgeGenius is a cartridge emulator that puts you back in control over your litter box by making it think it has a full cartridge. The Genie is finally out of the bottle!<br>
+http://catgenius.googlecode.com/svn/wiki/images/CartridgeGenius.jpg
 
+= How does it work? =
 
-= Details =
+CartridgeGenius is a drop-in replacement for the cartridge tag reader in your catbox. It simulates the presence of the both the original tag reader and the tag on the cartridge. We call this simulated cartridge a virtual cartridge. This enables you to repair your catbox in case the original tag reader broke down, or to remain using your box in case the supplier goes out of business, as was the case with the LitterFree box. In other words: CartridgeGenius puts you back in control over your appliance.
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+= Features =
+
+CartridgeGenius does a little more than just simulating a cartridge. It extends your possibilities and allow you to use wash your box as often as you want, without paying the penalty. Below is a list of it's features:
+  * Simulates the presence and absence of a cartridge. With one press of a button, the virtual cartridge can be inserted or removed from the litter box.
+  * Simulated user adjustable virtual cartridge level. With another button the level of the virtual cartridge can be changed.
+  * Simulates different cartridge types. Whether you want 120 cycle cartridge, a 60 cycle cartridge or even a maintenance cartridge, you can select it at the touch of a button.
+  * Auto-mode does it all, automatically. When enabled, you'll never need to think about the virtual cartridge again: As soon as the virtual cartridge level hits 0, the virtual cartridge is removed, reset to 100% and re-inserted automatically. This is very useful for people who prefer to use a large external reservoir instead of cartridges.
+It's easy; Anybody can do it. You don't need to be a genius to use CartridgeGenius, just watch this demonstration video:
+<wiki:video url="http://www.youtube.com/watch?v=rUlOYHhj1-o"/>
+
+= Installing CartridgeGenius =
+
+= Before you order =
+
+= Ordering information =
