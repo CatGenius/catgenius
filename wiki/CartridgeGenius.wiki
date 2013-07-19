@@ -16,12 +16,12 @@ CartridgeGenius does a little more than just simulating a cartridge. It extends 
   * Simulated user adjustable virtual cartridge level. With another button the level of the virtual cartridge can be changed.
   * Simulates different cartridge types. Whether you want 120 cycle cartridge, a 60 cycle cartridge or even a maintenance cartridge, you can select it at the touch of a button.
   * Auto-mode does it all, automatically. When enabled, you'll never need to think about the virtual cartridge again: As soon as the virtual cartridge level hits 0, the virtual cartridge is removed, reset to 100% and re-inserted automatically. This is very useful for people who prefer to use a large external reservoir instead of cartridges.
-It's easy; Anybody can do it. You don't need to be a genius to use CartridgeGenius, just watch this demonstration video:
+It's easy; Anybody can do it. You don't need to be a genius to use CartridgeGenius, just watch this demonstration video:<br>
 <wiki:video url="http://www.youtube.com/watch?v=rUlOYHhj1-o"/>
 
 = Installing CartridgeGenius =
 
-An you don't need to be a genius to install CartridgeGenius either. Anybody who knows at which end to hold a screwdriver and is not afraid to use it can install CartridgeGenius on their box. Just watch this instruction video:
+An you don't need to be a genius to install CartridgeGenius either. Anybody who knows at which end to hold a screwdriver and is not afraid to use it can install CartridgeGenius on their box. Just watch this instruction video:<br>
 <wiki:video url="http://www.youtube.com/watch?v=N8NyGfgZmQI"/>
 
 = Before you order =
