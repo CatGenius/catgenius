@@ -30,6 +30,8 @@ An you don't need to be a genius to install CartridgeGenius either. Anybody who 
 
 Installing this component involves opening the processing unit of your litter box. It directly connects to the internal low-voltage electronic circuits of your box. In a very far-fetched short circuit situation it is theoretically possible that the exposed conductors on the CartridgeGenius will carry live mains voltage. Since I have no influence on how well or careful CartridgeGenius is installed, I will take no responsibility whatsoever for any resulting damage of installing CartridgeGenius. In other words: Installing CartridgeGenius and any resulting damage by installing or using it is completely at your own risk. By buying this component you agree to that.
 
+Some alternative detergents are harmful to the internal silicon tubing of your box. You can either refill your cartridges with plain tap water, as I do, to keep the tubing and pump in good shape. Or you can test an alternative solution with some silicon tubing available in an RC model car shop, where they will call it fuel line. Make sure you get silicon fuel line as used for methanol containing fuels, not the one used for actual petrol. Cut off a piece, put it in the bottle of detergent for a couple of days and if it still feels intact afterwards, the detergent should be safe for your box. But here too, selecting and using an alternative detergent is at your own risk.
+
 == Compatibility ==
 
 CartridgeGenius works on Model 120 and Model 120+ CatGenie litter boxes. It is also compatible with VIC Club (Very Important Cats Club) boxes, but only after you have fulfilled your VIC 1080 or VIC 840 supply contract. CartridgeGenius is NOT compatible with the older Model 60.
