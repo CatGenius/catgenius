@@ -50,9 +50,10 @@ Do NOT buy a CartridgeGenius if you consider to buy a litter box in the future. 
 
 Don't wait until your cartridge is depleted before ordering or installing CartridgeGenius. Keep a working original cartridge at hand because it's a very useful tool when diagnosing problems. If you have a problem, my first question will be: Does the problem occur when using the original cartridge reader with an original cartridge?
 
- = Ordering information =
+= Ordering information =
 
-Still under construction.<br>
-A PayPal button will appear here later. For the time being, please send an email with the word cginfo in the subject to: cartridgegenius (at] gmail {dot) com
-You will receive an auto-reply with information on how to order, and everything you need to know before you do so. Questions? Just use the same email address, but avoid the word cginfo in the subject.<br>
-<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WBC4F92L6BF38" target="_blank"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0"></img></a>
+CartridgeGenius devices are *$99* each, not including shipment. You can order by using the PayPal button below.<br>
+<br>
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WBC4F92L6BF38" target="_blank"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0"></img></a><br>
+<br>
+All shipments within the continental US will be shipped insured priority mail. Priority mail has a 1-3 day timeline. Note to all international customers (outside the US): All units will be shipped from the US. All shipments will be shipped through USPS with insurance and tracking to all major destinations. We cannot be held liable for customs fees, duties, or taxes. Although, these have not been an issue up to this point. Before ordering, please don't forget to watch the installing video and read the User's manual, so you will know what will receive.
