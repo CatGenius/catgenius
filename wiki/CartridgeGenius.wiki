@@ -7,7 +7,7 @@ http://catgenius.googlecode.com/svn/wiki/images/CartridgeGenius.jpg
 
 = How does it work? =
 
-CartridgeGenius is a drop-in replacement for the cartridge tag reader in your catbox. It simulates the presence of the both the original tag reader and the tag on the cartridge. We call this simulated cartridge a virtual cartridge. This enables you to repair your catbox in case the original tag reader broke down, or to remain using your box in case the supplier goes out of business, as was the case with the LitterFree box. In other words: CartridgeGenius puts you back in control over your appliance.
+CartridgeGenius is a drop-in replacement for the cartridge tag reader in your litter box. It simulates the presence of the both the original tag reader and the tag on the cartridge. I call this simulated cartridge a virtual cartridge. This enables you to repair your litter box in case the original tag reader broke down, or to remain using your box in case the supplier goes out of business, as was the case with the LitterFree box. In other words: CartridgeGenius puts you back in control over your appliance.
 
 = Features =
 
@@ -26,9 +26,31 @@ An you don't need to be a genius to install CartridgeGenius either. Anybody who 
 
 = Before you order =
 
-Still under construction.
+== Responsibility ==
 
-= Ordering information =
+Installing this component involves opening the processing unit of your litter box. It directly connects to the internal low-voltage electronic circuits of your box. In a very far-fetched short circuit situation it is theoretically possible that the exposed conductors on the CartridgeGenius will carry live mains voltage. Since I have no influence on how well or careful CartridgeGenius is installed, I will take no responsibility whatsoever for any resulting damage of installing CartridgeGenius. In other words: Installing CartridgeGenius and any resulting damage by installing or using it is completely at your own risk. By buying this component you agree to that.
+
+== Compatibility ==
+
+CartridgeGenius works on Model 120 and Model 120+ CatGenie litter boxes. It is also compatible with VIC Club (Very Important Cats Club) boxes, but only after you have fulfilled your VIC 1080 or VIC 840 supply contract. CartridgeGenius is NOT compatible with the older Model 60.
+
+== Warranty ==
+
+That's simple: This hand assembled device comes with a ONE YEAR warranty. This is reduced from the warranty for the first generation units. If it's defective, unable to do what it's supposed to do, and it's not caused by mis-handling, We will repair it or replace it for free. However, you do have to pay for shipment back and forth. Having said that, CartridgeGenius will most likely outlive the mechanics of your box by far.
+
+I have to make one exception for warranty: We cannot guarantee this CartridgeGenius to work with future litter boxes, due to possible counter measures. Therefore CartridgeGenius not working on a newly replaced litter box is not covered.
+
+If you have just purchased CartridgeGenius and it doesn't work with your current box, we will help you getting it to work. If we can't, we will offer you to send it back for a refund for the purchasing price (not including shipment).
+
+== Generic tips ==
+
+If you own a compatible litter box and you're considering to buy a CartridgeGenius, then please do so now because the device may no longer be available in the future. The devices have in stock are the only devices left and I don't think I will build another batch.
+
+Do NOT buy a CartridgeGenius if you consider to buy a litter box in the future. CartridgeGenius works with litter boxes currently on the market, but nobody knows if it will work with future versions and revisions.
+
+Don't wait until your cartridge is depleted before ordering or installing CartridgeGenius. Keep a working original cartridge at hand because it's a very useful tool when diagnosing problems. If you have a problem, my first question will be: Does the problem occur when using the original cartridge reader with an original cartridge?
+
+ = Ordering information =
 
 Still under construction.<br>
 A PayPal button will appear here later. For the time being, please send an email with the word cginfo in the subject to: cartridgegenius (at] gmail {dot) com
