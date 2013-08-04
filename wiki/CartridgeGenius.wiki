@@ -1,9 +1,14 @@
 #summary CartridgeGenius, the no-hassle cartridge solution.
 
+= Got one of these? =
+http://catgenius.googlecode.com/svn/trunk/documentation/catgenie120/Exterior.jpg
+
+= Then you may need one of these: =
+http://catgenius.googlecode.com/svn/wiki/images/CartridgeGenius.jpg
+
 = Introduction =
 
-Want to break free your box? But flashing alternative firmware is a bit too much of a good thing? Then CartridgeGenius may be just what you are looking for: CartridgeGenius is a cartridge emulator that puts you back in control over your litter box by making it think it has a full cartridge. The Genie is finally out of the bottle!<br>
-http://catgenius.googlecode.com/svn/wiki/images/CartridgeGenius.jpg
+Do you like your CatGenie, but not the returning cost of ownership for the cartridges? Want to break free your box, making it run without a cartridge, or a cartridge you have refilled? Then CartridgeGenius may just be what you are looking for: CartridgeGenius is a cartridge emulator that puts you back in control over your litter box by making it think it has a full cartridge. With this device you will truly own your litter box, without updating its firmware. Just hook up this device, that's all. The Genie is finally out of the bottle!<br>
 
 = How does it work? =
 
