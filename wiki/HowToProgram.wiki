@@ -183,3 +183,9 @@ Optionally you may want to press the Verify button to make sure everything is wr
 
 If you're a true hacker and don't mind getting your hands dirty, you can build your own PIC programmer for just a couple of dollars.  The pin-out is about the same as the PICkit 3, except pins 4 and 5 are reversed, and there is no LVP pin.  If you're going to try this, then I'm assuming you can figure that out.  Here is the link:<br>
 http://www.instructables.com/id/Business-Card-PIC-Programmer/
+
+= Caveats =
+
+Even though the box can be programmed unpowered, the result can be unstable. Problems can vary between an unstable box, erratic behaviour, the box loosing it's program or a combination of the three. The cause of this instability is a too-low supply voltage during programming when powering the CPU from the programmer.
+
+Another known problem is the CPU being identified by the programmer as ID 0000, usually accompanied by verification errors after programming. This problem is most likely caused an error or a poor contact in the programming cable. *One of the most common causes for a poor contact is a missing pin in the programming header on more recent controller boards*. To make sure your controller has a missing pin too, remove the plastic header from the programming header and check if all pins are present. Below is a photo of a programming header with the plastic header removed, showing a missing pin.
