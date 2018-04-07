@@ -12,7 +12,7 @@
 #elif defined APP_GENIEDIAG
 #  include "../catgenius/geniediag_prefs.h"
 #elif defined APP_IOTESTER
-#  include "../catgenius/iotester_prefs.h"
+#  include "../iotester/iotester_prefs.h"
 #else
    /*
     * If you get this error, you need to add one of the above
