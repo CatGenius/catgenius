@@ -6,7 +6,7 @@
 /* History :	16 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
-#include <htc.h>
+#include <xc.h>
 #include <stdio.h>
 
 #include "../common/hardware.h"		/* Flexible hardware configuration */
@@ -37,7 +37,7 @@ static struct timer	holdtimeout	= NEVER;
 
 /* Event statuses */
 bit			cat_detected	= 0;
-bit			overheated	= 0;
+bit			error_overheat	= 0;
 
 /* Keyboard status bits */
 static unsigned char	buttonmask_cur	= 0;
@@ -188,7 +188,7 @@ void catsensor_event (unsigned char detected)
 {
 	cat_detected = detected;
 
-	DBG("Cat: %s\n", cat_detected?"in":"out");
+	DBG2("Cat: %s\n", cat_detected?"in":"out");
 
 	if (cat_detected)
 		set_LED_Cat(0xFF, 1);
@@ -198,22 +198,33 @@ void catsensor_event (unsigned char detected)
 /* catsensor_event */
 
 
-void watersensor_event (unsigned char detected)
+void waterdetection_event (unsigned char detected)
 /******************************************************************************/
-/* Function:	watersensor_event					      */
-/*		- Handle state changes of water sensor			      */
+/* Function:	waterdetection_event					      */
+/*		- Handle state changes of water detection		      */
 /* History :	13 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	DBG("Water: %s\n", detected?"high":"low");
+	DBG2("Water: %s\n", detected?"high":"low");
 
 	if (detected)
 		set_LED_Error(0xFF, 1);
 	else
 		set_LED_Error(0x00, 1);
 }
-/* watersensor_event */
+/* waterdetection_event */
+
+
+void watersensor_event (unsigned int reflectionquality)
+/******************************************************************************/
+/* Function:	watersensor_event					      */
+/*		- Handle value changes of water sensor reflection	      */
+/* History :	13 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
+{
+} /* watersensor_event */
 
 
 void heatsensor_event (unsigned char detected)
@@ -224,9 +235,9 @@ void heatsensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	overheated = detected;
+	error_overheat = detected;
 
-	DBG("Overheat: %s\n", overheated?"yes":"no");
+	DBG2("Overheat: %s\n", error_overheat?"yes":"no");
 }
 /* heatsensor_event */
 
