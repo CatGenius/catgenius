@@ -20,6 +20,7 @@
       <itemPath>litterlanguage.h</itemPath>
       <itemPath>romwashprogram.h</itemPath>
       <itemPath>userinterface.h</itemPath>
+      <itemPath>configbits.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
