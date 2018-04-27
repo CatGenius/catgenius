@@ -14,6 +14,7 @@
       <logicalFolder name="Library" displayName="Library" projectFiles="true">
         <itemPath>../../../../../../../Program Files (x86)/HI-TECH Software/PICC/9.83/include/pic16f1939.h</itemPath>
       </logicalFolder>
+      <itemPath>configbits.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
