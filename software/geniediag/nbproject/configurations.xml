@@ -21,6 +21,7 @@
         <itemPath>../../../../../../../Program Files (x86)/HI-TECH Software/PICC/9.83/include/pic16f1939.h</itemPath>
       </logicalFolder>
       <itemPath>userinterface.h</itemPath>
+      <itemPath>configbits.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
