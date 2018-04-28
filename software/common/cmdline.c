@@ -233,4 +233,5 @@ int help (int argc, char* argv[])
 
 	return ERR_OK;
 }
+
 #endif /* HAS_COMMANDLINE */
