@@ -7,20 +7,20 @@
 #define RXBUFFER			/* Use buffers for received characters */
 //#define TXBUFFER			/* Buffers for transmitted character not implemented yet */
 #define XONXOFF				/* Use Xon/Xoff handshaking (for receiving only) */
-#define BUFFER_SIZE		8	/* Don't change this without adapting struct queue and roll-overs too */
+#define BUFFER_SIZE		8	/* Must to be a power of 2 or roll-overs need to be taken into account */
 #define BUFFER_SPARE		3	/* Minumum number of free positions before issuing Xoff */
 
 #define INTDIV(t,n)		((2*(t)+(n))/(2*(n)))		/* Macro for integer division with proper round-off (BEWARE OF OVERFLOW!) */
 #define FREE(h,t,s)		(((h)>=(t))?((s)-((h)-(t))-1):((t)-(h))-1)
 
 #ifdef XONXOFF
-#define XON		0x11
-#define XOFF		0x13
+#define XON			0x11
+#define XOFF			0x13
 #endif /* XONXOFF */
 
 
 struct queue {
-	char		buffer[8];
+	char		buffer[BUFFER_SIZE];
 	unsigned	head	: 3;
 	unsigned	tail	: 3;
 	unsigned	full	: 1;
@@ -64,20 +64,22 @@ void serial_init(unsigned long bitrate)
 	BRGH = 1;	/* High-speed bit rate generation */
 	SYNC = 0;	/* Asynchronous mode */
 	SPEN = 1;	/* Enable serial port pins */
+#ifdef RXBUFFER
+	RCIE = 1;	/* Enable rx interrupts */
+#else /* RXBUFFER */
 	RCIE = 0;	/* Disable rx interrupts */
+#endif /* RXBUFFER */
+#ifdef TXBUFFER
+	TXIE = 1;	/* Enable tx interrupts */
+#else /* TXBUFFER */
 	TXIE = 0;	/* Disable tx interrupts */
+#endif /* TXBUFFER */
 	RX9  = 0;	/* 8-bit reception mode */
 	TX9  = 0;	/* 8-bit transmission mode */
 	CREN = 0;	/* Reset receiver */
 	CREN = 1;	/* Enable reception */
 	TXEN = 0;	/* Reset transmitter */
 	TXEN = 1;	/* Enable transmission */
-#ifdef RXBUFFER
-	RCIE = 1;	/* Enable rx interrupts */
-#endif /* RXBUFFER */
-#ifdef TXBUFFER
-	TXIE = 1;	/* Enable tx interrupts */
-#endif /* TXBUFFER */
 
 #ifdef XONXOFF
 	TXREG = XON;
@@ -131,7 +133,7 @@ void serial_rx_isr(void)
 	rx.head++;
 #ifdef XONXOFF
 	if (FREE(rx.head, rx.tail, BUFFER_SIZE) <= (BUFFER_SPARE)) {
-		while(!TXIF);
+		while(!TXIF);	// TBD: Could potentially wait forever here
 		TXREG = XOFF;
 	}
 #endif /* XONXOFF */
@@ -175,6 +177,7 @@ void putch(char ch)
 	}
 	TXREG = ch;
 	CLRWDT();
+	// TBD: Delay based on baud rate?
 #endif /* TXBUFFER */
 }
 
