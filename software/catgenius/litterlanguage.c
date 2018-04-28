@@ -52,10 +52,10 @@ static unsigned char		ins_state		= STATE_IDLE;
 static struct instruction	const * ins_pointer	= 0;
 static struct instruction	cur_instruction;
 
-static struct timer		timer_waitins   	= NEVER;
-static struct timer		timer_fill      	= NEVER;
-static struct timer		timer_drain     	= NEVER;
-static struct timer		timer_autodose  	= NEVER;
+static struct timer		timer_waitins		= NEVER;
+static struct timer		timer_fill		= NEVER;
+static struct timer		timer_drain		= NEVER;
+static struct timer		timer_autodose		= NEVER;
 
 
 /******************************************************************************/
@@ -86,22 +86,21 @@ void litterlanguage_init (unsigned char flags)
 			DBG("Box is ");
 			switch (eeprom_read(NVM_BOXSTATE)){
 			case BOX_TIDY:
-				DBG("tidy");
+				DBG("tidy\n");
 				break;
 			case BOX_MESSY:
-				DBG("messy");
+				DBG("messy\n");
 				litterlanguage_cleanup(0);
 				break;
 			case BOX_WET:
-				DBG("wet");
+				DBG("wet\n");
 				litterlanguage_cleanup(1);
 				break;
 			default:
-				DBG("unknown");
+				DBG("unknown\n");
 				eeprom_write(NVM_BOXSTATE, BOX_TIDY);
 				break;
 			}
-			DBG("\n");
 			break;
 		case START_BUTTON:
 			/* User wants to force a wet cleanup cycle */
@@ -141,7 +140,10 @@ void litterlanguage_work (void)
 			/* Fill error */
 			error_fill = 1;
 			/* Pauze */
-			litterlanguage_pause(1);
+//			litterlanguage_pause(1);
+			litterlanguage_stop();
+			set_LED_Error(0x01, 1);
+			set_Beeper(0x01, 1);
 		}
 
 		/* Check for draining timeout */
@@ -154,7 +156,10 @@ void litterlanguage_work (void)
 			/* Drain error */
 			error_drain = 1;
 			/* Pauze */
-			litterlanguage_pause(1);
+//			litterlanguage_pause(1);
+			litterlanguage_stop();
+			set_LED_Error(0x05, 1);
+			set_Beeper(0x05, 1);
 		}
 		/* Check for overheating error */
 		if( overheat_detected &&
@@ -164,7 +169,10 @@ void litterlanguage_work (void)
 			/* Overheat error */
 			error_dryer = 1;
 			/* Pauze */
-			litterlanguage_pause(1);
+//			litterlanguage_pause(1);
+			litterlanguage_stop();
+			set_LED_Error(0x15, 1);
+			set_Beeper(0x015, 1);
 		}
 	}
 
@@ -185,27 +193,26 @@ void litterlanguage_work (void)
 
 	case STATE_GET_START:	/* Wait for the start instruction to be fetched */
 		if (get_instruction(&cur_instruction)) {
-			printtime();
-			DBG("IP 0x%04X: ", ins_pointer);
+//			DBG("IP 0x%04X: ", ins_pointer);
 			if (cur_instruction.opcode == INS_START) {
-				DBG("INS_START, %s", wet_program?"wet":"dry");
+//				DBG("INS_START, %s", wet_program?"wet":"dry");
 				/* Check if this is a valid program for us */
 				if( ((cur_instruction.operant & 0x00FF) <= INS_END) &&
 				    ( (!wet_program && (cur_instruction.operant & FLAGS_DRYRUN)) ||
 				      (wet_program && (cur_instruction.operant & FLAGS_WETRUN)) ) ) {
-				      	if (eeprom_read(NVM_BOXSTATE) < BOX_MESSY)
+					if (eeprom_read(NVM_BOXSTATE) < BOX_MESSY)
 						eeprom_write(NVM_BOXSTATE, BOX_MESSY);
 					ins_pointer++;
 					ins_state = STATE_FETCH_INS;
 				} else {
 					ins_state = STATE_IDLE;
-					DBG(", incompatible");
+//					DBG(", incompatible");
 				}
 			} else {
 				ins_state = STATE_IDLE;
-				DBG(", no start: 0x%X", cur_instruction.opcode);
+//				DBG(", no start: 0x%X", cur_instruction.opcode);
 			}
-			DBG("\n");
+//			DBG("\n");
 		}
 		break;
 
@@ -233,8 +240,8 @@ void litterlanguage_start (unsigned char wet)
 {
 	extern const struct instruction	washprogram[];
 	if (ins_state == STATE_IDLE) {
-		/* TODO: Stack overflow if we're printing here */
-//		DBG("Starting %s program\n", wet?"wet":"dry");
+		printtime();
+		DBG("Starting %s program\n", wet?"wet":"dry");
 		switch (prg_source) {
 		case SRC_ROM:
 			ins_pointer = &washprogram[0];
@@ -255,11 +262,12 @@ unsigned char litterlanguage_running (void)
 void litterlanguage_pause (unsigned char pause)
 {
 	static struct {
-		unsigned char	bowl;
-		unsigned char	arm;
-		unsigned char	pump;
-		unsigned char	dosage;
-		unsigned char	dryer;
+		unsigned	bowl	: 2;
+		unsigned	arm	: 2;
+		unsigned	water	: 1;
+		unsigned	pump	: 1;
+		unsigned	dosage	: 1;
+		unsigned	dryer	: 1;
 		unsigned long	wait;
 		unsigned long	fill;
 		unsigned long	drain;
@@ -274,6 +282,8 @@ void litterlanguage_pause (unsigned char pause)
 		set_Bowl(BOWL_STOP);
 		context.arm = get_Arm();
 		set_Arm(ARM_STOP);
+		context.water = water_filling();
+		water_fill(0);
 		context.dosage = get_Dosage();
 		set_Dosage(0);
 		context.pump = get_Pump();
@@ -313,6 +323,7 @@ void litterlanguage_pause (unsigned char pause)
 		/* Restore hardware context */
 		set_Bowl(context.bowl);
 		set_Arm(context.arm);
+		water_fill(context.water);
 		set_Dosage(context.dosage);
 		set_Pump(context.pump);
 		set_Dryer(context.dryer);
@@ -331,8 +342,8 @@ unsigned char litterlanguage_paused (void)
 void litterlanguage_stop (void)
 {
 	if (ins_state != STATE_IDLE) {
-		/* TODO: Stack overflow if we're printing here */
-//		DBG("Stopping program\n");
+		printtime();
+		DBG("Stopping program\n");
 		/* Stop all actuators */
 		set_Bowl(BOWL_STOP);
 		set_Arm(ARM_STOP);
@@ -404,6 +415,8 @@ static void litterlanguage_cleanup (unsigned char wet)
 {
 	extern const struct instruction	cleanupprogram[];
 	if (ins_state == STATE_IDLE) {
+		printtime();
+		DBG("Starting %s cleanup\n", wet?"wet":"dry");
 		prg_source = SRC_ROM;
 		ins_pointer = &cleanupprogram[0];
 		wet_program = wet;
@@ -452,7 +465,7 @@ static void exe_instruction (void)
 //		DBG("INS_WATER, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
 			if (cur_instruction.operant) {
-			      	if (eeprom_read(NVM_BOXSTATE) < BOX_WET)
+				if (eeprom_read(NVM_BOXSTATE) < BOX_WET)
 					eeprom_write(NVM_BOXSTATE, BOX_WET);
 				/* Don't fill if water is detected already */
 				if (!water_detected()) {
@@ -556,8 +569,7 @@ static void exe_instruction (void)
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_END:
-		printtime();
-		DBG("INS_END\n");
+//		DBG("INS_END\n");
 		eeprom_write(NVM_BOXSTATE, BOX_TIDY);
 		litterlanguage_stop();
 		break;
