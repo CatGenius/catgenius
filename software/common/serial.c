@@ -51,7 +51,7 @@ void putch(char ch)
 			CREN = 1;
 		}
 		if (FERR) {
-			unsigned char dummy;
+			volatile unsigned char dummy;
 
 			dummy = RCREG;
 			TXEN  = 0;
