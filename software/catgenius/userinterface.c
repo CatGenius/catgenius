@@ -552,12 +552,21 @@ static void both_long (void)
 
 static void update_autotimer (unsigned char mode)
 {
+	/*
+	 * TODO: Functions settimeout and settimeout take up to 9.5 hours worth
+	 * of seconds, depending on the CPU frequency. So set, and postpone if
+	 * nessecary. This needs to be fixed to accomodate higher CPU
+	 * frequencies.
+	 */
 	switch (mode) {
 	case AUTO_TIMED1:
-		settimeout(&autotimer, 24 * 60 * 60 * SECOND);
+		settimeout(&autotimer, 9 * 60 * 60 * SECOND);
+		postponetimeout(&autotimer, 9 * 60 * 60 * SECOND);
+		postponetimeout(&autotimer, 6 * 60 * 60 * SECOND);
 		break;
 	case AUTO_TIMED2:
-		settimeout(&autotimer, 12 * 60 * 60 * SECOND);
+		settimeout(&autotimer, 9 * 60 * 60 * SECOND);
+		postponetimeout(&autotimer, 3 * 60 * 60 * SECOND);
 		break;
 	case AUTO_TIMED3:
 		settimeout(&autotimer,  8 * 60 * 60 * SECOND);
