@@ -45,7 +45,9 @@ const struct instruction	drain[] = {
 	{INS_WAITTIME,	65535},		/* Delay split in two because it exceeds maximum */
 	{INS_WAITTIME,	10183},		/* 65535 + 10183 = 75718 */
 	{INS_PUMP,	0},		/* Wash + 22 */
+	{INS_BOWL,	BOWL_STOP},	/* Stop the bowl in case of clog or sensor problem */
 	{INS_WAITWATER, 0},
+	{INS_BOWL,	BOWL_CW},	/* Start bowl only after low water detected */
 	{INS_RETURN,	0}
 };
 
@@ -250,7 +252,7 @@ const struct instruction	washprogram[] = {
 	{INS_WAITTIME,	932},
 	{INS_ARM,	ARM_STOP},	/* Scoop 3 + 2 */
 
-	{INS_SKIPIFDRY, 53},		/* Skip to surfacing for dry program */
+	{INS_SKIPIFDRY, 54},		/* Skip to surfacing for dry program */
 
 	{INS_WAITTIME,	12108},
 	{INS_BOWL,	BOWL_CCW},	/* Scoop 3 + 3 */
@@ -268,6 +270,7 @@ const struct instruction	washprogram[] = {
 	{INS_WAITTIME,	17141},
 	{INS_ARM,	ARM_STOP},	/* Scoop 3 + 9 */
 	/* Wash the bowl */
+	{INS_BOWL,	BOWL_STOP},	/* Stop the bowl in case of clog or sensor problem */
 	{INS_WAITWATER, 0},
 	{INS_WATER,	1},
 	{INS_BOWL,	BOWL_CW},
