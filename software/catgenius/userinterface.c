@@ -551,8 +551,8 @@ static void setup_long (void)
 static void start_short (void)
 {
 	if (!litterlanguage_running()) {
-		/* Scoop-only program */
-		full_wash = 0;
+		/* Full washing program */
+		full_wash = 1;
 		/* Start the program */
 		litterlanguage_start(full_wash);
 		/* Update the state machine */
@@ -565,8 +565,8 @@ static void start_short (void)
 static void start_long (void)
 {
 	if (!litterlanguage_running()) {
-		/* Full washing program */
-		full_wash = 1;
+		/* Scoop-only program */
+		full_wash = 0;
 		/* Start the program */
 		litterlanguage_start(full_wash);
 		/* Update the state machine */
