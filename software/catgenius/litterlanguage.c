@@ -178,9 +178,9 @@ void litterlanguage_work (void)
 
 	case STATE_GET_START:	/* Wait for the start instruction to be fetched */
 		if (get_instruction(&cur_instruction)) {
-//			printf("IP 0x%04X: ", ins_pointer);
+			printf("IP 0x%04X: ", ins_pointer);
 			if (cur_instruction.opcode == INS_START) {
-//				printf("INS_START, %s", wet_program?"wet":"dry");
+				printf("INS_START, %s", wet_program?"wet":"dry");
 				/* Check if this is a valid program for us */
 				if( ((cur_instruction.operant & 0x00FF) <= INS_END) &&
 				    ( (!wet_program && (cur_instruction.operant & FLAGS_DRYRUN)) ||
@@ -191,13 +191,13 @@ void litterlanguage_work (void)
 					ins_state = STATE_FETCH_INS;
 				} else {
 					ins_state = STATE_IDLE;
-//					printf(", incompatible");
+					printf(", incompatible");
 				}
 			} else {
 				ins_state = STATE_IDLE;
-//				printf(", no start: 0x%X", cur_instruction.opcode);
+				printf(", no start: 0x%X", cur_instruction.opcode);
 			}
-//			printf("\n");
+			printf("\n");
 		}
 		break;
 
@@ -457,36 +457,36 @@ static void exe_instruction (void)
 	static struct instruction	const * ret_address;
 	unsigned int			temp;
 
-//	printtime();
-//	printf("IP 0x%04X: ", ins_pointer);
+	printtime();
+	printf("IP 0x%04X: ", ins_pointer);
 	switch (cur_instruction.opcode) {
 	case INS_BOWL:
-//		printf("INS_BOWL, %s", (cur_instruction.operant == BOWL_STOP)?"BOWL_STOP":((cur_instruction.operant == BOWL_CW)?"BOWL_CW":"BOWL_CCW"));
+		printf("INS_BOWL, %s", (cur_instruction.operant == BOWL_STOP)?"BOWL_STOP":((cur_instruction.operant == BOWL_CW)?"BOWL_CW":"BOWL_CCW"));
 		set_Bowl((unsigned char)cur_instruction.operant);
 		ins_pointer++;
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_ARM:
-//		printf("INS_ARM, %s", (cur_instruction.operant == ARM_STOP)?"ARM_STOP":((cur_instruction.operant == ARM_DOWN)?"ARM_DOWN":"ARM_UP"));
+		printf("INS_ARM, %s", (cur_instruction.operant == ARM_STOP)?"ARM_STOP":((cur_instruction.operant == ARM_DOWN)?"ARM_DOWN":"ARM_UP"));
 		set_Arm((unsigned char)cur_instruction.operant);
 		ins_pointer++;
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_WATER:
-//		printf("INS_WATER, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
+		printf("INS_WATER, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
 			if (cur_instruction.operant) {
 				if (eeprom_read(NVM_BOXSTATE) < BOX_WET)
 					eeprom_write(NVM_BOXSTATE, BOX_WET);
 				/* Don't fill if water is detected already */
 				if (!water_detected()) {
-					printtime();
-					printf("Filling\n");
+					printf(" Filling");
 					water_fill(1);
 					settimeout(&timer_fill, MAX_FILLTIME);
 //					gettimestamp(&timer_fill);
 				}
-//					else printf(" (skipped)");
+				else
+					printf(" (skipped)");
 			} else {
 				/* Disable timeout on filling */
 				water_fill(0);
@@ -496,30 +496,31 @@ static void exe_instruction (void)
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_PUMP:
-//		printf("INS_PUMP, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
+		printf("INS_PUMP, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
 		if (wet_program) {
-			printtime();
-			printf("Draining\n");
+			printf(" Draining");
 			set_Pump((unsigned char)cur_instruction.operant);
 		}
+		else
+			printf(" (skipped)");
 		ins_pointer++;
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_DRYER:
-//		printf("INS_DRYER, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
+		printf("INS_DRYER, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
 			set_Dryer((unsigned char)cur_instruction.operant);
 		ins_pointer++;
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_WAITTIME:
-//		printf("INS_WAITTIME, %ums", cur_instruction.operant);
+		printf("INS_WAITTIME, %ums", cur_instruction.operant);
 		settimeout( &timer_waitins,
 			    (unsigned long)cur_instruction.operant * MILISECOND );
 		ins_state = STATE_WAIT_INS;
 		break;
 	case INS_WAITWATER:
-//		printf("INS_WAITWATER, %s%s", cur_instruction.operant?"high":"low", wet_program?"":" (nop)");
+		printf("INS_WAITWATER, %s%s", cur_instruction.operant?"high":"low", wet_program?"":" (nop)");
 		if (wet_program) {
 			if (!cur_instruction.operant)
 				/* Start the drain timeout, we don't want to wait forever */
@@ -531,7 +532,7 @@ static void exe_instruction (void)
 		}
 		break;
 	case INS_WAITDOSAGE:
-//		printf("INS_WAITDOSAGE%s", wet_program?"":" (nop)");
+		printf("INS_WAITDOSAGE%s", wet_program?"":" (nop)");
 		if (wet_program)
 			ins_state = STATE_WAIT_INS;
 		else {
@@ -540,7 +541,7 @@ static void exe_instruction (void)
 		}
 		break;
 	case INS_SKIPIFDRY:
-//		printf("INS_SKIPIFDRY, %u%s", cur_instruction.operant, wet_program?" (nop)":"");
+		printf("INS_SKIPIFDRY, %u%s", cur_instruction.operant, wet_program?" (nop)":"");
 		if (!wet_program)
 			ins_pointer += cur_instruction.operant + 1;
 		else
@@ -548,7 +549,7 @@ static void exe_instruction (void)
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_SKIPIFWET:
-//		printf("INS_SKIPIFWET, %u%s", cur_instruction.operant, wet_program?"":" (nop)");
+		printf("INS_SKIPIFWET, %u%s", cur_instruction.operant, wet_program?"":" (nop)");
 		if (wet_program)
 			ins_pointer += cur_instruction.operant + 1;
 		else
@@ -556,7 +557,7 @@ static void exe_instruction (void)
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_AUTODOSE:
-//		printf("INS_AUTODOSE, %u.%uml%s", cur_instruction.operant/10, cur_instruction.operant%10, wet_program?"":" (nop)");
+		printf("INS_AUTODOSE, %u.%uml%s", cur_instruction.operant/10, cur_instruction.operant%10, wet_program?"":" (nop)");
 		if (wet_program) {
 			settimeout(&timer_autodose,
 				   (unsigned long)cur_instruction.operant * SECOND * (DOSAGE_SECONDS_PER_ML / 10));
@@ -566,7 +567,7 @@ static void exe_instruction (void)
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_CALL:
-//		printf("INS_CALL, 0x%04X", cur_instruction.operant);
+		printf("INS_CALL, 0x%04X", cur_instruction.operant);
 		ret_address = ins_pointer + 1;
 		/* DIRTY HACK: Set highest bit, which seems to get lost due to compiler limitation */
 		temp = 0x8000 | cur_instruction.operant;
@@ -575,28 +576,28 @@ static void exe_instruction (void)
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_RETURN:
-//		printf("INS_RETURN, 0x%04X", ret_address);
+		printf("INS_RETURN, 0x%04X", ret_address);
 		ins_pointer = ret_address;
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_END:
-//		printf("INS_END\n");
+		printf("INS_END");
 		eeprom_write(NVM_BOXSTATE, BOX_TIDY);
 		litterlanguage_stop();
 		break;
 	case INS_START:
-//		printf("INS_START, unexpected");
+		printf("INS_START, unexpected");
 		error_execution = 1;
 		litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
 		break;
 	default:
 		/* Program error */
-//		printf("INS_unknown: 0x%X", cur_instruction.operant);
+		printf("INS_unknown: 0x%X", cur_instruction.operant);
 		error_execution = 1;
 		litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
 		break;
 	}
-//	printf("\n");
+	printf("\n");
 }
 
 static void wait_instruction (void)
