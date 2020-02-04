@@ -147,21 +147,21 @@ void userinterface_work (void)
 			/* Schedule the next timed wash */
 			update_autotimer(auto_mode);
 			printtime();
-			DBG("Autotimer expired: ");
+			printf("Autotimer expired: ");
 			/* Skip the actual washing is no cat has been detected */
 			if (cat_detected) {
-				DBG("waiting...\n");
+				printf("waiting...\n");
 				state = STATE_CAT;
 				update = 1;
 			} else
-				DBG("skipping\n");
+				printf("skipping\n");
 		}
 		break;
 	case STATE_CAT:
 		/* Wait until the cat has gone */
 		if (!cat_present && timeoutexpired(&cattimer)) {
 			printtime();
-			DBG("Cattimer expired\n");
+			printf("Cattimer expired\n");
 			litterlanguage_start(full_wash);
 			state = STATE_RUNNING;
 
@@ -283,7 +283,7 @@ void catsensor_event (unsigned char detected)
 	cat_present = detected;
 
 	printtime();
-	DBG("Cat %s\n", detected?"in":"out");
+	printf("Cat %s\n", detected?"in":"out");
 
 	/* Trigger detection on rising edge only */
 	if (detected)
@@ -412,7 +412,7 @@ static void set_mode (unsigned char mode)
 		auto_mode = AUTO_MANUAL;
 	else
 		auto_mode = mode;
-	DBG("Set mode %u\n", auto_mode);
+	printf("Set mode %u\n", auto_mode);
 
 	if ( (auto_mode == AUTO_TIMED1) ||
 	     (auto_mode == AUTO_TIMED2) ||

@@ -85,28 +85,28 @@ void litterlanguage_init (unsigned char flags)
 {
 	switch(flags & BUTTONS) {
 		case 0:
-			DBG("Box is ");
+			printf("Box is ");
 			switch (eeprom_read(NVM_BOXSTATE)){
 			case BOX_TIDY:
-				DBG("tidy\n");
+				printf("tidy\n");
 				break;
 			case BOX_MESSY:
-				DBG("messy\n");
+				printf("messy\n");
 				litterlanguage_cleanup(0);
 				break;
 			case BOX_WET:
-				DBG("wet\n");
+				printf("wet\n");
 				litterlanguage_cleanup(1);
 				break;
 			default:
-				DBG("unknown\n");
+				printf("unknown\n");
 				eeprom_write(NVM_BOXSTATE, BOX_TIDY);
 				break;
 			}
 			break;
 		case START_BUTTON:
 			/* User wants to force a wet cleanup cycle */
-			DBG("Wet cleanup forced\n");
+			printf("Wet cleanup forced\n");
 			litterlanguage_cleanup(1);
 			break;
 		case SETUP_BUTTON:
@@ -141,7 +141,7 @@ void litterlanguage_work (void)
 		    water_filling() &&
 		    timeoutexpired(&timer_fill) ){
 			printtime();
-			DBG("Fill timeout\n");
+			printf("Fill timeout\n");
 			/* Fill error */
 			error_fill = 1;
 			litterlanguage_event(EVENT_ERR_FILLING, error_fill);
@@ -152,7 +152,7 @@ void litterlanguage_work (void)
 		    get_Pump() &&
 		    timeoutexpired(&timer_drain) ){
 			printtime();
-			DBG("Drain timeout\n");
+			printf("Drain timeout\n");
 			/* Drain error */
 			error_drain = 1;
 			litterlanguage_event(EVENT_ERR_DRAINING, error_drain);
@@ -178,9 +178,9 @@ void litterlanguage_work (void)
 
 	case STATE_GET_START:	/* Wait for the start instruction to be fetched */
 		if (get_instruction(&cur_instruction)) {
-//			DBG("IP 0x%04X: ", ins_pointer);
+//			printf("IP 0x%04X: ", ins_pointer);
 			if (cur_instruction.opcode == INS_START) {
-//				DBG("INS_START, %s", wet_program?"wet":"dry");
+//				printf("INS_START, %s", wet_program?"wet":"dry");
 				/* Check if this is a valid program for us */
 				if( ((cur_instruction.operant & 0x00FF) <= INS_END) &&
 				    ( (!wet_program && (cur_instruction.operant & FLAGS_DRYRUN)) ||
@@ -191,13 +191,13 @@ void litterlanguage_work (void)
 					ins_state = STATE_FETCH_INS;
 				} else {
 					ins_state = STATE_IDLE;
-//					DBG(", incompatible");
+//					printf(", incompatible");
 				}
 			} else {
 				ins_state = STATE_IDLE;
-//				DBG(", no start: 0x%X", cur_instruction.opcode);
+//				printf(", no start: 0x%X", cur_instruction.opcode);
 			}
-//			DBG("\n");
+//			printf("\n");
 		}
 		break;
 
@@ -226,7 +226,7 @@ void litterlanguage_start (unsigned char wet)
 	extern const struct instruction	washprogram[];
 	if (ins_state == STATE_IDLE) {
 		printtime();
-		DBG("Starting %s program\n", wet?"wet":"dry");
+		printf("Starting %s program\n", wet?"wet":"dry");
 		switch (prg_source) {
 		case SRC_ROM:
 			ins_pointer = &washprogram[0];
@@ -292,12 +292,12 @@ void litterlanguage_pause (unsigned char pause)
 		timeoutnever(&timer_drain);
 		context.autodose = timestampdiff(&timer_autodose, &timer_now);
 		timeoutnever(&timer_autodose);
-		DBG("Paused program\n");
+		printf("Paused program\n");
 	} else {
 		/* Don't resume if still overheated */
 		if (error_overheat)
 			return;
-		DBG("Resuming program\n");
+		printf("Resuming program\n");
 		/* Restore timer context */
 		if (context.wait != 0xFFFFFFFF)
 			settimeout(&timer_waitins, context.wait);
@@ -339,7 +339,7 @@ void litterlanguage_stop (void)
 		return;
 
 	printtime();
-	DBG("Stopping program\n");
+	printf("Stopping program\n");
 	/* Stop all actuators */
 	set_Bowl(BOWL_STOP);
 	set_Arm(ARM_STOP);
@@ -377,7 +377,7 @@ void watersensor_event (unsigned char detected)
 /******************************************************************************/
 {
 	printtime();
-	DBG("Water %s\n", detected?"high":"low");
+	printf("Water %s\n", detected?"high":"low");
 	if (ins_state != STATE_IDLE) {
 		/* Disable timeout on event */
 		if (detected) {
@@ -385,16 +385,16 @@ void watersensor_event (unsigned char detected)
 			water_fill(0);
 			timeoutnever(&timer_fill);
 			printtime();
-			DBG("Filled\n");
+			printf("Filled\n");
 		} else {
 			printtime();
-			DBG("Drained\n");
+			printf("Drained\n");
 		}
 	} else {
 		error_flood = detected;
 		if (error_flood) {
 			printtime();
-			DBG("Box flooded!\n");
+			printf("Box flooded!\n");
 		}
 		litterlanguage_event(EVENT_ERR_FLOOD, error_flood);
 	}
@@ -426,7 +426,7 @@ static void litterlanguage_cleanup (unsigned char wet)
 	extern const struct instruction	cleanupprogram[];
 	if (ins_state == STATE_IDLE) {
 		printtime();
-		DBG("Starting %s cleanup\n", wet?"wet":"dry");
+		printf("Starting %s cleanup\n", wet?"wet":"dry");
 		prg_source = SRC_ROM;
 		ins_pointer = &cleanupprogram[0];
 		wet_program = wet;
@@ -458,22 +458,22 @@ static void exe_instruction (void)
 	unsigned int			temp;
 
 //	printtime();
-//	DBG("IP 0x%04X: ", ins_pointer);
+//	printf("IP 0x%04X: ", ins_pointer);
 	switch (cur_instruction.opcode) {
 	case INS_BOWL:
-//		DBG("INS_BOWL, %s", (cur_instruction.operant == BOWL_STOP)?"BOWL_STOP":((cur_instruction.operant == BOWL_CW)?"BOWL_CW":"BOWL_CCW"));
+//		printf("INS_BOWL, %s", (cur_instruction.operant == BOWL_STOP)?"BOWL_STOP":((cur_instruction.operant == BOWL_CW)?"BOWL_CW":"BOWL_CCW"));
 		set_Bowl((unsigned char)cur_instruction.operant);
 		ins_pointer++;
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_ARM:
-//		DBG("INS_ARM, %s", (cur_instruction.operant == ARM_STOP)?"ARM_STOP":((cur_instruction.operant == ARM_DOWN)?"ARM_DOWN":"ARM_UP"));
+//		printf("INS_ARM, %s", (cur_instruction.operant == ARM_STOP)?"ARM_STOP":((cur_instruction.operant == ARM_DOWN)?"ARM_DOWN":"ARM_UP"));
 		set_Arm((unsigned char)cur_instruction.operant);
 		ins_pointer++;
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_WATER:
-//		DBG("INS_WATER, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
+//		printf("INS_WATER, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
 			if (cur_instruction.operant) {
 				if (eeprom_read(NVM_BOXSTATE) < BOX_WET)
@@ -481,12 +481,12 @@ static void exe_instruction (void)
 				/* Don't fill if water is detected already */
 				if (!water_detected()) {
 					printtime();
-					DBG("Filling\n");
+					printf("Filling\n");
 					water_fill(1);
 					settimeout(&timer_fill, MAX_FILLTIME);
 //					gettimestamp(&timer_fill);
 				}
-//					else DBG(" (skipped)");
+//					else printf(" (skipped)");
 			} else {
 				/* Disable timeout on filling */
 				water_fill(0);
@@ -496,30 +496,30 @@ static void exe_instruction (void)
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_PUMP:
-//		DBG("INS_PUMP, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
+//		printf("INS_PUMP, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
 		if (wet_program) {
 			printtime();
-			DBG("Draining\n");
+			printf("Draining\n");
 			set_Pump((unsigned char)cur_instruction.operant);
 		}
 		ins_pointer++;
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_DRYER:
-//		DBG("INS_DRYER, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
+//		printf("INS_DRYER, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
 		if (wet_program)
 			set_Dryer((unsigned char)cur_instruction.operant);
 		ins_pointer++;
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_WAITTIME:
-//		DBG("INS_WAITTIME, %ums", cur_instruction.operant);
+//		printf("INS_WAITTIME, %ums", cur_instruction.operant);
 		settimeout( &timer_waitins,
 			    (unsigned long)cur_instruction.operant * MILISECOND );
 		ins_state = STATE_WAIT_INS;
 		break;
 	case INS_WAITWATER:
-//		DBG("INS_WAITWATER, %s%s", cur_instruction.operant?"high":"low", wet_program?"":" (nop)");
+//		printf("INS_WAITWATER, %s%s", cur_instruction.operant?"high":"low", wet_program?"":" (nop)");
 		if (wet_program) {
 			if (!cur_instruction.operant)
 				/* Start the drain timeout, we don't want to wait forever */
@@ -531,7 +531,7 @@ static void exe_instruction (void)
 		}
 		break;
 	case INS_WAITDOSAGE:
-//		DBG("INS_WAITDOSAGE%s", wet_program?"":" (nop)");
+//		printf("INS_WAITDOSAGE%s", wet_program?"":" (nop)");
 		if (wet_program)
 			ins_state = STATE_WAIT_INS;
 		else {
@@ -540,7 +540,7 @@ static void exe_instruction (void)
 		}
 		break;
 	case INS_SKIPIFDRY:
-//		DBG("INS_SKIPIFDRY, %u%s", cur_instruction.operant, wet_program?" (nop)":"");
+//		printf("INS_SKIPIFDRY, %u%s", cur_instruction.operant, wet_program?" (nop)":"");
 		if (!wet_program)
 			ins_pointer += cur_instruction.operant + 1;
 		else
@@ -548,7 +548,7 @@ static void exe_instruction (void)
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_SKIPIFWET:
-//		DBG("INS_SKIPIFWET, %u%s", cur_instruction.operant, wet_program?"":" (nop)");
+//		printf("INS_SKIPIFWET, %u%s", cur_instruction.operant, wet_program?"":" (nop)");
 		if (wet_program)
 			ins_pointer += cur_instruction.operant + 1;
 		else
@@ -556,7 +556,7 @@ static void exe_instruction (void)
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_AUTODOSE:
-//		DBG("INS_AUTODOSE, %u.%uml%s", cur_instruction.operant/10, cur_instruction.operant%10, wet_program?"":" (nop)");
+//		printf("INS_AUTODOSE, %u.%uml%s", cur_instruction.operant/10, cur_instruction.operant%10, wet_program?"":" (nop)");
 		if (wet_program) {
 			settimeout(&timer_autodose,
 				   (unsigned long)cur_instruction.operant * SECOND * (DOSAGE_SECONDS_PER_ML / 10));
@@ -566,7 +566,7 @@ static void exe_instruction (void)
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_CALL:
-//		DBG("INS_CALL, 0x%04X", cur_instruction.operant);
+//		printf("INS_CALL, 0x%04X", cur_instruction.operant);
 		ret_address = ins_pointer + 1;
 		/* DIRTY HACK: Set highest bit, which seems to get lost due to compiler limitation */
 		temp = 0x8000 | cur_instruction.operant;
@@ -575,28 +575,28 @@ static void exe_instruction (void)
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_RETURN:
-//		DBG("INS_RETURN, 0x%04X", ret_address);
+//		printf("INS_RETURN, 0x%04X", ret_address);
 		ins_pointer = ret_address;
 		ins_state = STATE_FETCH_INS;
 		break;
 	case INS_END:
-//		DBG("INS_END\n");
+//		printf("INS_END\n");
 		eeprom_write(NVM_BOXSTATE, BOX_TIDY);
 		litterlanguage_stop();
 		break;
 	case INS_START:
-//		DBG("INS_START, unexpected");
+//		printf("INS_START, unexpected");
 		error_execution = 1;
 		litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
 		break;
 	default:
 		/* Program error */
-//		DBG("INS_unknown: 0x%X", cur_instruction.operant);
+//		printf("INS_unknown: 0x%X", cur_instruction.operant);
 		error_execution = 1;
 		litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
 		break;
 	}
-//	DBG("\n");
+//	printf("\n");
 }
 
 static void wait_instruction (void)

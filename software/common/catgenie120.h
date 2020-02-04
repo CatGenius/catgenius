@@ -27,7 +27,6 @@
 
 /* Miscelaneous */
 #define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
-#define DBG			printf
 
 /* Frequencies */
 #define KHZ			(1000UL)
