@@ -18,6 +18,8 @@
 #  define WATERSENSOR_ANALOG
    /* LitterLanguage debug logging does not fit a 16F877A */
 #  define LL_DEBUG
+   /* User Interface debug logging does not fit a 16F877A */
+#  define UI_DEBUG
 #endif /* _16F1939 */
 
 /* Options */
