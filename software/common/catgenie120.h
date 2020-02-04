@@ -13,9 +13,11 @@
 #endif
 
 #ifdef _16F1939
-/* Analog water sensor readout is NOT supported on a 16F877A */
-/* On a 16F1939 it is optional */
+   /* Analog water sensor readout is NOT supported on a 16F877A */
+   /* On a 16F1939 it is optional */
 #  define WATERSENSOR_ANALOG
+   /* LitterLanguage debug logging does not fit a 16F877A */
+#  define LL_DEBUG
 #endif /* _16F1939 */
 
 /* Options */
