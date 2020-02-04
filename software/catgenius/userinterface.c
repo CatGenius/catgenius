@@ -146,22 +146,31 @@ void userinterface_work (void)
 		if (timeoutexpired(&autotimer)) {
 			/* Schedule the next timed wash */
 			update_autotimer(auto_mode);
+#ifdef UI_DEBUG
 			printtime();
 			printf("Autotimer expired: ");
+#endif /* UI_DEBUG */
 			/* Skip the actual washing is no cat has been detected */
 			if (cat_detected) {
+#ifdef UI_DEBUG
 				printf("waiting...\n");
+#endif /* UI_DEBUG */
 				state = STATE_CAT;
 				update = 1;
-			} else
+			}
+#ifdef UI_DEBUG
+			else
 				printf("skipping\n");
+#endif /* UI_DEBUG */
 		}
 		break;
 	case STATE_CAT:
 		/* Wait until the cat has gone */
 		if (!cat_present && timeoutexpired(&cattimer)) {
+#ifdef UI_DEBUG
 			printtime();
 			printf("Cattimer expired\n");
+#endif /* UI_DEBUG */
 			litterlanguage_start(full_wash);
 			state = STATE_RUNNING;
 
@@ -412,7 +421,9 @@ static void set_mode (unsigned char mode)
 		auto_mode = AUTO_MANUAL;
 	else
 		auto_mode = mode;
+#ifdef UI_DEBUG
 	printf("Set mode %u\n", auto_mode);
+#endif /* UI_DEBUG */
 
 	if ( (auto_mode == AUTO_TIMED1) ||
 	     (auto_mode == AUTO_TIMED2) ||
