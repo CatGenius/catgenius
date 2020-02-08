@@ -10,15 +10,21 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "hardware.h"			/* Flexible hardware configuration */
+
 #include "cmdline.h"
 #include "serial.h"
 
-
+#ifdef HAS_COMMANDLINE
 /******************************************************************************/
 /* Macros								      */
 /******************************************************************************/
 
 #define PROMPT		"# "
+
+#define ENQ		0x05
+#define ACK		0x06
+
 
 /******************************************************************************/
 /* Global Data								      */
@@ -67,7 +73,13 @@ void cmdline_work (void)
 	char rxd ;
 
 	while (readch(&rxd))
-		proc_char(rxd);
+		switch(rxd) {
+		case ENQ:
+			putch(ACK);
+			break;
+		default:
+			proc_char(rxd);
+		}
 }
 /* End: cmdline_work */
 
@@ -221,3 +233,5 @@ int help (int argc, char* argv[])
 
 	return ERR_OK;
 }
+
+#endif /* HAS_COMMANDLINE */

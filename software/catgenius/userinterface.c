@@ -25,9 +25,9 @@
 #define LEVEL_TIMEOUT		(5 * SECOND)	/* Show the level for 5 seconds */
 #define CAT_TIMEOUT		(4 * 60 * SECOND)
 
-#define DISP_AUTOMODE		0
-#define DISP_CARTRIDGELEVEL	1
-#define DISP_ERROR		2
+#define PANEL_AUTOMODE		0	/* Display/button mode in normal operation */
+#define PANEL_CARTRIDGELEVEL	1	/* Display/button mode showing/altering cartridge level */
+#define PANEL_ERROR		2	/* Display/button mode showing error(s) */
 
 #define STATE_IDLE		0
 #define STATE_CAT		1
@@ -67,7 +67,7 @@ static bit		full_wash	= 0;
 
 static unsigned char	state		= STATE_IDLE;
 static unsigned char	interval	= 0;
-static unsigned char	disp_mode	= DISP_AUTOMODE;
+static unsigned char	panel_mode	= PANEL_AUTOMODE;
 static unsigned char	auto_mode	= AUTO_MANUAL;
 static unsigned char	cart_level	= 100;
 static unsigned char	error_nr	= 0;
@@ -129,12 +129,12 @@ void userinterface_work (void)
 {
 	unsigned char		update		= 0;
 
-	if( (disp_mode == DISP_CARTRIDGELEVEL) &&
+	if( (panel_mode == PANEL_CARTRIDGELEVEL) &&
 	    (timeoutexpired(&cartridgetimeout)) ) {
 		if (error_nr)
-			disp_mode = DISP_ERROR;
+			panel_mode = PANEL_ERROR;
 		else
-			disp_mode = DISP_AUTOMODE;
+			panel_mode = PANEL_AUTOMODE;
 		update = 1;
 	}
 
@@ -146,22 +146,31 @@ void userinterface_work (void)
 		if (timeoutexpired(&autotimer)) {
 			/* Schedule the next timed wash */
 			update_autotimer(auto_mode);
+#ifdef UI_DEBUG
 			printtime();
-			DBG("Autotimer expired: ");
+			printf("Autotimer expired: ");
+#endif /* UI_DEBUG */
 			/* Skip the actual washing is no cat has been detected */
 			if (cat_detected) {
-				DBG("waiting...\n");
+#ifdef UI_DEBUG
+				printf("waiting...\n");
+#endif /* UI_DEBUG */
 				state = STATE_CAT;
 				update = 1;
-			} else
-				DBG("skipping\n");
+			}
+#ifdef UI_DEBUG
+			else
+				printf("skipping\n");
+#endif /* UI_DEBUG */
 		}
 		break;
 	case STATE_CAT:
 		/* Wait until the cat has gone */
 		if (!cat_present && timeoutexpired(&cattimer)) {
+#ifdef UI_DEBUG
 			printtime();
-			DBG("Cattimer expired\n");
+			printf("Cattimer expired\n");
+#endif /* UI_DEBUG */
 			litterlanguage_start(full_wash);
 			state = STATE_RUNNING;
 
@@ -283,7 +292,7 @@ void catsensor_event (unsigned char detected)
 	cat_present = detected;
 
 	printtime();
-	DBG("Cat %s\n", detected?"in":"out");
+	printf("Cat %s\n", detected?"in":"out");
 
 	/* Trigger detection on rising edge only */
 	if (detected)
@@ -328,6 +337,48 @@ void catsensor_event (unsigned char detected)
 /* catsensor_event */
 
 
+void litterlanguage_event (unsigned char event, unsigned char argument)
+{
+	/* Stop the washing program upon fatal errors */
+	if ((event == EVENT_ERR_EXECUTION) &&
+	    (argument)) {
+		litterlanguage_stop();
+	}
+	/* Pause the washing program upon non-fatal errors */
+	if (((event == EVENT_ERR_FILLING) ||
+	     (event == EVENT_ERR_DRAINING) ||
+	     (event == EVENT_ERR_OVERHEAT)) &&
+	    (argument)) {
+		litterlanguage_pause(1);
+	}
+
+
+	switch (event) {
+	case EVENT_LEVEL_CHANGED:
+		break;
+	case EVENT_ERR_FILLING:
+		if (argument)
+			set_Beeper(0x01, 1);
+		break;
+	case EVENT_ERR_DRAINING:
+		if (argument)
+			set_Beeper(0x05, 1);
+		break;
+	case EVENT_ERR_OVERHEAT:
+		if (argument)
+			set_Beeper(0x15, 1);
+		break;
+	case EVENT_ERR_EXECUTION:
+		break;
+	case EVENT_ERR_FLOOD:
+		break;
+	default:
+		break;
+	}
+}
+/* litterlanguage_event */
+
+
 /******************************************************************************/
 /* Local Implementations						      */
 /******************************************************************************/
@@ -370,7 +421,9 @@ static void set_mode (unsigned char mode)
 		auto_mode = AUTO_MANUAL;
 	else
 		auto_mode = mode;
-	DBG("Set mode %u\n", auto_mode);
+#ifdef UI_DEBUG
+	printf("Set mode %u\n", auto_mode);
+#endif /* UI_DEBUG */
 
 	if ( (auto_mode == AUTO_TIMED1) ||
 	     (auto_mode == AUTO_TIMED2) ||
@@ -395,10 +448,10 @@ static void set_mode (unsigned char mode)
 
 static void update_display (void)
 {
-	switch (disp_mode) {
+	switch (panel_mode) {
 	default:
-		disp_mode = DISP_AUTOMODE;
-	case DISP_AUTOMODE:
+		panel_mode = PANEL_AUTOMODE;
+	case PANEL_AUTOMODE:
 		set_LED_Error(0x00, 0);
 		if (cart_level >= 10)
 			set_LED_Cartridge(0x00, 0);
@@ -439,7 +492,7 @@ static void update_display (void)
 			break;
 		}
 		break;
-	case DISP_CARTRIDGELEVEL:
+	case PANEL_CARTRIDGELEVEL:
 		set_LED_Error(0x00, 0);
 		set_LED_Cartridge(0xFF, 1);
 		set_LED(1, cart_level >= 10);
@@ -451,7 +504,7 @@ static void update_display (void)
 		else
 			set_LED_Cat(0x00, 0);
 		break;
-	case DISP_ERROR:
+	case PANEL_ERROR:
 		set_LED_Error(0x55, 1);
 		set_LED_Cartridge(0x00, 0);
 		set_LED(1, error_nr == 1);
@@ -473,14 +526,14 @@ static void update_display (void)
 
 static void setup_short (void)
 {
-	switch (disp_mode) {
+	switch (panel_mode) {
 	default:
-		disp_mode = DISP_AUTOMODE;
-	case DISP_AUTOMODE:
+		panel_mode = PANEL_AUTOMODE;
+	case PANEL_AUTOMODE:
 		set_mode((auto_mode==AUTO_DETECTED)?AUTO_MANUAL:auto_mode+1);
 		break;
 
-	case DISP_CARTRIDGELEVEL:
+	case PANEL_CARTRIDGELEVEL:
 		if (cart_level < 10)
 			cart_level = 10;
 		else if (cart_level < 25)
@@ -497,7 +550,7 @@ static void setup_short (void)
 		settimeout(&cartridgetimeout, LEVEL_TIMEOUT);
 		break;
 
-	case DISP_ERROR:
+	case PANEL_ERROR:
 		break;
 	}
 }
@@ -509,8 +562,8 @@ static void setup_long (void)
 static void start_short (void)
 {
 	if (!litterlanguage_running()) {
-		/* Scoop-only program */
-		full_wash = 0;
+		/* Full washing program */
+		full_wash = 1;
 		/* Start the program */
 		litterlanguage_start(full_wash);
 		/* Update the state machine */
@@ -523,8 +576,8 @@ static void start_short (void)
 static void start_long (void)
 {
 	if (!litterlanguage_running()) {
-		/* Full washing program */
-		full_wash = 1;
+		/* Scoop-only program */
+		full_wash = 0;
 		/* Start the program */
 		litterlanguage_start(full_wash);
 		/* Update the state machine */
@@ -536,8 +589,8 @@ static void start_long (void)
 
 static void both_short (void)
 {
-	/* Swich display to cartridge level mode */
-	disp_mode = DISP_CARTRIDGELEVEL;
+	/* Swich panel to cartridge level mode */
+	panel_mode = PANEL_CARTRIDGELEVEL;
 	/* Set timeout to return to auto- or errormode */
 	settimeout(&cartridgetimeout, LEVEL_TIMEOUT);
 }
@@ -552,12 +605,21 @@ static void both_long (void)
 
 static void update_autotimer (unsigned char mode)
 {
+	/*
+	 * TODO: Functions settimeout and settimeout take up to 9.5 hours worth
+	 * of seconds, depending on the CPU frequency. So set, and postpone if
+	 * nessecary. This needs to be fixed to accomodate higher CPU
+	 * frequencies.
+	 */
 	switch (mode) {
 	case AUTO_TIMED1:
-		settimeout(&autotimer, 24 * 60 * 60 * SECOND);
+		settimeout(&autotimer, 9 * 60 * 60 * SECOND);
+		postponetimeout(&autotimer, 9 * 60 * 60 * SECOND);
+		postponetimeout(&autotimer, 6 * 60 * 60 * SECOND);
 		break;
 	case AUTO_TIMED2:
-		settimeout(&autotimer, 12 * 60 * 60 * SECOND);
+		settimeout(&autotimer, 9 * 60 * 60 * SECOND);
+		postponetimeout(&autotimer, 3 * 60 * 60 * SECOND);
 		break;
 	case AUTO_TIMED3:
 		settimeout(&autotimer,  8 * 60 * 60 * SECOND);

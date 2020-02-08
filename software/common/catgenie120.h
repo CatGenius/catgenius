@@ -13,17 +13,24 @@
 #endif
 
 #ifdef _16F1939
-/* Analog water sensor readout is NOT supported on a 16F877A */
-/* On a 16F1939 it is optional */
+   /* Analog water sensor readout is NOT supported on a 16F877A */
+   /* On a 16F1939 it is optional */
 #  define WATERSENSOR_ANALOG
+   /* LitterLanguage debug logging does not fit a 16F877A */
+#  define LL_DEBUG
+   /* User Interface debug logging does not fit a 16F877A */
+#  define UI_DEBUG
 #endif /* _16F1939 */
+
+/* Options */
+//#define HAS_BLUETOOTH
+#define HAS_COMMANDLINE
 
 /* Version number */
 #define VERSION			(2)		/* NVM layout version */
 
 /* Miscelaneous */
 #define BIT(n)			(1U << (n))	/* Bit mask for bit 'n' */
-#define DBG			printf
 
 /* Frequencies */
 #define KHZ			(1000UL)
@@ -35,8 +42,8 @@
 #define BITRATE			19200UL
 
 /* Times */
-#define MAX_FILLTIME		(( 2*60+15)*SECOND)
-#define MAX_DRAINTIME		((10*60+ 0)*SECOND)
+#define MAX_FILLTIME		((2*60+15)*SECOND)
+#define MAX_DRAINTIME		((0*60+10)*SECOND)
 
 /* EEPROM layout */
 #define NVM_VERSION		(0)
@@ -67,7 +74,8 @@
 #define ARM_UP			2
 
 /* Mechanics */
-#define DOSAGE_SECONDS_PER_ML	10		/* For 1 ml of cleaning liquid, 10 seconds of pumping */
+#define DOSAGE_SECONDS_PER_ML	10	/* For 1 ml of cleaning liquid, 10 seconds of pumping */
+#define CARTRIDGECAPACITY_ML	450	/* A full cartridge contains 450 ml of detergent */
 
 #define BOWL_MOTOR_RPM		52
 #define BOWL_MOTOR_TEETH	12
