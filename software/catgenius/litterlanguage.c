@@ -421,7 +421,6 @@ void watersensor_event (unsigned int reflectionquality)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-//	eventlog_track(EVENTLOG_WATER_SENSOR, reflectionquality >> 2);
 }
 /* watersensor_event */
 
