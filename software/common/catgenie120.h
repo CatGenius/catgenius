@@ -20,6 +20,8 @@
 #  define LL_DEBUG
    /* User Interface debug logging does not fit a 16F877A */
 #  define UI_DEBUG
+   /* Power-On Reset debug logging does not fit a 16F877A */
+#  define POR_DEBUG
 #endif /* _16F1939 */
 
 /* Options */

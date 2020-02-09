@@ -91,12 +91,17 @@ void main (void)
 
 	printf("\n*** CatGenius ***\n");
 	if (!nPOR) {
+#ifdef POR_DEBUG
 		printf("Power-on reset\n");
+#endif /* POR_DEBUG */
 		flags |= POWER_FAILURE;
 	} else if (!nBOR) {
+#ifdef POR_DEBUG
 		printf("Brown-out reset\n");
+#endif /* POR_DEBUG */
 		flags |= POWER_FAILURE;
 	}
+#ifdef POR_DEBUG
 #ifdef __RESETBITS_ADDR
 	else if (!__timeout)
 		printf("Watchdog reset\n");
@@ -108,6 +113,7 @@ void main (void)
 	else
 		printf("Unknown reset\n");
 #endif /* __RESETBITS_ADDR */
+#endif /* POR_DEBUG */
 	nPOR = 1;
 	nBOR = 1;
 
