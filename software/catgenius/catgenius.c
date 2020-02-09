@@ -80,13 +80,14 @@ void main (void)
 	flags = catgenie_init();
 
 #ifdef HAS_BLUETOOTH
+	/* Initialize the serial port for bluetooth */
 	serial_init(BT_BITRATE);
 	bluetooth_init();
 	serial_term();
-#endif /* HAS_BLUETOOTH */
-
-	/* Initialize the serial port */
+#else
+	/* Initialize the serial port for stdio */
 	serial_init(BITRATE);
+#endif /* HAS_BLUETOOTH */
 
 	printf("\n*** CatGenius ***\n");
 	if (!nPOR) {
