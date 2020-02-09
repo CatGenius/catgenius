@@ -204,7 +204,7 @@ int cat (int argc, char* argv[])
 	if (argc > 1)
 		return ERR_SYNTAX;
 
-	DBG("Cat: %s\n", cat_detected?"in":"out");
+	printf("Cat: %s\n", cat_detected?"in":"out");
 
 	return ERR_OK;
 }

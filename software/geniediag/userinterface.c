@@ -188,7 +188,7 @@ void catsensor_event (unsigned char detected)
 {
 	cat_detected = detected;
 
-	DBG("Cat: %s\n", cat_detected?"in":"out");
+	printf("Cat: %s\n", cat_detected?"in":"out");
 
 	if (cat_detected)
 		set_LED_Cat(0xFF, 1);
@@ -198,7 +198,25 @@ void catsensor_event (unsigned char detected)
 /* catsensor_event */
 
 
-void watersensor_event (unsigned char detected)
+void waterdetection_event (unsigned char detected)
+/******************************************************************************/
+/* Function:	waterdetection_event					      */
+/*		- Handle detection state changes of water sensor	      */
+/* History :	13 Feb 2010 by R. Delien:				      */
+/*		- Initial revision.					      */
+/******************************************************************************/
+{
+	printf("Water: %s\n", detected?"high":"low");
+
+	if (detected)
+		set_LED_Error(0xFF, 1);
+	else
+		set_LED_Error(0x00, 1);
+}
+/* waterdetection_event */
+
+
+void watersensor_event (unsigned int reflectionquality)
 /******************************************************************************/
 /* Function:	watersensor_event					      */
 /*		- Handle state changes of water sensor			      */
@@ -206,12 +224,6 @@ void watersensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	DBG("Water: %s\n", detected?"high":"low");
-
-	if (detected)
-		set_LED_Error(0xFF, 1);
-	else
-		set_LED_Error(0x00, 1);
 }
 /* watersensor_event */
 
@@ -226,7 +238,7 @@ void heatsensor_event (unsigned char detected)
 {
 	overheated = detected;
 
-	DBG("Overheat: %s\n", overheated?"yes":"no");
+	printf("Overheat: %s\n", overheated?"yes":"no");
 }
 /* heatsensor_event */
 
