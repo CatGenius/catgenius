@@ -67,24 +67,30 @@ void main (void)
 
 	printf("\n*** I/O Tester ***\n");
 	if (!nPOR) {
-		DBG("Power-on reset\n");
+		printf("Power-on reset\n");
 		flags |= POWER_FAILURE;
 	} else if (!nBOR) {
-		DBG("Brown-out reset\n");
+		printf("Brown-out reset\n");
 		flags |= POWER_FAILURE;
-	} else if (!__timeout)
-		DBG("Watchdog reset\n");
+	}
+#ifdef __RESETBITS_ADDR
+	else if (!__timeout)
+		printf("Watchdog reset\n");
 	else if (!__powerdown)
-		DBG("Pin reset (sleep)\n");
+		printf("Pin reset (sleep)\n");
 	else
-		DBG("Pin reset\n");
+		printf("Pin reset\n");
+#else
+	else
+		printf("Unknown reset\n");
+#endif /* __RESETBITS_ADDR */
 	nPOR = 1;
 	nBOR = 1;
 
 	if (flags & START_BUTTON)
-		DBG("Start button held\n");
+		printf("Start button held\n");
 	if (flags & SETUP_BUTTON)
-		DBG("Setup button held\n");
+		printf("Setup button held\n");
 
 	/* Initialize the command line interface */
 	cmdline_init();
