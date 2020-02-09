@@ -186,7 +186,7 @@ void catsensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	cat_detected = detected;
+	cat_detected = detected ? 1 : 0;
 
 	printf("Cat: %s\n", cat_detected?"in":"out");
 
@@ -201,7 +201,7 @@ void catsensor_event (unsigned char detected)
 void waterdetection_event (unsigned char detected)
 /******************************************************************************/
 /* Function:	waterdetection_event					      */
-/*		- Handle detection state changes of water sensor	      */
+/*		- Handle state changes of water detection		      */
 /* History :	13 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
@@ -219,7 +219,7 @@ void waterdetection_event (unsigned char detected)
 void watersensor_event (unsigned int reflectionquality)
 /******************************************************************************/
 /* Function:	watersensor_event					      */
-/*		- Handle state changes of water sensor			      */
+/*		- Handle value changes of water sensor reflection	      */
 /* History :	13 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
@@ -236,7 +236,7 @@ void heatsensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	overheated = detected;
+	overheated = detected ? 1 : 0;
 
 	printf("Overheat: %s\n", overheated?"yes":"no");
 }
