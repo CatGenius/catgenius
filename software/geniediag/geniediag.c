@@ -113,12 +113,18 @@ void main (void)
 	} else if (!nBOR) {
 		printf("Brown-out reset\n");
 		flags |= POWER_FAILURE;
-	} else if (!__timeout)
+	}
+#ifdef __RESETBITS_ADDR
+	else if (!__timeout)
 		printf("Watchdog reset\n");
 	else if (!__powerdown)
 		printf("Pin reset (sleep)\n");
 	else
 		printf("Pin reset\n");
+#else
+	else
+		printf("Unknown reset\n");
+#endif /* __RESETBITS_ADDR */
 	nPOR = 1;
 	nBOR = 1;
 
