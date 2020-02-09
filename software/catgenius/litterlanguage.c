@@ -434,7 +434,7 @@ void heatsensor_event (unsigned char detected)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	error_overheat = detected;
+	error_overheat = detected ? 1 : 0;
 	litterlanguage_event(EVENT_ERR_OVERHEAT, error_overheat);
 }
 /* heatsensor_event */
