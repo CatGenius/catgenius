@@ -151,6 +151,7 @@ void userinterface_work (void)
 		process_event(eventqueue[eventqueue_tail].event,
 			      eventqueue[eventqueue_tail].argument);
 		eventqueue_tail = (eventqueue_tail + 1) & EVENTQUEUE_MASK;
+		update = 1;
 	}
 
 	if( (panel_mode == PANEL_CARTRIDGELEVEL) &&
@@ -450,6 +451,27 @@ static void process_event (unsigned char event, unsigned char argument)
 	case EVENT_ERR_EXECUTION:
 		break;
 	case EVENT_ERR_FLOOD:
+		break;
+	default:
+		break;
+	}
+
+	/* Error events 1..4 correspond to the numbered panel LEDs */
+	switch (event) {
+	case EVENT_ERR_FILLING:
+	case EVENT_ERR_DRAINING:
+	case EVENT_ERR_OVERHEAT:
+	case EVENT_ERR_EXECUTION:
+		if (argument) {
+			error_nr = event;
+			/* Keep showing the cartridge level until its timeout */
+			if (panel_mode == PANEL_AUTOMODE)
+				panel_mode = PANEL_ERROR;
+		} else if (error_nr == event) {
+			error_nr = 0;
+			if (panel_mode == PANEL_ERROR)
+				panel_mode = PANEL_AUTOMODE;
+		}
 		break;
 	default:
 		break;
