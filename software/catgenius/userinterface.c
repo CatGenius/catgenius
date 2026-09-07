@@ -25,6 +25,9 @@
 #define LEVEL_TIMEOUT		(5 * SECOND)	/* Show the level for 5 seconds */
 #define CAT_TIMEOUT		(4 * 60 * SECOND)
 
+#define EVENTQUEUE_SIZE		4	/* Power of two */
+#define EVENTQUEUE_MASK		(EVENTQUEUE_SIZE - 1)
+
 #define PANEL_AUTOMODE		0	/* Display/button mode in normal operation */
 #define PANEL_CARTRIDGELEVEL	1	/* Display/button mode showing/altering cartridge level */
 #define PANEL_ERROR		2	/* Display/button mode showing error(s) */
@@ -72,6 +75,16 @@ static unsigned char	auto_mode	= AUTO_MANUAL;
 static unsigned char	cart_level	= 100;
 static unsigned char	error_nr	= 0;
 
+/* Defer LitterLanguage events to the main loop. Handling events directly
+ * can recurse through litterlanguage_stop/pause, which HI-TECH PICC
+ * does not support even though the recursion is bounded. */
+static struct {
+	unsigned char	event;
+	unsigned char	argument;
+}			eventqueue[EVENTQUEUE_SIZE];
+static unsigned char	eventqueue_head	= 0;
+static unsigned char	eventqueue_tail	= 0;
+
 
 /******************************************************************************/
 /* Local Prototypes							      */
@@ -81,6 +94,8 @@ static void	set_mode		(unsigned char mode);
 static void	update_display		(void);
 static void	process_button		(unsigned char	button_mask,
 					 unsigned char	down);
+static void	process_event		(unsigned char	event,
+					 unsigned char	argument);
 static void	setup_short		(void);
 static void	setup_long		(void);
 static void	start_short		(void);
@@ -128,6 +143,15 @@ void userinterface_work (void)
 /******************************************************************************/
 {
 	unsigned char		update		= 0;
+	unsigned char		drain_to	= eventqueue_head;
+
+	/* Process events pending at entry. Events generated while handling
+	 * these are left for the next call. */
+	while (eventqueue_tail != drain_to) {
+		process_event(eventqueue[eventqueue_tail].event,
+			      eventqueue[eventqueue_tail].argument);
+		eventqueue_tail = (eventqueue_tail + 1) & EVENTQUEUE_MASK;
+	}
 
 	if( (panel_mode == PANEL_CARTRIDGELEVEL) &&
 	    (timeoutexpired(&cartridgetimeout)) ) {
@@ -338,43 +362,21 @@ void catsensor_event (unsigned char detected)
 
 
 void litterlanguage_event (unsigned char event, unsigned char argument)
+/******************************************************************************/
+/* Function:	litterlanguage_event					      */
+/*		- Queue a LitterLanguage event for the user interface	      */
+/******************************************************************************/
 {
-	/* Stop the washing program upon fatal errors */
-	if ((event == EVENT_ERR_EXECUTION) &&
-	    (argument)) {
-		litterlanguage_stop();
-	}
-	/* Pause the washing program upon non-fatal errors */
-	if (((event == EVENT_ERR_FILLING) ||
-	     (event == EVENT_ERR_DRAINING) ||
-	     (event == EVENT_ERR_OVERHEAT)) &&
-	    (argument)) {
-		litterlanguage_pause(1);
-	}
+	unsigned char		next;
 
+	next = (eventqueue_head + 1) & EVENTQUEUE_MASK;
+	/* Discard the event if the queue is full */
+	if (next == eventqueue_tail)
+		return;
 
-	switch (event) {
-	case EVENT_LEVEL_CHANGED:
-		break;
-	case EVENT_ERR_FILLING:
-		if (argument)
-			set_Beeper(0x01, 1);
-		break;
-	case EVENT_ERR_DRAINING:
-		if (argument)
-			set_Beeper(0x05, 1);
-		break;
-	case EVENT_ERR_OVERHEAT:
-		if (argument)
-			set_Beeper(0x15, 1);
-		break;
-	case EVENT_ERR_EXECUTION:
-		break;
-	case EVENT_ERR_FLOOD:
-		break;
-	default:
-		break;
-	}
+	eventqueue[eventqueue_head].event = event;
+	eventqueue[eventqueue_head].argument = argument;
+	eventqueue_head = next;
 }
 /* litterlanguage_event */
 
@@ -413,6 +415,45 @@ static void process_button (unsigned char button_mask, unsigned char down)
 	}
 	if (locked)
 		update_display();
+}
+
+static void process_event (unsigned char event, unsigned char argument)
+{
+	/* Stop the washing program upon fatal errors */
+	if ((event == EVENT_ERR_EXECUTION) &&
+	    (argument)) {
+		litterlanguage_stop();
+	}
+	/* Pause the washing program upon non-fatal errors */
+	if (((event == EVENT_ERR_FILLING) ||
+	     (event == EVENT_ERR_DRAINING) ||
+	     (event == EVENT_ERR_OVERHEAT)) &&
+	    (argument)) {
+		litterlanguage_pause(1);
+	}
+
+	switch (event) {
+	case EVENT_LEVEL_CHANGED:
+		break;
+	case EVENT_ERR_FILLING:
+		if (argument)
+			set_Beeper(0x01, 1);
+		break;
+	case EVENT_ERR_DRAINING:
+		if (argument)
+			set_Beeper(0x05, 1);
+		break;
+	case EVENT_ERR_OVERHEAT:
+		if (argument)
+			set_Beeper(0x15, 1);
+		break;
+	case EVENT_ERR_EXECUTION:
+		break;
+	case EVENT_ERR_FLOOD:
+		break;
+	default:
+		break;
+	}
 }
 
 static void set_mode (unsigned char mode)
