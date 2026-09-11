@@ -34,6 +34,8 @@ void		water_work		(void) ;
 unsigned char	water_detected		(void) ;
 unsigned char	water_filling		(void) ;
 unsigned char	water_valid		(void) ;	/* Debounced level is qualified */
+unsigned char	water_failed		(void) ;	/* ADC timed out; clears after qualification */
+unsigned int	water_reflectionquality	(void) ;	/* Last completed sample; digital on 16F877A */
 /* Setters */
 void		water_fill		(unsigned char fill) ;
 void		water_ledalwayson	(unsigned char on) ;

@@ -130,6 +130,16 @@ void litterlanguage_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+	/* A failed conversion must not leave a program using a stale level. */
+	if ((ins_state != STATE_IDLE) && water_failed()) {
+		printtime();
+		printf("Water sensor timeout\n");
+		litterlanguage_stop();
+		error_execution = 1;
+		litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
+		return;
+	}
+
 	/* Don't work if paused */
 	if (paused)
 		return;
@@ -315,8 +325,8 @@ void litterlanguage_pause (unsigned char pause)
 		timeoutnever(&timer_autodose);
 		printf("Paused program\n");
 	} else {
-		/* Don't resume if still overheated */
-		if (error_overheat)
+		/* Don't resume while a heat or acquisition fault remains active. */
+		if (error_overheat || water_failed())
 			return;
 		printf("Resuming program\n");
 		/* Restore timer context */

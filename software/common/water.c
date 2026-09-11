@@ -22,7 +22,8 @@ extern void watersensor_event		(unsigned int	reflectionquality);
 /* Macros								      */
 /******************************************************************************/
 
-#define DETECTTIME		(SECOND/1000)	/*  10ms*/
+#define DETECTTIME		(SECOND/1000)	/*   1ms*/
+#define CONVERSION_TIMEOUT	(SECOND/100)	/*  10ms watchdog, not an acquisition delay */
 #define WATERSENSORPOLLING	(SECOND/4)	/* 250ms*/
 #define HYSTERESIS_MAX		8		/* Number of pollings to debounce the sensor output */
 
@@ -66,7 +67,9 @@ static struct timer	sensortimer       = EXPIRED;
 static unsigned char	state             = 0;
 static unsigned char	hysteresis        = 0;
 static unsigned char	samples           = 0;
+static unsigned int	reflectionquality = 0;
 static bit		valid             = 0;
+static bit		failed            = 0;
 static bit		filling           = 0;
 static bit		detected          = 0;
 static bit		ledalwayson       = 0;
@@ -125,8 +128,7 @@ void water_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	static unsigned int	cur_reflectionquality = 0;
-	static unsigned int	old_reflectionquality = 0;
+	unsigned int	cur_reflectionquality;
 
 	switch (state) {
 	default:
@@ -149,12 +151,28 @@ void water_work (void)
 			break;
 		/* Start A/D conversion */
 		ADCON0bits.GO = 1;
+		settimeout(&sensortimer, CONVERSION_TIMEOUT);
 		state = PROCESS_RESULT;
 		break;
 	case PROCESS_RESULT:
 #ifdef WATERSENSOR_ANALOG
-		if (ADCON0bits.nDONE)
+		if (ADCON0bits.nDONE) {
+			if (timeoutexpired(&sensortimer)) {
+				/* Never accept a partial conversion as a water level. */
+				ADCON0bits.GO = 0;
+				valid = 0;
+				failed = 1;
+				samples = 0;
+				hysteresis = detected ? HYSTERESIS_MAX : 0;
+				/* Inhibit filling before switching off the sensor LED. */
+				water_fill(0);
+				if (!ledalwayson)
+					WATERSENSOR_LED(LAT) &= ~WATERSENSOR_LED_MASK;
+				settimeout(&sensortimer, WATERSENSORPOLLING);
+				state = LED_ON;
+			}
 			break;
+		}
 		/* Read out the IR sensor analoguely (lower value == more light reflected == no water detected) */
 		cur_reflectionquality = ADRES;
 #else
@@ -186,11 +204,12 @@ void water_work (void)
 		if ((samples == HYSTERESIS_MAX) &&
 		    ((hysteresis == 0) || (hysteresis == HYSTERESIS_MAX))) {
 			valid = 1;
+			failed = 0;
 		}
 		/* Check water sensor reflection quality */
-		if (cur_reflectionquality != old_reflectionquality) {
+		if (cur_reflectionquality != reflectionquality) {
+			reflectionquality = cur_reflectionquality;
 			watersensor_event(cur_reflectionquality);
-			old_reflectionquality = cur_reflectionquality;
 		}
 
 		settimeout(&sensortimer, WATERSENSORPOLLING);
@@ -215,9 +234,23 @@ unsigned char water_valid (void)
 /* End: water_valid */
 
 
+unsigned char water_failed (void)
+{
+	return (failed);
+}
+/* End: water_failed */
+
+
+unsigned int water_reflectionquality (void)
+{
+	return (reflectionquality);
+}
+/* End: water_reflectionquality */
+
+
 void water_ledalwayson (unsigned char on)
 {
-	ledalwayson = on;
+	ledalwayson = on ? 1 : 0;
 }
 /* End: water_ledalwayson */
 
@@ -231,7 +264,8 @@ unsigned char water_filling (void)
 
 void water_fill (unsigned char fill)
 {
-	filling = fill;
+	/* Recovery requires new qualified samples and an explicit fill request. */
+	filling = (fill && !failed) ? 1 : 0;
 
 	if (filling) {
 		/* Pull-up WATERVALVE */

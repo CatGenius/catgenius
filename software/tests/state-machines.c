@@ -145,8 +145,8 @@ static void reset_firmware(void)
 	timeoutnever(&timer_autodose);
 	state = LED_ON;
 	hysteresis = samples = 0;
-	valid = 0;
-	filling = detected = ledalwayson = 0;
+	reflectionquality = 0;
+	valid = failed = filling = detected = ledalwayson = 0;
 	timeoutnow(&sensortimer);
 	ADCON0bits.GO = 0;
 	water_init();
@@ -179,7 +179,7 @@ static void qualify_water(unsigned int value)
 
 	for (i = 0; i < HYSTERESIS_MAX; i++)
 		sample_water(value);
-	assert(water_valid());
+	assert(water_valid() && !water_failed());
 }
 
 static void instruction(unsigned char opcode, unsigned int operand)
@@ -413,8 +413,19 @@ static void test_water_qualification(void)
 	}
 	sample_water(600);
 	assert(water_detected());
+#ifdef WATERSENSOR_ANALOG
+	assert(water_reflectionquality() == 600);
+#else
+	assert(water_reflectionquality() == DETECTION_THRESHOLD);
+#endif
 	qualify_water(UNDETECTION_THRESHOLD - DETECTION_MARGIN);
 	assert(!water_detected());
+	water_ledalwayson(2);
+	sample_water(0);
+	assert(WATERSENSOR_LED(LAT) & WATERSENSOR_LED_MASK);
+	water_ledalwayson(0);
+	sample_water(0);
+	assert(!(WATERSENSOR_LED(LAT) & WATERSENSOR_LED_MASK));
 }
 
 static void test_unqualified_wait(void)
@@ -428,6 +439,90 @@ static void test_unqualified_wait(void)
 	assert(paused && error_drain);
 }
 
+#ifdef WATERSENSOR_ANALOG
+static void fail_conversion(void)
+{
+	if (ticks < sensortimer.overflows)
+		ticks = sensortimer.overflows;
+	water_work();
+	ticks = sensortimer.overflows;
+	water_work();
+	assert(ADCON0bits.GO);
+	ADRES = 1023;
+	ticks = sensortimer.overflows;
+	water_work();
+	assert(!ADCON0bits.GO && water_failed() && !water_valid());
+}
+
+static void test_adc_timeout(void)
+{
+	unsigned char i, was_paused;
+
+	reset_firmware();
+	qualify_water(0);
+	water_fill(1);
+	ticks = sensortimer.overflows;
+	water_work();
+	ticks = sensortimer.overflows;
+	water_work();
+	ADRES = 1023;
+	ticks = sensortimer.overflows - 1;
+	water_work();
+	assert(ADCON0bits.GO && water_valid() && !water_failed());
+	assert(water_filling() && water_reflectionquality() == 0);
+	ticks++;
+	water_work();
+	assert(!ADCON0bits.GO && water_failed() && !water_valid());
+	assert(!water_filling() && !water_detected());
+	assert(water_reflectionquality() == 0);
+	assert(!(WATERVALVEPULLUP(LAT) & WATERVALVEPULLUP_MASK));
+	assert(!(WATERSENSOR_LED(LAT) & WATERSENSOR_LED_MASK));
+	water_fill(1);
+	assert(!water_filling());
+	for (i = 1; i < HYSTERESIS_MAX; i++) {
+		sample_water(0);
+		assert(!water_valid() && water_failed());
+	}
+	sample_water(0);
+	assert(water_valid() && !water_failed() && !water_filling());
+	water_fill(1);
+	assert(water_filling());
+	water_ledalwayson(1);
+	fail_conversion();
+	assert(WATERSENSOR_LED(LAT) & WATERSENSOR_LED_MASK);
+	assert(!water_filling());
+
+	for (was_paused = 0; was_paused <= 1; was_paused++) {
+		reset_firmware();
+		qualify_water(0);
+		instruction(INS_WAITTIME, 1000);
+		nvram[NVM_BOXSTATE] = BOX_WET;
+		set_Bowl(BOWL_CW);
+		set_Arm(ARM_DOWN);
+		water_fill(1);
+		set_Pump(1);
+		set_Dosage(1);
+		set_Dryer(!was_paused);
+		if (was_paused)
+			litterlanguage_pause(1);
+		fail_conversion();
+		if (was_paused) {
+			litterlanguage_pause(0);
+			assert(paused);
+			assert_stopped_outputs();
+		}
+		litterlanguage_work();
+		assert(ins_state == STATE_IDLE && !paused && error_execution);
+		assert_stopped_outputs();
+		assert(events[EVENT_ERR_EXECUTION][1] == 1);
+		assert(nvram[NVM_BOXSTATE] == BOX_WET);
+		qualify_water(0);
+		litterlanguage_work();
+		assert(ins_state == STATE_IDLE);
+	}
+}
+#endif
+
 int main(void)
 {
 	test_water_sampling();
@@ -440,6 +535,9 @@ int main(void)
 	test_water_waits();
 	test_water_qualification();
 	test_unqualified_wait();
+#ifdef WATERSENSOR_ANALOG
+	test_adc_timeout();
+#endif
 	puts("Host state-machine checks passed.");
 	return 0;
 }
