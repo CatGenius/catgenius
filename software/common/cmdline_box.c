@@ -218,15 +218,64 @@ int water (int argc, char* argv[])
 	printf("Water: %s\n", water_failed()?"sensor timeout":
 		(water_valid()?(water_detected()?"high":"low"):"unqualified"));
 #ifdef WATERSENSOR_ANALOG
-	printf("Reflection ADC (last completed): %u\n", water_reflectionquality());
+	printf("Reflection ADC mean (last completed cycle): ");
+	if (water_reflection_valid())
+		printf("%u; fill: %s\n", water_reflectionquality(),
+			water_reflection_filling()?str_on:str_off);
+	else
+		printf("unavailable\n");
+	printf("Quality: ");
+	switch (water_quality()) {
+	case WATER_QUALITY_UNCHECKED:
+		printf("unchecked");
+		break;
+	case WATER_QUALITY_CHECKING:
+		printf("checking");
+		break;
+	case WATER_QUALITY_GOOD:
+		printf("good");
+		break;
+	case WATER_QUALITY_OPTICAL:
+		printf("poor optical reflection");
+		break;
+	case WATER_QUALITY_LEVEL:
+		printf("high water or comparator fault");
+		break;
+	default:
+		printf(str_unkown);
+		break;
+	}
+	printf(" (threshold %u)\n", (unsigned int)WATER_QUALITY_THRESHOLD);
+	printf("Acquisition: ");
+	switch (water_acquisition_fault()) {
+	case WATER_ACQUISITION_OK:
+		printf("no timeout");
+		break;
+	case WATER_ACQUISITION_ADC:
+		printf("ADC timeout");
+		break;
+	case WATER_ACQUISITION_PROBE:
+		printf("probe timeout");
+		break;
+	default:
+		printf(str_unkown);
+		break;
+	}
+	printf("\nComparator RB3 (last enabled probe): ");
+	if (water_comparator_valid())
+		printf("%u\n", water_comparator());
+	else
+		printf("unavailable\n");
 #else
 	printf("Reflection digital (last completed): %u\n", water_reflectionquality());
 #endif /* WATERSENSOR_ANALOG */
-	printf("Fill enabled: %s; IR LED: %s\n", water_filling()?str_on:str_off,
+	printf("Fill requested: %s; RD0 now: %u; IR LED now: %s\n",
+		water_filling()?str_on:str_off,
+		(WATERVALVEPULLUP(LAT) & WATERVALVEPULLUP_MASK)?1:0,
 		(WATERSENSOR_LED(LAT) & WATERSENSOR_LED_MASK)?str_on:str_off);
 	printf("Comparator RB3 (instantaneous): %u%s\n",
 		(WATERVALVE(PORT) & WATERVALVE_MASK)?1:0,
-		water_filling()?"":" (fill inhibited)");
+		(WATERVALVEPULLUP(LAT) & WATERVALVEPULLUP_MASK)?"":" (pull-up disabled)");
 
 	return ERR_OK;
 }

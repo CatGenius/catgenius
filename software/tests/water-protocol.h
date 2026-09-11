@@ -205,4 +205,49 @@ static void test_quality_acquisition(void)
 	assert(!quality.repeats && !quality.good);
 	assert_stopped_outputs();
 }
+static void test_quality_diagnostics(void)
+{
+	char *args[] = {"water"};
+	unsigned char i;
+
+	reset_firmware();
+	assert(water(1, args) == ERR_OK);
+	assert(strstr(output, "Quality: unchecked (threshold 410)"));
+	assert(strstr(output, "last completed cycle): unavailable"));
+	assert(strstr(output, "last enabled probe): unavailable"));
+	assert(water_check(1));
+	output[0] = 0;
+	assert(water(1, args) == ERR_OK);
+	assert(strstr(output, "Quality: checking"));
+	for (i = 0; i < 11; i++)
+		sample_analog(600, 600, 600, 600, 1);
+	output[0] = 0;
+	assert(water(1, args) == ERR_OK);
+	assert(strstr(output, "Quality: poor optical reflection"));
+	assert(strstr(output, "last completed cycle): 600; fill: off"));
+	for (i = 0; i < 4; i++)
+		sample_analog(0, 0, 0, 0, 0);
+	output[0] = 0;
+	assert(water(1, args) == ERR_OK);
+	assert(strstr(output, "Quality: good"));
+	assert(water_check(1));
+	for (i = 0; i < 11; i++)
+		sample_analog(600, 600, 600, 600, 0);
+	output[0] = 0;
+	assert(water(1, args) == ERR_OK);
+	assert(strstr(output, "Quality: high water or comparator fault"));
+	assert(strstr(output, "last enabled probe): 0"));
+
+	reset_firmware();
+	prepare_probe(22);
+	output[0] = 0;
+	assert(water(1, args) == ERR_OK);
+	assert(strstr(output, "Fill requested: off; RD0 now: 1; IR LED now: on"));
+	ticks = sensortimer.overflows;
+	water_work();
+	output[0] = 0;
+	assert(water(1, args) == ERR_OK);
+	assert(strstr(output, "Acquisition: probe timeout"));
+	assert(strstr(output, "last enabled probe): unavailable"));
+}
 #endif

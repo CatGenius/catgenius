@@ -57,6 +57,7 @@ unsigned char	water_acquisition_fault	(void) ;
 unsigned char	water_comparator	(void) ;
 unsigned char	water_comparator_valid	(void) ;
 unsigned char	water_reflection_filling(void) ;
+unsigned char	water_reflection_valid	(void) ;	/* At least one complete cycle is available */
 #endif
 
 #endif /* WATER_H */

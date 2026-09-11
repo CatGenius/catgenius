@@ -630,7 +630,7 @@ static void test_diagnostics(void)
 	reset_firmware();
 	assert(water(1, args) == ERR_OK);
 	assert(strstr(output, "Water: unqualified"));
-	assert(strstr(output, "(fill inhibited)"));
+	assert(strstr(output, "(pull-up disabled)"));
 	qualify_water(0);
 	output[0] = 0;
 	assert(water(1, args) == ERR_OK);
@@ -649,7 +649,8 @@ static void test_diagnostics(void)
 	output[0] = 0;
 	assert(water(1, args) == ERR_OK);
 	assert(strstr(output, "Water: sensor timeout"));
-	assert(strstr(output, "Reflection ADC (last completed): 600"));
+	assert(strstr(output, "Reflection ADC mean (last completed cycle): 600"));
+	assert(strstr(output, "Acquisition: ADC timeout"));
 #endif
 	assert(water(2, args) == ERR_SYNTAX);
 }
@@ -679,6 +680,7 @@ int main(void)
 	test_probe_lifecycle();
 	test_analog_level_and_mean();
 	test_quality_acquisition();
+	test_quality_diagnostics();
 	test_preflight_success_and_timeout();
 	test_preflight_quality_faults();
 	test_preflight_acquisition_faults();

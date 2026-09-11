@@ -100,6 +100,7 @@ static unsigned char	acquisition_fault = WATER_ACQUISITION_OK;
 static bit		level_candidate   = 0;
 static bit		sample_filling    = 0;
 static bit		reflection_filling= 0;
+static bit		reflection_valid  = 0;
 static bit		comparator        = 0;
 static bit		comparator_valid  = 0;
 static volatile bit	probe_done        = 0;
@@ -145,6 +146,7 @@ void water_init (void)
 	adc_sum = reflectionquality = 0;
 	valid = failed = filling = detected = ledalwayson = 0;
 	level_candidate = sample_filling = reflection_filling = 0;
+	reflection_valid = 0;
 	comparator = comparator_valid = probe_done = probe_high = probe_keep_led = 0;
 	acquisition_fault = WATER_ACQUISITION_OK;
 	waterquality_init(&quality, WATER_QUALITY_THRESHOLD);
@@ -400,6 +402,12 @@ unsigned char water_reflection_filling (void)
 }
 /* End: water_reflection_filling */
 
+unsigned char water_reflection_valid (void)
+{
+	return (reflection_valid);
+}
+/* End: water_reflection_valid */
+
 
 #endif /* WATERSENSOR_ANALOG */
 
@@ -445,6 +453,7 @@ static void finish_batch (unsigned char have_probe)
 
 	reflectionquality = adc_sum >> 2;
 	reflection_filling = sample_filling;
+	reflection_valid = 1;
 	if (have_probe) {
 		comparator = probe_high;
 		comparator_valid = 1;
