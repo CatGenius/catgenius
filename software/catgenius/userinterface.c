@@ -248,12 +248,16 @@ void userinterface_work (void)
 	if (timeoutexpired(&holdtimeout)) {
 		switch (buttonmask_cum & BUTTONS) {
 		case START_BUTTON:
+			if (locked)
+				break;
 			key_Beep(2);
 			start_long();
 			update = 1;
 			break;
 
 		case SETUP_BUTTON:
+			if (locked)
+				break;
 			key_Beep(2);
 			setup_long();
 			update = 1;

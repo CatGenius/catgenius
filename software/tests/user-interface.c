@@ -120,10 +120,29 @@ static void test_deferred_faults(void)
 	assert(!error_nr);
 }
 
+static void test_locked_holds(void)
+{
+	unsigned char active, button;
+	for (active = 0; active <= 1; active++)
+		for (button = START_BUTTON; button <= SETUP_BUTTON; button++) {
+			reset_ui(1);
+			running = active;
+			process_button(button, 1);
+			ticks += HOLDTIME;
+			userinterface_work();
+			assert(locked && running == active);
+			assert(!starts && !stops && !pauses && !key_beeps);
+			process_button(button, 0);
+			userinterface_work();
+			assert(!starts && !stops && !pauses);
+		}
+}
+
 int main(void)
 {
 	test_buttons();
 	test_deferred_faults();
+	test_locked_holds();
 	puts("Host UI checks passed.");
 	return 0;
 }
