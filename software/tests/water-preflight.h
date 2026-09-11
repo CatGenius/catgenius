@@ -54,6 +54,7 @@ static void pass_preflight(void)
 	assert(timeoutneverexpires(&timer_waitins));
 	litterlanguage_work();
 	assert(ins_pointer == washprogram + 2 && get_Pump());
+	assert(nvram[NVM_BOXSTATE] >= BOX_MESSY);
 }
 
 static void test_preflight_success_and_timeout(void)
@@ -74,6 +75,7 @@ static void test_preflight_success_and_timeout(void)
 	litterlanguage_work();
 	assert(ins_state == STATE_IDLE && error_execution);
 	assert(water_quality() == WATER_QUALITY_UNCHECKED);
+	assert(nvram[NVM_BOXSTATE] == BOX_TIDY);
 	assert_stopped_outputs();
 	assert(timeoutneverexpires(&timer_waitins));
 
@@ -98,6 +100,7 @@ static void test_preflight_success_and_timeout(void)
 	litterlanguage_stop();
 	assert(!TMR4IE && !T4CON && !TMR4IF);
 	assert(water_quality() == WATER_QUALITY_UNCHECKED);
+	assert(nvram[NVM_BOXSTATE] == BOX_TIDY);
 	assert_stopped_outputs();
 	qualify_water(0);
 	litterlanguage_work();
@@ -140,6 +143,7 @@ static void test_preflight_quality_faults(void)
 	litterlanguage_work();
 	litterlanguage_work();
 	assert(ins_state == STATE_IDLE && water_quality() == WATER_QUALITY_OPTICAL);
+	assert(nvram[NVM_BOXSTATE] == BOX_TIDY);
 	assert_stopped_outputs();
 
 	/* Good quality alone does not authorize starting with newly detected water. */

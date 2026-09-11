@@ -239,7 +239,11 @@ void litterlanguage_work (void)
 				if( ((cur_instruction.operant & 0x00FF) <= INS_END) &&
 				    ( (!wet_program && (cur_instruction.operant & FLAGS_DRYRUN)) ||
 				      (wet_program && (cur_instruction.operant & FLAGS_WETRUN)) ) ) {
-					if (eeprom_read(NVM_BOXSTATE) < BOX_MESSY)
+					if (
+#ifdef WATERSENSOR_ANALOG
+					    !check_before_program &&
+#endif
+					    (eeprom_read(NVM_BOXSTATE) < BOX_MESSY))
 						eeprom_write(NVM_BOXSTATE, BOX_MESSY);
 					ins_pointer++;
 					ins_state = STATE_FETCH_INS;
@@ -573,6 +577,9 @@ static void check_water (void)
 		return;
 	}
 	if (check_started && (status == WATER_QUALITY_GOOD) && water_valid()) {
+		/* Failed or cancelled checks must leave the persisted box state intact. */
+		if (eeprom_read(NVM_BOXSTATE) < BOX_MESSY)
+			eeprom_write(NVM_BOXSTATE, BOX_MESSY);
 		timeoutnever(&timer_waitins);
 		check_before_program = check_started = 0;
 		ins_state = STATE_FETCH_INS;
