@@ -349,6 +349,50 @@ static void test_fill_resume(void)
 	assert(!(WATERVALVEPULLUP(LAT) & WATERVALVEPULLUP_MASK));
 }
 
+static void test_water_waits(void)
+{
+	unsigned long deadline;
+
+	reset_firmware();
+	qualify_water(600);
+	instruction(INS_WAITWATER, 0);
+	assert(!get_Pump());
+	ticks += MAX_DRAINTIME - 1;
+	litterlanguage_work();
+	assert(!paused && ins_pointer == program);
+	ticks++;
+	litterlanguage_work();
+	assert(paused && error_drain && ins_pointer == program);
+	assert_stopped_outputs();
+	assert(events[EVENT_ERR_DRAINING][1] == 1);
+	litterlanguage_work();
+	assert(events[EVENT_ERR_DRAINING][1] == 1);
+	litterlanguage_pause(0);
+	assert(timer_drain.overflows == ticks + MAX_DRAINTIME);
+	/* Keep the fake sensor schedule in step with the advanced clock. */
+	timeoutnow(&sensortimer);
+	qualify_water(0);
+	litterlanguage_work();
+	assert(ins_pointer == program + 1 && timeoutneverexpires(&timer_drain));
+
+	reset_firmware();
+	qualify_water(0);
+	instruction(INS_WAITWATER, 1);
+	assert(!water_filling());
+	ticks += MAX_FILLTIME;
+	litterlanguage_work();
+	assert(paused && error_fill && ins_pointer == program);
+	assert(events[EVENT_ERR_FILLING][1] == 1);
+
+	reset_firmware();
+	qualify_water(0);
+	settimeout(&timer_fill, SECOND);
+	deadline = timer_fill.overflows;
+	instruction(INS_WAITWATER, 1);
+	assert(timer_fill.overflows == deadline);
+
+}
+
 int main(void)
 {
 	test_water_sampling();
@@ -358,6 +402,7 @@ int main(void)
 	test_heat_fault();
 	test_pause_context();
 	test_fill_resume();
+	test_water_waits();
 	puts("Host state-machine checks passed.");
 	return 0;
 }

@@ -144,24 +144,28 @@ void litterlanguage_work (void)
 
 		/* Check for filling timeout */
 		if( !water_detected() &&
-		    water_filling() &&
+		    (water_filling() || ((ins_state == STATE_WAIT_INS) &&
+		     (cur_instruction.opcode == INS_WAITWATER) && cur_instruction.operant)) &&
 		    timeoutexpired(&timer_fill) ){
 			printtime();
 			printf("Fill timeout\n");
 			/* Fill error */
 			error_fill = 1;
+			litterlanguage_pause(1);
 			litterlanguage_event(EVENT_ERR_FILLING, error_fill);
+			return;
 		}
 
 		/* Check for draining timeout */
 		if( water_detected() &&
-		    get_Pump() &&
 		    timeoutexpired(&timer_drain) ){
 			printtime();
 			printf("Drain timeout\n");
 			/* Drain error */
 			error_drain = 1;
+			litterlanguage_pause(1);
 			litterlanguage_event(EVENT_ERR_DRAINING, error_drain);
+			return;
 		}
 		/* Check auto-dose timeout */
 		if (timeoutexpired(&timer_autodose)) {
@@ -576,7 +580,11 @@ static void exe_instruction (void)
 		printf("INS_WAITWATER, %s%s", cur_instruction.operant?"high":"low", wet_program?"":" (nop)");
 #endif /* LL_DEBUG */
 		if (wet_program) {
-			if (!cur_instruction.operant)
+			if (cur_instruction.operant) {
+				/* Bound this wait even when no fill request is active. */
+				if (timeoutneverexpires(&timer_fill))
+					settimeout(&timer_fill, MAX_FILLTIME);
+			} else
 				/* Start the drain timeout, we don't want to wait forever */
 				settimeout(&timer_drain, MAX_DRAINTIME);
 			ins_state = STATE_WAIT_INS;
@@ -686,6 +694,7 @@ static void wait_instruction (void)
 	case INS_WAITWATER:
 		if (cur_instruction.operant) {
 			if (water_detected()) {
+				timeoutnever(&timer_fill);
 				ins_pointer++;
 				ins_state = STATE_FETCH_INS;
 			}
