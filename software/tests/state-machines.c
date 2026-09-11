@@ -658,6 +658,30 @@ static void test_diagnostics(void)
 #include "water-protocol.h"
 #include "water-preflight.h"
 
+static void test_idle_pause_and_hot_start(void)
+{
+	reset_firmware();
+	litterlanguage_pause(1);
+	assert(!litterlanguage_paused() && !litterlanguage_running());
+	litterlanguage_pause(0);
+	assert(!litterlanguage_paused());
+	heatsensor_event(1);
+	litterlanguage_pause(1);
+	litterlanguage_start(0);
+	assert(!litterlanguage_running() && !litterlanguage_paused());
+	litterlanguage_start(1);
+	assert(!litterlanguage_running());
+	litterlanguage_cleanup(1);
+	assert(!litterlanguage_running());
+	heatsensor_event(0);
+	litterlanguage_start(0);
+	assert(litterlanguage_running() && !litterlanguage_paused());
+	litterlanguage_work();
+	litterlanguage_work();
+	litterlanguage_work();
+	assert(ins_state == STATE_WAIT_INS && !litterlanguage_paused());
+}
+
 int main(void)
 {
 	test_water_sampling();
@@ -665,6 +689,7 @@ int main(void)
 	test_dry_program();
 	test_buttons();
 	test_heat_fault();
+	test_idle_pause_and_hot_start();
 	test_pause_context();
 	test_fill_resume();
 	test_water_waits();

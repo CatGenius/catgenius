@@ -300,7 +300,7 @@ void litterlanguage_work (void)
 void litterlanguage_start (unsigned char wet)
 {
 	extern const struct instruction	washprogram[];
-	if (ins_state == STATE_IDLE) {
+	if ((ins_state == STATE_IDLE) && !error_overheat) {
 #ifdef WATERSENSOR_ANALOG
 		if (wet && water_failed()) {
 			/* Permit a fresh check even after combined level/acquisition faults. */
@@ -349,6 +349,9 @@ void litterlanguage_pause (unsigned char pause)
 	} context;
 
 	pause = pause ? 1 : 0;
+	/* There is no execution context to save or restore while idle. */
+	if (ins_state == STATE_IDLE)
+		return;
 	if (pause == paused)
 		return;
 
@@ -535,7 +538,7 @@ void heatsensor_event (unsigned char detected)
 static void litterlanguage_cleanup (unsigned char wet)
 {
 	extern const struct instruction	cleanupprogram[];
-	if (ins_state == STATE_IDLE) {
+	if ((ins_state == STATE_IDLE) && !error_overheat) {
 #ifdef WATERSENSOR_ANALOG
 		/* Recovery cleanup may start with water present: drain before drying. */
 		check_before_program = check_started = 0;
