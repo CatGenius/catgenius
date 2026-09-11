@@ -82,6 +82,7 @@ static uint64_t ticks;
 static unsigned char nvram[256];
 static unsigned int box_writes[3];
 static const struct instruction *requested;
+static const struct instruction *corrupt_instruction;
 static unsigned char buttons, hot, water_high;
 static unsigned char auto_fill = 1, auto_drain = 1;
 static uint64_t fill_since = TICKS_NEVER, drain_since = TICKS_NEVER;
@@ -93,6 +94,7 @@ static size_t output_used;
 #ifdef WATERSENSOR_ANALOG
 static uint64_t adc_due = TICKS_NEVER, probe_due = TICKS_NEVER;
 static unsigned char hold_adc, hold_probe;
+static unsigned char noisy_comparator;
 static int adc_override = -1;
 static unsigned int probes;
 #endif
@@ -227,6 +229,8 @@ unsigned char romwashprogram_getins(struct instruction * const instruction)
 {
 	CHECK(requested != NULL);
 	*instruction = *requested;
+	if (requested == corrupt_instruction)
+		instruction->opcode = 0xff;
 	return 1;
 }
 
@@ -346,6 +350,13 @@ static void advance_peripherals(uint64_t next)
 		} else {
 			account_time(probe_due);
 			drive_inputs();
+			if (noisy_comparator && water_quality() == WATER_QUALITY_GOOD) {
+				/* Quality can pass, but normal level samples cannot qualify. */
+				if (probes & 1)
+					PORTB |= WATERVALVE_MASK;
+				else
+					PORTB &= ~WATERVALVE_MASK;
+			}
 			CHECK(GIE && TMR4IE);
 			TMR4IF = 1;
 			water_isr();
@@ -524,6 +535,300 @@ static void locked_buttons(void)
 	finish_wash();
 }
 
+static void simultaneous_start_overheat(void)
+{
+	boot(BOX_TIDY, 0);
+	buttons = START_BUTTON;
+	run_ms(70);
+	buttons = 0;
+	run_ms(50); /* Release will debounce on the next pass. */
+	CHECK(!litterlanguage_running());
+	hot = 1;
+	run_ms(1);
+	CHECK(!litterlanguage_running() && !litterlanguage_paused());
+	CHECK(!seen_actuators && numbered_leds() == BIT(EVENT_ERR_OVERHEAT - 1));
+	CHECK(nvram[NVM_BOXSTATE] == BOX_TIDY);
+	hot = 0;
+	run_ms(1000);
+	CHECK(!litterlanguage_running() && !numbered_leds());
+	start_wash(); /* A new request is needed after cooling. */
+	finish_wash();
+}
+
+static void overheat_during_dosage(void)
+{
+	uint64_t delivered;
+
+	boot(BOX_TIDY, 0);
+	start_wash();
+	wait_actuator(ACT_DOSE, 8000);
+	run_ms(250);
+	hot = 1;
+	run_ms(1);
+	CHECK(litterlanguage_paused() && !actuators());
+	CHECK(numbered_leds() == BIT(EVENT_ERR_OVERHEAT - 1));
+	delivered = on_ticks[2];
+	gesture(START_BUTTON, 70);
+	CHECK(litterlanguage_paused());
+	hot = 0;
+	run_ms(2500);
+	CHECK(litterlanguage_paused() && !numbered_leds());
+	CHECK(on_ticks[2] == delivered);
+	gesture(START_BUTTON, 70);
+	CHECK(!litterlanguage_paused());
+	finish_wash();
+	CHECK(on_ticks[2] == 2 * SECOND * (DOSAGE_SECONDS_PER_ML / 10));
+}
+
+static void high_water_during_pause(void)
+{
+	auto_fill = 0;
+	boot(BOX_TIDY, 0);
+	start_wash();
+	wait_actuator(ACT_FILL, 4000);
+	gesture(START_BUTTON, 70);
+	CHECK(litterlanguage_paused() && !actuators());
+	water_high = 1;
+	run_ms(2500);
+	CHECK(water_valid() && water_detected());
+	CHECK(litterlanguage_paused() && !actuators());
+	gesture(START_BUTTON, 70);
+	CHECK(!litterlanguage_paused() && !water_filling());
+	CHECK(get_Dosage() && get_Bowl() == BOWL_CCW);
+	finish_wash();
+}
+
+static void high_water_during_drying(void)
+{
+	unsigned int remaining = 2500;
+
+	boot(BOX_TIDY, 0);
+	start_wash();
+	wait_actuator(ACT_DRYER, 12000);
+	water_high = 1;
+	while (!litterlanguage_paused() && remaining--)
+		run_ms(1);
+	CHECK(litterlanguage_paused() && !actuators());
+	run_ms(1); /* The UI consumes the interpreter's queued fault. */
+	CHECK(numbered_leds() == BIT(EVENT_ERR_DRAINING - 1));
+	gesture(START_BUTTON, 70);
+	CHECK(litterlanguage_paused() && !actuators());
+	water_high = 0;
+	run_ms(2500);
+	CHECK(water_valid() && !water_detected());
+	CHECK(litterlanguage_paused());
+	gesture(START_BUTTON, 70);
+	CHECK(!litterlanguage_paused() && get_Dryer());
+	finish_wash();
+	CHECK(!numbered_leds());
+}
+
+static void fill_timeout(void)
+{
+	auto_fill = 0;
+	boot(BOX_TIDY, 0);
+	start_wash();
+	wait_actuator(ACT_FILL, 4000);
+	run_ms(MAX_FILLTIME / MILISECOND - 1);
+	CHECK(!litterlanguage_paused() && water_filling());
+	run_ms(1);
+	CHECK(litterlanguage_paused() && !actuators());
+	CHECK(on_ticks[0] == MAX_FILLTIME && !numbered_leds());
+	run_ms(1);
+	CHECK(numbered_leds() == BIT(EVENT_ERR_FILLING - 1));
+	CHECK(nvram[NVM_BOXSTATE] == BOX_WET);
+	/* A long Start stops without falsely recording a completed wash. */
+	gesture(START_BUTTON, 2070);
+	CHECK(!litterlanguage_running() && !numbered_leds());
+	CHECK(nvram[NVM_BOXSTATE] == BOX_WET && !box_writes[BOX_TIDY]);
+}
+
+static void drain_timeout(void)
+{
+	auto_drain = 0;
+	boot(BOX_TIDY, 0);
+	start_wash();
+	wait_actuator(ACT_PUMP, 10000);
+	run_ms(MAX_DRAINTIME / MILISECOND - 1);
+	CHECK(!litterlanguage_paused() && get_Pump());
+	/* WAITWATER starts the deadline one instruction after PUMP. */
+	run_ms(2);
+	CHECK(litterlanguage_paused() && !actuators());
+	run_ms(1);
+	CHECK(numbered_leds() == BIT(EVENT_ERR_DRAINING - 1));
+	CHECK(nvram[NVM_BOXSTATE] == BOX_WET);
+	water_high = 0;
+	run_ms(2500);
+	CHECK(water_valid() && !water_detected() && litterlanguage_paused());
+	gesture(START_BUTTON, 70);
+	CHECK(!litterlanguage_paused());
+	finish_wash();
+	CHECK(!numbered_leds());
+}
+
+static void corrupt_recipe(void)
+{
+	corrupt_instruction = &washprogram[8]; /* Replace WAITDOSAGE with an invalid opcode. */
+	boot(BOX_TIDY, 0);
+	start_wash();
+	wait_actuator(ACT_DOSE, 8000);
+	run_ms(1);
+	/* Execution reports the fault after the UI has already run this pass. */
+	CHECK(litterlanguage_running() && get_Dosage() && !numbered_leds());
+	run_ms(1);
+	CHECK(!litterlanguage_running() && !actuators());
+	CHECK(numbered_leds() == BIT(EVENT_ERR_EXECUTION - 1));
+	CHECK(nvram[NVM_BOXSTATE] == BOX_WET && !box_writes[BOX_TIDY]);
+	run_ms(1000);
+	CHECK(!litterlanguage_running());
+}
+
+static void wet_boot_cleanup(void)
+{
+	water_high = 1;
+	boot(BOX_WET, 0);
+	CHECK(litterlanguage_running());
+	finish_wash();
+	CHECK(seen_actuators == ACT_PUMP && !box_writes[BOX_MESSY]);
+	CHECK(water_valid() && !water_detected());
+}
+
+#ifdef WATERSENSOR_ANALOG
+static void check_failed_preflight(void)
+{
+	CHECK(!litterlanguage_running() && !litterlanguage_paused());
+	CHECK(!seen_actuators && numbered_leds() == BIT(EVENT_ERR_EXECUTION - 1));
+	CHECK(nvram[NVM_BOXSTATE] == BOX_TIDY);
+	CHECK(!box_writes[BOX_MESSY] && !box_writes[BOX_WET]);
+}
+
+static void paused_preflight(void)
+{
+	boot(BOX_TIDY, 0);
+	start_wash();
+	gesture(START_BUTTON, 70);
+	CHECK(litterlanguage_paused() && !seen_actuators);
+	run_ms(2000);
+	CHECK(water_quality() == WATER_QUALITY_GOOD && water_valid());
+	CHECK(litterlanguage_paused() && nvram[NVM_BOXSTATE] == BOX_TIDY);
+	gesture(START_BUTTON, 70);
+	CHECK(!litterlanguage_paused());
+	finish_wash();
+}
+
+static void optical_preflight_fault(unsigned char pause)
+{
+	adc_override = 800;
+	boot(BOX_TIDY, 0);
+	start_wash();
+	if (pause) {
+		gesture(START_BUTTON, 70);
+		CHECK(litterlanguage_paused());
+	}
+	run_ms(1000);
+	check_failed_preflight();
+	CHECK(water_quality() == WATER_QUALITY_OPTICAL && !water_failed());
+	adc_override = 22;
+	run_ms(1500);
+	CHECK(water_quality() == WATER_QUALITY_GOOD && water_valid());
+	check_failed_preflight(); /* Clearing the sensor never restarts the request. */
+	start_wash();
+	finish_wash();
+	CHECK(!numbered_leds());
+}
+
+static void optical_preflight(void) { optical_preflight_fault(0); }
+static void optical_paused_preflight(void) { optical_preflight_fault(1); }
+
+static void level_preflight(void)
+{
+	water_high = 1;
+	boot(BOX_TIDY, 0);
+	start_wash();
+	run_ms(1000);
+	check_failed_preflight();
+	CHECK(water_quality() == WATER_QUALITY_LEVEL && !water_failed());
+	water_high = 0;
+	run_ms(1500);
+	CHECK(water_quality() == WATER_QUALITY_LEVEL);
+	check_failed_preflight();
+	start_wash(); /* Level faults require a new check, not passive recovery. */
+	finish_wash();
+}
+
+static void unqualified_preflight(void)
+{
+	noisy_comparator = 1;
+	adc_override = 22;
+	boot(BOX_TIDY, 0);
+	start_wash();
+	run_ms(4900);
+	CHECK(litterlanguage_running() && !water_valid());
+	CHECK(water_quality() == WATER_QUALITY_GOOD && !seen_actuators);
+	run_ms(100);
+	check_failed_preflight();
+	CHECK(!water_failed());
+	noisy_comparator = 0;
+	run_ms(1000);
+	CHECK(water_valid() && !litterlanguage_running());
+}
+
+static void acquisition_preflight_fault(unsigned char probe)
+{
+	boot(BOX_TIDY, 0);
+	start_wash();
+	hold_probe = probe;
+	hold_adc = !probe;
+	run_ms(200);
+	check_failed_preflight();
+	CHECK(water_failed() && !water_valid());
+	CHECK(water_acquisition_fault() == (probe ?
+		WATER_ACQUISITION_PROBE : WATER_ACQUISITION_ADC));
+	hold_probe = hold_adc = 0;
+	run_ms(1500);
+	CHECK(!water_failed() && water_valid());
+	check_failed_preflight();
+	start_wash();
+	finish_wash();
+}
+
+static void adc_preflight(void) { acquisition_preflight_fault(0); }
+static void probe_preflight(void) { acquisition_preflight_fault(1); }
+
+static void acquisition_program_fault(unsigned char probe, unsigned char pause)
+{
+	auto_fill = 0;
+	boot(BOX_TIDY, 0);
+	start_wash();
+	wait_actuator(ACT_FILL, 4000);
+	if (pause) {
+		gesture(START_BUTTON, 70);
+		CHECK(litterlanguage_paused());
+	}
+	hold_probe = probe;
+	hold_adc = !probe;
+	run_ms(200);
+	CHECK(water_failed() && !water_valid());
+	CHECK(water_acquisition_fault() == (probe ?
+		WATER_ACQUISITION_PROBE : WATER_ACQUISITION_ADC));
+	CHECK(!litterlanguage_running() && !litterlanguage_paused() && !actuators());
+	CHECK(numbered_leds() == BIT(EVENT_ERR_EXECUTION - 1));
+	CHECK(nvram[NVM_BOXSTATE] == BOX_WET && !box_writes[BOX_TIDY]);
+	hold_probe = hold_adc = 0;
+	run_ms(1500);
+	CHECK(!water_failed() && water_valid() && !litterlanguage_running());
+	CHECK(nvram[NVM_BOXSTATE] == BOX_WET);
+	auto_fill = 1;
+	start_wash();
+	finish_wash();
+}
+
+static void adc_active(void) { acquisition_program_fault(0, 0); }
+static void adc_paused(void) { acquisition_program_fault(0, 1); }
+static void probe_active(void) { acquisition_program_fault(1, 0); }
+static void probe_paused(void) { acquisition_program_fault(1, 1); }
+#endif
+
 static const struct scenario {
 	const char *name;
 	void (*run)(void);
@@ -531,7 +836,28 @@ static const struct scenario {
 	{"manual-wash", manual_wash},
 	{"scoop-only", scoop_only},
 	{"pause-dosage", pause_dosage},
-	{"locked-buttons", locked_buttons}
+	{"locked-buttons", locked_buttons},
+	{"simultaneous-start-overheat", simultaneous_start_overheat},
+	{"overheat-during-dosage", overheat_during_dosage},
+	{"high-water-during-pause", high_water_during_pause},
+	{"high-water-during-drying", high_water_during_drying},
+	{"fill-timeout", fill_timeout},
+	{"drain-timeout", drain_timeout},
+	{"corrupt-recipe", corrupt_recipe},
+	{"wet-boot-cleanup", wet_boot_cleanup},
+#ifdef WATERSENSOR_ANALOG
+	{"paused-preflight", paused_preflight},
+	{"optical-preflight", optical_preflight},
+	{"optical-paused-preflight", optical_paused_preflight},
+	{"level-preflight", level_preflight},
+	{"unqualified-preflight", unqualified_preflight},
+	{"adc-preflight", adc_preflight},
+	{"probe-preflight", probe_preflight},
+	{"adc-active", adc_active},
+	{"adc-paused", adc_paused},
+	{"probe-active", probe_active},
+	{"probe-paused", probe_paused},
+#endif
 };
 
 int main(int argc, char **argv)

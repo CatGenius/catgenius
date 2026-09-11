@@ -93,6 +93,16 @@ The quality-decision tests cover every combination of 0..10 analogue and
 comparator failures in the repeat window, history boundaries and recovery.
 The firmware tests exercise actual changed C paths with supplied inputs for
 both PIC configurations, including the Timer4 handler and wash preflight.
+The integrated fixture additionally links the real UI, interpreter, board,
+water, quality, RTC and command parser, using the application's worker order.
+It runs 12 scenarios on each configuration plus 11 analogue-only scenarios,
+covering button/fault timing, dosing across pauses, interlocks, preflight and
+acquisition failures, and deferred UI handling. Failures include a timestamped
+state-change trace. Each scenario starts in a fresh process without modifying
+private firmware state or adding production reset hooks.
+As a negative control, removing only the hot-start guard in a temporary source
+copy makes the simultaneous Start/overheat scenario fail at the shared event
+pass. The unmodified source passes all 35 scenario executions with both compilers.
 
 On 11 September 2026, every new commit passed the checks with both compilers,
 using address/undefined-behavior sanitizers. The quality-decision module also
@@ -102,8 +112,10 @@ project files retain their line endings; new source, test and documentation
 files use LF. Test-directory attributes enforce LF for the framework.
 
 These are not PIC ABI, instruction-timing or complete appliance tests. The
-fixtures do not execute complete wash recipes or the integrated main loop. Existing
-host-build warnings and other limits are documented in the test README.
+integration fixture uses a short synthetic recipe and simulated time, ADC and
+comparator inputs; it does not execute the actual `main()` or complete wash
+recipes. Cat-detection and serial hardware drivers remain outside its scope.
+Existing host-build warnings and other limits are documented in the test README.
 
 XC8 4.00 was subsequently found under `/opt/cross`, outside PATH. All three
 1939 applications now compile, link and pass the resource gate at `-O1`.
@@ -112,6 +124,10 @@ After the terminal-editing port, CatGenius uses 13,156/16,384 program words and
 ISR. The 877A CatGenius and GenieDiag builds fail allocation; IOTester fits with
 no estimated stack margin.
 The [full matrix](pic-build.md) records these results and the compiler profile.
+The integration-test expansion changes no production sources or build inputs.
+A fresh CatGenius 1939 build passes the same resource gate and produces a HEX
+file byte-for-byte identical to the terminal-editing build; it adds no flash,
+RAM or hardware-stack usage. The documented 877A limitations remain unresolved.
 No image has been flashed. The older MPLAB makefiles still need regeneration;
 the standalone build does not depend on them.
 

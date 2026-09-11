@@ -38,11 +38,29 @@ off, and that the dryer only runs with qualified low water. RD0 sensing probes
 are distinguished from logical fill requests. On failure the fixture prints
 the last 64 state changes, their times and workers, plus recent firmware output.
 
-Initial scenarios cover a complete manual wash, scoop-only operation, child
-lock/unlock, and pausing during dosing. They verify that a pause does not spend
-the remaining dose time: the synthetic recipe's 0.2 ml instruction receives
-exactly two seconds of **logical output on-time**, including across a pause.
-This is not a measurement of physical volume or relay/motor response.
+There are 12 scenarios on both configurations and 11 additional analogue-only
+scenarios (35 executions per compiler):
+
+- Complete manual wash, scoop-only operation, child lock/unlock, and pausing
+  during dosing. The synthetic recipe's 0.2 ml instruction receives exactly two
+  seconds of **logical output on-time**, including across a manual or overheat
+  pause. This is not a measurement of physical volume or relay/motor response.
+- Start release debouncing in the same pass as an overheat assertion; active
+  overheat handling; refusal to resume until cooling; no automatic resumption.
+- High water arriving during a fill pause or during drying, blocked dryer
+  resumption until qualified low water, and explicit successful recovery.
+- The 135-second fill deadline and 10-second drain-wait deadline, including
+  the next-pass UI response. Stopping a failed wash preserves its wet-box record.
+- An invalid recipe instruction while dosing: the real deferred UI handler
+  stops the interpreter and every actuator on its following pass.
+- Startup cleanup with a supplied wet-box EEPROM record. This does not yet
+  simulate a power cut and reboot with the preceding run's EEPROM contents.
+- Paused preflight completion; optical faults during running/paused preflight;
+  latched level faults; and the five-second preflight deadline when comparator
+  samples keep changing despite acceptable optical quality.
+- ADC/probe timeouts during preflight and active/paused execution. Recovery
+  qualifies fresh readings but never restarts the program; a new request can
+  subsequently complete. Failed preflight leaves the tidy-box record untouched.
 
 The short synthetic recipe exercises all six actuators without PIC-only calls.
 Supplied sensor inputs go high after two seconds of filling and low after two
@@ -53,6 +71,10 @@ hydraulic, interrupt-latency or instruction-cycle simulator. The separate
 Timer1 tests remain responsible for the real timer driver. The integration
 fixture does not execute `main()`, its initialization of all peripherals, or
 the complete interrupt dispatcher.
+
+Next useful extensions are cat-departure and automatic-mode scheduling, complete
+recipe traversal including target-aware call addresses, power-cut/reboot
+scenarios retaining EEPROM, and real serial/cat-sensor driver fault tests.
 
 ## Module regression checks
 
