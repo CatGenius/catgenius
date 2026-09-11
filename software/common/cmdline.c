@@ -154,6 +154,10 @@ static void proc_line (char *line)
 
 		/* Store the beginning of this argument */
 		if (*line) {
+			if (argc == ARGS_MAX) {
+				printf("Syntax error\n");
+				return;
+			}
 			argv[argc] = line;
 			argc++;
 		}
@@ -163,6 +167,8 @@ static void proc_line (char *line)
 			line++;
 	}
 
+	if (!argc)
+		return;
 	index = cmd2index(argv[0]);
 	if (index >= 0) {
 		switch (commands[index].function(argc, argv)) {

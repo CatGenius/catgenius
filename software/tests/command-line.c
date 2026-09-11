@@ -56,6 +56,15 @@ int main(void)
 	assert(calls == 2 && !output[0]);
 	parse("missing");
 	assert(calls == 2 && strstr(output, "Unknown command"));
+	parse("record a a a a");
+	assert(calls == 2 && strstr(output, "Syntax error"));
+	parse("");
+	assert(calls == 2 && !output[0]);
+	parse("  \t  ");
+	assert(calls == 2 && !output[0]);
+	expected_argc = 1;
+	parse("record");
+	assert(calls == 3 && !output[0]);
 	puts("Host command-line checks passed.");
 	return 0;
 }
