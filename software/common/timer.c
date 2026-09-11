@@ -211,6 +211,7 @@ void gettimestamp (struct timer * const ticks)
 /******************************************************************************/
 {
 	volatile unsigned char	temp;
+	unsigned char		pending;
 	unsigned char		*bytes = (unsigned char *)ticks;
 
 	/* To prevent a roll-over while reading the separate bytes, we could
@@ -218,6 +219,7 @@ void gettimestamp (struct timer * const ticks)
 	 * That's why we use a trick: */
 	do
 	{
+		pending = TMR1IF;
 		/* Temporarilly store the first roll-over dependent byte
 		 * directly from the running clock */
 		temp = TMR1H;
@@ -230,7 +232,12 @@ void gettimestamp (struct timer * const ticks)
 		/* Check if the Least Significant Byte has rolled over during this
 		 * operation, having the incread a More Significant Byte and making
 		 * the buffer invalid */
-	} while (bytes[1] != temp);
+	} while ((bytes[1] != temp) || (ticks->overflows != overflows) ||
+		 (pending != TMR1IF));
+	/* Include a hardware wrap whose ISR has not run yet. Leave the flag
+	 * and software counter for the ISR so the wrap is counted only once. */
+	if (pending)
+		ticks->overflows++;
 }
 /* End: gettimestamp */
 

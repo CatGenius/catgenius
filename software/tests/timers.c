@@ -25,12 +25,15 @@ static unsigned char read_low(void);
 static unsigned char read_low(void)
 {
 	if (advance_on_low_read) {
+		unsigned char service = advance_on_low_read == 1;
 		advance_on_low_read = 0;
 		hardware_ticks++;
 		if (!hardware_ticks) {
 			TMR1IF = 1;
-			timer_isr();
-			TMR1IF = 0;
+			if (service) {
+				timer_isr();
+				TMR1IF = 0;
+			}
 		}
 	}
 	return (unsigned char)hardware_ticks;
@@ -93,10 +96,33 @@ static void test_read_rollovers(void)
 	assert(unpack(&now) == 0x12350000);
 }
 
+static void test_pending_overflow(void)
+{
+	struct timer now, deadline;
+	clock_at(0x1234fffe);
+	settimeout(&deadline, 2);
+	hardware_ticks = 0;
+	TMR1IF = 1;
+	gettimestamp(&now);
+	assert(unpack(&now) == 0x12350000);
+	assert(timeoutexpired(&deadline));
+	assert(TMR1IF && overflows == 0x1234);
+	timer_isr();
+	TMR1IF = 0;
+	gettimestamp(&now);
+	assert(unpack(&now) == 0x12350000);
+	/* Overflow between the high and low register reads, ISR not yet run. */
+	clock_at(0x1234ffff);
+	advance_on_low_read = 2;
+	gettimestamp(&now);
+	assert(unpack(&now) == 0x12350000 && TMR1IF);
+}
+
 int main(void)
 {
 	test_arithmetic();
 	test_read_rollovers();
+	test_pending_overflow();
 	puts("Host timer checks passed.");
 	return 0;
 }
