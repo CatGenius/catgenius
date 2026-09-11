@@ -24,6 +24,11 @@ behavioral changes and build tooling have separate commits. A command-line XC8
 build and resource gate now report flash, RAM and hardware-stack estimates;
 see [build instructions and measured limits](pic-build.md).
 
+The terminal editor now accepts Backspace (0x08) as well as Delete (0x7f),
+visibly erasing the last character when local echo is enabled. Empty-line and
+full-buffer boundaries, split input and echo-off behavior have exact-output
+regression tests. The existing parser guards and reduced dispatch depth remain.
+
 Water handling now includes:
 
 - Qualified water-level readings, acquisition watchdogs and retained diagnostic
@@ -75,6 +80,12 @@ documents timing, fault/recovery behavior, interfaces and validation limits.
 - The 877A CatGenius RAM and GenieDiag program-space allocation failures under
   XC8, and small hardware-stack margins. No features were removed to force a fit.
 
+The [ccm follow-up inventory](ccm-follow-up.md) records the remaining feature
+configuration, serial commands, diagnostics, status reporting, arm-control,
+recipe-tooling and Bluetooth work, with source commits, blockers and validation
+requirements.
+Only terminal editing was ported from that review; the rest remains deferred.
+
 ## Verification and next gate
 
 Run [the host regression checks](../software/tests/README.md) with GCC and Clang.
@@ -96,9 +107,10 @@ host-build warnings and other limits are documented in the test README.
 
 XC8 4.00 was subsequently found under `/opt/cross`, outside PATH. All three
 1939 applications now compile, link and pass the resource gate at `-O1`.
-CatGenius uses 13,140/16,384 program words and 458/1,024 RAM bytes, with an
-estimated 15/16 hardware-stack levels including its ISR. The 877A CatGenius and
-GenieDiag builds fail allocation; IOTester fits with no estimated stack margin.
+After the terminal-editing port, CatGenius uses 13,156/16,384 program words and
+458/1,024 RAM bytes, with an estimated 15/16 hardware-stack levels including its
+ISR. The 877A CatGenius and GenieDiag builds fail allocation; IOTester fits with
+no estimated stack margin.
 The [full matrix](pic-build.md) records these results and the compiler profile.
 No image has been flashed. The older MPLAB makefiles still need regeneration;
 the standalone build does not depend on them.

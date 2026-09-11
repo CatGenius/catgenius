@@ -54,21 +54,30 @@ The command-line script is the tested, reproducible build route.
 
 ## Results on 11 September 2026
 
-Firmware through `405fac6`, built with the default XC8 4.00 / `-O1` profile:
+Firmware through `d5d26a9` (terminal editing), built with the default
+XC8 4.00 / `-O1` profile:
 
 | Application | Device | Program words | RAM bytes | Hardware-stack estimate | Result |
 | --- | --- | ---: | ---: | ---: | --- |
-| CatGenius | 16F1939 | 13,140 / 16,384 (80.2%) | 458 / 1,024 (44.7%) | 13 main + 2 ISR = 15 / 16 | Fits; one estimated stack level spare |
-| GenieDiag | 16F1939 | 10,883 / 16,384 (66.4%) | 382 / 1,024 (37.3%) | 13 main + 2 ISR = 15 / 16 | Fits; one estimated stack level spare |
-| IOTester | 16F1939 | 3,757 / 16,384 (22.9%) | 297 / 1,024 (29.0%) | 8 / 16 | Fits |
+| CatGenius | 16F1939 | 13,156 / 16,384 (80.3%) | 458 / 1,024 (44.7%) | 13 main + 2 ISR = 15 / 16 | Fits; one estimated stack level spare |
+| GenieDiag | 16F1939 | 10,900 / 16,384 (66.5%) | 382 / 1,024 (37.3%) | 13 main + 2 ISR = 15 / 16 | Fits; one estimated stack level spare |
+| IOTester | 16F1939 | 3,773 / 16,384 (23.0%) | 297 / 1,024 (29.0%) | 8 / 16 | Fits |
 | CatGenius | 16F877A | No completed link | Allocation fails | Unavailable | Blocked by RAM allocation |
 | GenieDiag | 16F877A | Allocation fails | No successful whole-image report | Not qualified | Blocked by program-space allocation |
-| IOTester | 16F877A | 4,068 / 8,192 (49.7%) | 278 / 368 (75.5%) | 8 / 8 | Fits numerically; no estimated stack headroom |
+| IOTester | 16F877A | 4,088 / 8,192 (49.9%) | 278 / 368 (75.5%) | 8 / 8 | Fits numerically; no estimated stack headroom |
+
+All six builds were repeated after the terminal-editing port. Relative to
+`405fac6`, CatGenius/1939 adds 16 program words, GenieDiag/1939 adds 17,
+IOTester/1939 adds 16 and IOTester/877A adds 20. RAM use and hardware-stack
+estimates are unchanged for the completed builds. The two 877A allocation
+failures remain; the change does not establish successful images for them.
 
 The 877A failures also occurred before this behavioral-fix batch under XC8:
 they must not be described as newly introduced by the button or timer changes,
 nor as resolved by passing the host suite. The RAM error names the first object
 that cannot be placed; it is **not** a reliable measurement of the total excess.
+
+### Earlier B07 comparisons, before terminal editing
 
 Rebuilding the pre-behavioral-fix snapshot `e047d3a` with the same `-O1`
 profile gives CatGenius/1939 13,007 words and 466 RAM bytes: this batch adds
