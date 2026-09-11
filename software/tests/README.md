@@ -70,7 +70,7 @@ Covered behaviors:
 ## Limits
 
 These are software regression checks, **not PIC firmware builds or appliance
-validation**. The mock `bit` is C `_Bool`; actual GPIO mask and one-bit field
+validation**. The mock `__bit` is C `_Bool`; actual GPIO mask and one-bit field
 operations are exercised, but PIC-specific storage allocation is not modeled.
 The timer fixture supplies deterministic time and does not test the real timer
 ISR, wraparound implementation or scheduling latency. The actual `water_isr()`

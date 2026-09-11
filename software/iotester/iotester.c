@@ -6,10 +6,7 @@
 /* History :	16 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
-#if (defined __PICC__)
-#  include <htc.h>
-#  include "configbits.h"		/* PIC MCU configuration bits, include after htc.h */
-#elif (defined __XC8)
+#if (defined __XC8)
 #  include "configbits.h"		/* PIC MCU configuration bits, include before anything else */
 #  include <xc.h>
 #else
@@ -28,11 +25,6 @@
 /******************************************************************************/
 /* Global Data								      */
 /******************************************************************************/
-
-#if (defined __PICC__)
-extern bit		__powerdown;
-extern bit		__timeout;
-#endif /* __PICC__ */
 
 /* command line commands */
 const struct command	commands[] = {

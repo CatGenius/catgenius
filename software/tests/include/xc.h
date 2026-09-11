@@ -1,8 +1,8 @@
 /* Host-only registers and declarations, not a PIC ABI or electrical model. */
-#ifndef CATGENIUS_TEST_HTC_H
-#define CATGENIUS_TEST_HTC_H
+#ifndef CATGENIUS_TEST_XC_H
+#define CATGENIUS_TEST_XC_H
 
-typedef _Bool bit;
+typedef _Bool __bit;
 
 extern volatile unsigned char PORTA, PORTB, PORTC, PORTD, PORTE;
 extern volatile unsigned char LATA, LATB, LATC, LATD, LATE;

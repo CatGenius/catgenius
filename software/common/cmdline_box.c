@@ -6,7 +6,7 @@
 /* History :	31 Mar 2012 by R. Delien:				      */
 /*		- First creation					      */
 /******************************************************************************/
-#include <htc.h>
+#include <xc.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -26,8 +26,8 @@
 /******************************************************************************/
 
 /* Event statuses */
-extern bit	cat_detected;
-extern bit	overheated;
+extern __bit	cat_detected;
+extern __bit	overheated;
 
 /* Frequently used strings declared once here, to save some memory */
 char str_unkown[]	= "<unknown>";

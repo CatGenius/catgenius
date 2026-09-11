@@ -6,7 +6,7 @@
 /* History :	7 Mar 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
-#include <htc.h>
+#include <xc.h>
 #include <stdio.h>
 
 #include "hardware.h"			/* Flexible hardware configuration */

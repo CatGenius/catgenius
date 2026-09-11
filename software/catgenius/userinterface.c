@@ -6,7 +6,7 @@
 /* History :	16 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
-#include <htc.h>
+#include <xc.h>
 #include <stdio.h>
 
 #include "../common/hardware.h"		/* Flexible hardware configuration */
@@ -61,12 +61,12 @@ static struct timer	cattimer	= EXPIRED;
 static unsigned char	buttonmask_cur	= 0;
 static unsigned char	buttonmask_cum	= 0;
 static unsigned char	buttonmask_evt	= 0;
-static bit		locked		= 0;
-static bit		longhandled	= 0;
+static __bit		locked		= 0;
+static __bit		longhandled	= 0;
 
-static bit		cat_present	= 0;
-static bit		cat_detected	= 0;
-static bit		full_wash	= 0;
+static __bit		cat_present	= 0;
+static __bit		cat_detected	= 0;
+static __bit		full_wash	= 0;
 
 static unsigned char	state		= STATE_IDLE;
 static unsigned char	interval	= 0;
@@ -76,8 +76,8 @@ static unsigned char	cart_level	= 100;
 static unsigned char	error_nr	= 0;
 
 /* Defer LitterLanguage events to the main loop. Handling events directly
- * can recurse through litterlanguage_stop/pause, which HI-TECH PICC
- * does not support even though the recursion is bounded. */
+ * can recurse through litterlanguage_stop/pause. Keep the call graph
+ * non-reentrant so the compiler can bound the RAM used by the compiled stack. */
 static struct {
 	unsigned char	event;
 	unsigned char	argument;

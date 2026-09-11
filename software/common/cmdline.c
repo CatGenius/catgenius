@@ -6,7 +6,7 @@
 /* History :	13 Feb 2011 by R. Delien:				      */
 /*		- Ported from other project.				      */
 /******************************************************************************/
-#include <htc.h>
+#include <xc.h>
 #include <stdio.h>
 #include <string.h>
 

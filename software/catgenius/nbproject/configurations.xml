@@ -15,9 +15,6 @@
         <itemPath>../common/waterquality.h</itemPath>
         <itemPath>../common/hardware.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="Library" displayName="Library" projectFiles="true">
-        <itemPath>../../../../../../../Program Files (x86)/HI-TECH Software/PICC/9.83/include/pic16f1939.h</itemPath>
-      </logicalFolder>
       <itemPath>litterlanguage.h</itemPath>
       <itemPath>romwashprogram.h</itemPath>
       <itemPath>userinterface.h</itemPath>
@@ -48,7 +45,6 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>..\..\..\..\..\..\..\Program Files (x86)\HI-TECH Software\PICC\9.83\include</Elem>
     <Elem>..\common</Elem>
     <Elem>.</Elem>
   </sourceRootList>
@@ -61,8 +57,8 @@
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PICkit3PlatformTool</platformTool>
-        <languageToolchain>hi-tech-picc</languageToolchain>
-        <languageToolchainVersion>9.83</languageToolchainVersion>
+        <languageToolchain>XC8</languageToolchain>
+        <languageToolchainVersion>4.00</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -92,14 +88,14 @@
       <HI-TECH-COMP>
         <property key="define-macros" value="HW_CATGENIE120PLUS"/>
         <property key="extra-include-directories"
-                  value="..\..\..\..\..\..\..\Program Files (x86)\HI-TECH Software\PICC\9.83\include;..\common;."/>
+                  value="../common;."/>
         <property key="identifier-length" value="31"/>
-        <property key="operation-mode" value="pro"/>
+        <property key="operation-mode" value="free"/>
         <property key="optimization-assembler" value="true"/>
         <property key="optimization-assembler-files" value="false"/>
         <property key="optimization-debug" value="false"/>
         <property key="optimization-global" value="true"/>
-        <property key="optimization-level" value="9"/>
+        <property key="optimization-level" value="-Os"/>
         <property key="optimization-set" value="default"/>
         <property key="optimization-speed" value="false"/>
         <property key="preprocess-assembler" value="true"/>
@@ -214,8 +210,8 @@
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PICkit3PlatformTool</platformTool>
-        <languageToolchain>hi-tech-picc</languageToolchain>
-        <languageToolchainVersion>9.83</languageToolchainVersion>
+        <languageToolchain>XC8</languageToolchain>
+        <languageToolchainVersion>4.00</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -245,14 +241,14 @@
       <HI-TECH-COMP>
         <property key="define-macros" value="HW_CATGENIE120"/>
         <property key="extra-include-directories"
-                  value="..\..\..\..\..\..\..\Program Files (x86)\HI-TECH Software\PICC\9.83\include;..\common;."/>
+                  value="../common;."/>
         <property key="identifier-length" value="31"/>
-        <property key="operation-mode" value="pro"/>
+        <property key="operation-mode" value="free"/>
         <property key="optimization-assembler" value="true"/>
         <property key="optimization-assembler-files" value="false"/>
         <property key="optimization-debug" value="false"/>
         <property key="optimization-global" value="true"/>
-        <property key="optimization-level" value="9"/>
+        <property key="optimization-level" value="-Os"/>
         <property key="optimization-set" value="default"/>
         <property key="optimization-speed" value="false"/>
         <property key="preprocess-assembler" value="true"/>

@@ -6,7 +6,7 @@
 /* History :	12 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
-#include <htc.h>
+#include <xc.h>
 
 #include "hardware.h"			/* Flexible hardware configuration */
 
@@ -48,7 +48,7 @@ extern void setupbutton_event (unsigned char up);
 /******************************************************************************/
 
 static unsigned char	PORTB_old;
-static bit		heat_old = 0;
+static __bit		heat_old = 0;
 static unsigned char	beep_bits = 0;
 
 struct debouncer {

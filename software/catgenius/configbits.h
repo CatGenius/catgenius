@@ -8,25 +8,9 @@
 #ifndef CONFIGBITS_H				/* Include file already compiled? */
 #  define CONFIGBITS_H
 
-#if (defined __PICC__)
-#  if (defined _16F877A)
-#    ifdef __DEBUG
-	__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_ON & BOREN_OFF & LVP_OFF & CPD_OFF & WRT_OFF & CP_OFF);
-#    else
-	__CONFIG(FOSC_XT & WDTE_ON  & PWRTE_ON & BOREN_ON  & LVP_OFF & CPD_ON  & WRT_OFF & CP_ON);
-#    endif
-#  elif (defined _16F1939)
-#    ifdef __DEBUG
-	__CONFIG(FOSC_XT & WDTE_OFF & PWRTE_OFF & MCLRE_ON & CP_OFF & CPD_OFF & BOREN_OFF & CLKOUTEN_OFF & IESO_OFF & FCMEN_OFF);
-	__CONFIG(WRT_OFF & VCAPEN_OFF & PLLEN_OFF & STVREN_ON & BORV_HI & LVP_OFF);
-#    else
-	__CONFIG(FOSC_XT & WDTE_ON  & PWRTE_ON  & MCLRE_ON & CP_ON  & CPD_ON  & BOREN_ON  & CLKOUTEN_OFF & IESO_OFF & FCMEN_OFF);
-	__CONFIG(WRT_OFF & VCAPEN_OFF & PLLEN_OFF & STVREN_ON & BORV_HI & LVP_OFF);
-#    endif
-#  endif
-#elif (defined __XC8)
+#if (defined __XC8)
 #  pragma config FOSC = XT		/* Oscillator Selection (XT Oscillator, Crystal/resonator connected between OSC1 and OSC2 pins) */
-#  pragma config PWRTE = ON		/* Power-up Timer Enable bit (PWRT disabled) */
+#  pragma config PWRTE = ON		/* Power-up Timer Enable bit (PWRT enabled) */
 #  pragma config LVP = OFF		/* Low-Voltage (Single-Supply) In-Circuit Serial Programming Enable bit (RB3 is digital I/O, HV on MCLR must be used for programming) */
 #  pragma config WRT = OFF		/* Flash Program Memory Write Enable bits (Write protection off; all program memory may be written to by EECON control) */
 #  if (defined _16F877A)

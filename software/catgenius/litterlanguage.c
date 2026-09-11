@@ -6,7 +6,7 @@
 /* History :	26 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
-#include <htc.h>
+#include <xc.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -45,16 +45,16 @@ extern void litterlanguage_event (unsigned char event, unsigned char argument);
 /******************************************************************************/
 
 static unsigned char		prg_source		= 0;
-static bit			wet_program		= 0;
-static bit			paused			= 0;
-static bit			error_fill		= 0;
-static bit			error_drain		= 0;
-static bit			error_overheat		= 0;
-static bit			error_flood		= 0;	/* Not fully implemented yet */
-static bit			error_execution		= 0;
+static __bit			wet_program		= 0;
+static __bit			paused			= 0;
+static __bit			error_fill		= 0;
+static __bit			error_drain		= 0;
+static __bit			error_overheat		= 0;
+static __bit			error_flood		= 0;	/* Not fully implemented yet */
+static __bit			error_execution		= 0;
 #ifdef WATERSENSOR_ANALOG
-static bit			check_before_program	= 0;
-static bit			check_started		= 0;
+static __bit			check_before_program	= 0;
+static __bit			check_started		= 0;
 #endif
 
 /* Program execution variables */

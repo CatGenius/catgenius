@@ -6,7 +6,7 @@
 /* History :	3 Sep 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
-#include <htc.h>
+#include <xc.h>
 #include <stdio.h>
 
 #include "hardware.h"			/* Flexible hardware configuration */
@@ -121,4 +121,3 @@ void incweekday (void)
 /******************************************************************************/
 /* Local Implementations						      */
 /******************************************************************************/
-

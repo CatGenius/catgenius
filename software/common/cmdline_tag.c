@@ -6,7 +6,7 @@
 /* History :	31 Mar 2012 by R. Delien:				      */
 /*		- First creation					      */
 /******************************************************************************/
-#include <htc.h>
+#include <xc.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>

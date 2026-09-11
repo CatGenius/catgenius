@@ -1,4 +1,4 @@
-#include <htc.h>
+#include <xc.h>
 
 #include "hardware.h"			/* Flexible hardware configuration */
 

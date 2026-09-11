@@ -6,7 +6,7 @@
 /* History :	16 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
-#include <htc.h>
+#include <xc.h>
 #include <stdio.h>
 
 #include "../common/hardware.h"		/* Flexible hardware configuration */
@@ -36,15 +36,15 @@
 static struct timer	holdtimeout	= NEVER;
 
 /* Event statuses */
-bit			cat_detected	= 0;
-bit			overheated	= 0;
+__bit			cat_detected	= 0;
+__bit			overheated	= 0;
 
 /* Keyboard status bits */
 static unsigned char	buttonmask_cur	= 0;
 static unsigned char	buttonmask_cum	= 0;
 static unsigned char	buttonmask_evt	= 0;
-static bit		locked		= 0;
-static bit		longhandled	= 0;
+static __bit		locked		= 0;
+static __bit		longhandled	= 0;
 
 static unsigned char	actuator	= 0;
 static unsigned char	bowl		= 0;

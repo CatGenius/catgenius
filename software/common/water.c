@@ -6,7 +6,7 @@
 /* History :	30 Dec 2012 by R. Delien:				      */
 /*		- Renamed from watersensor.c.				      */
 /******************************************************************************/
-#include <htc.h>
+#include <xc.h>
 
 #include "hardware.h"			/* Flexible hardware configuration */
 
@@ -85,11 +85,11 @@ static unsigned char	hysteresis        = 0;
 #endif
 static unsigned char	samples           = 0;
 static unsigned int	reflectionquality = 0;
-static bit		valid             = 0;
-static bit		failed            = 0;
-static volatile bit	filling           = 0;
-static bit		detected          = 0;
-static volatile bit	ledalwayson       = 0;
+static __bit		valid             = 0;
+static __bit		failed            = 0;
+static volatile __bit	filling           = 0;
+static __bit		detected          = 0;
+static volatile __bit	ledalwayson       = 0;
 
 #ifdef WATERSENSOR_ANALOG
 static struct timer	polltimer         = EXPIRED;
@@ -97,15 +97,15 @@ static struct waterquality quality;
 static unsigned int	adc_sum           = 0;
 static unsigned char	adc_samples       = 0;
 static unsigned char	acquisition_fault = WATER_ACQUISITION_OK;
-static bit		level_candidate   = 0;
-static bit		sample_filling    = 0;
-static bit		reflection_filling= 0;
-static bit		reflection_valid  = 0;
-static bit		comparator        = 0;
-static bit		comparator_valid  = 0;
-static volatile bit	probe_done        = 0;
-static volatile bit	probe_high        = 0;
-static volatile bit	probe_keep_led    = 0;
+static __bit		level_candidate   = 0;
+static __bit		sample_filling    = 0;
+static __bit		reflection_filling= 0;
+static __bit		reflection_valid  = 0;
+static __bit		comparator        = 0;
+static __bit		comparator_valid  = 0;
+static volatile __bit	probe_done        = 0;
+static volatile __bit	probe_high        = 0;
+static volatile __bit	probe_keep_led    = 0;
 #endif
 
 

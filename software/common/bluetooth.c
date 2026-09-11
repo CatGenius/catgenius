@@ -8,7 +8,7 @@
 /* Author  :    Christopher Mapes                                             */
 /******************************************************************************/
 
-#include <htc.h>
+#include <xc.h>
 #include <stdio.h>
 #include <string.h>
 

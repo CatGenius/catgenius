@@ -6,7 +6,7 @@
 /* History :	16 Feb 2010 by R. Delien:				      */
 /*		- Initial revision.					      */
 /******************************************************************************/
-#include <htc.h>
+#include <xc.h>
 
 #include "hardware.h"			/* Flexible hardware configuration */
 
@@ -28,11 +28,11 @@ extern void catsensor_event (unsigned char detected);
 /* Global Data								      */
 /******************************************************************************/
 
-static bit		pinging		= 0;		/* Indicates an on-going ping */
-static bit		echoed		= 0;		/* Stores an echo received */
-static bit		detected_cur	= 0;		/* Current detection state */
-static bit		detected_old	= 0;		/* Previous detection state (to detect differences) */
-static bit		detected_dbc	= 0;		/* Debounced detection state */
+static __bit		pinging		= 0;		/* Indicates an on-going ping */
+static __bit		echoed		= 0;		/* Stores an echo received */
+static __bit		detected_cur	= 0;		/* Current detection state */
+static __bit		detected_old	= 0;		/* Previous detection state (to detect differences) */
+static __bit		detected_dbc	= 0;		/* Debounced detection state */
 static struct timer	debouncer	= NEVER;	/* Timer to debounce detection state */
 static struct timer	pingtime	= EXPIRED;	/* Timer to schedule pings */
 

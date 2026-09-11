@@ -40,7 +40,7 @@ volatile unsigned int ADRES;
 volatile unsigned char TMR4, PR4, T4CON, TMR4IE, TMR4IF, GIE;
 volatile struct host_adcon0 ADCON0bits;
 volatile struct host_adcon1 ADCON1bits;
-bit cat_detected, overheated;
+__bit cat_detected, overheated;
 
 static unsigned long ticks;
 static unsigned char nvram[256];
