@@ -152,6 +152,16 @@ void litterlanguage_work (void)
 			return;
 		}
 
+		/* Never continue drying with high or unqualified water readings. */
+		if (get_Dryer() && (!water_valid() || water_detected())) {
+			printtime();
+			printf("Dryer inhibited: check water\n");
+			error_drain = 1;
+			litterlanguage_pause(1);
+			litterlanguage_event(EVENT_ERR_DRAINING, error_drain);
+			return;
+		}
+
 		/* Check for filling timeout */
 		if( (!water_valid() || !water_detected()) &&
 		    (water_filling() || ((ins_state == STATE_WAIT_INS) &&
@@ -327,6 +337,9 @@ void litterlanguage_pause (unsigned char pause)
 	} else {
 		/* Don't resume while a heat or acquisition fault remains active. */
 		if (error_overheat || water_failed())
+			return;
+		/* Do not restore a running dryer before the water level is safe. */
+		if (context.dryer && (!water_valid() || water_detected()))
 			return;
 		printf("Resuming program\n");
 		/* Restore timer context */
@@ -572,6 +585,15 @@ static void exe_instruction (void)
 #ifdef LL_DEBUG
 		printf("INS_DRYER, %s%s", cur_instruction.operant?"on":"off", wet_program?"":" (nop)");
 #endif /* LL_DEBUG */
+		if (wet_program && cur_instruction.operant &&
+		    (!water_valid() || water_detected())) {
+			/* Retry this instruction only after an explicit resume. */
+			ins_state = STATE_FETCH_INS;
+			error_drain = 1;
+			litterlanguage_pause(1);
+			litterlanguage_event(EVENT_ERR_DRAINING, error_drain);
+			break;
+		}
 		if (wet_program)
 			set_Dryer((unsigned char)cur_instruction.operant);
 		ins_pointer++;

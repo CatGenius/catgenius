@@ -523,6 +523,43 @@ static void test_adc_timeout(void)
 }
 #endif
 
+static void test_dryer_interlock(void)
+{
+	reset_firmware();
+	instruction(INS_DRYER, 1);
+	assert(paused && error_drain && !get_Dryer() && ins_pointer == program);
+
+	reset_firmware();
+	qualify_water(600);
+	instruction(INS_DRYER, 1);
+	assert(paused && error_drain && !get_Dryer() && ins_pointer == program);
+	qualify_water(0);
+	litterlanguage_pause(0);
+	litterlanguage_work();
+	/* The blocked dryer instruction is fetched again on retry. */
+	assert(ins_pointer == program + 1 && get_Dryer());
+
+	reset_firmware();
+	qualify_water(0);
+	instruction(INS_DRYER, 1);
+	assert(get_Dryer() && !paused && ins_pointer == program + 1);
+	qualify_water(600);
+	litterlanguage_work();
+	assert(paused && error_drain);
+	assert_stopped_outputs();
+	litterlanguage_pause(0);
+	assert(paused && !get_Dryer());
+	qualify_water(0);
+	litterlanguage_pause(0);
+	assert(!paused && get_Dryer());
+
+	reset_firmware();
+	qualify_water(600);
+	set_Dryer(1);
+	instruction(INS_DRYER, 0);
+	assert(!get_Dryer() && !paused);
+}
+
 int main(void)
 {
 	test_water_sampling();
@@ -538,6 +575,7 @@ int main(void)
 #ifdef WATERSENSOR_ANALOG
 	test_adc_timeout();
 #endif
+	test_dryer_interlock();
 	puts("Host state-machine checks passed.");
 	return 0;
 }
