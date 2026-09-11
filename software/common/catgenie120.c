@@ -234,7 +234,7 @@ void catgenie_work (void)
 	unsigned char	status;
 
 	/* Check for overheat */
-	temp = HEATSENSOR(PORT) & HEATSENSOR_MASK;
+	temp = (HEATSENSOR(PORT) & HEATSENSOR_MASK) ? 1 : 0;
 	if (temp != heat_old) {
 		heatsensor_event(temp);
 		heat_old = temp;

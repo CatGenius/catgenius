@@ -271,12 +271,37 @@ static void test_buttons(void)
 	}
 }
 
+static void test_heat_fault(void)
+{
+	unsigned char cycle;
+
+	reset_firmware();
+	PORTB |= HEATSENSOR_MASK;
+	for (cycle = 0; cycle < 10; cycle++)
+		catgenie_work();
+	assert(events[EVENT_ERR_OVERHEAT][1] == 1);
+	PORTB &= ~HEATSENSOR_MASK;
+	for (cycle = 0; cycle < 10; cycle++)
+		catgenie_work();
+	assert(events[EVENT_ERR_OVERHEAT][0] == 1);
+	qualify_water(0);
+	instruction(INS_WAITTIME, 1000);
+	PORTB |= HEATSENSOR_MASK;
+	catgenie_work();
+	litterlanguage_work();
+	assert(paused && error_overheat);
+	assert_stopped_outputs();
+	litterlanguage_pause(0);
+	assert(paused);
+}
+
 int main(void)
 {
 	test_water_sampling();
 	test_stop_outputs();
 	test_dry_program();
 	test_buttons();
+	test_heat_fault();
 	puts("Host state-machine checks passed.");
 	return 0;
 }

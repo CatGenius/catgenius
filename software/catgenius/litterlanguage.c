@@ -136,6 +136,12 @@ void litterlanguage_work (void)
 
 	/* Check if a program is executed */
 	if (ins_state != STATE_IDLE) {
+		/* Enforce the heat fault even before its queued UI event is handled. */
+		if (error_overheat) {
+			litterlanguage_pause(1);
+			return;
+		}
+
 		/* Check for filling timeout */
 		if( !water_detected() &&
 		    water_filling() &&
