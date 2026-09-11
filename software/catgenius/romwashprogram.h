@@ -9,6 +9,8 @@
 #define ROMWASHPROGRAM_H
 
 
+struct instruction;
+
 /* Control */
 void		romwashprogram_reqins	(struct instruction const *       address) ;
 unsigned char	romwashprogram_getins	(struct instruction       * const instruction) ;
