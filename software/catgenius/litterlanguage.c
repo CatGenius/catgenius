@@ -335,7 +335,8 @@ void litterlanguage_pause (unsigned char pause)
 		/* Restore hardware context */
 		set_Bowl(context.bowl);
 		set_Arm(context.arm);
-		water_fill(context.water);
+		/* High water may have arrived while the program was paused. */
+		water_fill(context.water && !water_detected());
 		set_Dosage(context.dosage);
 		set_Pump(context.pump);
 		set_Dryer(context.dryer);

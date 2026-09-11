@@ -336,6 +336,19 @@ static void test_pause_context(void)
 		}
 }
 
+static void test_fill_resume(void)
+{
+	reset_firmware();
+	qualify_water(0);
+	instruction(INS_WAITTIME, 1000);
+	water_fill(1);
+	litterlanguage_pause(1);
+	qualify_water(600);
+	litterlanguage_pause(0);
+	assert(!paused && water_detected() && !water_filling());
+	assert(!(WATERVALVEPULLUP(LAT) & WATERVALVEPULLUP_MASK));
+}
+
 int main(void)
 {
 	test_water_sampling();
@@ -344,6 +357,7 @@ int main(void)
 	test_buttons();
 	test_heat_fault();
 	test_pause_context();
+	test_fill_resume();
 	puts("Host state-machine checks passed.");
 	return 0;
 }
