@@ -4,7 +4,15 @@ set -eu
 test_root=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
 test_build_dir=$(mktemp -d "${TMPDIR:-/tmp}/catgenius-host-checks.XXXXXX")
 test_cc=${CC:-gcc}
-trap 'rm -f -- "$test_build_dir/16f877a" "$test_build_dir/16f1939"; rmdir -- "$test_build_dir"' 0
+trap 'rm -f -- "$test_build_dir/16f877a" "$test_build_dir/16f1939" "$test_build_dir/water-quality"; rmdir -- "$test_build_dir"' 0
+
+"$test_cc" -std=c99 -Wall -Wextra -Werror \
+	-g -fsanitize=address,undefined -fno-omit-frame-pointer \
+	"$test_root/software/tests/water-quality.c" \
+	"$test_root/software/common/waterquality.c" \
+	-o "$test_build_dir/water-quality"
+ASAN_OPTIONS="${ASAN_OPTIONS:+$ASAN_OPTIONS:}detect_leaks=0" \
+	"$test_build_dir/water-quality"
 
 for test_target in 16f877a 16f1939; do
 	case "$test_target" in
