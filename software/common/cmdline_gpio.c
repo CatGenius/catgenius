@@ -19,7 +19,7 @@
 /* Macros								      */
 /******************************************************************************/
 
-#ifdef _16F1939)
+#ifdef _16F1939
 #define HAS_LATCH_REGS
 #endif /* _16F1939 */
 
@@ -53,7 +53,7 @@ struct gpioport	gpioports[] = {
 	{'C',	0xff,	0x00,	PORT_REGISTERS(C)},
 	{'D',	0xff,	0x00,	PORT_REGISTERS(D)},
 	{'E',	0xff,	0x00,	PORT_REGISTERS(E)},
-	{NULL}	/* Sentinel */
+	{0}	/* Sentinel */
 };
 
 
