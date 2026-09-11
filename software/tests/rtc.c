@@ -19,6 +19,7 @@ unsigned char timeoutexpired(struct timer const * const timer_p)
 
 int main(void)
 {
+	unsigned char hour;
 	rtc_init(POWER_FAILURE);
 	assert(!currenttime.seconds && !currenttime.minutes && !currenttime.hours);
 	currenttime.seconds = currenttime.minutes = 59;
@@ -38,6 +39,11 @@ int main(void)
 	currenttime.weekday = 6;
 	incweekday();
 	assert(!currenttime.weekday);
+	for (hour = 0; hour < 24; hour++) {
+		currenttime.hours = hour;
+		inchours();
+		assert(currenttime.hours == (hour + 1) % 24);
+	}
 	puts("Host RTC checks passed.");
 	return 0;
 }

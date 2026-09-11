@@ -105,7 +105,7 @@ void incminutes (void)
 void inchours (void)
 {
 	settimeout(&second, SECOND);
-	if (++currenttime.hours >=23)
+	if (++currenttime.hours >=24)
 		currenttime.hours = 0;
 }
 
