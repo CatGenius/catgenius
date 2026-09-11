@@ -12,6 +12,8 @@ errors. It then builds and executes the actual `catgenie120.c`, `water.c`,
 `waterquality.c`, `litterlanguage.c` and `cmdline_box.c` with supplied GPIO,
 ADC, EEPROM and timer inputs, once with `_16F877A` and once with `_16F1939`.
 Separate fixtures execute the actual UI, command parser, Timer1 and RTC modules.
+An integration executable also links the real board, water, quality, UI,
+interpreter, RTC and command-parser modules as separate translation units.
 Python 3 tests the PIC resource-report gate without needing the target compiler.
 It uses AddressSanitizer
 and UndefinedBehaviorSanitizer. Its temporary executables are removed on exit.
@@ -21,11 +23,44 @@ LeakSanitizer cannot run under some debugger/sandbox environments.
 New test sources use LF line endings, enforced by the local `.gitattributes`.
 Existing firmware sources retain CRLF.
 
+## Integrated application scenarios
+
+`integration.c` runs one scenario per process, so production static variables
+start naturally; no reset hooks or private-state overrides are needed. It runs
+the active workers in the order used by `catgenius.c`, with a deterministic
+one-millisecond loop and a logical 48-bit timer service. Cat detection and
+serial input are inactive; their hardware drivers are not linked.
+
+Button gestures pass through the actual GPIO debouncer and UI. Checks observe
+actuator outputs/directions, numbered panel LEDs, water status and EEPROM
+writes. Every pass checks that an idle or paused interpreter leaves actuators
+off, and that the dryer only runs with qualified low water. RD0 sensing probes
+are distinguished from logical fill requests. On failure the fixture prints
+the last 64 state changes, their times and workers, plus recent firmware output.
+
+Initial scenarios cover a complete manual wash, scoop-only operation, child
+lock/unlock, and pausing during dosing. They verify that a pause does not spend
+the remaining dose time: the synthetic recipe's 0.2 ml instruction receives
+exactly two seconds of **logical output on-time**, including across a pause.
+This is not a measurement of physical volume or relay/motor response.
+
+The short synthetic recipe exercises all six actuators without PIC-only calls.
+Supplied sensor inputs go high after two seconds of filling and low after two
+seconds of draining. Analogue builds receive explicit ADC completions and
+nominal 500-microsecond Timer4 events between main-loop passes, invoking the
+real `water_isr()`. These are deterministic test inputs, not an electrical,
+hydraulic, interrupt-latency or instruction-cycle simulator. The separate
+Timer1 tests remain responsible for the real timer driver. The integration
+fixture does not execute `main()`, its initialization of all peripherals, or
+the complete interrupt dispatcher.
+
+## Module regression checks
+
 Covered behaviors:
 
 - Locked short/long single-button gestures cannot start, stop or pause a wash;
   the two-button unlock gesture remains available. The UI fixture uses a stub
-  interpreter, not a complete end-to-end application.
+  interpreter; the separate integration scenarios connect it to the real one.
 - Fault bursts retain assertions and final clears, normalize nonzero arguments,
   and defer handler-generated events. Tests cover simultaneous types and both
   assertion/clear orders. They do not specify a new acknowledgement policy.
