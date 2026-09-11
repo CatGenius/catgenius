@@ -12,6 +12,7 @@ extern volatile unsigned char WPUB, WPUE, nWPUEN, nRBPU;
 extern volatile unsigned char RBIF, RBIE, IOCBP, IOCBN, IOCBF, IOCIF, IOCIE;
 extern volatile unsigned char ADCON1;
 extern volatile unsigned int ADRES;
+extern volatile unsigned char TMR4, PR4, T4CON, TMR4IE, TMR4IF, GIE;
 
 struct host_adcon0 {
 	unsigned char ADON;

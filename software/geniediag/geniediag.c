@@ -191,6 +191,11 @@ static void interrupt isr (void)
 {
 	unsigned char temp;
 
+#ifdef WATERSENSOR_ANALOG
+	/* End valve-enable probes before servicing the other interrupt sources. */
+	if (TMR4IE && TMR4IF)
+		water_isr();
+#endif
 	/* Timer 1 interrupt */
 	if (TMR1IF) {
 		/* Reset interrupt */

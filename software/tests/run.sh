@@ -1,5 +1,6 @@
 #!/bin/sh
 set -eu
+ulimit -c 0
 
 test_root=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
 test_build_dir=$(mktemp -d "${TMPDIR:-/tmp}/catgenius-host-checks.XXXXXX")
@@ -25,6 +26,7 @@ for test_target in 16f877a 16f1939; do
 		-DHW_CATGENIE120 -D"$test_device" \
 		-I"$test_root/software/tests/include" \
 		"$test_root/software/tests/state-machines.c" \
+		"$test_root/software/common/waterquality.c" \
 		-o "$test_build_dir/$test_target"
 	# No heap allocation is used; LeakSanitizer cannot run under some sandboxes.
 	ASAN_OPTIONS="${ASAN_OPTIONS:+$ASAN_OPTIONS:}detect_leaks=0" \

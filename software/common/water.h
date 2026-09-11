@@ -11,8 +11,8 @@
 
 /*
  * The table below shows the correlation between light guide cleanliness and
- * state, and the analog reflection quality value read by the ADC. A light guide
- * is considered to be dirty when the original firmware starts warning.
+ * state, and the analog reflection quality value read by the ADC. These are
+ * observations, not sufficient by themselves to diagnose an optical fault.
  * Cleanliness:	| State:	| Reflection:
  * -------------+---------------+--------------------
  * Clean	| Dry		| ~22
@@ -23,7 +23,7 @@
  * Dirty	| Wet		| No reliable measurement yet
  
  */
-#define GUIDEDIRTY_THRESHOLD	414		/* At an ADC value of 414 or above, the original firmware warns to clean the light guide */
+#define GUIDEDIRTY_THRESHOLD	414		/* Observed dirty/dry reading, not a level threshold */
 
 
 /* Generic */
@@ -34,10 +34,29 @@ void		water_work		(void) ;
 unsigned char	water_detected		(void) ;
 unsigned char	water_filling		(void) ;
 unsigned char	water_valid		(void) ;	/* Debounced level is qualified */
-unsigned char	water_failed		(void) ;	/* ADC timed out; clears after qualification */
-unsigned int	water_reflectionquality	(void) ;	/* Last completed sample; digital on 16F877A */
+unsigned char	water_failed		(void) ;	/* Acquisition timed out; clears after qualification */
+unsigned int	water_reflectionquality	(void) ;	/* Last four-read mean; digital sample on 16F877A */
 /* Setters */
 void		water_fill		(unsigned char fill) ;
 void		water_ledalwayson	(unsigned char on) ;
+
+#ifdef WATERSENSOR_ANALOG
+#include "waterquality.h"
+
+#define WATER_ACQUISITION_OK	0
+#define WATER_ACQUISITION_ADC	1
+#define WATER_ACQUISITION_PROBE	2
+
+/* Timer4 ISR: sample the comparator and restore outputs without callbacks. */
+void		water_isr		(void) ;
+/* Checks require stopped actuators. Optical faults cannot bypass recovery. */
+unsigned char	water_check		(unsigned char probe) ;
+void		water_check_cancel	(void) ;
+unsigned char	water_quality		(void) ;
+unsigned char	water_acquisition_fault	(void) ;
+unsigned char	water_comparator	(void) ;
+unsigned char	water_comparator_valid	(void) ;
+unsigned char	water_reflection_filling(void) ;
+#endif
 
 #endif /* WATER_H */

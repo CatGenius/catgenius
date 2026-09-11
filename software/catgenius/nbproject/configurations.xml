@@ -12,6 +12,7 @@
         <itemPath>../common/serial.h</itemPath>
         <itemPath>../common/timer.h</itemPath>
         <itemPath>../common/water.h</itemPath>
+        <itemPath>../common/waterquality.h</itemPath>
         <itemPath>../common/hardware.h</itemPath>
       </logicalFolder>
       <logicalFolder name="Library" displayName="Library" projectFiles="true">
@@ -33,6 +34,7 @@
         <itemPath>../common/serial.c</itemPath>
         <itemPath>../common/timer.c</itemPath>
         <itemPath>../common/water.c</itemPath>
+        <itemPath>../common/waterquality.c</itemPath>
       </logicalFolder>
       <itemPath>catgenius.c</itemPath>
       <itemPath>litterlanguage.c</itemPath>

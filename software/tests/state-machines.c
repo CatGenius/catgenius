@@ -37,6 +37,7 @@ volatile unsigned char WPUB, WPUE, nWPUEN, nRBPU;
 volatile unsigned char RBIF, RBIE, IOCBP, IOCBN, IOCBF, IOCIF, IOCIE;
 volatile unsigned char ADCON1;
 volatile unsigned int ADRES;
+volatile unsigned char TMR4, PR4, T4CON, TMR4IE, TMR4IF, GIE;
 volatile struct host_adcon0 ADCON0bits;
 volatile struct host_adcon1 ADCON1bits;
 bit cat_detected, overheated;
@@ -143,34 +144,94 @@ static void reset_firmware(void)
 	timeoutnever(&timer_fill);
 	timeoutnever(&timer_drain);
 	timeoutnever(&timer_autodose);
+#ifndef WATERSENSOR_ANALOG
 	state = LED_ON;
 	hysteresis = samples = 0;
 	reflectionquality = 0;
 	valid = failed = filling = detected = ledalwayson = 0;
 	timeoutnow(&sensortimer);
+#endif
 	ADCON0bits.GO = 0;
+	GIE = 1;
 	water_init();
 }
 
+#ifdef WATERSENSOR_ANALOG
+static void start_analog_cycle(void)
+{
+	assert(state == LED_ON);
+	if (ticks < polltimer.overflows)
+		ticks = polltimer.overflows;
+	water_work();
+	assert(state == START_CONVERSION);
+}
+
+static void begin_analog_conversion(void)
+{
+	start_analog_cycle();
+	ticks = sensortimer.overflows;
+	water_work();
+	assert(ADCON0bits.GO && state == PROCESS_RESULT);
+}
+
+static void complete_probe(unsigned char high)
+{
+	assert(state == WAIT_PROBE && TMR4IE && T4CON == 0x05);
+	assert(PR4 == PROBE_COUNTS - 1 && GIE);
+	assert(WATERVALVEPULLUP(LAT) & WATERVALVEPULLUP_MASK);
+	assert(WATERSENSOR_LED(LAT) & WATERSENSOR_LED_MASK);
+	if (high)
+		PORTB |= WATERVALVE_MASK;
+	else
+		PORTB &= ~WATERVALVE_MASK;
+	ticks += (SECOND + 1999) / 2000;
+	TMR4IF = 1;
+	water_isr();
+	assert(!TMR4IE && !TMR4IF && !T4CON && probe_done);
+	assert(!!(WATERVALVEPULLUP(LAT) & WATERVALVEPULLUP_MASK) == !!water_filling());
+}
+
+static void sample_analog(unsigned int first, unsigned int second,
+			  unsigned int third, unsigned int fourth,
+			  unsigned char comparator_high)
+{
+	unsigned char i;
+	unsigned int values[] = {first, second, third, fourth};
+
+	start_analog_cycle();
+	for (i = 0; i < 4; i++) {
+		ticks = sensortimer.overflows;
+		water_work();
+		assert(ADCON0bits.GO && state == PROCESS_RESULT);
+		ADRES = values[i];
+		ADCON0bits.GO = 0;
+		water_work();
+	}
+	if (state == WAIT_PROBE) {
+		complete_probe(comparator_high);
+		water_work();
+	}
+	assert(state == LED_ON);
+}
+#endif
+
 static void sample_water(unsigned int value)
 {
+#ifdef WATERSENSOR_ANALOG
+	sample_analog(value, value, value, value,
+		      value <= UNDETECTION_THRESHOLD - DETECTION_MARGIN);
+#else
 	assert(state == LED_ON);
 	ticks = sensortimer.overflows;
 	water_work();
 	ticks = sensortimer.overflows;
-#ifdef WATERSENSOR_ANALOG
-	water_work();
-	assert(ADCON0bits.GO && state == PROCESS_RESULT);
-	ADRES = value;
-	ADCON0bits.GO = 0;
-#else
 	if (value > UNDETECTION_THRESHOLD - DETECTION_MARGIN)
 		PORTA |= WATERSENSORANALOG_MASK;
 	else
 		PORTA &= ~WATERSENSORANALOG_MASK;
-#endif
 	water_work();
 	assert(state == LED_ON);
+#endif
 }
 
 static void qualify_water(unsigned int value)
@@ -442,11 +503,7 @@ static void test_unqualified_wait(void)
 #ifdef WATERSENSOR_ANALOG
 static void fail_conversion(void)
 {
-	if (ticks < sensortimer.overflows)
-		ticks = sensortimer.overflows;
-	water_work();
-	ticks = sensortimer.overflows;
-	water_work();
+	begin_analog_conversion();
 	assert(ADCON0bits.GO);
 	ADRES = 1023;
 	ticks = sensortimer.overflows;
@@ -461,10 +518,7 @@ static void test_adc_timeout(void)
 	reset_firmware();
 	qualify_water(0);
 	water_fill(1);
-	ticks = sensortimer.overflows;
-	water_work();
-	ticks = sensortimer.overflows;
-	water_work();
+	begin_analog_conversion();
 	ADRES = 1023;
 	ticks = sensortimer.overflows - 1;
 	water_work();
@@ -591,6 +645,8 @@ static void test_diagnostics(void)
 	assert(water(2, args) == ERR_SYNTAX);
 }
 
+#include "water-protocol.h"
+
 int main(void)
 {
 	test_water_sampling();
@@ -608,6 +664,11 @@ int main(void)
 #endif
 	test_dryer_interlock();
 	test_diagnostics();
+#ifdef WATERSENSOR_ANALOG
+	test_probe_lifecycle();
+	test_analog_level_and_mean();
+	test_quality_acquisition();
+#endif
 	puts("Host state-machine checks passed.");
 	return 0;
 }

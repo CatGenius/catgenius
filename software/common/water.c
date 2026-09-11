@@ -12,6 +12,9 @@
 
 #include "water.h"
 #include "timer.h"
+#ifdef WATERSENSOR_ANALOG
+#include "waterquality.h"
+#endif
 
 
 extern void waterdetection_event	(unsigned char	detected);
@@ -24,8 +27,19 @@ extern void watersensor_event		(unsigned int	reflectionquality);
 
 #define DETECTTIME		(SECOND/1000)	/*   1ms*/
 #define CONVERSION_TIMEOUT	(SECOND/100)	/*  10ms watchdog, not an acquisition delay */
+#ifdef WATERSENSOR_ANALOG
+#define WATERSENSORPOLLING	(SECOND/10)	/* 100ms between normal cycle starts */
+#define HYSTERESIS_MAX		6		/* Consecutive comparator samples */
+#define QUALITY_SETTLE		(SECOND/40)	/*  25ms with the IR LED on */
+#define ADC_ACQUISITION		((SECOND + 39999)/40000) /* At least 25us */
+#define PROBE_COUNTS		(_XTAL_FREQ/4/4/2000) /* Timer4: Fosc/4, prescale 4, 0.5ms */
+#if (PROBE_COUNTS < 1) || (PROBE_COUNTS > 256)
+#error Timer4 probe period is out of range
+#endif
+#else
 #define WATERSENSORPOLLING	(SECOND/4)	/* 250ms*/
 #define HYSTERESIS_MAX		8		/* Number of pollings to debounce the sensor output */
+#endif
 
 /*
  * The LM393 inverting schmitt-trigger circuit shuts the water valve autonomously
@@ -57,6 +71,7 @@ extern void watersensor_event		(unsigned int	reflectionquality);
 #define LED_ON			0
 #define START_CONVERSION	1
 #define PROCESS_RESULT		2
+#define WAIT_PROBE		3
 
 
 /******************************************************************************/
@@ -65,20 +80,44 @@ extern void watersensor_event		(unsigned int	reflectionquality);
 
 static struct timer	sensortimer       = EXPIRED;
 static unsigned char	state             = 0;
+#ifndef WATERSENSOR_ANALOG
 static unsigned char	hysteresis        = 0;
+#endif
 static unsigned char	samples           = 0;
 static unsigned int	reflectionquality = 0;
 static bit		valid             = 0;
 static bit		failed            = 0;
-static bit		filling           = 0;
+static volatile bit	filling           = 0;
 static bit		detected          = 0;
-static bit		ledalwayson       = 0;
+static volatile bit	ledalwayson       = 0;
+
+#ifdef WATERSENSOR_ANALOG
+static struct timer	polltimer         = EXPIRED;
+static struct waterquality quality;
+static unsigned int	adc_sum           = 0;
+static unsigned char	adc_samples       = 0;
+static unsigned char	acquisition_fault = WATER_ACQUISITION_OK;
+static bit		level_candidate   = 0;
+static bit		sample_filling    = 0;
+static bit		reflection_filling= 0;
+static bit		comparator        = 0;
+static bit		comparator_valid  = 0;
+static volatile bit	probe_done        = 0;
+static volatile bit	probe_high        = 0;
+static volatile bit	probe_keep_led    = 0;
+#endif
 
 
 /******************************************************************************/
 /* Local Prototypes							      */
 /******************************************************************************/
 
+#ifdef WATERSENSOR_ANALOG
+static void	water_work_analog	(void);
+static void	cancel_acquisition	(void);
+static void	fail_acquisition	(unsigned char fault);
+static void	finish_batch		(unsigned char have_probe);
+#endif
 
 /******************************************************************************/
 /* Global Implementations						      */
@@ -96,6 +135,24 @@ void water_init (void)
 	unsigned char	mask    = WATERSENSORANALOG_MASK;
 	unsigned char	channel = 0;
 
+	/* Timer4 belongs to the water comparator probe, not the cat-sensor PWM. */
+	TMR4IE = 0;
+	T4CON = 0;
+	TMR4IF = 0;
+	PR4 = PROBE_COUNTS - 1;
+	state = LED_ON;
+	samples = adc_samples = 0;
+	adc_sum = reflectionquality = 0;
+	valid = failed = filling = detected = ledalwayson = 0;
+	level_candidate = sample_filling = reflection_filling = 0;
+	comparator = comparator_valid = probe_done = probe_high = probe_keep_led = 0;
+	acquisition_fault = WATER_ACQUISITION_OK;
+	waterquality_init(&quality, WATER_QUALITY_THRESHOLD);
+	WATERVALVEPULLUP(LAT) &= ~WATERVALVEPULLUP_MASK;
+	WATERSENSOR_LED(LAT) &= ~WATERSENSOR_LED_MASK;
+	timeoutnow(&polltimer);
+	ADCON0bits.GO = 0;
+
 	/* Dynamically determine channel# from mask */
 	while (!(mask & 0x01)) {
 		mask >>= 0x01;
@@ -109,8 +166,8 @@ void water_init (void)
 
 	/* Set output format to right-justified data */
 	ADCON1bits.ADFM = 1;
-	/* Set conversion clock to internal RC oscillator */
-	ADCON1bits.ADCS = 7;
+	/* Fosc/32 gives 8us per ADC clock at 4MHz. */
+	ADCON1bits.ADCS = 2;
 
 	/* Set negative reference to Vss, positive reference to Vdd */
 	ADCON1bits.ADNREF = 0;
@@ -128,6 +185,9 @@ void water_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
+#ifdef WATERSENSOR_ANALOG
+	water_work_analog();
+#else
 	unsigned int	cur_reflectionquality;
 
 	switch (state) {
@@ -140,47 +200,13 @@ void water_work (void)
 		WATERSENSOR_LED(LAT) |= WATERSENSOR_LED_MASK;
 		/* Wait for DETECTTIME to give the IR sensor some time */
 		settimeout(&sensortimer, DETECTTIME);
-#ifdef WATERSENSOR_ANALOG
-		state = START_CONVERSION;
-#else
-		state = PROCESS_RESULT;
-#endif /* WATERSENSOR_ANALOG */
-		break;
-	case START_CONVERSION:
-		if (!timeoutexpired(&sensortimer))
-			break;
-		/* Start A/D conversion */
-		ADCON0bits.GO = 1;
-		settimeout(&sensortimer, CONVERSION_TIMEOUT);
 		state = PROCESS_RESULT;
 		break;
 	case PROCESS_RESULT:
-#ifdef WATERSENSOR_ANALOG
-		if (ADCON0bits.nDONE) {
-			if (timeoutexpired(&sensortimer)) {
-				/* Never accept a partial conversion as a water level. */
-				ADCON0bits.GO = 0;
-				valid = 0;
-				failed = 1;
-				samples = 0;
-				hysteresis = detected ? HYSTERESIS_MAX : 0;
-				/* Inhibit filling before switching off the sensor LED. */
-				water_fill(0);
-				if (!ledalwayson)
-					WATERSENSOR_LED(LAT) &= ~WATERSENSOR_LED_MASK;
-				settimeout(&sensortimer, WATERSENSORPOLLING);
-				state = LED_ON;
-			}
-			break;
-		}
-		/* Read out the IR sensor analoguely (lower value == more light reflected == no water detected) */
-		cur_reflectionquality = ADRES;
-#else
 		if (!timeoutexpired(&sensortimer))
 			break;
 		/* Read out the IR sensor digitally (lower value == more light reflected == no water detected) */
 		cur_reflectionquality = (WATERSENSORANALOG(PORT) & WATERSENSORANALOG_MASK)?DETECTION_THRESHOLD:0;
-#endif /* WATERSENSOR_ANALOG */
 		/* Switch off the IR LED if we're not filling */
 		if (!filling && !ledalwayson)
 			WATERSENSOR_LED(LAT) &= ~WATERSENSOR_LED_MASK;
@@ -216,6 +242,7 @@ void water_work (void)
 		state = LED_ON;
 		break;
 	}
+#endif /* WATERSENSOR_ANALOG */
 }
 /* End: water_work */
 
@@ -251,6 +278,12 @@ unsigned int water_reflectionquality (void)
 void water_ledalwayson (unsigned char on)
 {
 	ledalwayson = on ? 1 : 0;
+#ifdef WATERSENSOR_ANALOG
+	if (ledalwayson)
+		WATERSENSOR_LED(LAT) |= WATERSENSOR_LED_MASK;
+	else if (!filling && (state == LED_ON))
+		WATERSENSOR_LED(LAT) &= ~WATERSENSOR_LED_MASK;
+#endif
 }
 /* End: water_ledalwayson */
 
@@ -264,6 +297,22 @@ unsigned char water_filling (void)
 
 void water_fill (unsigned char fill)
 {
+#ifdef WATERSENSOR_ANALOG
+	/* A change of fill state must not mix acquisition contexts or leave a probe on. */
+	cancel_acquisition();
+	filling = (fill && !failed &&
+		   (quality.status != WATER_QUALITY_CHECKING) &&
+		   (quality.status != WATER_QUALITY_OPTICAL) &&
+		   (quality.status != WATER_QUALITY_LEVEL)) ? 1 : 0;
+	if (filling) {
+		WATERSENSOR_LED(LAT) |= WATERSENSOR_LED_MASK;
+		WATERVALVEPULLUP(LAT) |= WATERVALVEPULLUP_MASK;
+	} else {
+		WATERVALVEPULLUP(LAT) &= ~WATERVALVEPULLUP_MASK;
+		if (!ledalwayson)
+			WATERSENSOR_LED(LAT) &= ~WATERSENSOR_LED_MASK;
+	}
+#else
 	/* Recovery requires new qualified samples and an explicit fill request. */
 	filling = (fill && !failed) ? 1 : 0;
 
@@ -274,10 +323,236 @@ void water_fill (unsigned char fill)
 		/* Pull-down WATERVALVE */
 		WATERVALVEPULLUP(LAT) &= ~WATERVALVEPULLUP_MASK;
 	}
+#endif /* WATERSENSOR_ANALOG */
 }
 /* End: water_fill */
+
+
+#ifdef WATERSENSOR_ANALOG
+void water_isr (void)
+{
+	/* No callbacks, shared helper calls or serial output in this ISR. */
+	T4CON = 0;
+	TMR4IE = 0;
+	probe_high = (WATERVALVE(PORT) & WATERVALVE_MASK) ? 1 : 0;
+	if (!filling)
+		WATERVALVEPULLUP(LAT) &= ~WATERVALVEPULLUP_MASK;
+	if (!filling && !ledalwayson && !probe_keep_led)
+		WATERSENSOR_LED(LAT) &= ~WATERSENSOR_LED_MASK;
+	TMR4IF = 0;
+	/* Publish only after the valve-enable pulse has ended. */
+	probe_done = 1;
+}
+
+unsigned char water_check (unsigned char probe)
+{
+	if (filling || get_Pump() || get_Dosage() || get_Dryer() ||
+	    (get_Bowl() != BOWL_STOP) || (get_Arm() != ARM_STOP))
+		return 0;
+	if (!waterquality_begin(&quality, probe))
+		return 0;
+	cancel_acquisition();
+	WATERVALVEPULLUP(LAT) &= ~WATERVALVEPULLUP_MASK;
+	valid = comparator_valid = 0;
+	samples = 0;
+	timeoutnow(&polltimer);
+	return 1;
+}
+
+void water_check_cancel (void)
+{
+	if (quality.status == WATER_QUALITY_CHECKING)
+		quality.status = WATER_QUALITY_UNCHECKED;
+	water_fill(0);
+}
+
+unsigned char water_quality (void)
+{
+	return (quality.status);
+}
+/* End: water_quality */
+
+
+unsigned char water_acquisition_fault (void)
+{
+	return (acquisition_fault);
+}
+/* End: water_acquisition_fault */
+
+
+unsigned char water_comparator (void)
+{
+	return (comparator);
+}
+/* End: water_comparator */
+
+
+unsigned char water_comparator_valid (void)
+{
+	return (comparator_valid);
+}
+/* End: water_comparator_valid */
+
+
+unsigned char water_reflection_filling (void)
+{
+	return (reflection_filling);
+}
+/* End: water_reflection_filling */
+
+
+#endif /* WATERSENSOR_ANALOG */
 
 
 /******************************************************************************/
 /* Local Implementations						      */
 /******************************************************************************/
+
+#ifdef WATERSENSOR_ANALOG
+static void cancel_acquisition (void)
+{
+	/* Disabling the source first also excludes a pending probe ISR. */
+	TMR4IE = 0;
+	T4CON = 0;
+	TMR4IF = 0;
+	ADCON0bits.GO = 0;
+	probe_done = probe_keep_led = 0;
+	adc_sum = 0;
+	adc_samples = 0;
+	state = LED_ON;
+	settimeout(&polltimer, WATERSENSORPOLLING);
+}
+
+static void fail_acquisition (unsigned char fault)
+{
+	failed = 1;
+	acquisition_fault = fault;
+	valid = comparator_valid = 0;
+	samples = 0;
+	/* A fault breaks consecutive recovery and confirmation evidence. */
+	quality.good = 0;
+	quality.repeats = quality.analog_bad = quality.comparator_bad = 0;
+	/* Inhibit the valve before extinguishing illumination. */
+	water_fill(0);
+}
+
+static void finish_batch (unsigned char have_probe)
+{
+	unsigned int	old_reflectionquality = reflectionquality;
+	unsigned char	old_detected = detected;
+	unsigned char	old_quality = quality.status;
+	unsigned char	level;
+
+	reflectionquality = adc_sum >> 2;
+	reflection_filling = sample_filling;
+	if (have_probe) {
+		comparator = probe_high;
+		comparator_valid = 1;
+	}
+	probe_done = 0;
+	if ((old_quality == WATER_QUALITY_CHECKING) ||
+	    (old_quality == WATER_QUALITY_OPTICAL)) {
+		waterquality_batch(&quality, reflectionquality, comparator);
+		/* Quality batches are not normal, regularly spaced level samples. */
+		valid = 0;
+		samples = 0;
+	} else if (have_probe) {
+		level = comparator ? 0 : 1;
+		if (!samples || (level_candidate != level)) {
+			level_candidate = level;
+			samples = 1;
+		} else if (samples < HYSTERESIS_MAX)
+			samples++;
+		if (samples == HYSTERESIS_MAX) {
+			detected = level;
+			valid = 1;
+			failed = 0;
+			acquisition_fault = WATER_ACQUISITION_OK;
+		}
+	}
+	state = LED_ON;
+	/* Keep illumination through confirmation, but never keep its probe enabled. */
+	if (quality.status == WATER_QUALITY_CHECKING)
+		timeoutnow(&polltimer);
+	else if (!filling && !ledalwayson)
+		WATERSENSOR_LED(LAT) &= ~WATERSENSOR_LED_MASK;
+	if (old_detected != detected)
+		waterdetection_event(detected);
+	if (old_reflectionquality != reflectionquality)
+		watersensor_event(reflectionquality);
+}
+
+static void water_work_analog (void)
+{
+	unsigned char	interrupts_enabled;
+
+	switch (state) {
+	case LED_ON:
+		if (!timeoutexpired(&polltimer))
+			break;
+		settimeout(&polltimer, WATERSENSORPOLLING);
+		/* A quality check/recovery always measures with filling inhibited. */
+		if (!filling)
+			WATERVALVEPULLUP(LAT) &= ~WATERVALVEPULLUP_MASK;
+		WATERSENSOR_LED(LAT) |= WATERSENSOR_LED_MASK;
+		sample_filling = filling;
+		adc_sum = 0;
+		adc_samples = 0;
+		settimeout(&sensortimer, QUALITY_SETTLE);
+		state = START_CONVERSION;
+		break;
+	case START_CONVERSION:
+		if (!timeoutexpired(&sensortimer))
+			break;
+		ADCON0bits.GO = 1;
+		settimeout(&sensortimer, CONVERSION_TIMEOUT);
+		state = PROCESS_RESULT;
+		break;
+	case PROCESS_RESULT:
+		if (ADCON0bits.nDONE) {
+			if (timeoutexpired(&sensortimer))
+				fail_acquisition(WATER_ACQUISITION_ADC);
+			break;
+		}
+		adc_sum += ADRES;
+		if (++adc_samples < 4) {
+			/* Give the hold capacitor a fresh acquisition interval each time. */
+			settimeout(&sensortimer, ADC_ACQUISITION);
+			state = START_CONVERSION;
+			break;
+		}
+		if (((quality.status == WATER_QUALITY_CHECKING) && !quality.probe) ||
+		    (quality.status == WATER_QUALITY_OPTICAL) ||
+		    (quality.status == WATER_QUALITY_LEVEL)) {
+			/* Recovery and analogue-only checking must not pulse the valve. */
+			finish_batch(0);
+			break;
+		}
+		probe_done = 0;
+		probe_keep_led = (quality.status == WATER_QUALITY_CHECKING) ? 1 : 0;
+		settimeout(&sensortimer, CONVERSION_TIMEOUT);
+		state = WAIT_PROBE;
+		TMR4IE = 0;
+		T4CON = 0;
+		TMR4 = 0;
+		TMR4IF = 0;
+		/* Do not allow an intervening ISR before the pulse timer is started. */
+		interrupts_enabled = GIE;
+		GIE = 0;
+		WATERVALVEPULLUP(LAT) |= WATERVALVEPULLUP_MASK;
+		T4CON = 0x05;	/* Prescale 4, postscale 1, timer on */
+		TMR4IE = 1;
+		GIE = interrupts_enabled;
+		break;
+	case WAIT_PROBE:
+		if (probe_done)
+			finish_batch(1);
+		else if (timeoutexpired(&sensortimer))
+			fail_acquisition(WATER_ACQUISITION_PROBE);
+		break;
+	default:
+		fail_acquisition(WATER_ACQUISITION_PROBE);
+		break;
+	}
+}
+#endif /* WATERSENSOR_ANALOG */
