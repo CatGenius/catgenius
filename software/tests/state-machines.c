@@ -144,7 +144,8 @@ static void reset_firmware(void)
 	timeoutnever(&timer_drain);
 	timeoutnever(&timer_autodose);
 	state = LED_ON;
-	hysteresis = 0;
+	hysteresis = samples = 0;
+	valid = 0;
 	filling = detected = ledalwayson = 0;
 	timeoutnow(&sensortimer);
 	ADCON0bits.GO = 0;
@@ -178,6 +179,7 @@ static void qualify_water(unsigned int value)
 
 	for (i = 0; i < HYSTERESIS_MAX; i++)
 		sample_water(value);
+	assert(water_valid());
 }
 
 static void instruction(unsigned char opcode, unsigned int operand)
@@ -393,6 +395,39 @@ static void test_water_waits(void)
 
 }
 
+static void test_water_qualification(void)
+{
+	unsigned char i;
+
+	reset_firmware();
+	assert(!water_valid());
+	for (i = 1; i < HYSTERESIS_MAX; i++) {
+		sample_water(0);
+		assert(!water_valid());
+	}
+	sample_water(0);
+	assert(water_valid() && !water_detected());
+	for (i = 1; i < HYSTERESIS_MAX; i++) {
+		sample_water(600);
+		assert(!water_detected());
+	}
+	sample_water(600);
+	assert(water_detected());
+	qualify_water(UNDETECTION_THRESHOLD - DETECTION_MARGIN);
+	assert(!water_detected());
+}
+
+static void test_unqualified_wait(void)
+{
+	reset_firmware();
+	instruction(INS_WAITWATER, 0);
+	litterlanguage_work();
+	assert(!water_valid() && ins_pointer == program);
+	ticks += MAX_DRAINTIME;
+	litterlanguage_work();
+	assert(paused && error_drain);
+}
+
 int main(void)
 {
 	test_water_sampling();
@@ -403,6 +438,8 @@ int main(void)
 	test_pause_context();
 	test_fill_resume();
 	test_water_waits();
+	test_water_qualification();
+	test_unqualified_wait();
 	puts("Host state-machine checks passed.");
 	return 0;
 }

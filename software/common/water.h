@@ -33,6 +33,7 @@ void		water_work		(void) ;
 /* Getters */
 unsigned char	water_detected		(void) ;
 unsigned char	water_filling		(void) ;
+unsigned char	water_valid		(void) ;	/* Debounced level is qualified */
 /* Setters */
 void		water_fill		(unsigned char fill) ;
 void		water_ledalwayson	(unsigned char on) ;

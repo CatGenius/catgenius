@@ -65,6 +65,8 @@ extern void watersensor_event		(unsigned int	reflectionquality);
 static struct timer	sensortimer       = EXPIRED;
 static unsigned char	state             = 0;
 static unsigned char	hysteresis        = 0;
+static unsigned char	samples           = 0;
+static bit		valid             = 0;
 static bit		filling           = 0;
 static bit		detected          = 0;
 static bit		ledalwayson       = 0;
@@ -178,6 +180,13 @@ void water_work (void)
 				waterdetection_event(detected);
 			}
 		}
+		/* Qualify startup and recovery before trusting the debounced level. */
+		if (samples < HYSTERESIS_MAX)
+			samples++;
+		if ((samples == HYSTERESIS_MAX) &&
+		    ((hysteresis == 0) || (hysteresis == HYSTERESIS_MAX))) {
+			valid = 1;
+		}
 		/* Check water sensor reflection quality */
 		if (cur_reflectionquality != old_reflectionquality) {
 			watersensor_event(cur_reflectionquality);
@@ -197,6 +206,13 @@ unsigned char water_detected (void)
 	return (detected);
 }
 /* End: water_detected */
+
+
+unsigned char water_valid (void)
+{
+	return (valid);
+}
+/* End: water_valid */
 
 
 void water_ledalwayson (unsigned char on)

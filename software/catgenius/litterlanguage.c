@@ -143,7 +143,7 @@ void litterlanguage_work (void)
 		}
 
 		/* Check for filling timeout */
-		if( !water_detected() &&
+		if( (!water_valid() || !water_detected()) &&
 		    (water_filling() || ((ins_state == STATE_WAIT_INS) &&
 		     (cur_instruction.opcode == INS_WAITWATER) && cur_instruction.operant)) &&
 		    timeoutexpired(&timer_fill) ){
@@ -157,7 +157,7 @@ void litterlanguage_work (void)
 		}
 
 		/* Check for draining timeout */
-		if( water_detected() &&
+		if( (!water_valid() || water_detected()) &&
 		    timeoutexpired(&timer_drain) ){
 			printtime();
 			printf("Drain timeout\n");
@@ -692,6 +692,8 @@ static void wait_instruction (void)
 		}
 		break;
 	case INS_WAITWATER:
+		if (!water_valid())
+			break;
 		if (cur_instruction.operant) {
 			if (water_detected()) {
 				timeoutnever(&timer_fill);
