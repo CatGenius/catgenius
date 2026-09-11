@@ -560,6 +560,37 @@ static void test_dryer_interlock(void)
 	assert(!get_Dryer() && !paused);
 }
 
+static void test_diagnostics(void)
+{
+	char *args[] = {"water"};
+
+	reset_firmware();
+	assert(water(1, args) == ERR_OK);
+	assert(strstr(output, "Water: unqualified"));
+	assert(strstr(output, "(fill inhibited)"));
+	qualify_water(0);
+	output[0] = 0;
+	assert(water(1, args) == ERR_OK);
+	assert(strstr(output, "Water: low"));
+#ifdef WATERSENSOR_ANALOG
+	assert(strstr(output, "Reflection ADC"));
+#else
+	assert(strstr(output, "Reflection digital"));
+#endif
+	qualify_water(600);
+	output[0] = 0;
+	assert(water(1, args) == ERR_OK);
+	assert(strstr(output, "Water: high"));
+#ifdef WATERSENSOR_ANALOG
+	fail_conversion();
+	output[0] = 0;
+	assert(water(1, args) == ERR_OK);
+	assert(strstr(output, "Water: sensor timeout"));
+	assert(strstr(output, "Reflection ADC (last completed): 600"));
+#endif
+	assert(water(2, args) == ERR_SYNTAX);
+}
+
 int main(void)
 {
 	test_water_sampling();
@@ -576,6 +607,7 @@ int main(void)
 	test_adc_timeout();
 #endif
 	test_dryer_interlock();
+	test_diagnostics();
 	puts("Host state-machine checks passed.");
 	return 0;
 }

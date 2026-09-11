@@ -215,7 +215,18 @@ int water (int argc, char* argv[])
 	if (argc > 1)
 		return ERR_SYNTAX;
 
-	printf("Water: %s\n", water_detected()?"high":"low");
+	printf("Water: %s\n", water_failed()?"sensor timeout":
+		(water_valid()?(water_detected()?"high":"low"):"unqualified"));
+#ifdef WATERSENSOR_ANALOG
+	printf("Reflection ADC (last completed): %u\n", water_reflectionquality());
+#else
+	printf("Reflection digital (last completed): %u\n", water_reflectionquality());
+#endif /* WATERSENSOR_ANALOG */
+	printf("Fill enabled: %s; IR LED: %s\n", water_filling()?str_on:str_off,
+		(WATERSENSOR_LED(LAT) & WATERSENSOR_LED_MASK)?str_on:str_off);
+	printf("Comparator RB3 (instantaneous): %u%s\n",
+		(WATERVALVE(PORT) & WATERVALVE_MASK)?1:0,
+		water_filling()?"":" (fill inhibited)");
 
 	return ERR_OK;
 }
