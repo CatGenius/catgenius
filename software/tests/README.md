@@ -11,6 +11,8 @@ The runner first tests `waterquality.c` independently with warnings treated as
 errors. It then builds and executes the actual `catgenie120.c`, `water.c`,
 `waterquality.c`, `litterlanguage.c` and `cmdline_box.c` with supplied GPIO,
 ADC, EEPROM and timer inputs, once with `_16F877A` and once with `_16F1939`.
+Separate fixtures execute the actual UI, command parser, Timer1 and RTC modules.
+Python 3 tests the PIC resource-report gate without needing the target compiler.
 It uses AddressSanitizer
 and UndefinedBehaviorSanitizer. Its temporary executables are removed on exit.
 Leak checking is disabled: the fixture does not allocate heap memory, and
@@ -21,6 +23,20 @@ Existing firmware sources retain CRLF.
 
 Covered behaviors:
 
+- Locked short/long single-button gestures cannot start, stop or pause a wash;
+  the two-button unlock gesture remains available. The UI fixture uses a stub
+  interpreter, not a complete end-to-end application.
+- Fault bursts retain assertions and final clears, normalize nonzero arguments,
+  and defer handler-generated events. Tests cover simultaneous types and both
+  assertion/clear orders. They do not specify a new acknowledgement policy.
+- Command argument boundaries, empty/whitespace-only input, invalid commands,
+  streamed lines and backspace editing. Dispatch occurs after character handling
+  returns, reducing command call depth.
+- Idle pause is a no-op, hot starts/cleanup are refused, and a new request after
+  cooling can execute. Active-program heat protection remains covered too.
+- Timer carry, saturation, disabled deadlines, register-read rollovers, pending
+  interrupt flags and exactly-once overflow accounting after ISR service.
+  RTC midnight/week rollover, delayed catch-up and all 24 hour-setting inputs.
 - Both buttons produce normalized, debounced press/release events, including
   Setup on RB5; a steady overheat input produces only one event per transition.
   An active heat fault pauses execution even without processing the UI event.
@@ -72,21 +88,25 @@ Covered behaviors:
 These are software regression checks, **not PIC firmware builds or appliance
 validation**. The mock `__bit` is C `_Bool`; actual GPIO mask and one-bit field
 operations are exercised, but PIC-specific storage allocation is not modeled.
-The timer fixture supplies deterministic time and does not test the real timer
-ISR, wraparound implementation or scheduling latency. The actual `water_isr()`
+The interpreter fixture supplies deterministic time. The separate timer fixture
+executes the real timer code using a test-only mapping of `long` to a 32-bit host
+type and packed six-byte timers. It models selected register/ISR interleavings,
+not PIC byte-access timing, every possible interrupt race or scheduling latency.
+The actual `water_isr()`
 body is exercised, but Timer4 expiry, ADC results/completion and comparator
 levels are supplied inputs. This does not simulate analogue behavior, peripheral
 clocking, generated interrupt dispatch or worst-case interrupt latency.
 
 The fixture uses native host pointers to fetch instructions. It deliberately
 does not execute the PIC-specific `INS_CALL` pointer conversion, complete ROM
-wash recipes, UI event queue or electrical circuits. PIC-address debug logging
+wash recipes or electrical circuits. PIC-address debug logging
 is disabled in the host fixture. GCC consequently warns about the existing
 PIC-only `memcpy` pointer workaround: host pointers are wider than the source
 integer. Existing unused-parameter, fall-through, dangling-else and register
 mask conversion warnings are also visible; they are not new regression-test
 failures. Register-pointer signedness warnings alone are disabled in the runner.
 
-Both PIC targets still need real compiler/linker checks, code/RAM budget checks
-and controlled hardware validation. See the [B07 development notes](../../documentation/b07-development.md)
+Real compiler/linker results and unresolved 877A resource limits are recorded in
+the [XC8 build report](../../documentation/pic-build.md). Both targets still need
+controlled hardware validation. See the [B07 development notes](../../documentation/b07-development.md)
 and [water-sensing specification](../../documentation/water-sensing.md).

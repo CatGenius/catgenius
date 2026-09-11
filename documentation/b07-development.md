@@ -10,6 +10,20 @@ The first checkpoint fixed button/overheat normalization, lost pause context,
 fill restoration after high water arrived while paused, and unbounded water
 waits. These fixes remain separate commits with their regression tests.
 
+The next batch fixes the held-button key-lock bypass, command argument bounds
+and empty input, idle pause contexts and overheated starts, pending Timer1
+overflows, and the hour-setting helper. Boolean fault assertions/final clears
+now use two byte masks instead of a ten-byte queue, so bursts cannot discard a
+fault. Repeated states coalesce; assertions still take effect before their final
+clear. Different types are handled in event-number order and callbacks remain
+deferred to the next pass. This is not a chronological fault history or a full
+multi-fault display/acknowledgement policy.
+
+PICC support was retired in stand-alone commit `e047d3a`. Declaration fixes,
+behavioral changes and build tooling have separate commits. A command-line XC8
+build and resource gate now report flash, RAM and hardware-stack estimates;
+see [build instructions and measured limits](pic-build.md).
+
 Water handling now includes:
 
 - Qualified water-level readings, acquisition watchdogs and retained diagnostic
@@ -55,9 +69,11 @@ documents timing, fault/recovery behavior, interfaces and validation limits.
 - Timestamped fault history, stale-value detection beyond acquisition timeouts,
   and a universal low-level actuator interlock. GenieDiag and IOTester remain
   service tools, not automatically safe wash controllers.
-- Other closure findings, including child-lock long-press handling, command
-  parser bounds, event-queue overflow, idle overheat/pause behavior, timer/RTC
-  corner cases and a reproducible supported PIC build environment.
+- Idle flood handling and a complete fault/acknowledgement policy, optional
+  features from the closure inventory, and remaining timer representation/
+  extreme-uptime limitations. No automatic idle drainage was introduced.
+- The 877A CatGenius RAM and GenieDiag program-space allocation failures under
+  XC8, and small hardware-stack margins. No features were removed to force a fit.
 
 ## Verification and next gate
 
@@ -75,16 +91,20 @@ project files retain their line endings; new source, test and documentation
 files use LF. Test-directory attributes enforce LF for the framework.
 
 These are not PIC ABI, instruction-timing or complete appliance tests. The
-fixture does not execute complete wash recipes or the UI event queue. Existing
+fixtures do not execute complete wash recipes or the integrated main loop. Existing
 host-build warnings and other limits are documented in the test README.
 
-No PIC compiler was found on the current PATH. The MPLAB projects still lack
-generated `nbproject/Makefile-impl.mk` and `Makefile-variables.mk` files; a
-CatGenius dry-run build fails at the missing latter file. No PIC image has been
-built or flashed during this work.
+XC8 4.00 was subsequently found under `/opt/cross`, outside PATH. All three
+1939 applications now compile, link and pass the resource gate at `-O1`.
+CatGenius uses 13,140/16,384 program words and 458/1,024 RAM bytes, with an
+estimated 15/16 hardware-stack levels including its ISR. The 877A CatGenius and
+GenieDiag builds fail allocation; IOTester fits with no estimated stack margin.
+The [full matrix](pic-build.md) records these results and the compiler profile.
+No image has been flashed. The older MPLAB makefiles still need regeneration;
+the standalone build does not depend on them.
 
-Before release, regenerate the project makefiles and build CatGenius, GenieDiag
-and IOTester for both PICs. Check flash/RAM, compiler call graphs, Timer4 ISR
+Before release, resolve the failed resource gates and inspect compiler call
+graphs, the instruction-pointer conversion, Timer4 ISR
 latency and shared GPIO instructions. Then carry out controlled board validation,
 with mains circuitry enclosed and appropriate isolated test equipment.
 

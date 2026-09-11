@@ -168,8 +168,9 @@ ISR behavior, cancellation, fault recovery, preflight and both configurations.
 They supply ADC and interrupt completion; they do not model the circuit, real
 interrupt latency, PIC ABI or complete washing recipes.
 
-Before release, regenerate the MPLAB makefiles, build both application targets
-for both PICs, inspect flash/RAM and call-graph results, and inspect Timer4 and
+The [XC8 build report](pic-build.md) now records target compilation, flash/RAM
+and stack estimates, including the unresolved 877A allocation failures. Before
+release, resolve those gates, inspect generated call paths, and inspect Timer4 and
 GPIO instructions. Then validate clean/dry, wet, submerged, dirty/misaligned and
 faulted sensor conditions on identified hardware. Measure settling, threshold
 margin, probe width under interrupt/serial load, and whether brief enables
