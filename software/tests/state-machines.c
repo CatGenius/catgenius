@@ -50,8 +50,14 @@ static unsigned int events[6][2];
 static struct instruction program[] = {
 	{INS_WAITTIME, 10}, {INS_DRYER, 1}, {INS_DRYER, 0}, {INS_END, 0}
 };
-const struct instruction washprogram[] = {{INS_END, 0}};
-const struct instruction cleanupprogram[] = {{INS_END, 0}};
+const struct instruction washprogram[] = {
+	{INS_START, FLAGS_WETRUN | FLAGS_DRYRUN | INS_END},
+	{INS_PUMP, 1}, {INS_WAITTIME, 500}, {INS_END, 0}
+};
+const struct instruction cleanupprogram[] = {
+	{INS_START, FLAGS_WETRUN | FLAGS_DRYRUN | INS_END},
+	{INS_PUMP, 1}, {INS_END, 0}
+};
 static struct instruction const *requested;
 
 unsigned char eeprom_read(unsigned char address) { return nvram[address]; }
@@ -140,6 +146,9 @@ static void reset_firmware(void)
 	ins_pointer = program;
 	wet_program = paused = 0;
 	error_fill = error_drain = error_overheat = error_flood = error_execution = 0;
+#ifdef WATERSENSOR_ANALOG
+	check_before_program = check_started = 0;
+#endif
 	timeoutnever(&timer_waitins);
 	timeoutnever(&timer_fill);
 	timeoutnever(&timer_drain);
@@ -646,6 +655,7 @@ static void test_diagnostics(void)
 }
 
 #include "water-protocol.h"
+#include "water-preflight.h"
 
 int main(void)
 {
@@ -664,10 +674,14 @@ int main(void)
 #endif
 	test_dryer_interlock();
 	test_diagnostics();
+	test_program_start_compatibility();
 #ifdef WATERSENSOR_ANALOG
 	test_probe_lifecycle();
 	test_analog_level_and_mean();
 	test_quality_acquisition();
+	test_preflight_success_and_timeout();
+	test_preflight_quality_faults();
+	test_preflight_acquisition_faults();
 #endif
 	puts("Host state-machine checks passed.");
 	return 0;

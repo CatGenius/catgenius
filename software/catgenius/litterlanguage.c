@@ -35,6 +35,10 @@ extern void litterlanguage_event (unsigned char event, unsigned char argument);
 #define STATE_FETCH_INS		3
 #define STATE_GET_INS		4
 #define STATE_WAIT_INS		5
+#ifdef WATERSENSOR_ANALOG
+#define STATE_CHECK_WATER	6
+#define WATER_CHECK_TIMEOUT	(5 * SECOND)
+#endif
 
 /******************************************************************************/
 /* Global Data								      */
@@ -48,6 +52,10 @@ static bit			error_drain		= 0;
 static bit			error_overheat		= 0;
 static bit			error_flood		= 0;	/* Not fully implemented yet */
 static bit			error_execution		= 0;
+#ifdef WATERSENSOR_ANALOG
+static bit			check_before_program	= 0;
+static bit			check_started		= 0;
+#endif
 
 /* Program execution variables */
 static unsigned char		ins_state		= STATE_IDLE;
@@ -69,6 +77,9 @@ static void		req_instruction		(struct instruction	const *instruction);
 static unsigned char	get_instruction		(struct instruction	*instruction);
 static void		exe_instruction		(void);
 static void		wait_instruction	(void);
+#ifdef WATERSENSOR_ANALOG
+static void		check_water		(void);
+#endif
 
 
 /******************************************************************************/
@@ -130,15 +141,24 @@ void litterlanguage_work (void)
 /*		- Initial revision.					      */
 /******************************************************************************/
 {
-	/* A failed conversion must not leave a program using a stale level. */
+	/* Failed acquisition must not leave a program using a stale level. */
 	if ((ins_state != STATE_IDLE) && water_failed()) {
 		printtime();
-		printf("Water sensor timeout\n");
+		printf("Water sensor acquisition timeout\n");
 		litterlanguage_stop();
 		error_execution = 1;
 		litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
 		return;
 	}
+
+#ifdef WATERSENSOR_ANALOG
+	/* A failed preflight also stops a paused request; recovery never resumes it. */
+	if (check_started && ((water_quality() == WATER_QUALITY_OPTICAL) ||
+			      (water_quality() == WATER_QUALITY_LEVEL))) {
+		check_water();
+		return;
+	}
+#endif
 
 	/* Don't work if paused */
 	if (paused)
@@ -223,6 +243,13 @@ void litterlanguage_work (void)
 						eeprom_write(NVM_BOXSTATE, BOX_MESSY);
 					ins_pointer++;
 					ins_state = STATE_FETCH_INS;
+#ifdef WATERSENSOR_ANALOG
+					if (check_before_program) {
+						/* No actuator instruction runs before this check completes. */
+						settimeout(&timer_waitins, WATER_CHECK_TIMEOUT);
+						ins_state = STATE_CHECK_WATER;
+					}
+#endif
 				} else {
 					ins_state = STATE_IDLE;
 #ifdef LL_DEBUG
@@ -256,6 +283,11 @@ void litterlanguage_work (void)
 	case STATE_WAIT_INS:	/* Wait for the instruction to finish */
 		wait_instruction();
 		break;
+#ifdef WATERSENSOR_ANALOG
+	case STATE_CHECK_WATER:
+		check_water();
+		break;
+#endif
 	}
 }
 /* litterlanguage_work */
@@ -265,6 +297,19 @@ void litterlanguage_start (unsigned char wet)
 {
 	extern const struct instruction	washprogram[];
 	if (ins_state == STATE_IDLE) {
+#ifdef WATERSENSOR_ANALOG
+		if (wet && water_failed()) {
+			/* Permit a fresh check even after combined level/acquisition faults. */
+			water_check(1);
+			printtime();
+			printf("Water sensor recovering; request a new wash when ready\n");
+			error_execution = 1;
+			litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
+			return;
+		}
+		check_before_program = wet ? 1 : 0;
+		check_started = 0;
+#endif
 		printtime();
 		printf("Starting %s program\n", wet?"wet":"dry");
 		switch (prg_source) {
@@ -385,6 +430,11 @@ void litterlanguage_stop (void)
 
 	printtime();
 	printf("Stopping program\n");
+#ifdef WATERSENSOR_ANALOG
+	if (check_started)
+		water_check_cancel();
+	check_before_program = check_started = 0;
+#endif
 	/* Stop all actuators */
 	set_Bowl(BOWL_STOP);
 	set_Arm(ARM_STOP);
@@ -482,6 +532,10 @@ static void litterlanguage_cleanup (unsigned char wet)
 {
 	extern const struct instruction	cleanupprogram[];
 	if (ins_state == STATE_IDLE) {
+#ifdef WATERSENSOR_ANALOG
+		/* Recovery cleanup may start with water present: drain before drying. */
+		check_before_program = check_started = 0;
+#endif
 		printtime();
 		printf("Starting %s cleanup\n", wet?"wet":"dry");
 		prg_source = SRC_ROM;
@@ -490,6 +544,41 @@ static void litterlanguage_cleanup (unsigned char wet)
 		ins_state = STATE_FETCH_START ;
 	}
 }
+
+
+#ifdef WATERSENSOR_ANALOG
+static void check_water (void)
+{
+	unsigned char	status;
+	unsigned char	expired = timeoutexpired(&timer_waitins);
+
+	if (!expired && !check_started)
+		check_started = water_check(1) ? 1 : 0;
+	status = water_quality();
+	if (expired || (status == WATER_QUALITY_OPTICAL) ||
+	    (status == WATER_QUALITY_LEVEL) ||
+	    (check_started && (status == WATER_QUALITY_GOOD) &&
+	     water_valid() && water_detected())) {
+		printtime();
+		if (expired)
+			printf("Water check timeout\n");
+		else if (status == WATER_QUALITY_OPTICAL)
+			printf("Water check: poor optical reflection\n");
+		else
+			printf("Water check: high water or comparator fault\n");
+		timeoutnever(&timer_waitins);
+		litterlanguage_stop();
+		error_execution = 1;
+		litterlanguage_event(EVENT_ERR_EXECUTION, error_execution);
+		return;
+	}
+	if (check_started && (status == WATER_QUALITY_GOOD) && water_valid()) {
+		timeoutnever(&timer_waitins);
+		check_before_program = check_started = 0;
+		ins_state = STATE_FETCH_INS;
+	}
+}
+#endif /* WATERSENSOR_ANALOG */
 
 
 static void req_instruction (struct instruction const *instruction)
