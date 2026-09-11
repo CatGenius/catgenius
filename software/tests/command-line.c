@@ -7,6 +7,7 @@
 static char output[512];
 static unsigned int calls;
 static int expected_argc;
+static const char *serial_input = "";
 
 static int command_printf(const char *format, ...)
 {
@@ -34,7 +35,13 @@ static int record(int argc, char *argv[])
 	return ERR_OK;
 }
 const struct command commands[] = {{"record", record}, {"", 0}};
-unsigned char readch(char *rxd) { (void)rxd; return 0; }
+unsigned char readch(char *rxd)
+{
+	if (!*serial_input)
+		return 0;
+	*rxd = *serial_input++;
+	return 1;
+}
 void putch(char value) { (void)value; }
 
 static void parse(const char *input)
@@ -65,6 +72,13 @@ int main(void)
 	expected_argc = 1;
 	parse("record");
 	assert(calls == 3 && !output[0]);
+	/* Exercise complete lines through the actual character worker too. */
+	serial_input = "record\r\r   \rrecord a a a a\rrecord\r";
+	cmdline_work();
+	assert(calls == 5);
+	serial_input = "record a\x7f\x7f\r";
+	cmdline_work();
+	assert(calls == 6);
 	puts("Host command-line checks passed.");
 	return 0;
 }

@@ -39,7 +39,7 @@ static unsigned char		localecho = 1;
 /* Local Prototypes							      */
 /******************************************************************************/
 
-static void proc_char (char rxd);
+static unsigned char proc_char (char rxd);
 static void proc_line (char *line);
 static int cmd2index (char *cmd);
 
@@ -78,7 +78,12 @@ void cmdline_work (void)
 			putch(ACK);
 			break;
 		default:
-			proc_char(rxd);
+			/* Dispatch after the character handler returns, saving a stack level. */
+			if (proc_char(rxd)) {
+				proc_line(linebuffer);
+				if (localecho)
+					printf(PROMPT);
+			}
 		}
 }
 /* End: cmdline_work */
@@ -88,7 +93,7 @@ void cmdline_work (void)
 /* Local Implementations						      */
 /******************************************************************************/
 
-static void proc_char (char rxd)
+static unsigned char proc_char (char rxd)
 {
 	static unsigned char curcolumn = 0;
 
@@ -111,8 +116,8 @@ static void proc_char (char rxd)
 		if (curcolumn) {
 			/* Terminate string */
 			linebuffer[curcolumn] = 0;
-			/* Process string */
-			proc_line(linebuffer);
+			curcolumn = 0;
+			return 1;
 		}
 		curcolumn = 0;
 
@@ -128,6 +133,7 @@ static void proc_char (char rxd)
 				putch(rxd);
 		}
 	}
+	return 0;
 }
 
 
