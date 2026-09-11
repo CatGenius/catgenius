@@ -4,6 +4,9 @@ Started on 11 September 2026 from `master-b06` at `e5c34b0`. The historical
 `b06` tag stays at `ff3785a`, before the two recent UI fixes. This is development
 work, not a release or a claim that an appliance has been validated.
 
+For a fresh session, start with the [roadmap](#roadmap) and
+[session handoff](#session-handoff) below.
+
 ## Implemented
 
 The first checkpoint fixed button/overheat normalization, lost pause context,
@@ -86,6 +89,47 @@ recipe-tooling and Bluetooth work, with source commits, blockers and validation
 requirements.
 Only terminal editing was ported from that review; the rest remains deferred.
 
+## Roadmap
+
+Proposed order as of 11 September 2026. These are open tasks, not completed
+features or a commitment to implement every historical wish. Keep this as the
+central priority list; record completion with commit references and verification
+results. Detailed coverage and limitations belong in the
+[test README](../software/tests/README.md).
+
+1. [ ] Automatic-mode tests, the next implementation tranche. Exercise cat
+   arrival/departure, the four-minute waiting period and returning cats; timed
+   schedules; and full-wash/scoop-only ratios across modes 0..9. Include manual
+   starts, locking, pauses and faults during automatic operation. Characterize
+   how aborted or failed attempts affect scheduling/counting, and confirm the
+   intended policy before changing that behavior.
+2. [ ] Power-loss recovery tests. Interrupt preflight, filling, dosing, draining,
+   drying and paused execution; preserve that run's EEPROM contents and start
+   a fresh process. Check tidy/messy/wet cleanup selection, actuator state and
+   persisted markers. This validates existing recovery, not a new feature for
+   resuming at the exact interrupted instruction.
+3. [ ] Complete wash-recipe validation. Add the actual wash/cleanup recipes
+   alongside the short synthetic scenarios. Validate wet/dry paths, calls,
+   returns and skips, actuator sequencing and total dosage-pump on-time. Use
+   target-aware call-address handling; a host address mapping alone does not
+   validate the PIC instruction-pointer conversion or ABI.
+4. [ ] Automated regression runs on pushes and pull requests. Run the host
+   suite with GCC and Clang and both sanitizers. Keep host results distinct
+   from PIC resource checks; automated XC8 builds require the compiler and
+   matching device packs to be provisioned explicitly.
+5. [ ] Resource headroom before further firmware features. Review generated
+   call paths and interrupt depth, the 1939 stack margin and the 877A allocation
+   failures. Evaluate the feature-profile idea from the
+   [ccm inventory](ccm-follow-up.md#open-per-application-feature-configuration)
+   without weakening control protections. Rebuild the application/device matrix
+   and record measured results; do not bypass failing gates or silently drop
+   target support. This gate need not delay test-only work above.
+
+Further independent candidates include real serial/cat-sensor driver fault
+tests and the optional features in the ccm inventory. Before any release, the
+hardware and build gates below still apply. Passing host scenarios alone is
+not sufficient for release.
+
 ## Verification and next gate
 
 Run [the host regression checks](../software/tests/README.md) with GCC and Clang.
@@ -135,6 +179,54 @@ Before release, resolve the failed resource gates and inspect compiler call
 graphs, the instruction-pointer conversion, Timer4 ISR
 latency and shared GPIO instructions. Then carry out controlled board validation,
 with mains circuitry enclosed and appropriate isolated test equipment.
+
+## Session handoff
+
+Checkpoint recorded on 11 September 2026: development is on `master-b07`.
+The integration framework (`293b4ab`) and its fault scenarios (`f78b613`) are
+committed and pushed. The expansion left no pending tracked edits or partially
+applied changes. The roadmap above records proposed follow-up work; start with
+automatic-mode coverage when implementation is requested.
+
+On resuming, check the branch, worktree and recent commits rather than assuming
+this checkpoint is still HEAD. Read this document, the
+[test README](../software/tests/README.md), [XC8 report](pic-build.md),
+[water specification](water-sensing.md) and relevant
+[ccm follow-up entries](ccm-follow-up.md).
+
+Working conventions agreed with Robert:
+
+- Make review- and bisect-friendly commits. Keep bug fixes separate from
+  feature/refactoring work, with the regression tests that demonstrate them.
+- Use `CatGenius <robert@delien.nl>` for both author and committer.
+- Match surrounding indentation and style. Preserve each existing file's
+  line endings, including legacy firmware CRLF; use LF for new files. Do not
+  make a repository-wide formatting or line-ending conversion.
+- XC8 is the supported compiler; do not restore PICC support. After firmware
+  changes, run both host compilers and the application/device resource matrix.
+  Check flash, RAM and hardware-stack depth, not just whether linking succeeds.
+  Keep known target-build failures visible; the reproducible build commands
+  and compiler/device-pack versions are in the XC8 report.
+- Describe CatGenius behavior on its own terms in firmware comments and
+  documentation, without comparisons to other firmware implementations.
+- Robert has authorized useful pushes to `master-b07`. That does not authorize
+  a release, changes to other branches/tags, or flashing an appliance.
+- Leave unrelated files and credentials untouched; do not inspect key
+  contents or bulk-stage untracked files.
+
+The host checks can be rerun from the repository root with:
+
+```sh
+sh software/tests/run.sh
+CC=clang sh software/tests/run.sh
+```
+
+The local `documentation/google-group/` and `documentation/project-closure/`
+research archives were still untracked at handoff. They have been preserved,
+but are not backed up by the pushed branch and will not appear in a fresh
+clone. Treat the closure inventory as a historical research snapshot, not the
+current B07 status list. Publishing or backing up those archives is separate
+work requiring its own review; do not include them incidentally in a commit.
 
 ## Commit structure
 

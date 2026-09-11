@@ -75,6 +75,8 @@ the complete interrupt dispatcher.
 Next useful extensions are cat-departure and automatic-mode scheduling, complete
 recipe traversal including target-aware call addresses, power-cut/reboot
 scenarios retaining EEPROM, and real serial/cat-sensor driver fault tests.
+The prioritized checklist and working conventions are maintained in the
+[B07 roadmap and handoff](../../documentation/b07-development.md#roadmap).
 
 ## Module regression checks
 
