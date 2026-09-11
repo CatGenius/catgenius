@@ -295,6 +295,47 @@ static void test_heat_fault(void)
 	assert(paused);
 }
 
+static void test_pause_context(void)
+{
+	unsigned char combination, direction;
+	unsigned long before;
+
+	for (direction = 1; direction <= 2; direction++)
+		for (combination = 0; combination < 16; combination++) {
+			reset_firmware();
+			qualify_water(0);
+			instruction(INS_WAITTIME, 1000);
+			set_Bowl(direction);
+			set_Arm(direction);
+			water_fill(combination & 1);
+			set_Pump(combination & 2);
+			set_Dosage(combination & 4);
+			set_Dryer(combination & 8);
+			settimeout(&timer_fill, 2 * SECOND);
+			settimeout(&timer_drain, 3 * SECOND);
+			settimeout(&timer_autodose, 4 * SECOND);
+			before = ticks;
+			litterlanguage_pause(0xff);
+			assert(litterlanguage_paused());
+			assert_stopped_outputs();
+			assert(timeoutneverexpires(&timer_waitins));
+			litterlanguage_pause(2);
+			ticks += 5 * SECOND;
+			litterlanguage_pause(0);
+			assert(!litterlanguage_paused());
+			assert(get_Bowl() == direction && get_Arm() == direction);
+			assert(water_filling() == !!(combination & 1));
+			assert(get_Pump() == ((combination & 2) ? PUMP_MASK : 0));
+			assert(get_Dosage() == ((combination & 4) ? DOSAGE_MASK : 0));
+			assert(get_Dryer() == ((combination & 8) ? DRYER_MASK : 0));
+			assert(timer_waitins.overflows == ticks + SECOND);
+			assert(timer_fill.overflows == ticks + 2 * SECOND);
+			assert(timer_drain.overflows == ticks + 3 * SECOND);
+			assert(timer_autodose.overflows == ticks + 4 * SECOND);
+			assert(ticks > before);
+		}
+}
+
 int main(void)
 {
 	test_water_sampling();
@@ -302,6 +343,7 @@ int main(void)
 	test_dry_program();
 	test_buttons();
 	test_heat_fault();
+	test_pause_context();
 	puts("Host state-machine checks passed.");
 	return 0;
 }

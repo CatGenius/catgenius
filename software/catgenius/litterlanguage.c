@@ -275,6 +275,7 @@ void litterlanguage_pause (unsigned char pause)
 		unsigned long	autodose;
 	} context;
 
+	pause = pause ? 1 : 0;
 	if (pause == paused)
 		return;
 
@@ -287,13 +288,13 @@ void litterlanguage_pause (unsigned char pause)
 		set_Bowl(BOWL_STOP);
 		context.arm = get_Arm();
 		set_Arm(ARM_STOP);
-		context.water = water_filling();
+		context.water = water_filling() ? 1 : 0;
 		water_fill(0);
-		context.dosage = get_Dosage();
+		context.dosage = get_Dosage() ? 1 : 0;
 		set_Dosage(0);
-		context.pump = get_Pump();
+		context.pump = get_Pump() ? 1 : 0;
 		set_Pump(0);
-		context.dryer = get_Dryer();
+		context.dryer = get_Dryer() ? 1 : 0;
 		set_Dryer(0);
 		/* Save timer context */
 		gettimestamp(&timer_now);
