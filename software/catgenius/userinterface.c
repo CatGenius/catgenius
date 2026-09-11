@@ -25,9 +25,6 @@
 #define LEVEL_TIMEOUT		(5 * SECOND)	/* Show the level for 5 seconds */
 #define CAT_TIMEOUT		(4 * 60 * SECOND)
 
-#define EVENTQUEUE_SIZE		4	/* Power of two */
-#define EVENTQUEUE_MASK		(EVENTQUEUE_SIZE - 1)
-
 #define PANEL_AUTOMODE		0	/* Display/button mode in normal operation */
 #define PANEL_CARTRIDGELEVEL	1	/* Display/button mode showing/altering cartridge level */
 #define PANEL_ERROR		2	/* Display/button mode showing error(s) */
@@ -75,15 +72,11 @@ static unsigned char	auto_mode	= AUTO_MANUAL;
 static unsigned char	cart_level	= 100;
 static unsigned char	error_nr	= 0;
 
-/* Defer LitterLanguage events to the main loop. Handling events directly
- * can recurse through litterlanguage_stop/pause. Keep the call graph
- * non-reentrant so the compiler can bound the RAM used by the compiled stack. */
-static struct {
-	unsigned char	event;
-	unsigned char	argument;
-}			eventqueue[EVENTQUEUE_SIZE];
-static unsigned char	eventqueue_head	= 0;
-static unsigned char	eventqueue_tail	= 0;
+/* Faults are boolean states, not an unbounded stream. Retain each assertion
+ * and the final clear state until the next UI pass. This cannot overflow,
+ * uses two bytes, and keeps handler-generated events non-reentrant. */
+static unsigned char	fault_assertions = 0;
+static unsigned char	fault_clears     = 0;
 
 
 /******************************************************************************/
@@ -143,15 +136,24 @@ void userinterface_work (void)
 /******************************************************************************/
 {
 	unsigned char		update		= 0;
-	unsigned char		drain_to	= eventqueue_head;
+	unsigned char		assertions	= fault_assertions;
+	unsigned char		clears		= fault_clears;
+	unsigned char		event, mask;
 
-	/* Process events pending at entry. Events generated while handling
-	 * these are left for the next call. */
-	while (eventqueue_tail != drain_to) {
-		process_event(eventqueue[eventqueue_tail].event,
-			      eventqueue[eventqueue_tail].argument);
-		eventqueue_tail = (eventqueue_tail + 1) & EVENTQUEUE_MASK;
-		update = 1;
+	/* Snapshot at entry; callbacks leave work for the next pass. Assertions
+	 * are never erased by a subsequent clear before they have been handled.
+	 * Multiple fault types are handled in event-number order. */
+	fault_assertions = fault_clears = 0;
+	for (event = EVENT_ERR_FILLING; event <= EVENT_ERR_FLOOD; event++) {
+		mask = BIT(event);
+		if (assertions & mask) {
+			process_event(event, 1);
+			update = 1;
+		}
+		if (clears & mask) {
+			process_event(event, 0);
+			update = 1;
+		}
 	}
 
 	if( (panel_mode == PANEL_CARTRIDGELEVEL) &&
@@ -372,16 +374,17 @@ void litterlanguage_event (unsigned char event, unsigned char argument)
 /*		- Queue a LitterLanguage event for the user interface	      */
 /******************************************************************************/
 {
-	unsigned char		next;
+	unsigned char		mask;
 
-	next = (eventqueue_head + 1) & EVENTQUEUE_MASK;
-	/* Discard the event if the queue is full */
-	if (next == eventqueue_tail)
+	/* LEVEL_CHANGED has no accounting handler yet; other values are invalid. */
+	if ((event < EVENT_ERR_FILLING) || (event > EVENT_ERR_FLOOD))
 		return;
-
-	eventqueue[eventqueue_head].event = event;
-	eventqueue[eventqueue_head].argument = argument;
-	eventqueue_head = next;
+	mask = BIT(event);
+	if (argument) {
+		fault_assertions |= mask;
+		fault_clears &= ~mask;
+	} else
+		fault_clears |= mask;
 }
 /* litterlanguage_event */
 

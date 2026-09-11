@@ -138,11 +138,49 @@ static void test_locked_holds(void)
 		}
 }
 
+static void test_fault_bursts(void)
+{
+	unsigned int i;
+	unsigned char event;
+	reset_ui(0);
+	running = 1;
+	for (i = 0; i < 100; i++)
+		for (event = EVENT_ERR_FILLING; event <= EVENT_ERR_FLOOD; event++)
+			litterlanguage_event(event, 1);
+	userinterface_work();
+	assert(stops == 1 && pauses == 3 && error_nr == EVENT_ERR_EXECUTION);
+	for (event = EVENT_ERR_FILLING; event <= EVENT_ERR_FLOOD; event++)
+		litterlanguage_event(event, 0);
+	userinterface_work();
+	assert(!error_nr && stops == 1 && pauses == 3);
+
+	/* An assertion followed by clearing must still be acted upon once. */
+	reset_ui(0);
+	running = 1;
+	for (i = 0; i < 100; i++) {
+		litterlanguage_event(EVENT_ERR_OVERHEAT, 1);
+		litterlanguage_event(EVENT_ERR_OVERHEAT, 0);
+	}
+	userinterface_work();
+	assert(pauses == 1 && !error_nr);
+	/* A last assertion takes precedence over an earlier clear. */
+	litterlanguage_event(EVENT_ERR_OVERHEAT, 0);
+	litterlanguage_event(EVENT_ERR_OVERHEAT, 255);
+	userinterface_work();
+	assert(pauses == 2 && error_nr == EVENT_ERR_OVERHEAT);
+	litterlanguage_event(EVENT_ERR_OVERHEAT, 0);
+	litterlanguage_event(EVENT_LEVEL_CHANGED, 100);
+	litterlanguage_event(255, 1);
+	userinterface_work();
+	assert(!error_nr && pauses == 2);
+}
+
 int main(void)
 {
 	test_buttons();
 	test_deferred_faults();
 	test_locked_holds();
+	test_fault_bursts();
 	puts("Host UI checks passed.");
 	return 0;
 }
