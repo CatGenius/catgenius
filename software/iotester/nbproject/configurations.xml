@@ -81,7 +81,7 @@
         <property key="optimization-assembler-files" value="false"/>
         <property key="optimization-debug" value="false"/>
         <property key="optimization-global" value="true"/>
-        <property key="optimization-level" value="-Os"/>
+        <property key="optimization-level" value="-O1"/>
         <property key="optimization-set" value="default"/>
         <property key="optimization-speed" value="false"/>
         <property key="preprocess-assembler" value="true"/>
@@ -234,7 +234,7 @@
         <property key="optimization-assembler-files" value="false"/>
         <property key="optimization-debug" value="false"/>
         <property key="optimization-global" value="true"/>
-        <property key="optimization-level" value="-Os"/>
+        <property key="optimization-level" value="-O1"/>
         <property key="optimization-set" value="default"/>
         <property key="optimization-speed" value="false"/>
         <property key="preprocess-assembler" value="true"/>

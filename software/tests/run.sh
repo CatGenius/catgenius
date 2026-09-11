@@ -5,6 +5,7 @@ ulimit -c 0
 test_root=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
 test_build_dir=$(mktemp -d "${TMPDIR:-/tmp}/catgenius-host-checks.XXXXXX")
 test_cc=${CC:-gcc}
+PYTHONDONTWRITEBYTECODE=1 python3 "$test_root/software/tests/pic-memory.py"
 trap 'rm -f -- "$test_build_dir/16f877a" "$test_build_dir/16f1939" "$test_build_dir/water-quality" "$test_build_dir/user-interface" "$test_build_dir/command-line" "$test_build_dir/timers" "$test_build_dir/rtc"; rmdir -- "$test_build_dir"' 0
 
 "$test_cc" -std=c99 -Wall -Wextra -Werror \
