@@ -29,8 +29,12 @@ Covered behaviors:
 - Fault bursts retain assertions and final clears, normalize nonzero arguments,
   and defer handler-generated events. Tests cover simultaneous types and both
   assertion/clear orders. They do not specify a new acknowledgement policy.
-- Command argument boundaries, empty/whitespace-only input, invalid commands,
-  streamed lines and backspace editing. Dispatch occurs after character handling
+- Command argument boundaries, empty/whitespace-only input, invalid commands
+  and streamed lines. Backspace (0x08) and Delete (0x7f) both remove the last
+  character and echo Backspace, space, Backspace to erase it on the terminal.
+  Tests capture the exact output for empty/full buffers, complete-line deletion,
+  edits across worker calls, mixed erase keys and echo-off operation. CRLF input
+  and ENQ/ACK behavior remain covered. Dispatch occurs after character handling
   returns, reducing command call depth.
 - Idle pause is a no-op, hot starts/cleanup are refused, and a new request after
   cooling can execute. Active-program heat protection remains covered too.

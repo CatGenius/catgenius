@@ -123,14 +123,17 @@ static unsigned char proc_char (char rxd)
 
 		if (localecho)
 			printf(PROMPT);
-	} else if (rxd == 0x7f) {
+	} else if ((rxd == 0x7f) || (rxd == '\b')) {
 		/* Delete last character from the line */
 		if (curcolumn) {
 			/* Remove last character from the buffer */
 			curcolumn--;
 
-			if (localecho)
-				putch(rxd);
+			if (localecho) {
+				putch('\b');
+				putch(' ');
+				putch('\b');
+			}
 		}
 	}
 	return 0;
