@@ -183,4 +183,35 @@ static void test_preflight_acquisition_faults(void)
 	start_preflight();
 	pass_preflight();
 }
+
+static void test_probe_program_faults(void)
+{
+	unsigned char was_paused;
+
+	for (was_paused = 0; was_paused <= 1; was_paused++) {
+		reset_firmware();
+		qualify_water(0);
+		instruction(INS_WAITTIME, 1000);
+		nvram[NVM_BOXSTATE] = BOX_WET;
+		set_Bowl(BOWL_CW);
+		set_Arm(ARM_DOWN);
+		water_fill(1);
+		set_Pump(1);
+		set_Dosage(1);
+		set_Dryer(1);
+		if (was_paused)
+			litterlanguage_pause(1);
+		prepare_probe(1023);
+		ticks = sensortimer.overflows;
+		water_work();
+		litterlanguage_work();
+		assert(ins_state == STATE_IDLE && !paused && error_execution);
+		assert(water_acquisition_fault() == WATER_ACQUISITION_PROBE);
+		assert(nvram[NVM_BOXSTATE] == BOX_WET);
+		assert_stopped_outputs();
+		qualify_water(0);
+		litterlanguage_work();
+		assert(ins_state == STATE_IDLE);
+	}
+}
 #endif

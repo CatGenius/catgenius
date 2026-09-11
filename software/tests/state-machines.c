@@ -684,6 +684,7 @@ int main(void)
 	test_preflight_success_and_timeout();
 	test_preflight_quality_faults();
 	test_preflight_acquisition_faults();
+	test_probe_program_faults();
 #endif
 	puts("Host state-machine checks passed.");
 	return 0;
