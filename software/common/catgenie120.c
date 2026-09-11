@@ -207,7 +207,7 @@ unsigned char catgenie_init (void)
 	for (temp = 0; temp < DEBOUNCER_MAX; temp++) {
 		unsigned char	mask = 1 << debouncers[temp].port_bit; /* for compiler limitations */
 
-		debouncers[temp].state = *debouncers[temp].port & mask;
+		debouncers[temp].state = (*debouncers[temp].port & mask) ? 1 : 0;
 	}
 
 	/* Fill out the return flags */
@@ -254,6 +254,7 @@ void catgenie_work (void)
 		if (timeoutexpired(&debouncers[temp].timer)) {
 			unsigned char	tempstate = *debouncers[temp].port; /* for compiler limitations */
 			tempstate &= 1 << debouncers[temp].port_bit;
+			tempstate = tempstate ? 1 : 0;
 			/* Check if the state changed */
 			if (tempstate != debouncers[temp].state) {
 				/* Call function pointer (cannot be NULL) */

@@ -245,11 +245,38 @@ static void test_dry_program(void)
 	assert(ins_pointer == program + 2 && !get_Dryer() && !paused);
 }
 
+static void test_buttons(void)
+{
+	unsigned char button, cycle;
+	unsigned char masks[] = {BIT(STARTBUTTON_BIT), BIT(SETUPBUTTON_BIT)};
+
+	reset_firmware();
+	assert(debouncers[0].state == 1 && debouncers[1].state == 1);
+	for (button = 0; button < 2; button++) {
+		for (cycle = 0; cycle < 2; cycle++) {
+			PORTB &= ~masks[button];
+			catgenie_work();
+			ticks += BUTTON_DEBOUNCE - 1;
+			catgenie_work();
+			assert(button_events[button][0] == cycle);
+			ticks++;
+			catgenie_work();
+			assert(button_events[button][0] == cycle + 1U);
+			PORTB |= masks[button];
+			catgenie_work();
+			ticks += BUTTON_DEBOUNCE;
+			catgenie_work();
+			assert(button_events[button][1] == cycle + 1U);
+		}
+	}
+}
+
 int main(void)
 {
 	test_water_sampling();
 	test_stop_outputs();
 	test_dry_program();
+	test_buttons();
 	puts("Host state-machine checks passed.");
 	return 0;
 }
